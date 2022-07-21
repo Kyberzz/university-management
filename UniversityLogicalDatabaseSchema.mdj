@@ -681,6 +681,25 @@
 										},
 										{
 											"_type": "UMLAttributeView",
+											"_id": "AAAAAAGCIWXYABVDTzo=",
+											"_parent": {
+												"$ref": "AAAAAAGCINr1mz4RAd4="
+											},
+											"model": {
+												"$ref": "AAAAAAGCIWXX9BVAVKs="
+											},
+											"fillColor": "#777676",
+											"font": "Arial;14;0",
+											"showShadow": false,
+											"left": 482,
+											"top": 190,
+											"width": 136,
+											"height": 14,
+											"text": "+groupId: Integer",
+											"horizontalAlignment": 0
+										},
+										{
+											"_type": "UMLAttributeView",
 											"_id": "AAAAAAGCIOAMUkIbfKc=",
 											"_parent": {
 												"$ref": "AAAAAAGCINr1mz4RAd4="
@@ -692,7 +711,7 @@
 											"font": "Arial;14;0",
 											"showShadow": false,
 											"left": 482,
-											"top": 190,
+											"top": 206,
 											"width": 136,
 											"height": 14,
 											"text": "+courseId: Integer",
@@ -711,7 +730,7 @@
 											"font": "Arial;14;0",
 											"showShadow": false,
 											"left": 482,
-											"top": 206,
+											"top": 222,
 											"width": 136,
 											"height": 14,
 											"text": "+startTime: long",
@@ -730,7 +749,7 @@
 											"font": "Arial;14;0",
 											"showShadow": false,
 											"left": 482,
-											"top": 222,
+											"top": 238,
 											"width": 136,
 											"height": 14,
 											"text": "+endTime: long",
@@ -749,7 +768,7 @@
 											"font": "Arial;14;0",
 											"showShadow": false,
 											"left": 482,
-											"top": 238,
+											"top": 254,
 											"width": 136,
 											"height": 14,
 											"text": "+description: String",
@@ -768,7 +787,7 @@
 											"font": "Arial;14;0",
 											"showShadow": false,
 											"left": 482,
-											"top": 254,
+											"top": 270,
 											"width": 136,
 											"height": 14,
 											"text": "+dayOfWeek: enum",
@@ -781,7 +800,7 @@
 									"left": 477,
 									"top": 169,
 									"width": 146,
-									"height": 104
+									"height": 120
 								},
 								{
 									"_type": "UMLOperationCompartmentView",
@@ -796,7 +815,7 @@
 									"font": "Arial;14;0",
 									"showShadow": false,
 									"left": 477,
-									"top": 273,
+									"top": 289,
 									"width": 146,
 									"height": 10
 								},
@@ -844,7 +863,7 @@
 							"left": 477,
 							"top": 143,
 							"width": 146,
-							"height": 140,
+							"height": 156,
 							"nameCompartment": {
 								"$ref": "AAAAAAGCINr1mz4MYSU="
 							},
@@ -3182,6 +3201,15 @@
 								"$ref": "AAAAAAGCINr1mz4JWSk="
 							},
 							"name": "id",
+							"type": "Integer"
+						},
+						{
+							"_type": "UMLAttribute",
+							"_id": "AAAAAAGCIWXX9BVAVKs=",
+							"_parent": {
+								"$ref": "AAAAAAGCINr1mz4JWSk="
+							},
+							"name": "groupId",
 							"type": "Integer"
 						},
 						{
