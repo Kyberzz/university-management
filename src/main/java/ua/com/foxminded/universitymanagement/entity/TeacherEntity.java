@@ -5,16 +5,16 @@ import java.util.Objects;
 
 public class TeacherEntity {
 
-    private Integer id;
+    private int id;
     private String firstName;
     private String lastName;
     private List<CourseEntity> courseList;
 
-    public Integer getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -57,6 +57,6 @@ public class TeacherEntity {
             return false;
         TeacherEntity other = (TeacherEntity) obj;
         return Objects.equals(courseList, other.courseList) && Objects.equals(firstName, other.firstName)
-                && Objects.equals(id, other.id) && Objects.equals(lastName, other.lastName);
+                && id == other.id && Objects.equals(lastName, other.lastName);
     }
 }

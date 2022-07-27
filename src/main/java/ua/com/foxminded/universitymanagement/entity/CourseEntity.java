@@ -4,26 +4,26 @@ import java.util.List;
 import java.util.Objects;
 
 public class CourseEntity {
-    private Integer id;
-    private Integer teacherId;
+    private int id;
+    private TeacherEntity teacher;
     private String name;
     private String description;
     private List<TimetableEntity> timetableList;
 
-    public Integer getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(int id) {
         this.id = id;
     }
 
-    public Integer getTeacherId() {
-        return teacherId;
+    public TeacherEntity getTeacher() {
+        return teacher;
     }
 
-    public void setTeacherId(Integer teacherId) {
-        this.teacherId = teacherId;
+    public void setTeacher(TeacherEntity teacher) {
+        this.teacher = teacher;
     }
 
     public String getName() {
@@ -52,7 +52,7 @@ public class CourseEntity {
 
     @Override
     public int hashCode() {
-        return Objects.hash(description, id, name, teacherId, timetableList);
+        return Objects.hash(description, id, name, teacher, timetableList);
     }
 
     @Override
@@ -64,8 +64,7 @@ public class CourseEntity {
         if (getClass() != obj.getClass())
             return false;
         CourseEntity other = (CourseEntity) obj;
-        return Objects.equals(description, other.description) && Objects.equals(id, other.id)
-                && Objects.equals(name, other.name) && Objects.equals(teacherId, other.teacherId)
-                && Objects.equals(timetableList, other.timetableList);
+        return Objects.equals(description, other.description) && id == other.id && Objects.equals(name, other.name)
+                && Objects.equals(teacher, other.teacher) && Objects.equals(timetableList, other.timetableList);
     }
 }

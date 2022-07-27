@@ -4,25 +4,25 @@ import java.util.Objects;
 
 public class StudentEntity {
 
-    private Integer id;
-    private Integer groupId;
+    private int id;
+    private GroupEntity group;
     private String firstName;
     private String lastName;
 
-    public Integer getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(int id) {
         this.id = id;
     }
 
-    public Integer getGroupId() {
-        return groupId;
+    public GroupEntity getGroup() {
+        return group;
     }
 
-    public void setGroupId(Integer groupId) {
-        this.groupId = groupId;
+    public void setGroup(GroupEntity group) {
+        this.group = group;
     }
 
     public String getFirstName() {
@@ -43,7 +43,7 @@ public class StudentEntity {
 
     @Override
     public int hashCode() {
-        return Objects.hash(firstName, groupId, id, lastName);
+        return Objects.hash(firstName, group, id, lastName);
     }
 
     @Override
@@ -55,7 +55,7 @@ public class StudentEntity {
         if (getClass() != obj.getClass())
             return false;
         StudentEntity other = (StudentEntity) obj;
-        return Objects.equals(firstName, other.firstName) && Objects.equals(groupId, other.groupId)
-                && Objects.equals(id, other.id) && Objects.equals(lastName, other.lastName);
+        return Objects.equals(firstName, other.firstName) && Objects.equals(group, other.group) && id == other.id
+                && Objects.equals(lastName, other.lastName);
     }
 }

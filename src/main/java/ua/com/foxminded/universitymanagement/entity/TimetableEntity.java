@@ -4,36 +4,36 @@ import java.util.Objects;
 
 public class TimetableEntity {
 
-    private Integer id;
-    private Integer groupId;
-    private Integer courseId;
+    private int id;
+    private GroupEntity group;
+    private CourseEntity course;
     private long startTime;
     private long endTime;
     private String description;
     private WeekDayEntity weekDay;
 
-    public Integer getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(int id) {
         this.id = id;
     }
 
-    public Integer getGroupId() {
-        return groupId;
+    public GroupEntity getGroup() {
+        return group;
     }
 
-    public void setGroupId(Integer groupId) {
-        this.groupId = groupId;
+    public void setGroup(GroupEntity group) {
+        this.group = group;
     }
 
-    public Integer getCourseId() {
-        return courseId;
+    public CourseEntity getCourse() {
+        return course;
     }
 
-    public void setCourseId(Integer courseId) {
-        this.courseId = courseId;
+    public void setCourse(CourseEntity course) {
+        this.course = course;
     }
 
     public long getStartTime() {
@@ -67,10 +67,10 @@ public class TimetableEntity {
     public void setWeekDay(WeekDayEntity weekDay) {
         this.weekDay = weekDay;
     }
-    
+
     @Override
     public int hashCode() {
-        return Objects.hash(courseId, description, endTime, groupId, id, startTime, weekDay);
+        return Objects.hash(course, description, endTime, group, id, startTime, weekDay);
     }
 
     @Override
@@ -82,8 +82,8 @@ public class TimetableEntity {
         if (getClass() != obj.getClass())
             return false;
         TimetableEntity other = (TimetableEntity) obj;
-        return Objects.equals(courseId, other.courseId) && Objects.equals(description, other.description)
-                && endTime == other.endTime && Objects.equals(groupId, other.groupId) && Objects.equals(id, other.id)
+        return Objects.equals(course, other.course) && Objects.equals(description, other.description)
+                && endTime == other.endTime && Objects.equals(group, other.group) && id == other.id
                 && startTime == other.startTime && weekDay == other.weekDay;
     }
 }

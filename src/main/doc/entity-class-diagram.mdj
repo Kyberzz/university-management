@@ -147,7 +147,7 @@
 											"top": 67,
 											"width": 342.5009765625,
 											"height": 14,
-											"text": "-id: Integer",
+											"text": "-id: int",
 											"horizontalAlignment": 0
 										},
 										{
@@ -166,7 +166,7 @@
 											"top": 83,
 											"width": 342.5009765625,
 											"height": 14,
-											"text": "-teacherId: Integer",
+											"text": "-teacher: TeacherEntity",
 											"horizontalAlignment": 0
 										},
 										{
@@ -299,7 +299,7 @@
 											"top": 187,
 											"width": 342.5009765625,
 											"height": 14,
-											"text": "+setTeacherId(teacherId: Integer)",
+											"text": "+setTeacher(teacher: TeacherEntity)",
 											"horizontalAlignment": 0
 										},
 										{
@@ -318,7 +318,7 @@
 											"top": 203,
 											"width": 342.5009765625,
 											"height": 14,
-											"text": "+getTeacherId(): Integer",
+											"text": "+getTeacher(): TeacherEntity",
 											"horizontalAlignment": 0
 										},
 										{
@@ -632,7 +632,7 @@
 											"top": 67,
 											"width": 257.4072265625,
 											"height": 14,
-											"text": "-id: Integer",
+											"text": "-id: int",
 											"horizontalAlignment": 0
 										},
 										{
@@ -651,7 +651,7 @@
 											"top": 83,
 											"width": 257.4072265625,
 											"height": 14,
-											"text": "-groupId: Integer",
+											"text": "-group: GroupEntity",
 											"horizontalAlignment": 0
 										},
 										{
@@ -670,7 +670,7 @@
 											"top": 99,
 											"width": 257.4072265625,
 											"height": 14,
-											"text": "-courseId: Integer",
+											"text": "-course: CourseEntity",
 											"horizontalAlignment": 0
 										},
 										{
@@ -822,7 +822,7 @@
 											"top": 219,
 											"width": 257.4072265625,
 											"height": 14,
-											"text": "+setGroupId(groupId: Integer)",
+											"text": "+setGroup(group: GroupEntity)",
 											"horizontalAlignment": 0
 										},
 										{
@@ -841,7 +841,7 @@
 											"top": 235,
 											"width": 257.4072265625,
 											"height": 14,
-											"text": "+getGroupId(): Integer",
+											"text": "+getGroup(): GroupEntity",
 											"horizontalAlignment": 0
 										},
 										{
@@ -860,7 +860,7 @@
 											"top": 251,
 											"width": 257.4072265625,
 											"height": 14,
-											"text": "+setCourseId(courseId: Integer)",
+											"text": "+setCourse(course: GroupEntity)",
 											"horizontalAlignment": 0
 										},
 										{
@@ -1212,7 +1212,7 @@
 											"top": 67,
 											"width": 342.5009765625,
 											"height": 14,
-											"text": "-id: Integer",
+											"text": "-id: int",
 											"horizontalAlignment": 0
 										},
 										{
@@ -1640,7 +1640,7 @@
 											"top": 468,
 											"width": 296.078125,
 											"height": 14,
-											"text": "-id: Integer",
+											"text": "-id: int",
 											"horizontalAlignment": 0
 										},
 										{
@@ -2068,7 +2068,7 @@
 											"top": 464,
 											"width": 204.982421875,
 											"height": 14,
-											"text": "-id: Integer",
+											"text": "-id: int",
 											"horizontalAlignment": 0
 										},
 										{
@@ -2087,7 +2087,7 @@
 											"top": 480,
 											"width": 204.982421875,
 											"height": 14,
-											"text": "-groupId: Integer",
+											"text": "-group: GroupEntity",
 											"horizontalAlignment": 0
 										},
 										{
@@ -2201,7 +2201,7 @@
 											"top": 568,
 											"width": 204.982421875,
 											"height": 14,
-											"text": "+setGroupId(groupId: Integer)",
+											"text": "+setGroup(group: GroupEntity)",
 											"horizontalAlignment": 0
 										},
 										{
@@ -2220,7 +2220,7 @@
 											"top": 584,
 											"width": 204.982421875,
 											"height": 14,
-											"text": "+getGroupId(): Integer",
+											"text": "+getGroup(): GroupEntity",
 											"horizontalAlignment": 0
 										},
 										{
@@ -4217,7 +4217,7 @@
 							},
 							"name": "id",
 							"visibility": "private",
-							"type": "Integer"
+							"type": "int"
 						},
 						{
 							"_type": "UMLAttribute",
@@ -4225,9 +4225,11 @@
 							"_parent": {
 								"$ref": "AAAAAAGCJWzpHbWKla8="
 							},
-							"name": "teacherId",
+							"name": "teacher",
 							"visibility": "private",
-							"type": "Integer"
+							"type": {
+								"$ref": "AAAAAAGCJW+kGLZrrrI="
+							}
 						},
 						{
 							"_type": "UMLAttribute",
@@ -4305,7 +4307,7 @@
 							"_parent": {
 								"$ref": "AAAAAAGCJWzpHbWKla8="
 							},
-							"name": "setTeacherId",
+							"name": "setTeacher",
 							"parameters": [
 								{
 									"_type": "UMLParameter",
@@ -4313,8 +4315,10 @@
 									"_parent": {
 										"$ref": "AAAAAAGCJiQIIbmwqSA="
 									},
-									"name": "teacherId",
-									"type": "Integer"
+									"name": "teacher",
+									"type": {
+										"$ref": "AAAAAAGCJW+kGLZrrrI="
+									}
 								}
 							]
 						},
@@ -4324,7 +4328,7 @@
 							"_parent": {
 								"$ref": "AAAAAAGCJWzpHbWKla8="
 							},
-							"name": "getTeacherId",
+							"name": "getTeacher",
 							"parameters": [
 								{
 									"_type": "UMLParameter",
@@ -4332,7 +4336,9 @@
 									"_parent": {
 										"$ref": "AAAAAAGCJiRYBroBvvc="
 									},
-									"type": "Integer",
+									"type": {
+										"$ref": "AAAAAAGCJW+kGLZrrrI="
+									},
 									"direction": "return"
 								}
 							]
@@ -4555,7 +4561,7 @@
 							},
 							"name": "id",
 							"visibility": "private",
-							"type": "Integer"
+							"type": "int"
 						},
 						{
 							"_type": "UMLAttribute",
@@ -4563,9 +4569,11 @@
 							"_parent": {
 								"$ref": "AAAAAAGCJW1FVLW0yik="
 							},
-							"name": "groupId",
+							"name": "group",
 							"visibility": "private",
-							"type": "Integer"
+							"type": {
+								"$ref": "AAAAAAGCJW2TDLXfGus="
+							}
 						},
 						{
 							"_type": "UMLAttribute",
@@ -4573,9 +4581,9 @@
 							"_parent": {
 								"$ref": "AAAAAAGCJW1FVLW0yik="
 							},
-							"name": "courseId",
+							"name": "course",
 							"visibility": "private",
-							"type": "Integer"
+							"type": "CourseEntity"
 						},
 						{
 							"_type": "UMLAttribute",
@@ -4663,7 +4671,7 @@
 							"_parent": {
 								"$ref": "AAAAAAGCJW1FVLW0yik="
 							},
-							"name": "setGroupId",
+							"name": "setGroup",
 							"parameters": [
 								{
 									"_type": "UMLParameter",
@@ -4671,8 +4679,10 @@
 									"_parent": {
 										"$ref": "AAAAAAGCJh44PbHMuls="
 									},
-									"name": "groupId",
-									"type": "Integer"
+									"name": "group",
+									"type": {
+										"$ref": "AAAAAAGCJW2TDLXfGus="
+									}
 								}
 							]
 						},
@@ -4682,7 +4692,7 @@
 							"_parent": {
 								"$ref": "AAAAAAGCJW1FVLW0yik="
 							},
-							"name": "getGroupId",
+							"name": "getGroup",
 							"parameters": [
 								{
 									"_type": "UMLParameter",
@@ -4690,7 +4700,9 @@
 									"_parent": {
 										"$ref": "AAAAAAGCJh6RNLJTdIM="
 									},
-									"type": "Integer",
+									"type": {
+										"$ref": "AAAAAAGCJW2TDLXfGus="
+									},
 									"direction": "return"
 								}
 							]
@@ -4701,7 +4713,7 @@
 							"_parent": {
 								"$ref": "AAAAAAGCJW1FVLW0yik="
 							},
-							"name": "setCourseId",
+							"name": "setCourse",
 							"parameters": [
 								{
 									"_type": "UMLParameter",
@@ -4709,8 +4721,10 @@
 									"_parent": {
 										"$ref": "AAAAAAGCJh64X7KksEk="
 									},
-									"name": "courseId",
-									"type": "Integer"
+									"name": "course",
+									"type": {
+										"$ref": "AAAAAAGCJW2TDLXfGus="
+									}
 								}
 							]
 						},
@@ -4888,7 +4902,7 @@
 							},
 							"name": "id",
 							"visibility": "private",
-							"type": "Integer"
+							"type": "int"
 						},
 						{
 							"_type": "UMLAttribute",
@@ -5108,7 +5122,7 @@
 							},
 							"name": "id",
 							"visibility": "private",
-							"type": "Integer"
+							"type": "int"
 						},
 						{
 							"_type": "UMLAttribute",
@@ -5370,7 +5384,7 @@
 							},
 							"name": "id",
 							"visibility": "private",
-							"type": "Integer"
+							"type": "int"
 						},
 						{
 							"_type": "UMLAttribute",
@@ -5378,9 +5392,11 @@
 							"_parent": {
 								"$ref": "AAAAAAGCJXDnmbazUB4="
 							},
-							"name": "groupId",
+							"name": "group",
 							"visibility": "private",
-							"type": "Integer"
+							"type": {
+								"$ref": "AAAAAAGCJW2TDLXfGus="
+							}
 						},
 						{
 							"_type": "UMLAttribute",
@@ -5448,7 +5464,7 @@
 							"_parent": {
 								"$ref": "AAAAAAGCJXDnmbazUB4="
 							},
-							"name": "setGroupId",
+							"name": "setGroup",
 							"parameters": [
 								{
 									"_type": "UMLParameter",
@@ -5456,8 +5472,10 @@
 									"_parent": {
 										"$ref": "AAAAAAGCJjJMPdzRsZ0="
 									},
-									"name": "groupId",
-									"type": "Integer"
+									"name": "group",
+									"type": {
+										"$ref": "AAAAAAGCJW2TDLXfGus="
+									}
 								}
 							]
 						},
@@ -5467,7 +5485,7 @@
 							"_parent": {
 								"$ref": "AAAAAAGCJXDnmbazUB4="
 							},
-							"name": "getGroupId",
+							"name": "getGroup",
 							"parameters": [
 								{
 									"_type": "UMLParameter",
@@ -5475,7 +5493,9 @@
 									"_parent": {
 										"$ref": "AAAAAAGCJjK8c91SkU4="
 									},
-									"type": "Integer",
+									"type": {
+										"$ref": "AAAAAAGCJW2TDLXfGus="
+									},
 									"direction": "return"
 								}
 							]

@@ -5,16 +5,16 @@ import java.util.Objects;
 
 public class GroupEntity {
 
-    private Integer id;
+    private int id;
     private String name;
     private List<TimetableEntity> timetableLis;
     private List<StudentEntity> studentList;
 
-    public Integer getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -56,7 +56,7 @@ public class GroupEntity {
         if (getClass() != obj.getClass())
             return false;
         GroupEntity other = (GroupEntity) obj;
-        return Objects.equals(id, other.id) && Objects.equals(name, other.name)
-                && Objects.equals(studentList, other.studentList) && Objects.equals(timetableLis, other.timetableLis);
+        return id == other.id && Objects.equals(name, other.name) && Objects.equals(studentList, other.studentList)
+                && Objects.equals(timetableLis, other.timetableLis);
     }
 }
