@@ -790,7 +790,7 @@
 											"top": 270,
 											"width": 164.048828125,
 											"height": 14,
-											"text": "+dayOfWeek: DayOfWeek",
+											"text": "+weekDay: WeekDay",
 											"horizontalAlignment": 0
 										}
 									],
@@ -2630,7 +2630,7 @@
 											"top": 406,
 											"width": 130,
 											"height": 14,
-											"text": "DayOfWeek"
+											"text": "WeekDay"
 										},
 										{
 											"_type": "LabelView",
@@ -3891,9 +3891,9 @@
 							"_parent": {
 								"$ref": "AAAAAAGCINr1mz4JWSk="
 							},
-							"name": "dayOfWeek",
+							"name": "weekDay",
 							"type": {
-								"$ref": "AAAAAAGCILN12idD7Nc="
+								"$ref": "AAAAAAGCJbei1nANjng="
 							}
 						}
 					]
@@ -4075,7 +4075,7 @@
 					"_parent": {
 						"$ref": "AAAAAAFF+qBWK6M3Z8Y="
 					},
-					"name": "DayOfWeek",
+					"name": "WeekDay",
 					"stereotype": "enumeration",
 					"attributes": [
 						{
@@ -4084,7 +4084,8 @@
 							"_parent": {
 								"$ref": "AAAAAAGCJbei1nANjng="
 							},
-							"name": "MONDAY"
+							"name": "MONDAY",
+							"type": ""
 						},
 						{
 							"_type": "UMLAttribute",
@@ -4092,7 +4093,8 @@
 							"_parent": {
 								"$ref": "AAAAAAGCJbei1nANjng="
 							},
-							"name": "TUESDAY"
+							"name": "TUESDAY",
+							"type": ""
 						},
 						{
 							"_type": "UMLAttribute",
@@ -4100,7 +4102,8 @@
 							"_parent": {
 								"$ref": "AAAAAAGCJbei1nANjng="
 							},
-							"name": "WEDNESDAY"
+							"name": "WEDNESDAY",
+							"type": ""
 						},
 						{
 							"_type": "UMLAttribute",
@@ -4108,7 +4111,8 @@
 							"_parent": {
 								"$ref": "AAAAAAGCJbei1nANjng="
 							},
-							"name": "THURSDAY"
+							"name": "THURSDAY",
+							"type": ""
 						},
 						{
 							"_type": "UMLAttribute",
@@ -4116,7 +4120,8 @@
 							"_parent": {
 								"$ref": "AAAAAAGCJbei1nANjng="
 							},
-							"name": "FRIDAY"
+							"name": "FRIDAY",
+							"type": ""
 						},
 						{
 							"_type": "UMLAttribute",
@@ -4124,7 +4129,8 @@
 							"_parent": {
 								"$ref": "AAAAAAGCJbei1nANjng="
 							},
-							"name": "SATURDAY"
+							"name": "SATURDAY",
+							"type": ""
 						},
 						{
 							"_type": "UMLAttribute",
@@ -4132,7 +4138,8 @@
 							"_parent": {
 								"$ref": "AAAAAAGCJbei1nANjng="
 							},
-							"name": "SUNDAY"
+							"name": "SUNDAY",
+							"type": ""
 						}
 					]
 				}
