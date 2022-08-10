@@ -1,4 +1,4 @@
-package ua.com.foxminded.universitymanagement.entity;
+package ua.com.foxminded.university.entity;
 
 import java.util.List;
 import java.util.Objects;
@@ -66,5 +66,11 @@ public class CourseEntity {
         CourseEntity other = (CourseEntity) obj;
         return Objects.equals(description, other.description) && id == other.id && Objects.equals(name, other.name)
                 && Objects.equals(teacher, other.teacher) && Objects.equals(timetableList, other.timetableList);
+    }
+
+    @Override
+    public String toString() {
+        return "CourseEntity [id=" + id + ", teacher=" + teacher + ", name=" + name + ", description=" + description
+                + ", timetableList=" + timetableList + "]";
     }
 }

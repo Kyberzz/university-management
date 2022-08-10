@@ -1,4 +1,4 @@
-package ua.com.foxminded.universitymanagement.entity;
+package ua.com.foxminded.university.entity;
 
 public enum WeekDayEntity {
         

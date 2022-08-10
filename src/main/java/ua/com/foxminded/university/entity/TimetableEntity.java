@@ -1,4 +1,4 @@
-package ua.com.foxminded.universitymanagement.entity;
+package ua.com.foxminded.university.entity;
 
 import java.util.Objects;
 
@@ -85,5 +85,11 @@ public class TimetableEntity {
         return Objects.equals(course, other.course) && Objects.equals(description, other.description)
                 && endTime == other.endTime && Objects.equals(group, other.group) && id == other.id
                 && startTime == other.startTime && weekDay == other.weekDay;
+    }
+
+    @Override
+    public String toString() {
+        return "TimetableEntity [id=" + id + ", group=" + group + ", course=" + course + ", startTime=" + startTime
+                + ", endTime=" + endTime + ", description=" + description + ", weekDay=" + weekDay + "]";
     }
 }

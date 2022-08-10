@@ -1,4 +1,4 @@
-package ua.com.foxminded.universitymanagement.entity;
+package ua.com.foxminded.university.entity;
 
 import java.util.Objects;
 
@@ -8,6 +8,16 @@ public class StudentEntity {
     private GroupEntity group;
     private String firstName;
     private String lastName;
+    
+    public StudentEntity() {
+    }
+
+    public StudentEntity(int id, GroupEntity group, String firstName, String lastName) {
+        this.id = id;
+        this.group = group;
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
 
     public int getId() {
         return id;
@@ -57,5 +67,11 @@ public class StudentEntity {
         StudentEntity other = (StudentEntity) obj;
         return Objects.equals(firstName, other.firstName) && Objects.equals(group, other.group) && id == other.id
                 && Objects.equals(lastName, other.lastName);
+    }
+
+    @Override
+    public String toString() {
+        return "StudentEntity [id=" + id + ", group=" + group + ", firstName=" + firstName + ", lastName=" + lastName
+                + "]";
     }
 }

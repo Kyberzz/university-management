@@ -1,4 +1,4 @@
-package ua.com.foxminded.universitymanagement.entity;
+package ua.com.foxminded.university.entity;
 
 import java.util.List;
 import java.util.Objects;
@@ -58,5 +58,11 @@ public class GroupEntity {
         GroupEntity other = (GroupEntity) obj;
         return id == other.id && Objects.equals(name, other.name) && Objects.equals(studentList, other.studentList)
                 && Objects.equals(timetableLis, other.timetableLis);
+    }
+
+    @Override
+    public String toString() {
+        return "GroupEntity [id=" + id + ", name=" + name + ", timetableLis=" + timetableLis + ", studentList="
+                + studentList + "]";
     }
 }
