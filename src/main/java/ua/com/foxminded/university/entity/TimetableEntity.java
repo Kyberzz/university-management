@@ -12,14 +12,6 @@ public class TimetableEntity {
     private String description;
     private WeekDayEntity weekDay;
     
-    public TimetableEntity(int id, long startTime, long endTime, String description, WeekDayEntity weekDay) {
-        this.id = id;
-        this.startTime = startTime;
-        this.endTime = endTime;
-        this.description = description;
-        this.weekDay = weekDay;
-    }
-
     public int getId() {
         return id;
     }

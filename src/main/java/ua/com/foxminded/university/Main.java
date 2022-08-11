@@ -13,15 +13,7 @@ public class Main {
         ApplicationContext context = new ClassPathXmlApplicationContext("dao.xml");
         JdbcStudentDao studentDao = context.getBean("studentDao", JdbcStudentDao.class);
         StudentEntity student = studentDao.getStudentById(1);
+        System.out.println(student.toString());
         
-        System.out.println(student.getId());
-        System.out.println(student.getFirstName());
-        System.out.println(student.getLastName());
-        
-        student.getGroup().getTimetableList().forEach(timetable -> {
-            System.out.println(timetable.getId());
-            System.out.println(timetable.getStartTime());
-            System.out.println(timetable.getEndTime());
-        });
     }
 }

@@ -10,11 +10,6 @@ public class GroupEntity {
     private List<TimetableEntity> timetableList;
     private List<StudentEntity> studentList;
     
-    public GroupEntity(int id, String name) {
-        this.id = id;
-        this.name = name;
-    }
-
     public int getId() {
         return id;
     }

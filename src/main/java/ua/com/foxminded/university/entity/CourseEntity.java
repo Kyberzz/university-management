@@ -10,12 +10,6 @@ public class CourseEntity {
     private String description;
     private List<TimetableEntity> timetableList;
     
-    public CourseEntity(int id, String name, String description) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-    }
-
     public int getId() {
         return id;
     }
