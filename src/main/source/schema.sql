@@ -1,42 +1,56 @@
 drop schema if exists university cascade;
 create schema university;
 
-create sequence university.teacher_id_seq as integer;
-create table university.teacher (
-    id integer default nextval('university.teacher_id_seq'::regclass) primary key,
-    first_name varchar collate pg_catalog."default" not null
+create sequence university.teachers_id_seq as integer;
+create table university.teachers (
+    id integer default nextval('university.teachers_id_seq'::regclass) primary key,
+    first_name varchar collate pg_catalog."default" not null,
+    last_name varchar collate pg_catalog."default" not null
 )
 tablespace pg_default;
-alter sequence university.teacher_id_seq owned by university.teacher.id;
+alter sequence university.teachers_id_seq owned by university.teachers.id;
 
-create sequence university.course_id_seq as integer;
-create table university.course (
-    id integer default nextval('university.course_id_seq'::regclass) primary key,
-    teacher_id integer references university.teacher(id) on delete set null,
+create sequence university.courses_id_seq as integer;
+create table university.courses (
+    id integer default nextval('university.courses_id_seq'::regclass) primary key,
+    teacher_id integer references university.teachers(id) on delete set null,
     name varchar collate pg_catalog."default" not null unique,
     description varchar collate pg_catalog."default"
 )
 tablespace pg_default;
-alter sequence university.course_id_seq owned by university.course.id;
+alter sequence university.courses_id_seq owned by university.courses.id;
 
 create type university.week_day as enum (
     'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY'
 );
 
-create sequence university.group_id_seq as integer;
-create table university.group (
-    id integer default nextval('university.group_id_seq'::regclass) primary key,
+create sequence university.groups_id_seq as integer;
+create table university.groups (
+    id integer default nextval('university.groups_id_seq'::regclass) primary key,
     name varchar collate pg_catalog."default" not null unique  
 )
 tablespace pg_default;
-alter sequence university.group_id_seq owned by university.group.id;
+alter sequence university.groups_id_seq owned by university.groups.id;
 
-create sequence university.student_id_seq as integer;
-create table university.student (
-    id integer default nextval('university.student_id_seq'::regclass) primary key,
-    group_id integer references university.group(id) on delete set null,
+create sequence university.students_id_seq as integer;
+create table university.students (
+    id integer default nextval('university.students_id_seq'::regclass) primary key,
+    group_id integer references university.groups(id) on delete set null,
     first_name varchar collate pg_catalog."default" not null,
     last_name varchar collate pg_catalog."default" not null
 )
 tablespace pg_default;
-alter sequence university.student_id_seq owned by university.student.id;
+alter sequence university.students_id_seq owned by university.students.id;
+
+create sequence university.timetable_id_seq as integer;
+create table university.timetable (
+	id integer default nextval('university.timetable_id_seq'::regclass) primary key,
+	group_id integer references university.groups(id) on delete set null,
+	course_id integer references university.courses(id) on delete set null,
+	start_time bigint,
+	end_time bigint,
+	description varchar collate pg_catalog."default",
+    week_day university.week_day
+)
+tablespace pg_default;
+alter sequence university.timetable_id_seq owned by university.timetable.id;

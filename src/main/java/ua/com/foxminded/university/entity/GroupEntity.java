@@ -7,8 +7,13 @@ public class GroupEntity {
 
     private int id;
     private String name;
-    private List<TimetableEntity> timetableLis;
+    private List<TimetableEntity> timetableList;
     private List<StudentEntity> studentList;
+    
+    public GroupEntity(int id, String name) {
+        this.id = id;
+        this.name = name;
+    }
 
     public int getId() {
         return id;
@@ -26,12 +31,12 @@ public class GroupEntity {
         this.name = name;
     }
 
-    public List<TimetableEntity> getTimetableLis() {
-        return timetableLis;
+    public List<TimetableEntity> getTimetableList() {
+        return timetableList;
     }
 
-    public void setTimetableLis(List<TimetableEntity> timetableLis) {
-        this.timetableLis = timetableLis;
+    public void setTimetableList(List<TimetableEntity> timetableList) {
+        this.timetableList = timetableList;
     }
 
     public List<StudentEntity> getStudentList() {
@@ -44,7 +49,7 @@ public class GroupEntity {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, studentList, timetableLis);
+        return Objects.hash(id, name, studentList, timetableList);
     }
 
     @Override
@@ -57,12 +62,12 @@ public class GroupEntity {
             return false;
         GroupEntity other = (GroupEntity) obj;
         return id == other.id && Objects.equals(name, other.name) && Objects.equals(studentList, other.studentList)
-                && Objects.equals(timetableLis, other.timetableLis);
+                && Objects.equals(timetableList, other.timetableList);
     }
 
     @Override
     public String toString() {
-        return "GroupEntity [id=" + id + ", name=" + name + ", timetableLis=" + timetableLis + ", studentList="
+        return "GroupEntity [id=" + id + ", name=" + name + ", timetableList=" + timetableList + ", studentList="
                 + studentList + "]";
     }
 }
