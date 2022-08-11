@@ -10,7 +10,7 @@
 	
 	<bean id="studentDao" class="ua.com.foxminded.university.dao.jdbc.JdbcStudentDao">
 		<constructor-arg ref="jdbcTemplate"/>
-		<property name="studentQuery" ref="studentQuery"/>
+		<constructor-arg ref="studentQuery"/>
 	</bean>
 	
 	<bean id="studentQuery" class="org.springframework.beans.factory.config.PropertiesFactoryBean">

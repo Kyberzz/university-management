@@ -19,14 +19,11 @@ public class JdbcStudentDao implements StudentDao {
     private Properties studentQuery;
     private JdbcTemplate jdbcTemplate;
     
-    public JdbcStudentDao(JdbcTemplate jdbcTemplate) {
+    public JdbcStudentDao(JdbcTemplate jdbcTemplate, Properties studentQuery) {
         this.jdbcTemplate = jdbcTemplate;
+        this.studentQuery = studentQuery;
     }
     
-    public void setStudentQuery(Properties properties) {
-        this.studentQuery = properties;
-    }
-
     @Override
     public StudentEntity getStudentById(int id) {
             return jdbcTemplate.query(studentQuery.getProperty(GET_STUDENT_BY_ID), 
