@@ -6,8 +6,10 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import ua.com.foxminded.university.dao.jdbc.JdbcStudentDao;
+import ua.com.foxminded.university.dao.jdbc.JdbcTeacherDao;
 import ua.com.foxminded.university.dao.jdbc.JdbcTimetableDao;
 import ua.com.foxminded.university.entity.StudentEntity;
+import ua.com.foxminded.university.entity.TeacherEntity;
 import ua.com.foxminded.university.entity.TimetableEntity;
 
 public class Main {
@@ -23,7 +25,8 @@ public class Main {
         List<TimetableEntity> timetableList = timetableDao.getTimetableByStudentId(1);
         timetableList.stream().forEach(timetable -> System.out.println(timetable.toString()));
         
-        
-        
+        JdbcTeacherDao teacherDao = context.getBean("teacherDao", JdbcTeacherDao.class);
+        TeacherEntity teacher = teacherDao.getTeacherById(1);
+        System.out.println(teacher.toString());
     }
 }
