@@ -1,8 +1,6 @@
 package ua.com.foxminded.university.dao;
 
-import ua.com.foxminded.university.entity.StudentEntity;
-
-public interface StudentDao {
+public interface StudentDao<T> {
     
-    public StudentEntity getStudentById(int id);
+    public T getStudentById(int id);
 }
