@@ -28,6 +28,7 @@ public class JdbcTeacherDao implements TeacherDao<TeacherEntity> {
                 preparedStatement -> preparedStatement.setInt(1, id),
                 resultSet -> {
                     TeacherEntity teacher = new TeacherEntity();
+                    
                     while(resultSet.next()) {
                         teacher.setId(resultSet.getInt(TEACHER_ID));
                         teacher.setFirstName(resultSet.getString(FIRST_NAME));

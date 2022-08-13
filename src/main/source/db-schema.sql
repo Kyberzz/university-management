@@ -1,3 +1,5 @@
+-- create role university with login password '2345'
+-- create database university owner university
 drop schema if exists university cascade;
 create schema university;
 
