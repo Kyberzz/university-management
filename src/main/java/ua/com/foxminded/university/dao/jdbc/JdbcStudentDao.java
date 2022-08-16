@@ -26,18 +26,18 @@ public class JdbcStudentDao implements StudentDao<StudentEntity> {
     
     @Override
     public StudentEntity getStudentById(int id) {
-            return jdbcTemplate.query(studentQueries.getProperty(GET_STUDENT_BY_ID), 
-                    preparedStatement -> preparedStatement.setInt(1, id), 
-                    resultSet -> {
-                        StudentEntity student = new StudentEntity();
+        return jdbcTemplate.query(studentQueries.getProperty(GET_STUDENT_BY_ID),
+                                  preparedStatement -> preparedStatement.setInt(1, id), 
+                                  resultSet -> {
+                                      StudentEntity student = new StudentEntity();
 
-                        while(resultSet.next()) {
-                            student.setId(resultSet.getInt(STUDENT_ID));
-                            student.setFirstName(resultSet.getString(FIRST_NAME));
-                            student.setLastName(resultSet.getString(LAST_NAME));
-                            student.setGroup(new GroupEntity(resultSet.getInt(GROUP_ID)));
-                        }
-                        return student;
-                    });
+                                      while (resultSet.next()) {
+                                          student.setId(resultSet.getInt(STUDENT_ID));
+                                          student.setFirstName(resultSet.getString(FIRST_NAME));
+                                          student.setLastName(resultSet.getString(LAST_NAME));
+                                          student.setGroup(new GroupEntity(resultSet.getInt(GROUP_ID)));
+                                      }
+                                      return student;
+                                  });
     }
 }

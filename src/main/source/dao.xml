@@ -31,7 +31,7 @@
 	
 	<jdbc:initialize-database data-source="dataSource">
 		<jdbc:script location="classpath:db-schema.sql"/>
-		<jdbc:script location="classpath:db-test-data.sql"/>
+		<jdbc:script location="classpath:test-db-data.sql"/>
 	</jdbc:initialize-database>
 	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="${jdbc.driverClassName}"/>
