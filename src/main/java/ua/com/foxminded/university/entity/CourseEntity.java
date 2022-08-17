@@ -10,6 +10,9 @@ public class CourseEntity {
     private String description;
     private List<TimetableEntity> timetableList;
     
+    public CourseEntity() {
+    }
+
     public CourseEntity(int id) {
         this.id = id;
     }

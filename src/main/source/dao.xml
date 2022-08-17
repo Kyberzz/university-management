@@ -13,6 +13,11 @@
 		https://www.springframework.org/schema/context/spring-context.xsd
 		http://www.springframework.org/schema/util
 		https://www.springframework.org/schema/util/spring-util.xsd">
+		
+	<bean id="courseDao" class="ua.com.foxminded.university.dao.jdbc.JdbcCourseDao">
+		<constructor-arg ref="jdbcTemplate"/>
+		<constructor-arg ref="courseQuries"/>
+	</bean>	
 	<bean id="teacherDao" class="ua.com.foxminded.university.dao.jdbc.JdbcTeacherDao">
 		<constructor-arg ref="jdbcTemplate"/>
 		<constructor-arg ref="teacherQueries"/>
@@ -39,8 +44,11 @@
 		<property name="username" value="${jdbc.username}" />
 		<property name="password" value="${jdbc.password}" />
 	</bean>
+	<bean id="courseQuries" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+		<property name="location" value="/course-queries.properties"/>
+	</bean>
 	<bean id="studentQueries" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
-		<property name="location" value="classpath:student-queries.properties" />
+		<property name="location" value="/student-queries.properties" />
 	</bean>
 	<util:properties id="teacherQueries" location="classpath:teacher-queries.properties"/>
 	<util:properties id="timetableQueries" location="classpath:timetable-queries.properties"/>

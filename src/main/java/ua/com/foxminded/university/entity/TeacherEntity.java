@@ -10,6 +10,10 @@ public class TeacherEntity {
     private String lastName;
     private List<CourseEntity> courseList;
     
+    public TeacherEntity(int id) {
+        this.id = id;
+    }
+
     public int getId() {
         return id;
     }
