@@ -185,7 +185,26 @@
 											"top": 588,
 											"width": 385.533203125,
 											"height": 14,
-											"text": "+getCoursesByTeacherId(id: int): int",
+											"text": "+getCourseListByTeacherId(id: int): TeacherEntity",
+											"horizontalAlignment": 0
+										},
+										{
+											"_type": "UMLOperationView",
+											"_id": "AAAAAAGCrTggtFO2bgM=",
+											"_parent": {
+												"$ref": "AAAAAAGCbiU8na5c44w="
+											},
+											"model": {
+												"$ref": "AAAAAAGCrTggo1Oz3Pw="
+											},
+											"fillColor": "#777676",
+											"font": "Arial;14;0",
+											"showShadow": false,
+											"left": 55,
+											"top": 604,
+											"width": 385.533203125,
+											"height": 14,
+											"text": "+getTimetableListByTeacherId(id: int): TeacherEnttity",
 											"horizontalAlignment": 0
 										}
 									],
@@ -195,7 +214,7 @@
 									"left": 50,
 									"top": 581,
 									"width": 395.533203125,
-									"height": 26
+									"height": 42
 								},
 								{
 									"_type": "UMLReceptionCompartmentView",
@@ -241,7 +260,7 @@
 							"left": 50,
 							"top": 531,
 							"width": 395.533203125,
-							"height": 80,
+							"height": 92,
 							"nameCompartment": {
 								"$ref": "AAAAAAGCbiU8nK5WKtc="
 							},
@@ -289,7 +308,7 @@
 											"showShadow": false,
 											"left": 1187,
 											"top": 531,
-											"width": 289,
+											"width": 320.4892578125,
 											"height": 14,
 											"text": "«interface»"
 										},
@@ -304,7 +323,7 @@
 											"showShadow": false,
 											"left": 1187,
 											"top": 547,
-											"width": 289,
+											"width": 320.4892578125,
 											"height": 14,
 											"text": "StudentDao"
 										},
@@ -345,7 +364,7 @@
 									"showShadow": false,
 									"left": 1182,
 									"top": 526,
-									"width": 299,
+									"width": 330.4892578125,
 									"height": 40,
 									"stereotypeLabel": {
 										"$ref": "AAAAAAGCbiuc2a8zPpg="
@@ -374,7 +393,7 @@
 									"showShadow": false,
 									"left": 1182,
 									"top": 566,
-									"width": 299,
+									"width": 330.4892578125,
 									"height": 10
 								},
 								{
@@ -401,11 +420,30 @@
 											"showShadow": false,
 											"left": 1187,
 											"top": 581,
-											"width": 289,
+											"width": 320.4892578125,
 											"height": 14,
 											"text": "+getGroupByStudentId(id: int): StudentEntity",
 											"horizontalAlignment": 0,
 											"wordWrap": true
+										},
+										{
+											"_type": "UMLOperationView",
+											"_id": "AAAAAAGCrUBn1VPT15Q=",
+											"_parent": {
+												"$ref": "AAAAAAGCbiuc2a84fIE="
+											},
+											"model": {
+												"$ref": "AAAAAAGCrUBnylPQrVQ="
+											},
+											"fillColor": "#777676",
+											"font": "Arial;14;0",
+											"showShadow": false,
+											"left": 1187,
+											"top": 597,
+											"width": 320.4892578125,
+											"height": 14,
+											"text": "+getTimetableListByStudentId(id: int): StudentEntity",
+											"horizontalAlignment": 0
 										}
 									],
 									"fillColor": "#777676",
@@ -413,8 +451,8 @@
 									"showShadow": false,
 									"left": 1182,
 									"top": 576,
-									"width": 299,
-									"height": 24
+									"width": 330.4892578125,
+									"height": 40
 								},
 								{
 									"_type": "UMLReceptionCompartmentView",
@@ -459,8 +497,8 @@
 							"containerChangeable": true,
 							"left": 1182,
 							"top": 526,
-							"width": 299,
-							"height": 88,
+							"width": 330.4892578125,
+							"height": 90,
 							"nameCompartment": {
 								"$ref": "AAAAAAGCbiuc2a8yClc="
 							},
@@ -701,7 +739,7 @@
 									"font": "Arial;14;0",
 									"showShadow": false,
 									"left": 224,
-									"top": 644,
+									"top": 650,
 									"height": 14,
 									"alpha": 1.5707963267948966,
 									"distance": 15,
@@ -724,7 +762,7 @@
 									"font": "Arial;14;0",
 									"showShadow": false,
 									"left": 209,
-									"top": 644,
+									"top": 650,
 									"height": 14,
 									"alpha": 1.5707963267948966,
 									"distance": 30,
@@ -747,7 +785,7 @@
 									"font": "Arial;14;0",
 									"showShadow": false,
 									"left": 253,
-									"top": 645,
+									"top": 651,
 									"height": 14,
 									"alpha": -1.5707963267948966,
 									"distance": 15,
@@ -766,7 +804,7 @@
 							"tail": {
 								"$ref": "AAAAAAGCbjQDBq+aloE="
 							},
-							"points": "239:695;239:610",
+							"points": "239:695;239:622",
 							"showVisibility": true,
 							"nameLabel": {
 								"$ref": "AAAAAAGCbjT9j6/WLSA="
@@ -1002,7 +1040,7 @@
 									"font": "Arial;14;0",
 									"showShadow": false,
 									"left": 1307,
-									"top": 648,
+									"top": 649,
 									"height": 14,
 									"alpha": 1.5707963267948966,
 									"distance": 15,
@@ -1025,7 +1063,7 @@
 									"font": "Arial;14;0",
 									"showShadow": false,
 									"left": 1292,
-									"top": 648,
+									"top": 649,
 									"height": 14,
 									"alpha": 1.5707963267948966,
 									"distance": 30,
@@ -1048,7 +1086,7 @@
 									"font": "Arial;14;0",
 									"showShadow": false,
 									"left": 1336,
-									"top": 649,
+									"top": 650,
 									"height": 14,
 									"alpha": -1.5707963267948966,
 									"distance": 15,
@@ -1067,7 +1105,7 @@
 							"tail": {
 								"$ref": "AAAAAAGCbk6VLLECXhc="
 							},
-							"points": "1322:700;1322:613",
+							"points": "1322:700;1322:615",
 							"showVisibility": true,
 							"nameLabel": {
 								"$ref": "AAAAAAGCbk7lILEue3o="
@@ -2334,7 +2372,7 @@
 											"top": 587,
 											"width": 436,
 											"height": 14,
-											"text": "+getTimetableByStudentId(id: int): List<TimetabelEntity>",
+											"text": "+getCourseByTimetableId(id: int): TimetableEntity",
 											"horizontalAlignment": 0
 										},
 										{
@@ -2353,7 +2391,7 @@
 											"top": 603,
 											"width": 436,
 											"height": 14,
-											"text": "+getTimetableByTeacherId(id: int): List<TimetableEntity>",
+											"text": "+getGroupByTimetableId(id: int): TimetableEntity",
 											"horizontalAlignment": 0
 										}
 									],
@@ -3682,7 +3720,7 @@
 											"showShadow": false,
 											"left": 366,
 											"top": 696,
-											"width": 312.44140625,
+											"width": 334.2275390625,
 											"height": 14,
 											"text": "«interface»"
 										},
@@ -3697,7 +3735,7 @@
 											"showShadow": false,
 											"left": 366,
 											"top": 712,
-											"width": 312.44140625,
+											"width": 334.2275390625,
 											"height": 14,
 											"text": "CourceDao"
 										},
@@ -3738,7 +3776,7 @@
 									"showShadow": false,
 									"left": 361,
 									"top": 691,
-									"width": 322.44140625,
+									"width": 344.2275390625,
 									"height": 40,
 									"stereotypeLabel": {
 										"$ref": "AAAAAAGCq16EOVOCKco="
@@ -3767,7 +3805,7 @@
 									"showShadow": false,
 									"left": 361,
 									"top": 731,
-									"width": 322.44140625,
+									"width": 344.2275390625,
 									"height": 10
 								},
 								{
@@ -3794,9 +3832,28 @@
 											"showShadow": false,
 											"left": 366,
 											"top": 746,
-											"width": 312.44140625,
+											"width": 334.2275390625,
 											"height": 14,
-											"text": "+getTimetableByCourseId(id: int): CourseEntity",
+											"text": "+getTimetableListByCourseId(id: int): CourseEntity",
+											"horizontalAlignment": 0
+										},
+										{
+											"_type": "UMLOperationView",
+											"_id": "AAAAAAGCrTnjGlPCiFM=",
+											"_parent": {
+												"$ref": "AAAAAAGCq16EOVOHSbU="
+											},
+											"model": {
+												"$ref": "AAAAAAGCrTnjEVO/UQ4="
+											},
+											"fillColor": "#777676",
+											"font": "Arial;14;0",
+											"showShadow": false,
+											"left": 366,
+											"top": 762,
+											"width": 334.2275390625,
+											"height": 14,
+											"text": "+getTeacherByCourseId(id: int): CourseEntity",
 											"horizontalAlignment": 0
 										}
 									],
@@ -3805,8 +3862,8 @@
 									"showShadow": false,
 									"left": 361,
 									"top": 741,
-									"width": 322.44140625,
-									"height": 24
+									"width": 344.2275390625,
+									"height": 40
 								},
 								{
 									"_type": "UMLReceptionCompartmentView",
@@ -3848,7 +3905,7 @@
 											"fillColor": "#777676",
 											"font": "Arial;14;0",
 											"showShadow": false,
-											"left": 607.296875,
+											"left": 629.0830078125,
 											"top": 677,
 											"width": 80.14453125,
 											"height": 14,
@@ -3859,7 +3916,7 @@
 									"fillColor": "#777676",
 									"font": "Arial;14;0",
 									"showShadow": false,
-									"left": 602.296875,
+									"left": 624.0830078125,
 									"top": 672,
 									"width": 90.14453125,
 									"height": 24
@@ -3871,8 +3928,8 @@
 							"containerChangeable": true,
 							"left": 361,
 							"top": 672,
-							"width": 332.44140625,
-							"height": 95,
+							"width": 354.2275390625,
+							"height": 109,
 							"nameCompartment": {
 								"$ref": "AAAAAAGCq16EOVOBWBg="
 							},
@@ -4015,7 +4072,7 @@
 									"font": "Arial;14;0",
 									"showShadow": false,
 									"left": 505,
-									"top": 826,
+									"top": 833,
 									"height": 14,
 									"alpha": 1.5707963267948966,
 									"distance": 15,
@@ -4038,7 +4095,7 @@
 									"font": "Arial;14;0",
 									"showShadow": false,
 									"left": 490,
-									"top": 826,
+									"top": 833,
 									"height": 14,
 									"alpha": 1.5707963267948966,
 									"distance": 30,
@@ -4061,7 +4118,7 @@
 									"font": "Arial;14;0",
 									"showShadow": false,
 									"left": 534,
-									"top": 827,
+									"top": 834,
 									"height": 14,
 									"alpha": -1.5707963267948966,
 									"distance": 15,
@@ -4080,7 +4137,7 @@
 							"tail": {
 								"$ref": "AAAAAAGCq1vYF1L9cek="
 							},
-							"points": "520:902;520:766",
+							"points": "520:902;520:780",
 							"showVisibility": true,
 							"nameLabel": {
 								"$ref": "AAAAAAGCq2G+JlPX0Zc="
@@ -4123,7 +4180,7 @@
 											"showShadow": false,
 											"left": 974,
 											"top": 791,
-											"width": 300,
+											"width": 321.7861328125,
 											"height": 14,
 											"text": "«interface»"
 										},
@@ -4138,7 +4195,7 @@
 											"showShadow": false,
 											"left": 974,
 											"top": 807,
-											"width": 300,
+											"width": 321.7861328125,
 											"height": 14,
 											"text": "GroupDao"
 										},
@@ -4179,7 +4236,7 @@
 									"showShadow": false,
 									"left": 969,
 									"top": 786,
-									"width": 310,
+									"width": 331.7861328125,
 									"height": 40,
 									"stereotypeLabel": {
 										"$ref": "AAAAAAGCq2QH91Pt4Oc="
@@ -4208,7 +4265,7 @@
 									"showShadow": false,
 									"left": 969,
 									"top": 826,
-									"width": 310,
+									"width": 331.7861328125,
 									"height": 10
 								},
 								{
@@ -4235,9 +4292,9 @@
 											"showShadow": false,
 											"left": 974,
 											"top": 841,
-											"width": 300,
+											"width": 321.7861328125,
 											"height": 14,
-											"text": "+getTimetableByGroupId(id: int): GroupEntity",
+											"text": "+getTimetableListByGroupId(id: int): GroupEntity",
 											"horizontalAlignment": 0
 										},
 										{
@@ -4254,9 +4311,9 @@
 											"showShadow": false,
 											"left": 974,
 											"top": 857,
-											"width": 300,
+											"width": 321.7861328125,
 											"height": 14,
-											"text": "+getStudentsByGroupId(id: int): GroupEntity",
+											"text": "+getStudentListByGroupId(id: int): GroupEntity",
 											"horizontalAlignment": 0
 										}
 									],
@@ -4265,7 +4322,7 @@
 									"showShadow": false,
 									"left": 969,
 									"top": 836,
-									"width": 310,
+									"width": 331.7861328125,
 									"height": 40
 								},
 								{
@@ -4308,7 +4365,7 @@
 											"fillColor": "#777676",
 											"font": "Arial;14;0",
 											"showShadow": false,
-											"left": 1209.076171875,
+											"left": 1230.8623046875,
 											"top": 772,
 											"width": 73.923828125,
 											"height": 14,
@@ -4319,7 +4376,7 @@
 									"fillColor": "#777676",
 									"font": "Arial;14;0",
 									"showShadow": false,
-									"left": 1204.076171875,
+									"left": 1225.8623046875,
 									"top": 767,
 									"width": 83.923828125,
 									"height": 24
@@ -4331,7 +4388,7 @@
 							"containerChangeable": true,
 							"left": 969,
 							"top": 767,
-							"width": 320,
+							"width": 341.7861328125,
 							"height": 109,
 							"nameCompartment": {
 								"$ref": "AAAAAAGCq2QH91Psnp4="
@@ -4820,7 +4877,7 @@
 							"_parent": {
 								"$ref": "AAAAAAGCbiU8m65TzQk="
 							},
-							"name": "getCoursesByTeacherId",
+							"name": "getCourseListByTeacherId",
 							"parameters": [
 								{
 									"_type": "UMLParameter",
@@ -4837,7 +4894,37 @@
 									"_parent": {
 										"$ref": "AAAAAAGCpt3SiR0dz9o="
 									},
-									"type": "int",
+									"type": {
+										"$ref": "AAAAAAGCptIO9xyLy0g="
+									},
+									"direction": "return"
+								}
+							]
+						},
+						{
+							"_type": "UMLOperation",
+							"_id": "AAAAAAGCrTggo1Oz3Pw=",
+							"_parent": {
+								"$ref": "AAAAAAGCbiU8m65TzQk="
+							},
+							"name": "getTimetableListByTeacherId",
+							"parameters": [
+								{
+									"_type": "UMLParameter",
+									"_id": "AAAAAAGCrTjqblO6W18=",
+									"_parent": {
+										"$ref": "AAAAAAGCrTggo1Oz3Pw="
+									},
+									"name": "id",
+									"type": "int"
+								},
+								{
+									"_type": "UMLParameter",
+									"_id": "AAAAAAGCrTjqblO7kvI=",
+									"_parent": {
+										"$ref": "AAAAAAGCrTggo1Oz3Pw="
+									},
+									"type": "TeacherEnttity",
 									"direction": "return"
 								}
 							]
@@ -4956,6 +5043,36 @@
 									"_id": "AAAAAAGCbk5xTrD9xPk=",
 									"_parent": {
 										"$ref": "AAAAAAGCbk33ybD1wPk="
+									},
+									"type": {
+										"$ref": "AAAAAAGCpvAAvR6k/iI="
+									},
+									"direction": "return"
+								}
+							]
+						},
+						{
+							"_type": "UMLOperation",
+							"_id": "AAAAAAGCrUBnylPQrVQ=",
+							"_parent": {
+								"$ref": "AAAAAAGCbiuc2a8vPPA="
+							},
+							"name": "getTimetableListByStudentId",
+							"parameters": [
+								{
+									"_type": "UMLParameter",
+									"_id": "AAAAAAGCrUDMAVPXF1c=",
+									"_parent": {
+										"$ref": "AAAAAAGCrUBnylPQrVQ="
+									},
+									"name": "id",
+									"type": "int"
+								},
+								{
+									"_type": "UMLParameter",
+									"_id": "AAAAAAGCrUDMAVPYAu4=",
+									"_parent": {
+										"$ref": "AAAAAAGCrUBnylPQrVQ="
 									},
 									"type": {
 										"$ref": "AAAAAAGCpvAAvR6k/iI="
@@ -5604,7 +5721,7 @@
 							"_parent": {
 								"$ref": "AAAAAAGCpuLxLB1txyU="
 							},
-							"name": "getTimetableByStudentId",
+							"name": "getCourseByTimetableId",
 							"parameters": [
 								{
 									"_type": "UMLParameter",
@@ -5621,7 +5738,9 @@
 									"_parent": {
 										"$ref": "AAAAAAGCq2qczVSG2JA="
 									},
-									"type": "List<TimetabelEntity>",
+									"type": {
+										"$ref": "AAAAAAGCpuDB0B0zlXk="
+									},
 									"direction": "return"
 								}
 							]
@@ -5632,7 +5751,7 @@
 							"_parent": {
 								"$ref": "AAAAAAGCpuLxLB1txyU="
 							},
-							"name": "getTimetableByTeacherId",
+							"name": "getGroupByTimetableId",
 							"parameters": [
 								{
 									"_type": "UMLParameter",
@@ -5649,7 +5768,9 @@
 									"_parent": {
 										"$ref": "AAAAAAGCq2uUeFSRiro="
 									},
-									"type": "List<TimetableEntity>",
+									"type": {
+										"$ref": "AAAAAAGCpuDB0B0zlXk="
+									},
 									"direction": "return"
 								}
 							]
@@ -5936,7 +6057,7 @@
 							"_parent": {
 								"$ref": "AAAAAAGCq16EOVN+8kw="
 							},
-							"name": "getTimetableByCourseId",
+							"name": "getTimetableListByCourseId",
 							"parameters": [
 								{
 									"_type": "UMLParameter",
@@ -5953,7 +6074,39 @@
 									"_parent": {
 										"$ref": "AAAAAAGCq18IlVOpyDw="
 									},
-									"type": "CourseEntity",
+									"type": {
+										"$ref": "AAAAAAGCq3MSD1pgM9w="
+									},
+									"direction": "return"
+								}
+							]
+						},
+						{
+							"_type": "UMLOperation",
+							"_id": "AAAAAAGCrTnjEVO/UQ4=",
+							"_parent": {
+								"$ref": "AAAAAAGCq16EOVN+8kw="
+							},
+							"name": "getTeacherByCourseId",
+							"parameters": [
+								{
+									"_type": "UMLParameter",
+									"_id": "AAAAAAGCrTpB6VPGrfc=",
+									"_parent": {
+										"$ref": "AAAAAAGCrTnjEVO/UQ4="
+									},
+									"name": "id",
+									"type": "int"
+								},
+								{
+									"_type": "UMLParameter",
+									"_id": "AAAAAAGCrTpB6lPH1GM=",
+									"_parent": {
+										"$ref": "AAAAAAGCrTnjEVO/UQ4="
+									},
+									"type": {
+										"$ref": "AAAAAAGCq3MSD1pgM9w="
+									},
 									"direction": "return"
 								}
 							]
@@ -6004,7 +6157,7 @@
 							"_parent": {
 								"$ref": "AAAAAAGCq2QH91Ppib0="
 							},
-							"name": "getTimetableByGroupId",
+							"name": "getTimetableListByGroupId",
 							"parameters": [
 								{
 									"_type": "UMLParameter",
@@ -6021,7 +6174,9 @@
 									"_parent": {
 										"$ref": "AAAAAAGCq2SthVQVaWA="
 									},
-									"type": "GroupEntity",
+									"type": {
+										"$ref": "AAAAAAGCq3NMQVpoBgk="
+									},
 									"direction": "return"
 								}
 							]
@@ -6032,7 +6187,7 @@
 							"_parent": {
 								"$ref": "AAAAAAGCq2QH91Ppib0="
 							},
-							"name": "getStudentsByGroupId",
+							"name": "getStudentListByGroupId",
 							"parameters": [
 								{
 									"_type": "UMLParameter",
@@ -6049,7 +6204,9 @@
 									"_parent": {
 										"$ref": "AAAAAAGCq2UO/lQgT+U="
 									},
-									"type": "GroupEntity",
+									"type": {
+										"$ref": "AAAAAAGCq3NMQVpoBgk="
+									},
 									"direction": "return"
 								}
 							]
