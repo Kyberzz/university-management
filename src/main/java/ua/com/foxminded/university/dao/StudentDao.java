@@ -4,5 +4,5 @@ import ua.com.foxminded.university.entity.StudentEntity;
 
 public interface StudentDao extends GenericDao<StudentEntity> {
     
-    public T getStudentById(int id);
+    public StudentEntity getGroupByStudentId(int id);
 }

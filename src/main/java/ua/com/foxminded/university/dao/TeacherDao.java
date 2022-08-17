@@ -4,5 +4,5 @@ import ua.com.foxminded.university.entity.TeacherEntity;
 
 public interface TeacherDao extends GenericDao<TeacherEntity> {
     
-    public TeacherEntity getCoursesByTeacherId(int id);
+    public TeacherEntity getCourseListByTeacherId(int id);
 }
