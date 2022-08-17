@@ -1,6 +1,8 @@
 package ua.com.foxminded.university.dao;
 
-public interface StudentDao<T> {
+import ua.com.foxminded.university.entity.StudentEntity;
+
+public interface StudentDao extends GenericDao<StudentEntity> {
     
     public T getStudentById(int id);
 }

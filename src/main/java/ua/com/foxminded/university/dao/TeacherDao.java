@@ -1,6 +1,8 @@
 package ua.com.foxminded.university.dao;
 
-public interface TeacherDao<T> {
+import ua.com.foxminded.university.entity.TeacherEntity;
+
+public interface TeacherDao extends GenericDao<TeacherEntity> {
     
-    public T getTeacherById(int id);
+    public TeacherEntity getCoursesByTeacherId(int id);
 }

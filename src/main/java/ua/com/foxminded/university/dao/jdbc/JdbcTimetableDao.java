@@ -12,7 +12,7 @@ import ua.com.foxminded.university.entity.GroupEntity;
 import ua.com.foxminded.university.entity.TimetableEntity;
 import ua.com.foxminded.university.entity.WeekDayEntity;
 
-public class JdbcTimetableDao implements TimetableDao<List<TimetableEntity>> {
+public class JdbcTimetableDao implements TimetableDao {
     
     private static final String GET_TIMETABLE_BY_TEACHER_ID = "getTimetableByTeacherId";
     private static final String WEEK_DAY = "week_day";
@@ -31,6 +31,9 @@ public class JdbcTimetableDao implements TimetableDao<List<TimetableEntity>> {
         this.jdbcTemplate = jdbcTemplate;
         this.timetableQueries = timetableQueries;
     }
+    
+    
+    
 
     @Override
     public List<TimetableEntity> getTimetableByStudentId(int id) {
@@ -73,4 +76,14 @@ public class JdbcTimetableDao implements TimetableDao<List<TimetableEntity>> {
                     return timetableList;
                 });
     }
+    
+    public T getById(int id);
+    public int update(T entity);
+    public int deleteById(int id);
+    
+    @Override
+    public int insert(TimetableEntity entity) {
+        return 
+        
+    } 
 }

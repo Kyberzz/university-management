@@ -8,6 +8,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -17,6 +19,7 @@ import ua.com.foxminded.university.entity.StudentEntity;
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration("/test-config.xml")
 @ExtendWith(MockitoExtension.class)
+@DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 class JdbcStudentDaoTest {
     private static final String LAST_NAME = "Smith";
     private static final String FIRST_NAME = "Alex";
