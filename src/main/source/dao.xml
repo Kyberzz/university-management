@@ -14,6 +14,10 @@
 		http://www.springframework.org/schema/util
 		https://www.springframework.org/schema/util/spring-util.xsd">
 		
+	<bean id="groupDao" class="ua.com.foxminded.university.dao.jdbc.JdbcGroupDao">
+		<constructor-arg ref="jdbcTemplate"/>
+		<constructor-arg ref="groupQueries"/>
+	</bean>
 	<bean id="courseDao" class="ua.com.foxminded.university.dao.jdbc.JdbcCourseDao">
 		<constructor-arg ref="jdbcTemplate"/>
 		<constructor-arg ref="courseQuries"/>
@@ -33,7 +37,6 @@
 	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
 		<constructor-arg ref="dataSource"/>
 	</bean>
-	
 	<jdbc:initialize-database data-source="dataSource">
 		<jdbc:script location="classpath:db-schema.sql"/>
 		<jdbc:script location="classpath:test-db-data.sql"/>
@@ -43,6 +46,9 @@
 		<property name="url" value="${jdbc.url}" />
 		<property name="username" value="${jdbc.username}" />
 		<property name="password" value="${jdbc.password}" />
+	</bean>
+	<bean id="groupQueries" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+		<property name="location" value="/group-queries.properties"/>
 	</bean>
 	<bean id="courseQuries" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
 		<property name="location" value="/course-queries.properties"/>
