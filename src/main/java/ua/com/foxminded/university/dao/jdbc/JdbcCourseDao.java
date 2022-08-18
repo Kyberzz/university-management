@@ -39,12 +39,13 @@ public class JdbcCourseDao implements CourseDao {
         this.jdbcTemplate = jdbcTemplate;
     }
     
-    public CourseEntity getTimetablesByCourseId(int id) {
+    public CourseEntity getTimetableListByCourseId(int id) {
         return jdbcTemplate.query(courseQueries.getProperty(GET_TIMETABLES_BY_COURSE_ID), 
                                   preparedStatement -> preparedStatement.setInt(1, id),
                                   resultSet -> {
                                       List<TimetableEntity> timetableList = new ArrayList<>();
                                       CourseEntity course = new CourseEntity();
+                                      TimetableEntity timetable = new TimetableEntity();
                                       
                                       while(resultSet.next()) {
                                           if(resultSet.getInt(COURSE_ID) != course.getId()) {
@@ -53,7 +54,7 @@ public class JdbcCourseDao implements CourseDao {
                                               course.setName(resultSet.getString(COURSE_NAME));
                                               course.setDescription(resultSet.getString(COURSE_DESCRIPTION));
                                           }
-                                          TimetableEntity timetable = new TimetableEntity();
+                                          
                                           timetable.setId(resultSet.getInt(TIMETABLE_ID));
                                           timetable.setGroup(new GroupEntity(resultSet.getInt(GROUP_ID)));
                                           timetable.setCourse(course);

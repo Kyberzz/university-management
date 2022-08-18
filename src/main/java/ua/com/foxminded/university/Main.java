@@ -1,15 +1,12 @@
 package ua.com.foxminded.university;
 
-import java.util.List;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import ua.com.foxminded.university.dao.jdbc.JdbcStudentDao;
-import ua.com.foxminded.university.dao.jdbc.JdbcTeacherDao;
 import ua.com.foxminded.university.dao.jdbc.JdbcTimetableDao;
 import ua.com.foxminded.university.entity.StudentEntity;
-import ua.com.foxminded.university.entity.TeacherEntity;
 import ua.com.foxminded.university.entity.TimetableEntity;
 
 public class Main {
@@ -18,15 +15,11 @@ public class Main {
         
         ApplicationContext context = new ClassPathXmlApplicationContext("dao.xml");
         JdbcStudentDao studentDao = context.getBean("studentDao", JdbcStudentDao.class);
-        StudentEntity student = studentDao.getStudentById(1);
+        StudentEntity student = studentDao.getById(1);
+        JdbcTimetableDao timetableDao = context.getBean("timetableDao", JdbcTimetableDao.class);
+        TimetableEntity timetable = timetableDao.getById(1);
+        System.out.println(timetable.toString());
         System.out.println(student.toString());
         
-        JdbcTimetableDao timetableDao = context.getBean("timetableDao", JdbcTimetableDao.class);
-        List<TimetableEntity> timetableList = timetableDao.getTimetableByStudentId(1);
-        timetableList.stream().forEach(timetable -> System.out.println(timetable.toString()));
-        
-        JdbcTeacherDao teacherDao = context.getBean("teacherDao", JdbcTeacherDao.class);
-        TeacherEntity teacher = teacherDao.getTeacherById(1);
-        System.out.println(teacher.toString());
     }
 }

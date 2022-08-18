@@ -36,27 +36,32 @@ public class JdbcGroupDao implements GroupDao {
     private Properties groupQueries;
     private JdbcTemplate jdbcTemplate;
     
+    public JdbcGroupDao(Properties groupQueries, JdbcTemplate jdbcTemplate) {
+        this.groupQueries = groupQueries;
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
     public GroupEntity getTimetableListByGroupId(int id) {
         return jdbcTemplate.query(groupQueries.getProperty(GET_TIMETABLE_LIST_BY_GROUP_ID), 
                                   preparedStatement -> preparedStatement.setInt(1, id),
                                   resultSet -> {
                                       List<TimetableEntity> timetableList = new ArrayList<>();
                                       GroupEntity group = new GroupEntity();
+                                      TimetableEntity timetable = new TimetableEntity();
                                       
                                       while(resultSet.next()) {
                                           if (resultSet.getInt(GROUP_ID) != group.getId()) {
                                               group.setId(resultSet.getInt(GROUP_ID));
                                               group.setName(resultSet.getString(GROUP_NAME));
+                                              timetable.setGroup(group);
                                           }
                                           
-                                          TimetableEntity timetable = new TimetableEntity();
                                           timetable.setId(resultSet.getInt(TIMETABLE_ID));
                                           timetable.setCourse(new CourseEntity(resultSet.getInt(COURSE_ID)));
                                           timetable.setStartTime(resultSet.getLong(START_TIME));
                                           timetable.setEndTime(resultSet.getLong(END_TIME));
                                           timetable.setDescription(resultSet.getString(TIMETABLE_DESCRIPTION));
                                           timetable.setWeekDay(WeekDayEntity.valueOf(resultSet.getString(WEEK_DAY)));
-                                          timetable.setGroup(group);
                                           timetableList.add(timetable);
                                           group.setTimetableList(timetableList);
                                       }
@@ -70,18 +75,18 @@ public class JdbcGroupDao implements GroupDao {
                                   resultSet -> {
                                       List<StudentEntity> studentList = new ArrayList<>();
                                       GroupEntity group = new GroupEntity();
+                                      StudentEntity student = new StudentEntity();
                                       
                                       while(resultSet.next()) {
                                           if (resultSet.getInt(GROUP_ID) != group.getId()) {
                                               group.setId(resultSet.getInt(GROUP_ID));
                                               group.setName(resultSet.getString(GROUP_NAME));
+                                              student.setGroup(group);
                                           }
                                           
-                                          StudentEntity student = new StudentEntity();
                                           student.setId(resultSet.getInt(STUDENT_ID));
                                           student.setFirstName(resultSet.getString(STUDENT_FIRST_NAME));
                                           student.setLastName(resultSet.getString(LAST_NAME));
-                                          student.setGroup(group);
                                           studentList.add(student);
                                           group.setStudentList(studentList);
                                       }
