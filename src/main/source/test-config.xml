@@ -9,9 +9,9 @@
 		http://www.springframework.org/schema/beans
 		https://www.springframework.org/schema/beans/spring-beans.xsd">
 	
-	<bean id="properties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+	<bean id="studentQueries" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
 		<property name="location">
-			<value>/student-queries.properties</value>
+				<value>classpath:student-queries.properties</value>
 		</property>
 	</bean>
 	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
