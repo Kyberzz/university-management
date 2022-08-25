@@ -37,5 +37,9 @@ public class Boot {
         JdbcGroupDao groupDao = context.getBean("groupDao", JdbcGroupDao.class);
         GroupEntity group = groupDao.getById(1);
         System.out.println(group.toString());
+        
+        JdbcStudentDao studentDao = context.getBean("studentDao", JdbcStudentDao.class);
+        StudentEntity student = studentDao.getGroupByStudentId(1);
+        System.out.println(student.toString());
     }
 }

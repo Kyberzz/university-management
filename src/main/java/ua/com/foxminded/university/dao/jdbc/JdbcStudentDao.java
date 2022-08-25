@@ -10,25 +10,25 @@ import ua.com.foxminded.university.entity.StudentEntity;
 
 public class JdbcStudentDao implements StudentDao {
     
-    private static final String GROUP_NAME = "group_name";
-    private static final String GET_GROUP_BY_STUDENT_ID = "getGroupByStudentId";
-    private static final String INSERT = "insert";
-    private static final String GET_BY_ID = "getById";
-    private static final String UPDATE = "update";
     private static final String DELETE_BY_ID = "deleteById";
+    private static final String UPDATE = "update";
+    private static final String GET_BY_ID = "getById";
+    private static final String INSERT = "insert";
+    private static final String GET_GROUP_BY_STUDENT_ID = "getGroupByStudentId";
+    private static final String GROUP_NAME = "group_name";
     private static final String GROUP_ID = "group_id";
     private static final String LAST_NAME = "last_name";
     private static final String FIRST_NAME = "first_name";
     private static final String STUDENT_ID = "id";
     
-    private Properties studentQueries;
     private JdbcTemplate jdbcTemplate;
-    
+    private Properties studentQueries;
+
     public JdbcStudentDao(JdbcTemplate jdbcTemplate, Properties studentQueries) {
         this.jdbcTemplate = jdbcTemplate;
         this.studentQueries = studentQueries;
     }
-    
+
     public StudentEntity getGroupByStudentId(int id) {
         return jdbcTemplate.query(studentQueries.getProperty(GET_GROUP_BY_STUDENT_ID),
                                   preparedStatement -> preparedStatement.setInt(1, id),

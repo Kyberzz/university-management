@@ -1,6 +1,7 @@
 package ua.com.foxminded.university.dao;
 
 import java.io.IOException;
+import java.util.Properties;
 
 import javax.sql.DataSource;
 
@@ -21,7 +22,9 @@ import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 
 import ua.com.foxminded.university.dao.jdbc.JdbcCourseDao;
 import ua.com.foxminded.university.dao.jdbc.JdbcGroupDao;
+import ua.com.foxminded.university.dao.jdbc.JdbcStudentDao;
 
+@PropertySource("/student-queries.properties")
 @PropertySource({"/jdbc.properties", "/group-queries.properties"})
 @Configuration
 public class DaoConfig {
@@ -38,6 +41,15 @@ public class DaoConfig {
     @Value("/test-db-data.sql")
     private Resource dataScript;
     
+    @Value("/student-queries.properties")
+    private Resource studentQueriesResource;
+    
+    
+    @Bean
+    public StudentDao studentDao() throws IOException {
+        return new JdbcStudentDao(jdbcTemplate(), studentQueries());
+    }
+    
     @Bean
     public GroupDao groupDao() {
         return new JdbcGroupDao(environment, jdbcTemplate());
@@ -45,11 +57,18 @@ public class DaoConfig {
     
     @Bean
     public CourseDao courseDao() throws IOException {
-        return new JdbcCourseDao(getPropertiesFactoryBean().getObject(), jdbcTemplate());
+        return new JdbcCourseDao(coursePropertiesFactoryBean().getObject(), jdbcTemplate());
     }
     
     @Bean
-    public PropertiesFactoryBean getPropertiesFactoryBean() {
+    public Properties studentQueries() throws IOException {
+        Properties studentQueries = new Properties();
+        studentQueries.load(studentQueriesResource.getInputStream());
+        return studentQueries;
+    }
+    
+    @Bean
+    public PropertiesFactoryBean coursePropertiesFactoryBean() {
         PropertiesFactoryBean propertiesFactoryBean = new PropertiesFactoryBean();
         propertiesFactoryBean.setLocation(new ClassPathResource("/course-queries.properties"));
         return propertiesFactoryBean;
@@ -58,19 +77,19 @@ public class DaoConfig {
     
     @Bean
     public JdbcTemplate jdbcTemplate() {
-        return new JdbcTemplate(createDataSource());
+        return new JdbcTemplate(dataSource());
     }
     
     @Bean
     public DataSourceInitializer dataSourceInitializer(DataSource dataSource) {
         DataSourceInitializer initializer = new DataSourceInitializer();
-        initializer.setDataSource(createDataSource());
-        initializer.setDatabasePopulator(createDatabasePopulator());
+        initializer.setDataSource(dataSource());
+        initializer.setDatabasePopulator(databasePopulator());
         return initializer;
     }
     
     @Bean
-    public DataSource createDataSource() {
+    public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName(environment.getProperty(DRIVER_CLASS_NAME));
         dataSource.setUrl( environment.getProperty(URL));
@@ -79,7 +98,7 @@ public class DaoConfig {
         return dataSource;
     }
     
-    private DatabasePopulator createDatabasePopulator() {
+    private DatabasePopulator databasePopulator() {
         ResourceDatabasePopulator databasePopulator = new ResourceDatabasePopulator();
         databasePopulator.setContinueOnError(true);
         databasePopulator.addScript(new ClassPathResource(SCHEMA_FILENAME));
