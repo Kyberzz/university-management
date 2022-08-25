@@ -20,8 +20,9 @@ import org.springframework.jdbc.datasource.init.DatabasePopulator;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 
 import ua.com.foxminded.university.dao.jdbc.JdbcCourseDao;
+import ua.com.foxminded.university.dao.jdbc.JdbcGroupDao;
 
-@PropertySource("/jdbc.properties")
+@PropertySource({"/jdbc.properties", "/group-queries.properties"})
 @Configuration
 public class DaoConfig {
     
@@ -36,6 +37,11 @@ public class DaoConfig {
     
     @Value("/test-db-data.sql")
     private Resource dataScript;
+    
+    @Bean
+    public GroupDao groupDao() {
+        return new JdbcGroupDao(environment, jdbcTemplate());
+    }
     
     @Bean
     public CourseDao courseDao() throws IOException {

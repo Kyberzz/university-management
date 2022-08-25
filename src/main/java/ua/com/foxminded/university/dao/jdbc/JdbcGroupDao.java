@@ -2,8 +2,8 @@ package ua.com.foxminded.university.dao.jdbc;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
+import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import ua.com.foxminded.university.dao.GroupDao;
@@ -33,10 +33,10 @@ public class JdbcGroupDao implements GroupDao {
     private static final String UPDATE = "update";
     private static final String DELETE_BY_ID = "deleteById";
     
-    private Properties groupQueries;
+    private Environment groupQueries;
     private JdbcTemplate jdbcTemplate;
     
-    public JdbcGroupDao(Properties groupQueries, JdbcTemplate jdbcTemplate) {
+    public JdbcGroupDao(Environment groupQueries, JdbcTemplate jdbcTemplate) {
         this.groupQueries = groupQueries;
         this.jdbcTemplate = jdbcTemplate;
     }

@@ -7,9 +7,11 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import ua.com.foxminded.university.dao.DaoConfig;
 import ua.com.foxminded.university.dao.jdbc.JdbcCourseDao;
+import ua.com.foxminded.university.dao.jdbc.JdbcGroupDao;
 import ua.com.foxminded.university.dao.jdbc.JdbcStudentDao;
 import ua.com.foxminded.university.dao.jdbc.JdbcTimetableDao;
 import ua.com.foxminded.university.entity.CourseEntity;
+import ua.com.foxminded.university.entity.GroupEntity;
 import ua.com.foxminded.university.entity.StudentEntity;
 import ua.com.foxminded.university.entity.TimetableEntity;
 
@@ -31,5 +33,9 @@ public class Boot {
         JdbcCourseDao courseDao = context.getBean("courseDao", JdbcCourseDao.class);
         CourseEntity course = courseDao.getById(1);
         System.out.println(course.toString());
+        
+        JdbcGroupDao groupDao = context.getBean("groupDao", JdbcGroupDao.class);
+        GroupEntity group = groupDao.getById(1);
+        System.out.println(group.toString());
     }
 }
