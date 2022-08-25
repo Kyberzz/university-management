@@ -8,6 +8,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
@@ -18,7 +20,7 @@ import ua.com.foxminded.university.entity.GroupEntity;
 import ua.com.foxminded.university.entity.StudentEntity;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration("/test-config.xml")
+@ContextConfiguration(classes = JdbcDaoConfig.class)
 @ExtendWith(MockitoExtension.class)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 class JdbcStudentDaoTest {
@@ -41,13 +43,18 @@ class JdbcStudentDaoTest {
     @Autowired
     Properties studentQueries;
     
-    @Autowired
-    Properties testStudentQueries;
+    @Value("${test_insert}")
+    private String test_insert;
     
     
 //    public int update(T entity);
   //  public int deleteById(int id);
-  //  public StudentEntity getGroupByStudentId(int id);
+    @Test
+    void getGroupByStudentId_GettingDatabaseData_CorrectReceivedData() {
+        JdbcStudentDao studentDao = new JdbcStudentDao(jdbcTemplate, studentQueries);
+        
+        
+    }
     
     @Test
     void insert_InsertingStudentToDatabase_CorrectInsertedData() {
@@ -58,8 +65,7 @@ class JdbcStudentDaoTest {
         student.setLastName(LAST_NAME_STUDENT);
         student.setGroup(new GroupEntity(GROUP_ID_NUMBER));
         studentDao.insert(student);
-        Map<String,Object> databaseStudent = jdbcTemplate.queryForMap(testStudentQueries
-                .getProperty(TEST_INSERT));
+        Map<String,Object> databaseStudent = jdbcTemplate.queryForMap(test_insert);
         assertEquals(student.getFirstName(), databaseStudent.get(FIRST_NAME).toString());
         assertEquals(student.getLastName(), databaseStudent.get(LAST_NAME).toString());
         assertEquals(student.getGroup().getId(), databaseStudent.get(GROUP_ID));

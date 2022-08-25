@@ -2,6 +2,7 @@ package ua.com.foxminded.university.dao.jdbc;
 
 import java.util.Properties;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import ua.com.foxminded.university.dao.StudentDao;
@@ -28,7 +29,7 @@ public class JdbcStudentDao implements StudentDao {
         this.jdbcTemplate = jdbcTemplate;
         this.studentQueries = studentQueries;
     }
-
+    
     public StudentEntity getGroupByStudentId(int id) {
         return jdbcTemplate.query(studentQueries.getProperty(GET_GROUP_BY_STUDENT_ID),
                                   preparedStatement -> preparedStatement.setInt(1, id),
