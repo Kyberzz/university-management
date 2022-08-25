@@ -1,4 +1,4 @@
-package ua.com.foxminded.university.dao;
+package ua.com.foxminded.university.dao.jdbc;
 
 import java.io.IOException;
 import java.util.Properties;
@@ -20,14 +20,16 @@ import org.springframework.jdbc.datasource.init.DataSourceInitializer;
 import org.springframework.jdbc.datasource.init.DatabasePopulator;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 
-import ua.com.foxminded.university.dao.jdbc.JdbcCourseDao;
-import ua.com.foxminded.university.dao.jdbc.JdbcGroupDao;
-import ua.com.foxminded.university.dao.jdbc.JdbcStudentDao;
+import ua.com.foxminded.university.dao.CourseDao;
+import ua.com.foxminded.university.dao.GroupDao;
+import ua.com.foxminded.university.dao.StudentDao;
+import ua.com.foxminded.university.dao.TeacherDao;
+import ua.com.foxminded.university.dao.TimetableDao;
 
 @PropertySource("/student-queries.properties")
 @PropertySource({"/jdbc.properties", "/group-queries.properties"})
 @Configuration
-public class DaoConfig {
+public class JdbcDaoConfig {
     
     private static final String SCHEMA_FILENAME = "db-schema.sql";
     private static final String PASSWORD = "jdbc.password";
@@ -44,7 +46,23 @@ public class DaoConfig {
     @Value("/student-queries.properties")
     private Resource studentQueriesResource;
     
+    @Value("/teacher-queries.properties")
+    private Resource teacherQueriesResource;
     
+    @Value("/timetable-queries.properties")
+    private Resource timetalbeQuriesResource;
+    
+    @Bean
+    public TimetableDao timetableDao() throws IOException {
+        return new JdbcTimetableDao(jdbcTemplate(), timetableQueries());
+    }
+    
+    @Bean
+    public TeacherDao teacherDao() throws IOException {
+        Properties teacherQueries = teacherPropertiesFactoryBean().getObject();
+        return new JdbcTeacherDao(teacherQueries, jdbcTemplate());
+    }
+
     @Bean
     public StudentDao studentDao() throws IOException {
         return new JdbcStudentDao(jdbcTemplate(), studentQueries());
@@ -58,6 +76,20 @@ public class DaoConfig {
     @Bean
     public CourseDao courseDao() throws IOException {
         return new JdbcCourseDao(coursePropertiesFactoryBean().getObject(), jdbcTemplate());
+    }
+    
+    @Bean 
+    public Properties timetableQueries() throws IOException {
+        Properties timetableQueries = new Properties();
+        timetableQueries.load(timetalbeQuriesResource.getInputStream());
+        return timetableQueries;
+    }
+    
+    @Bean
+    public PropertiesFactoryBean teacherPropertiesFactoryBean() {
+        PropertiesFactoryBean teacherPropertiesFactoryBean = new PropertiesFactoryBean();
+        teacherPropertiesFactoryBean.setLocation(teacherQueriesResource);
+        return teacherPropertiesFactoryBean;
     }
     
     @Bean
