@@ -8,18 +8,26 @@ import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.io.Resource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 
-@PropertySource("/test-student-queries.properties")
 @Configuration
 public class JdbcDaoConfigTest {
     
     @Value("/student-queries.properties")
     private Resource studentQueriesResource;
+    
+    @Value("/test-student-queries.properties")
+    private Resource testStudentQueriesResource;
+    
+    @Bean
+    public Properties testStudentQueries() throws IOException {
+        Properties testStudentQueries = new Properties();
+        testStudentQueries.load(testStudentQueriesResource.getInputStream());
+        return testStudentQueries;
+    }
     
     @Bean 
     public Properties studentQueries() throws IOException {

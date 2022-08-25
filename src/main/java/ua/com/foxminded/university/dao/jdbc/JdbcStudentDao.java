@@ -2,7 +2,6 @@ package ua.com.foxminded.university.dao.jdbc;
 
 import java.util.Properties;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import ua.com.foxminded.university.dao.StudentDao;

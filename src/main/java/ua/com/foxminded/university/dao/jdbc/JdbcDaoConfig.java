@@ -26,7 +26,7 @@ import ua.com.foxminded.university.dao.StudentDao;
 import ua.com.foxminded.university.dao.TeacherDao;
 import ua.com.foxminded.university.dao.TimetableDao;
 
-@PropertySource({"/jdbc.properties", "group-queries.properties"})
+@PropertySource({"/jdbc.properties", "/group-queries.properties"})
 @Configuration
 public class JdbcDaoConfig {
     
