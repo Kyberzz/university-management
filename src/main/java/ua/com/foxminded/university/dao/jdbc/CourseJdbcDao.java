@@ -2,9 +2,11 @@ package ua.com.foxminded.university.dao.jdbc;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
 import ua.com.foxminded.university.dao.CourseDao;
 import ua.com.foxminded.university.entity.CourseEntity;
@@ -13,6 +15,7 @@ import ua.com.foxminded.university.entity.TeacherEntity;
 import ua.com.foxminded.university.entity.TimetableEntity;
 import ua.com.foxminded.university.entity.WeekDayEntity;
 
+@Repository
 public class CourseJdbcDao implements CourseDao {
     
     private static final String WEEK_DAY = "week_day";
@@ -21,23 +24,21 @@ public class CourseJdbcDao implements CourseDao {
     private static final String START_TIME = "start_time";
     private static final String GROUP_ID = "group_id";
     private static final String TIMETABLE_ID = "timetable_id";
-    private static final String GET_TIMETABLES_BY_COURSE_ID = "getTimetablesByCourseId";
-    private static final String UPDATE = "update";
+    private static final String GET_TIMETABLES_BY_COURSE_ID = "course.getTimetablesByCourseId";
+    private static final String UPDATE = "course.update";
     private static final String COURSE_DESCRIPTION = "description";
     private static final String COURSE_NAME = "name";
     private static final String TEACHER_ID = "teacher_id";
     private static final String COURSE_ID = "id";
-    private static final String GET_BY_ID = "getById";
-    private static final String INSERT = "insert";
-    private static final String DELETE_BY_ID = "deleteById";
+    private static final String GET_BY_ID = "course.getById";
+    private static final String INSERT = "course.insert";
+    private static final String DELETE_BY_ID = "course.deleteById";
     
-    private Properties courseQueries;
+    @Autowired
+    private Environment courseQueries;
+    
+    @Autowired
     private JdbcTemplate jdbcTemplate;
-    
-    public CourseJdbcDao(Properties courseQueries, JdbcTemplate jdbcTemplate) {
-        this.courseQueries = courseQueries;
-        this.jdbcTemplate = jdbcTemplate;
-    }
     
     public CourseEntity getTimetableListByCourseId(int id) {
         return jdbcTemplate.query(courseQueries.getProperty(GET_TIMETABLES_BY_COURSE_ID), 

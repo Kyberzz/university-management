@@ -35,24 +35,25 @@ public class Boot {
          */
 
         ApplicationContext context = new AnnotationConfigApplicationContext(JdbcDaoConfig.class);
-        CourseDao courseDao = context.getBean("courseDao", CourseJdbcDao.class);
+       
+        CourseDao courseDao = context.getBean("courseJdbcDao", CourseJdbcDao.class);
         CourseEntity course = courseDao.getById(1);
         System.out.println(course.toString());
 
-        GroupDao groupDao = context.getBean("groupDao", GroupJdbcDao.class);
+        GroupDao groupDao = context.getBean("groupJdbcDao", GroupJdbcDao.class);
         GroupEntity group = groupDao.getById(1);
         System.out.println(group.toString());
 
-        StudentDao studentDao = context.getBean("studentDao", StudentJdbcDao.class);
+        StudentDao studentDao = context.getBean("studentJdbcDao", StudentJdbcDao.class);
         StudentEntity student = studentDao.getGroupByStudentId(1);
         System.out.println(student.toString());
 
-        TeacherDao teacherDao = context.getBean("teacherDao", TeacherJdbcDao.class);
+        TeacherDao teacherDao = context.getBean("teacherJdbcDao", TeacherJdbcDao.class);
         TeacherEntity teacher = teacherDao.getById(1);
         System.out.println(teacher.toString());
         
         
-        TimetableDao timetableDao = context.getBean("timetableDao", TimetableJdbcDao.class);
+        TimetableDao timetableDao = context.getBean("timetableJdbcDao", TimetableJdbcDao.class);
         TimetableEntity timetable = timetableDao.getById(1);
         System.out.println(timetable.toString());
     }

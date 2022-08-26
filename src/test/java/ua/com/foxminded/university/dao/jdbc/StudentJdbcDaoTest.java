@@ -21,7 +21,6 @@ import ua.com.foxminded.university.entity.StudentEntity;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = JdbcDaoTestConfig.class)
-@ExtendWith(MockitoExtension.class)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 class StudentJdbcDaoTest {
     

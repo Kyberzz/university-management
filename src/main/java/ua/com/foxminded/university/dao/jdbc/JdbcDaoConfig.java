@@ -1,14 +1,11 @@
 package ua.com.foxminded.university.dao.jdbc;
 
-import java.io.IOException;
-import java.util.Properties;
-
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.beans.factory.config.PropertiesFactoryBean;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
@@ -20,13 +17,8 @@ import org.springframework.jdbc.datasource.init.DataSourceInitializer;
 import org.springframework.jdbc.datasource.init.DatabasePopulator;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 
-import ua.com.foxminded.university.dao.CourseDao;
-import ua.com.foxminded.university.dao.GroupDao;
-import ua.com.foxminded.university.dao.StudentDao;
-import ua.com.foxminded.university.dao.TeacherDao;
-import ua.com.foxminded.university.dao.TimetableDao;
-
-@PropertySource({"/jdbc.properties", "/group-queries.properties"})
+@PropertySource({"/jdbc.properties", "/queries.properties"})
+@ComponentScan(basePackages = "ua.com.foxminded.university")
 @Configuration
 public class JdbcDaoConfig {
     
@@ -41,69 +33,6 @@ public class JdbcDaoConfig {
     
     @Value("/test-db-data.sql")
     private Resource dataScript;
-    
-    @Value("/student-queries.properties")
-    private Resource studentQueriesResource;
-    
-    @Value("/teacher-queries.properties")
-    private Resource teacherQueriesResource;
-    
-    @Value("/timetable-queries.properties")
-    private Resource timetalbeQuriesResource;
-    
-    @Bean
-    public TimetableDao timetableDao() throws IOException {
-        return new TimetableJdbcDao(jdbcTemplate(), timetableQueries());
-    }
-    
-    @Bean
-    public TeacherDao teacherDao() throws IOException {
-        Properties teacherQueries = teacherPropertiesFactoryBean().getObject();
-        return new TeacherJdbcDao(teacherQueries, jdbcTemplate());
-    }
-
-    @Bean
-    public StudentDao studentDao() throws IOException {
-        return new StudentJdbcDao(jdbcTemplate(), studentQueries());
-    }
-    
-    @Bean
-    public GroupDao groupDao() {
-        return new GroupJdbcDao(environment, jdbcTemplate());
-    }
-    
-    @Bean
-    public CourseDao courseDao() throws IOException {
-        return new CourseJdbcDao(coursePropertiesFactoryBean().getObject(), jdbcTemplate());
-    }
-    
-    @Bean 
-    public Properties timetableQueries() throws IOException {
-        Properties timetableQueries = new Properties();
-        timetableQueries.load(timetalbeQuriesResource.getInputStream());
-        return timetableQueries;
-    }
-    
-    @Bean
-    public PropertiesFactoryBean teacherPropertiesFactoryBean() {
-        PropertiesFactoryBean teacherPropertiesFactoryBean = new PropertiesFactoryBean();
-        teacherPropertiesFactoryBean.setLocation(teacherQueriesResource);
-        return teacherPropertiesFactoryBean;
-    }
-    
-    @Bean
-    public Properties studentQueries() throws IOException {
-        Properties studentQueries = new Properties();
-        studentQueries.load(studentQueriesResource.getInputStream());
-        return studentQueries;
-    }
-    
-    @Bean
-    public PropertiesFactoryBean coursePropertiesFactoryBean() {
-        PropertiesFactoryBean propertiesFactoryBean = new PropertiesFactoryBean();
-        propertiesFactoryBean.setLocation(new ClassPathResource("/course-queries.properties"));
-        return propertiesFactoryBean;
-    }
     
     @Bean
     public JdbcTemplate jdbcTemplate() {

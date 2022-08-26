@@ -3,8 +3,10 @@ package ua.com.foxminded.university.dao.jdbc;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
 import ua.com.foxminded.university.dao.GroupDao;
 import ua.com.foxminded.university.entity.CourseEntity;
@@ -13,6 +15,7 @@ import ua.com.foxminded.university.entity.StudentEntity;
 import ua.com.foxminded.university.entity.TimetableEntity;
 import ua.com.foxminded.university.entity.WeekDayEntity;
 
+@Repository
 public class GroupJdbcDao implements GroupDao {
     
     private static final String WEEK_DAY = "week_day";
@@ -21,26 +24,24 @@ public class GroupJdbcDao implements GroupDao {
     private static final String START_TIME = "start_time";
     private static final String COURSE_ID = "course_id";
     private static final String TIMETABLE_ID = "timetable_id";
-    private static final String GET_TIMETABLE_LIST_BY_GROUP_ID = "getTimetableListByGroupId";
+    private static final String GET_TIMETABLE_LIST_BY_GROUP_ID = "group.getTimetableListByGroupId";
     private static final String LAST_NAME = "last_name";
     private static final String STUDENT_FIRST_NAME = "first_name";
     private static final String STUDENT_ID = "student_id";
-    private static final String GET_STUDENT_LIST_BY_GROUP_ID = "getStudentsByGroupId";
-    private static final String INSERT = "insert";
+    private static final String GET_STUDENT_LIST_BY_GROUP_ID = "group.getStudentsByGroupId";
+    private static final String INSERT = "group.insert";
     private static final String GROUP_NAME = "name";
     private static final String GROUP_ID = "id";
-    private static final String GET_BY_ID = "getById";
-    private static final String UPDATE = "update";
-    private static final String DELETE_BY_ID = "deleteById";
+    private static final String GET_BY_ID = "group.getById";
+    private static final String UPDATE = "group.update";
+    private static final String DELETE_BY_ID = "group.deleteById";
     
+    @Autowired
     private Environment groupQueries;
+    
+    @Autowired
     private JdbcTemplate jdbcTemplate;
     
-    public GroupJdbcDao(Environment groupQueries, JdbcTemplate jdbcTemplate) {
-        this.groupQueries = groupQueries;
-        this.jdbcTemplate = jdbcTemplate;
-    }
-
     public GroupEntity getTimetableListByGroupId(int id) {
         return jdbcTemplate.query(groupQueries.getProperty(GET_TIMETABLE_LIST_BY_GROUP_ID), 
                                   preparedStatement -> preparedStatement.setInt(1, id),

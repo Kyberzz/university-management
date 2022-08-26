@@ -2,36 +2,37 @@ package ua.com.foxminded.university.dao.jdbc;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
 import ua.com.foxminded.university.dao.TeacherDao;
 import ua.com.foxminded.university.entity.CourseEntity;
 import ua.com.foxminded.university.entity.TeacherEntity;
 
+@Repository
 public class TeacherJdbcDao implements TeacherDao {
 
     private static final String COURSE_DESCRIPTION = "course_description";
     private static final String COURSE_NAME = "course_name";
-    private static final String GET_COURSE_LIST_BY_TEACHER_ID = "getCourseListByTeacherId";
-    private static final String DELETE_BY_ID = "deleteById";
-    private static final String UPDATE = "update";
-    private static final String INSERT = "insert";
+    private static final String GET_COURSE_LIST_BY_TEACHER_ID = "teacher.getCourseListByTeacherId";
+    private static final String DELETE_BY_ID = "teacher.deleteById";
+    private static final String UPDATE = "teacher.update";
+    private static final String INSERT = "teacher.insert";
     private static final String LAST_NAME = "last_name";
     private static final String FIRST_NAME = "first_name";
     private static final String COURSE_ID = "course_id";
     private static final String TEACHER_ID = "id";
-    private static final String GET_TEACHER_BY_ID = "getTeacherById";
-
-    Properties teacherQueries;
+    private static final String GET_TEACHER_BY_ID = "teacher.getTeacherById";
+    
+    @Autowired
+    Environment teacherQueries;
+    
+    @Autowired
     JdbcTemplate jdbcTemplate;
 
-    public TeacherJdbcDao(Properties teacherQueries, JdbcTemplate jdbcTemplate) {
-        this.teacherQueries = teacherQueries;
-        this.jdbcTemplate = jdbcTemplate;
-    }
-    
     @Override
     public TeacherEntity getCourseListByTeacherId(int id) {
        return jdbcTemplate.query(teacherQueries.getProperty(GET_COURSE_LIST_BY_TEACHER_ID),

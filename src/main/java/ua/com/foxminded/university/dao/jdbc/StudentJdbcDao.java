@@ -1,34 +1,34 @@
 package ua.com.foxminded.university.dao.jdbc;
 
-import java.util.Properties;
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
 import ua.com.foxminded.university.dao.StudentDao;
 import ua.com.foxminded.university.entity.GroupEntity;
 import ua.com.foxminded.university.entity.StudentEntity;
 
+@Repository
 public class StudentJdbcDao implements StudentDao {
     
-    private static final String DELETE_BY_ID = "deleteById";
-    private static final String UPDATE = "update";
-    private static final String GET_BY_ID = "getById";
-    private static final String INSERT = "insert";
-    private static final String GET_GROUP_BY_STUDENT_ID = "getGroupByStudentId";
+    private static final String DELETE_BY_ID = "student.deleteById";
+    private static final String UPDATE = "student.update";
+    private static final String GET_BY_ID = "student.getById";
+    private static final String INSERT = "student.insert";
+    private static final String GET_GROUP_BY_STUDENT_ID = "student.getGroupByStudentId";
     private static final String GROUP_NAME = "group_name";
     private static final String GROUP_ID = "group_id";
     private static final String LAST_NAME = "last_name";
     private static final String FIRST_NAME = "first_name";
     private static final String STUDENT_ID = "id";
     
+    @Autowired
     private JdbcTemplate jdbcTemplate;
-    private Properties studentQueries;
-
-    public StudentJdbcDao(JdbcTemplate jdbcTemplate, Properties studentQueries) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.studentQueries = studentQueries;
-    }
     
+    @Autowired
+    private Environment studentQueries;
+
     public StudentEntity getGroupByStudentId(int id) {
         return jdbcTemplate.query(studentQueries.getProperty(GET_GROUP_BY_STUDENT_ID),
                                   preparedStatement -> preparedStatement.setInt(1, id),

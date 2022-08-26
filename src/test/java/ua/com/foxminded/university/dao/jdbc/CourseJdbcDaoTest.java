@@ -27,7 +27,6 @@ import ua.com.foxminded.university.entity.WeekDayEntity;
 @ContextConfiguration(classes = JdbcDaoTestConfig.class)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 @ExtendWith(SpringExtension.class)
-@ExtendWith(MockitoExtension.class)
 class CourseJdbcDaoTest {
     
     private static final String MONDAY = "MONDAY";

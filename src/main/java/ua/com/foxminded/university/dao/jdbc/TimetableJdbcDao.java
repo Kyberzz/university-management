@@ -1,8 +1,9 @@
 package ua.com.foxminded.university.dao.jdbc;
 
-import java.util.Properties;
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
 import ua.com.foxminded.university.dao.TimetableDao;
 import ua.com.foxminded.university.entity.CourseEntity;
@@ -11,14 +12,15 @@ import ua.com.foxminded.university.entity.TeacherEntity;
 import ua.com.foxminded.university.entity.TimetableEntity;
 import ua.com.foxminded.university.entity.WeekDayEntity;
 
+@Repository
 public class TimetableJdbcDao implements TimetableDao {
     
-    private static final String GET_COURCE_BY_TIMETABLE_ID = "getCourseByTimetableId";
-    private static final String GET_GROUP_BY_TIMETABLE_ID = "getGroupByTimetableId";
-    private static final String UPDATE = "update";
-    private static final String DELETE_BY_ID = "deleteById";
-    private static final String GET_BY_ID = "getById";
-    private static final String INSERT = "insert";
+    private static final String GET_COURCE_BY_TIMETABLE_ID = "timetable.getCourseByTimetableId";
+    private static final String GET_GROUP_BY_TIMETABLE_ID = "timetable.getGroupByTimetableId";
+    private static final String UPDATE = "timetable.update";
+    private static final String DELETE_BY_ID = "timetable.deleteById";
+    private static final String GET_BY_ID = "timetable.getById";
+    private static final String INSERT = "timetable.insert";
     private static final String GROUP_NAME = "group_name";
     private static final String WEEK_DAY = "week_day";
     private static final String TIMETABLE_DESCRIPTION = "description";
@@ -31,14 +33,12 @@ public class TimetableJdbcDao implements TimetableDao {
     private static final String COURSE_ID = "course_id";
     private static final String TIMETABLE_ID = "id";
     
+    @Autowired
     JdbcTemplate jdbcTemplate;
-    Properties timetableQueries;
     
-    public TimetableJdbcDao(JdbcTemplate jdbcTemplate, Properties timetableQueries) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.timetableQueries = timetableQueries;
-    }
-
+    @Autowired
+    Environment timetableQueries;
+    
     public TimetableEntity getCourseByTimetableId(int id) {
         return jdbcTemplate.query(timetableQueries.getProperty(GET_COURCE_BY_TIMETABLE_ID),
                                   preparedStatement -> preparedStatement.setInt(1, id),
