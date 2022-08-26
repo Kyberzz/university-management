@@ -47,7 +47,7 @@ class StudentJdbcDaoTest {
     Properties studentQueries;
     
     @Autowired
-    Properties testStudentQueries;
+    Properties testQueries;
     
     @Test
     void update_UdatingDatabaseData_DatabaseHasCorrectData() {
@@ -59,7 +59,7 @@ class StudentJdbcDaoTest {
         student.setGroup(new GroupEntity(GROUP_ID_NUMBER));
         studentDao.update(student);
         Map<String, Object> databaseStudent = jdbcTemplate.queryForMap(
-                testStudentQueries.getProperty(SELECT_STUDENT_BY_ID), 
+                testQueries.getProperty(SELECT_STUDENT_BY_ID), 
                 STUDENT_ID_NUMBER);
         assertEquals(student.getFirstName(), databaseStudent.get(FIRST_NAME));
         assertEquals(student.getLastName(), databaseStudent.get(LAST_NAME));
@@ -72,7 +72,7 @@ class StudentJdbcDaoTest {
         StudentJdbcDao studentDao = new StudentJdbcDao(jdbcTemplate, studentQueries);
         studentDao.deleteById(STUDENT_ID_NUMBER);
         jdbcTemplate.query(
-                testStudentQueries.getProperty(SELECT_STUDENT_BY_ID),
+                testQueries.getProperty(SELECT_STUDENT_BY_ID),
                 preperadStatement -> preperadStatement.setInt(1, STUDENT_ID_NUMBER),
                 resultSet -> {
                     assertTrue(!resultSet.next());
@@ -103,7 +103,7 @@ class StudentJdbcDaoTest {
         student.setGroup(new GroupEntity(GROUP_ID_NUMBER));
         studentDao.insert(student);
         Map<String,Object> databaseStudent = jdbcTemplate.queryForMap(
-                testStudentQueries.getProperty(SELECT_STUDENT_BY_NAME));
+                testQueries.getProperty(SELECT_STUDENT_BY_NAME));
         assertEquals(student.getFirstName(), databaseStudent.get(FIRST_NAME).toString());
         assertEquals(student.getLastName(), databaseStudent.get(LAST_NAME).toString());
         assertEquals(student.getGroup().getId(), databaseStudent.get(GROUP_ID));

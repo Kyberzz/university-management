@@ -19,11 +19,8 @@ public class JdbcDaoTestConfig {
     @Value("/student-queries.properties")
     private Resource studentQueriesResource;
     
-    @Value("/test-student-queries.properties")
-    private Resource testStudentQueriesResource;
-    
-    @Value("/test-course-queries.properties")
-    private Resource testCoruceQueriesResource;
+    @Value("/test-queries.properties")
+    private Resource testQueriesResource;
     
     @Value("/course-queries.properties")
     private Resource courseQueriesResource;
@@ -36,17 +33,10 @@ public class JdbcDaoTestConfig {
     }
     
     @Bean
-    public Properties testCourseQueries() throws IOException {
-        Properties testCourseProperties = new Properties();
-        testCourseProperties.load(testCoruceQueriesResource.getInputStream());
-        return testCourseProperties;
-    }
-    
-    @Bean
-    public Properties testStudentQueries() throws IOException {
-        Properties testStudentQueries = new Properties();
-        testStudentQueries.load(testStudentQueriesResource.getInputStream());
-        return testStudentQueries;
+    public Properties testQueries() throws IOException {
+        Properties testQueries = new Properties();
+        testQueries.load(testQueriesResource.getInputStream());
+        return testQueries;
     }
     
     @Bean 
