@@ -33,12 +33,15 @@ public class TimetableJdbcDao implements TimetableDao {
     private static final String COURSE_ID = "course_id";
     private static final String TIMETABLE_ID = "id";
     
-    @Autowired
     JdbcTemplate jdbcTemplate;
-    
-    @Autowired
     Environment timetableQueries;
     
+    @Autowired
+    public TimetableJdbcDao(JdbcTemplate jdbcTemplate, Environment timetableQueries) {
+        this.jdbcTemplate = jdbcTemplate;
+        this.timetableQueries = timetableQueries;
+    }
+
     public TimetableEntity getCourseByTimetableId(int id) {
         return jdbcTemplate.query(timetableQueries.getProperty(GET_COURCE_BY_TIMETABLE_ID),
                                   preparedStatement -> preparedStatement.setInt(1, id),

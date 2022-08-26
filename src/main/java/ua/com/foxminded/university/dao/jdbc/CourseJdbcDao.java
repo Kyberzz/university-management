@@ -34,12 +34,15 @@ public class CourseJdbcDao implements CourseDao {
     private static final String INSERT = "course.insert";
     private static final String DELETE_BY_ID = "course.deleteById";
     
-    @Autowired
+    private JdbcTemplate jdbcTemplate;
     private Environment courseQueries;
     
     @Autowired
-    private JdbcTemplate jdbcTemplate;
-    
+    public CourseJdbcDao(JdbcTemplate jdbcTemplate, Environment courseQueries) {
+        this.jdbcTemplate = jdbcTemplate;
+        this.courseQueries = courseQueries;
+    }
+
     public CourseEntity getTimetableListByCourseId(int id) {
         return jdbcTemplate.query(courseQueries.getProperty(GET_TIMETABLES_BY_COURSE_ID), 
                                   preparedStatement -> preparedStatement.setInt(1, id),

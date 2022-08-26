@@ -36,12 +36,15 @@ public class GroupJdbcDao implements GroupDao {
     private static final String UPDATE = "group.update";
     private static final String DELETE_BY_ID = "group.deleteById";
     
-    @Autowired
     private Environment groupQueries;
-    
-    @Autowired
     private JdbcTemplate jdbcTemplate;
     
+    @Autowired
+    public GroupJdbcDao(Environment groupQueries, JdbcTemplate jdbcTemplate) {
+        this.groupQueries = groupQueries;
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
     public GroupEntity getTimetableListByGroupId(int id) {
         return jdbcTemplate.query(groupQueries.getProperty(GET_TIMETABLE_LIST_BY_GROUP_ID), 
                                   preparedStatement -> preparedStatement.setInt(1, id),

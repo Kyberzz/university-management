@@ -27,11 +27,14 @@ public class TeacherJdbcDao implements TeacherDao {
     private static final String TEACHER_ID = "id";
     private static final String GET_TEACHER_BY_ID = "teacher.getTeacherById";
     
-    @Autowired
+    JdbcTemplate jdbcTemplate;
     Environment teacherQueries;
     
     @Autowired
-    JdbcTemplate jdbcTemplate;
+    public TeacherJdbcDao(JdbcTemplate jdbcTemplate, Environment teacherQueries) {
+        this.jdbcTemplate = jdbcTemplate;
+        this.teacherQueries = teacherQueries;
+    }
 
     @Override
     public TeacherEntity getCourseListByTeacherId(int id) {

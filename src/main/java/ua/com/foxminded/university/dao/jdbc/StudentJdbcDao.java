@@ -23,11 +23,14 @@ public class StudentJdbcDao implements StudentDao {
     private static final String FIRST_NAME = "first_name";
     private static final String STUDENT_ID = "id";
     
-    @Autowired
     private JdbcTemplate jdbcTemplate;
+    private Environment studentQueries;
     
     @Autowired
-    private Environment studentQueries;
+    public StudentJdbcDao(JdbcTemplate jdbcTemplate, Environment studentQueries) {
+        this.jdbcTemplate = jdbcTemplate;
+        this.studentQueries = studentQueries;
+    }
 
     public StudentEntity getGroupByStudentId(int id) {
         return jdbcTemplate.query(studentQueries.getProperty(GET_GROUP_BY_STUDENT_ID),

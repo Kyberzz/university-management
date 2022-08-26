@@ -5,11 +5,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.sql.SQLException;
 import java.util.Map;
-import java.util.Properties;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
@@ -24,12 +23,12 @@ import ua.com.foxminded.university.entity.StudentEntity;
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 class StudentJdbcDaoTest {
     
-    private static final String SELECT_STUDENT_BY_ID = "selectStudentById";
+    private static final String SELECT_STUDENT_BY_ID = "test.selectStudentById";
     private static final String GROUP_NAME = "rs-01";
     private static final String LAST_NAME = "last_name";
     private static final String FIRST_NAME = "first_name";
     private static final String GROUP_ID = "group_id";
-    private static final String SELECT_STUDENT_BY_NAME = "selectStudentByName";
+    private static final String SELECT_STUDENT_BY_NAME = "test.selectStudentByName";
     private static final String DATABASE_LAST_NAME_STUDENT = "Smith";
     private static final String DATABASE_FIRST_NAME_STUDENT = "Alex";
     private static final String LAST_NAME_STUDENT = "Deniels";
@@ -43,14 +42,11 @@ class StudentJdbcDaoTest {
     JdbcTemplate jdbcTemplate;
     
     @Autowired
-    Properties studentQueries;
-    
-    @Autowired
-    Properties testQueries;
+    Environment queries;
     
     @Test
     void update_UdatingDatabaseData_DatabaseHasCorrectData() {
-        StudentJdbcDao studentDao = new StudentJdbcDao(jdbcTemplate, studentQueries);
+        StudentJdbcDao studentDao = new StudentJdbcDao(jdbcTemplate, queries);
         StudentEntity student = new StudentEntity();
         student.setFirstName(FIRST_NAME_STUDENT);
         student.setLastName(LAST_NAME_STUDENT);
@@ -58,7 +54,7 @@ class StudentJdbcDaoTest {
         student.setGroup(new GroupEntity(GROUP_ID_NUMBER));
         studentDao.update(student);
         Map<String, Object> databaseStudent = jdbcTemplate.queryForMap(
-                testQueries.getProperty(SELECT_STUDENT_BY_ID), 
+                queries.getProperty(SELECT_STUDENT_BY_ID), 
                 STUDENT_ID_NUMBER);
         assertEquals(student.getFirstName(), databaseStudent.get(FIRST_NAME));
         assertEquals(student.getLastName(), databaseStudent.get(LAST_NAME));
@@ -68,10 +64,10 @@ class StudentJdbcDaoTest {
     
     @Test
     void deleteById_DeletingStudentDatabaseData_NoStudentDatabaseData() throws SQLException {
-        StudentJdbcDao studentDao = new StudentJdbcDao(jdbcTemplate, studentQueries);
+        StudentJdbcDao studentDao = new StudentJdbcDao(jdbcTemplate, queries);
         studentDao.deleteById(STUDENT_ID_NUMBER);
         jdbcTemplate.query(
-                testQueries.getProperty(SELECT_STUDENT_BY_ID),
+                queries.getProperty(SELECT_STUDENT_BY_ID),
                 preperadStatement -> preperadStatement.setInt(1, STUDENT_ID_NUMBER),
                 resultSet -> {
                     assertTrue(!resultSet.next());
@@ -80,7 +76,7 @@ class StudentJdbcDaoTest {
     
     @Test
     void getGroupByStudentId_GettingDatabaseData_CorrectReceivedData() {
-        StudentJdbcDao studentDao = new StudentJdbcDao(jdbcTemplate, studentQueries);
+        StudentJdbcDao studentDao = new StudentJdbcDao(jdbcTemplate, queries);
         StudentEntity student = studentDao.getGroupByStudentId(GROUP_ID_NUMBER);
         StudentEntity expectedResult = new StudentEntity();
         GroupEntity group = new GroupEntity();
@@ -95,14 +91,14 @@ class StudentJdbcDaoTest {
     
     @Test
     void insert_InsertingStudentToDatabase_CorrectInsertedData() {
-        StudentJdbcDao studentDao = new StudentJdbcDao(jdbcTemplate, studentQueries);
+        StudentJdbcDao studentDao = new StudentJdbcDao(jdbcTemplate, queries);
         StudentEntity student = new StudentEntity();
         student.setFirstName(FIRST_NAME_STUDENT);
         student.setLastName(LAST_NAME_STUDENT);
         student.setGroup(new GroupEntity(GROUP_ID_NUMBER));
         studentDao.insert(student);
         Map<String,Object> databaseStudent = jdbcTemplate.queryForMap(
-                testQueries.getProperty(SELECT_STUDENT_BY_NAME));
+                queries.getProperty(SELECT_STUDENT_BY_NAME));
         assertEquals(student.getFirstName(), databaseStudent.get(FIRST_NAME).toString());
         assertEquals(student.getLastName(), databaseStudent.get(LAST_NAME).toString());
         assertEquals(student.getGroup().getId(), databaseStudent.get(GROUP_ID));
@@ -110,7 +106,7 @@ class StudentJdbcDaoTest {
     
     @Test
     void getById_GettingStudent_CorrectStudentData() {
-        StudentJdbcDao studentDao = new StudentJdbcDao(jdbcTemplate, studentQueries);
+        StudentJdbcDao studentDao = new StudentJdbcDao(jdbcTemplate, queries);
         StudentEntity student = studentDao.getById(STUDENT_ID_NUMBER);
         StudentEntity expectedResult = new StudentEntity();
         expectedResult.setId(STUDENT_ID_NUMBER);
