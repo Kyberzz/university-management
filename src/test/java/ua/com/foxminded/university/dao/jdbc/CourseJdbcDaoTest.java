@@ -46,6 +46,7 @@ class CourseJdbcDaoTest {
     private static final int DATABASE_COURSE_ID = 4;
     private static final int DATABASE_TEACHER_ID = 1;
     private static final int TEACHER_ID_NUMBER = 2;
+    private static final int FIRST_ELEMENT = 0;
     private static final int COURSE_ID = 1;
     
     @Autowired
@@ -57,24 +58,37 @@ class CourseJdbcDaoTest {
     @Test
     void getTimetableListByCourseId_GettingDatabaseTimetableData_CorrectData() {
         CourseJdbcDao courseDao = new CourseJdbcDao(jdbcTemplate, queries);
-        CourseEntity receivedCourse = courseDao.getTimetableListByCourseId(COURSE_ID);
+        CourseEntity receivedCourse = courseDao.getTimetableListByCourseId(EXPECTED_COURSE_ID);
         CourseEntity expectedResult = new CourseEntity();
-        expectedResult.setId(COURSE_ID);
-        expectedResult.setName(DATABASE_COURSE_NAME);
-        expectedResult.setTeacher(new TeacherEntity(DATABASE_TEACHER_ID));
+        expectedResult.setId(EXPECTED_COURSE_ID);
+        expectedResult.setName(EXPECTED_COURSE_NAME);
+        expectedResult.setTeacher(new TeacherEntity(TEACHER_ID_NUMBER));
         List<TimetableEntity> timetableList = new ArrayList<>();
         TimetableEntity timetable = new TimetableEntity();
         timetable.setId(TIMETABLE_ID);
         timetable.setGroup(new GroupEntity(GROUP_ID_NUMBER));
-        timetable.setCourse(new CourseEntity(GROUP_ID_NUMBER));
+        timetable.setCourse(new CourseEntity(EXPECTED_COURSE_ID));
         timetable.setStartTime(START_TIME);
         timetable.setEndTime(END_TIME);
         timetable.setWeekDay(WeekDayEntity.valueOf(MONDAY));
         timetableList.add(timetable);
-        expectedResult.setId(EXPECTED_COURSE_ID);
-        expectedResult.setName(EXPECTED_COURSE_NAME);
-        expectedResult.setTeacher(new TeacherEntity(TEACHER_ID_NUMBER));
-        assertEquals(expectedResult, receivedCourse);
+        expectedResult.setTimetableList(timetableList);
+        
+        assertEquals(expectedResult.getId(), receivedCourse.getId());
+        assertEquals(expectedResult.getName(), receivedCourse.getName());
+        assertEquals(expectedResult.getTeacher(), receivedCourse.getTeacher());
+        assertEquals(expectedResult.getTimetableList().get(FIRST_ELEMENT).getCourse().getId(), 
+                     receivedCourse.getTimetableList().get(FIRST_ELEMENT).getCourse().getId());
+        assertEquals(expectedResult.getTimetableList().get(FIRST_ELEMENT).getEndTime(), 
+                     receivedCourse.getTimetableList().get(FIRST_ELEMENT).getEndTime());
+        assertEquals(expectedResult.getTimetableList().get(FIRST_ELEMENT).getGroup().getId(), 
+                     receivedCourse.getTimetableList().get(FIRST_ELEMENT).getGroup().getId());
+        assertEquals(expectedResult.getTimetableList().get(FIRST_ELEMENT).getId(), 
+                     receivedCourse.getTimetableList().get(FIRST_ELEMENT).getId());
+        assertEquals(expectedResult.getTimetableList().get(FIRST_ELEMENT).getStartTime(), 
+                     receivedCourse.getTimetableList().get(FIRST_ELEMENT).getStartTime());
+        assertEquals(expectedResult.getTimetableList().get(FIRST_ELEMENT).getWeekDay(), 
+                     receivedCourse.getTimetableList().get(FIRST_ELEMENT).getWeekDay());
     }
     
     @Test
