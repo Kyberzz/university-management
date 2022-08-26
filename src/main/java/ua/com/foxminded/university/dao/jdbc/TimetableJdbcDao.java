@@ -11,7 +11,7 @@ import ua.com.foxminded.university.entity.TeacherEntity;
 import ua.com.foxminded.university.entity.TimetableEntity;
 import ua.com.foxminded.university.entity.WeekDayEntity;
 
-public class JdbcTimetableDao implements TimetableDao {
+public class TimetableJdbcDao implements TimetableDao {
     
     private static final String GET_COURCE_BY_TIMETABLE_ID = "getCourseByTimetableId";
     private static final String GET_GROUP_BY_TIMETABLE_ID = "getGroupByTimetableId";
@@ -34,7 +34,7 @@ public class JdbcTimetableDao implements TimetableDao {
     JdbcTemplate jdbcTemplate;
     Properties timetableQueries;
     
-    public JdbcTimetableDao(JdbcTemplate jdbcTemplate, Properties timetableQueries) {
+    public TimetableJdbcDao(JdbcTemplate jdbcTemplate, Properties timetableQueries) {
         this.jdbcTemplate = jdbcTemplate;
         this.timetableQueries = timetableQueries;
     }

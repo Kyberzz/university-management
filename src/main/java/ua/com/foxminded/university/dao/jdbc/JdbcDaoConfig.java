@@ -53,28 +53,28 @@ public class JdbcDaoConfig {
     
     @Bean
     public TimetableDao timetableDao() throws IOException {
-        return new JdbcTimetableDao(jdbcTemplate(), timetableQueries());
+        return new TimetableJdbcDao(jdbcTemplate(), timetableQueries());
     }
     
     @Bean
     public TeacherDao teacherDao() throws IOException {
         Properties teacherQueries = teacherPropertiesFactoryBean().getObject();
-        return new JdbcTeacherDao(teacherQueries, jdbcTemplate());
+        return new TeacherJdbcDao(teacherQueries, jdbcTemplate());
     }
 
     @Bean
     public StudentDao studentDao() throws IOException {
-        return new JdbcStudentDao(jdbcTemplate(), studentQueries());
+        return new StudentJdbcDao(jdbcTemplate(), studentQueries());
     }
     
     @Bean
     public GroupDao groupDao() {
-        return new JdbcGroupDao(environment, jdbcTemplate());
+        return new GroupJdbcDao(environment, jdbcTemplate());
     }
     
     @Bean
     public CourseDao courseDao() throws IOException {
-        return new JdbcCourseDao(coursePropertiesFactoryBean().getObject(), jdbcTemplate());
+        return new CourseJdbcDao(coursePropertiesFactoryBean().getObject(), jdbcTemplate());
     }
     
     @Bean 

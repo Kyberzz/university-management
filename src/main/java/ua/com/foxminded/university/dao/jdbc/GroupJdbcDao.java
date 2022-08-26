@@ -13,7 +13,7 @@ import ua.com.foxminded.university.entity.StudentEntity;
 import ua.com.foxminded.university.entity.TimetableEntity;
 import ua.com.foxminded.university.entity.WeekDayEntity;
 
-public class JdbcGroupDao implements GroupDao {
+public class GroupJdbcDao implements GroupDao {
     
     private static final String WEEK_DAY = "week_day";
     private static final String TIMETABLE_DESCRIPTION = "timetable_description";
@@ -36,7 +36,7 @@ public class JdbcGroupDao implements GroupDao {
     private Environment groupQueries;
     private JdbcTemplate jdbcTemplate;
     
-    public JdbcGroupDao(Environment groupQueries, JdbcTemplate jdbcTemplate) {
+    public GroupJdbcDao(Environment groupQueries, JdbcTemplate jdbcTemplate) {
         this.groupQueries = groupQueries;
         this.jdbcTemplate = jdbcTemplate;
     }

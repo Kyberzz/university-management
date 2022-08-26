@@ -14,13 +14,33 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 
 @Configuration
-public class JdbcDaoConfigTest {
+public class JdbcDaoTestConfig {
     
     @Value("/student-queries.properties")
     private Resource studentQueriesResource;
     
     @Value("/test-student-queries.properties")
     private Resource testStudentQueriesResource;
+    
+    @Value("/test-course-queries.properties")
+    private Resource testCoruceQueriesResource;
+    
+    @Value("/course-queries.properties")
+    private Resource courseQueriesResource;
+    
+    @Bean
+    public Properties courseQueries() throws IOException {
+        Properties courseQueries = new Properties();
+        courseQueries.load(courseQueriesResource.getInputStream());
+        return courseQueries;
+    }
+    
+    @Bean
+    public Properties testCourseQueries() throws IOException {
+        Properties testCourseProperties = new Properties();
+        testCourseProperties.load(testCoruceQueriesResource.getInputStream());
+        return testCourseProperties;
+    }
     
     @Bean
     public Properties testStudentQueries() throws IOException {

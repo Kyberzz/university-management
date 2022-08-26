@@ -13,7 +13,7 @@ import ua.com.foxminded.university.entity.TeacherEntity;
 import ua.com.foxminded.university.entity.TimetableEntity;
 import ua.com.foxminded.university.entity.WeekDayEntity;
 
-public class JdbcCourseDao implements CourseDao {
+public class CourseJdbcDao implements CourseDao {
     
     private static final String WEEK_DAY = "week_day";
     private static final String TIMETABLE_DESCRIPTION = "timetable_description";
@@ -34,7 +34,7 @@ public class JdbcCourseDao implements CourseDao {
     private Properties courseQueries;
     private JdbcTemplate jdbcTemplate;
     
-    public JdbcCourseDao(Properties courseQueries, JdbcTemplate jdbcTemplate) {
+    public CourseJdbcDao(Properties courseQueries, JdbcTemplate jdbcTemplate) {
         this.courseQueries = courseQueries;
         this.jdbcTemplate = jdbcTemplate;
     }
@@ -80,6 +80,7 @@ public class JdbcCourseDao implements CourseDao {
                                        preparedStatement.setInt(1, entity.getTeacher().getId());
                                        preparedStatement.setString(2, entity.getName());
                                        preparedStatement.setString(3, entity.getDescription());
+                                       preparedStatement.setInt(4, entity.getId());
                                    });
     }
     

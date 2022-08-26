@@ -10,7 +10,7 @@ import ua.com.foxminded.university.dao.TeacherDao;
 import ua.com.foxminded.university.entity.CourseEntity;
 import ua.com.foxminded.university.entity.TeacherEntity;
 
-public class JdbcTeacherDao implements TeacherDao {
+public class TeacherJdbcDao implements TeacherDao {
 
     private static final String COURSE_DESCRIPTION = "course_description";
     private static final String COURSE_NAME = "course_name";
@@ -27,7 +27,7 @@ public class JdbcTeacherDao implements TeacherDao {
     Properties teacherQueries;
     JdbcTemplate jdbcTemplate;
 
-    public JdbcTeacherDao(Properties teacherQueries, JdbcTemplate jdbcTemplate) {
+    public TeacherJdbcDao(Properties teacherQueries, JdbcTemplate jdbcTemplate) {
         this.teacherQueries = teacherQueries;
         this.jdbcTemplate = jdbcTemplate;
     }

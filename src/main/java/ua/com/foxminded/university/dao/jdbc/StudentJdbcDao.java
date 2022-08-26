@@ -8,7 +8,7 @@ import ua.com.foxminded.university.dao.StudentDao;
 import ua.com.foxminded.university.entity.GroupEntity;
 import ua.com.foxminded.university.entity.StudentEntity;
 
-public class JdbcStudentDao implements StudentDao {
+public class StudentJdbcDao implements StudentDao {
     
     private static final String DELETE_BY_ID = "deleteById";
     private static final String UPDATE = "update";
@@ -24,7 +24,7 @@ public class JdbcStudentDao implements StudentDao {
     private JdbcTemplate jdbcTemplate;
     private Properties studentQueries;
 
-    public JdbcStudentDao(JdbcTemplate jdbcTemplate, Properties studentQueries) {
+    public StudentJdbcDao(JdbcTemplate jdbcTemplate, Properties studentQueries) {
         this.jdbcTemplate = jdbcTemplate;
         this.studentQueries = studentQueries;
     }

@@ -20,10 +20,10 @@ import ua.com.foxminded.university.entity.GroupEntity;
 import ua.com.foxminded.university.entity.StudentEntity;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = JdbcDaoConfigTest.class)
+@ContextConfiguration(classes = JdbcDaoTestConfig.class)
 @ExtendWith(MockitoExtension.class)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
-class JdbcStudentDaoTest {
+class StudentJdbcDaoTest {
     
     private static final String SELECT_STUDENT_BY_ID = "selectStudentById";
     private static final String GROUP_NAME = "rs-01";
@@ -51,7 +51,7 @@ class JdbcStudentDaoTest {
     
     @Test
     void update_UdatingDatabaseData_DatabaseHasCorrectData() {
-        JdbcStudentDao studentDao = new JdbcStudentDao(jdbcTemplate, studentQueries);
+        StudentJdbcDao studentDao = new StudentJdbcDao(jdbcTemplate, studentQueries);
         StudentEntity student = new StudentEntity();
         student.setFirstName(FIRST_NAME_STUDENT);
         student.setLastName(LAST_NAME_STUDENT);
@@ -69,7 +69,7 @@ class JdbcStudentDaoTest {
     
     @Test
     void deleteById_DeletingStudentDatabaseData_NoStudentDatabaseData() throws SQLException {
-        JdbcStudentDao studentDao = new JdbcStudentDao(jdbcTemplate, studentQueries);
+        StudentJdbcDao studentDao = new StudentJdbcDao(jdbcTemplate, studentQueries);
         studentDao.deleteById(STUDENT_ID_NUMBER);
         jdbcTemplate.query(
                 testStudentQueries.getProperty(SELECT_STUDENT_BY_ID),
@@ -81,7 +81,7 @@ class JdbcStudentDaoTest {
     
     @Test
     void getGroupByStudentId_GettingDatabaseData_CorrectReceivedData() {
-        JdbcStudentDao studentDao = new JdbcStudentDao(jdbcTemplate, studentQueries);
+        StudentJdbcDao studentDao = new StudentJdbcDao(jdbcTemplate, studentQueries);
         StudentEntity student = studentDao.getGroupByStudentId(GROUP_ID_NUMBER);
         StudentEntity expectedResult = new StudentEntity();
         GroupEntity group = new GroupEntity();
@@ -96,7 +96,7 @@ class JdbcStudentDaoTest {
     
     @Test
     void insert_InsertingStudentToDatabase_CorrectInsertedData() {
-        JdbcStudentDao studentDao = new JdbcStudentDao(jdbcTemplate, studentQueries);
+        StudentJdbcDao studentDao = new StudentJdbcDao(jdbcTemplate, studentQueries);
         StudentEntity student = new StudentEntity();
         student.setFirstName(FIRST_NAME_STUDENT);
         student.setLastName(LAST_NAME_STUDENT);
@@ -111,7 +111,7 @@ class JdbcStudentDaoTest {
     
     @Test
     void getById_GettingStudent_CorrectStudentData() {
-        JdbcStudentDao studentDao = new JdbcStudentDao(jdbcTemplate, studentQueries);
+        StudentJdbcDao studentDao = new StudentJdbcDao(jdbcTemplate, studentQueries);
         StudentEntity student = studentDao.getById(STUDENT_ID_NUMBER);
         StudentEntity expectedResult = new StudentEntity();
         expectedResult.setId(STUDENT_ID_NUMBER);
