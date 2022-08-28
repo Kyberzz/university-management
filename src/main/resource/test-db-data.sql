@@ -1,7 +1,7 @@
 insert into university.teachers(first_name, last_name) values('Albert', 'Einstein');  
 insert into university.teachers(first_name, last_name) values('Dennis', 'Ritchie');  
 insert into university.courses(teacher_id, name) values(1, 'Physics');
-insert into university.courses(teacher_id, name) values(2, 'Programming');
+insert into university.courses(teacher_id, name, description) values(2, 'Programming', 'some description');
 insert into university.courses(teacher_id, name) values(2, 'Circuitry');
 insert into university.groups(name) values ('rs-01');
 insert into university.groups(name) values ('kt-52');

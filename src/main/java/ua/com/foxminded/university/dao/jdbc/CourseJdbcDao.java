@@ -24,7 +24,7 @@ public class CourseJdbcDao implements CourseDao {
     private static final String START_TIME = "start_time";
     private static final String GROUP_ID = "group_id";
     private static final String TIMETABLE_ID = "timetable_id";
-    private static final String GET_TIMETABLES_BY_COURSE_ID = "course.getTimetablesByCourseId";
+    private static final String GET_TIMETABLES_BY_COURSE_ID = "course.getTimetableListByCourseId";
     private static final String UPDATE = "course.update";
     private static final String COURSE_DESCRIPTION = "description";
     private static final String COURSE_NAME = "name";
