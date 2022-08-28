@@ -28,7 +28,7 @@ public class GroupJdbcDao implements GroupDao {
     private static final String LAST_NAME = "last_name";
     private static final String STUDENT_FIRST_NAME = "first_name";
     private static final String STUDENT_ID = "student_id";
-    private static final String GET_STUDENT_LIST_BY_GROUP_ID = "group.getStudentsByGroupId";
+    private static final String GET_STUDENT_LIST_BY_GROUP_ID = "group.getStudentListByGroupId";
     private static final String INSERT = "group.insert";
     private static final String GROUP_NAME = "name";
     private static final String GROUP_ID = "id";
