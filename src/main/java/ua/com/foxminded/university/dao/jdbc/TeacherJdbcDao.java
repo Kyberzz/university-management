@@ -25,7 +25,7 @@ public class TeacherJdbcDao implements TeacherDao {
     private static final String FIRST_NAME = "first_name";
     private static final String COURSE_ID = "course_id";
     private static final String TEACHER_ID = "id";
-    private static final String GET_TEACHER_BY_ID = "teacher.getTeacherById";
+    private static final String GET_BY_ID = "teacher.getById";
     
     JdbcTemplate jdbcTemplate;
     Environment teacherQueries;
@@ -81,7 +81,7 @@ public class TeacherJdbcDao implements TeacherDao {
     
     @Override
     public TeacherEntity getById(int id) {
-        return jdbcTemplate.query(teacherQueries.getProperty(GET_TEACHER_BY_ID),
+        return jdbcTemplate.query(teacherQueries.getProperty(GET_BY_ID),
                                   preparedStatement -> preparedStatement.setInt(1, id), 
                                   resultSet -> {
                                       TeacherEntity teacher = new TeacherEntity();
