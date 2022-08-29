@@ -22,7 +22,7 @@ public class TimetableJdbcDao implements TimetableDao {
     private static final String GET_BY_ID = "timetable.getById";
     private static final String INSERT = "timetable.insert";
     private static final String GROUP_NAME = "group_name";
-    private static final String WEEK_DAY = "week_day";
+    private static final String WEEK_DAY_COLUMN = "week_day";
     private static final String TIMETABLE_DESCRIPTION = "description";
     private static final String END_TIME = "end_time";
     private static final String START_TIME = "start_time";
@@ -60,6 +60,7 @@ public class TimetableJdbcDao implements TimetableDao {
                                           timetable.setStartTime(resultSet.getLong(START_TIME));
                                           timetable.setEndTime(resultSet.getLong(END_TIME));
                                           timetable.setDescription(resultSet.getString(TIMETABLE_DESCRIPTION));
+                                          timetable.setWeekDay(WeekDayEntity.valueOf(resultSet.getString(WEEK_DAY_COLUMN)));
                                       }
                                       return timetable;
                                   });
@@ -82,7 +83,7 @@ public class TimetableJdbcDao implements TimetableDao {
                                           timetable.setEndTime(resultSet.getLong(END_TIME));
                                           timetable.setCourse(new CourseEntity(resultSet.getInt(COURSE_ID)));
                                           timetable.setDescription(resultSet.getString(TIMETABLE_DESCRIPTION));
-                                          timetable.setWeekDay(WeekDayEntity.valueOf(resultSet.getString(WEEK_DAY)));
+                                          timetable.setWeekDay(WeekDayEntity.valueOf(resultSet.getString(WEEK_DAY_COLUMN)));
                                       }
                                       return timetable;
                                   });
@@ -102,7 +103,7 @@ public class TimetableJdbcDao implements TimetableDao {
                                          timetable.setStartTime(resultSet.getLong(START_TIME));
                                          timetable.setEndTime(resultSet.getLong(END_TIME));
                                          timetable.setDescription(resultSet.getString(TIMETABLE_DESCRIPTION));
-                                         timetable.setWeekDay(WeekDayEntity.valueOf(resultSet.getString(WEEK_DAY)));
+                                         timetable.setWeekDay(WeekDayEntity.valueOf(resultSet.getString(WEEK_DAY_COLUMN)));
                                      }
                                      return timetable;
                                   });
