@@ -60,8 +60,8 @@ public class Boot {
         TimetableEntity timetable = timetableDao.getById(1);
         System.out.println(timetable.toString());
         
-        CourseService courseService = context.getBean("courseServiceImpl", CourseServiceImpl.class);
-        int status = courseService.addCourseToTeacherById(course, 2);
+    //    CourseService courseService = context.getBean("courseServiceImpl", CourseServiceImpl.class);
+    //    int status = courseService.addCourseToTeacherById(course, 2);
         
         
     }

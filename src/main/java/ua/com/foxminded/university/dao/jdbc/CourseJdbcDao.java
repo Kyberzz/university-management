@@ -3,6 +3,7 @@ package ua.com.foxminded.university.dao.jdbc;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -53,10 +54,11 @@ public class CourseJdbcDao implements CourseDao {
                     TimetableEntity timetable = null;
                     
                     while(resultSet.next()) {
-                        if(resultSet.getInt(COURSE_ID) != course.getId()) {
+                        if(course == null) {
                             course = getCourseEntity(resultSet);
-                        }
-                            
+                            course.setTimetableList(new ArrayList<>());
+                        } 
+                                                                            
                         timetable = getTimetableEntity(resultSet);
                         course.getTimetableList().add(timetable);
                     }
@@ -72,7 +74,7 @@ public class CourseJdbcDao implements CourseDao {
     
     public int update(CourseEntity entity) {
         return jdbcTemplate.update(courseQueries.getProperty(UPDATE),
-                                   preparedStatement -> getPreperedStatementOfUpdate(preparedStatement, 
+                                   preparedStatement -> getPreparedStatementOfUpdate(preparedStatement, 
                                                                                      entity));
     }
     
@@ -92,7 +94,7 @@ public class CourseJdbcDao implements CourseDao {
     
     public int insert(CourseEntity entity) {
         return jdbcTemplate.update(courseQueries.getProperty(INSERT),
-                                   preparedStatement -> getPreparedStatementOfUpdate(preparedStatement, 
+                                   preparedStatement -> getPreparedStatementOfInsert(preparedStatement, 
                                                                                      entity));
     }
     
@@ -108,7 +110,7 @@ public class CourseJdbcDao implements CourseDao {
         return timetable;
     }
 
-    private PreparedStatement getPreperedStatementOfUpdate(PreparedStatement preparedStatement, 
+    private PreparedStatement getPreparedStatementOfUpdate(PreparedStatement preparedStatement, 
                                                            CourseEntity entity) throws SQLException {
         preparedStatement.setInt(1, entity.getTeacher().getId());
         preparedStatement.setString(2, entity.getName());
@@ -126,7 +128,7 @@ public class CourseJdbcDao implements CourseDao {
         return course;
     }
     
-    private PreparedStatement getPreparedStatementOfUpdate(PreparedStatement preparedStatement, 
+    private PreparedStatement getPreparedStatementOfInsert(PreparedStatement preparedStatement, 
                                                            CourseEntity entity) throws SQLException {
         preparedStatement.setInt(1, entity.getTeacher().getId());
         preparedStatement.setString(2, entity.getName());
