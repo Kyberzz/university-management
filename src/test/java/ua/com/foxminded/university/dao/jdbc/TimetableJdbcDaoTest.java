@@ -47,10 +47,10 @@ class TimetableJdbcDaoTest {
     private static final int TIMETABLE_ID_NUMBER = 1;
     
     @Autowired
-    JdbcTemplate jdbcTemplate;
+    private JdbcTemplate jdbcTemplate;
     
     @Autowired
-    Environment timetableQueries;
+    private Environment timetableQueries;
 
     @Test
     void insert_InsertingTimetableDataToDatabase_DatabaseHasCorrectData() {

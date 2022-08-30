@@ -63,7 +63,7 @@ public class CourseServiceImpl implements CourseService<CourseModel> {
         if (courseEntity == null) {
             return BAD_STATUS;
         } else {
-            courseEntity.getTeacher().setId(null);
+            courseEntity.setTeacher(new TeacherEntity());
             return courseDao.update(courseEntity);
         }
     }

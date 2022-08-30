@@ -40,10 +40,10 @@ class StudentJdbcDaoTest {
     
    
     @Autowired
-    JdbcTemplate jdbcTemplate;
+    private JdbcTemplate jdbcTemplate;
     
     @Autowired
-    Environment queries;
+    private Environment queries;
     
     @Test
     void update_UdatingDatabaseData_DatabaseHasCorrectData() {

@@ -9,6 +9,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -16,14 +18,18 @@ import ua.com.foxminded.university.config.TestAppConfig;
 import ua.com.foxminded.university.dao.GroupDao;
 import ua.com.foxminded.university.entity.GroupEntity;
 
+@DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 @ContextConfiguration(classes = TestAppConfig.class)
 @ExtendWith(SpringExtension.class)
 class GroupJdbcDaoTest {
     
+    private static final String GROUP_NAME_COLUMN = "name";
+    private static final String GROUP_ID_COLUMN = "id";
     private static final String SELECT_GROUP_BY_ID = "test.selectGroupById";
     private static final String EXPECTED_WEEK_DAY = "MONDAY";
     private static final String EXPECTED_STUDENT_LAST_NAME = "Smith";
     private static final String EXPECTED_STUDENT_FIST_NAME = "Julitta";
+    private static final String NEW_GROUP_NAME = "kt-53";
     private static final String EXPECTED_GROUP_NAME = "kt-52";
     private static final long EXPECTED_ENDTIME = 39360000;
     private static final long EXPECTED_START_TIME = 36360000;
@@ -35,22 +41,24 @@ class GroupJdbcDaoTest {
     private static final int GROUP_ID_NUMBER = 2;
     
     @Autowired
-    JdbcTemplate jdbcTemplate;
+    private JdbcTemplate jdbcTemplate;
     
     @Autowired
-    Environment groupQueries;
+    private Environment groupQueries;
     
+    @Test
     void insert_InsertingDataOfGroupToDatabase_DatabaseHasCorrectData() {
         GroupDao groupDao = new GroupJdbcDao(groupQueries, jdbcTemplate);
         GroupEntity group = new GroupEntity();
-        group.setName(EXPECTED_GROUP_NAME);
+        group.setName(NEW_GROUP_NAME);
         groupDao.insert(group);
         Map<String, Object> insertedGroup = jdbcTemplate.queryForMap(
                 groupQueries.getProperty(SELECT_GROUP_BY_ID), 
                 INSERTED_GROUP_ID);
-        assertEquals(insertedGroup, group);
+        assertEquals(NEW_GROUP_NAME, insertedGroup.get(GROUP_NAME_COLUMN));
     }
     
+    @Test
     void getById_ReceivingDatabaseDataOfGroup_CorrectReceivedData() {
         GroupDao groupDao = new GroupJdbcDao(groupQueries, jdbcTemplate);
         GroupEntity group = groupDao.getById(GROUP_ID_NUMBER);
@@ -59,6 +67,7 @@ class GroupJdbcDaoTest {
         assertEquals(EXPECTED_GROUP_NAME, group.getName());
     }
     
+    @Test
     void update_UpdatingDatabaseDataOfGroup_DatabaseHasCorrectData() {
         GroupDao groupDao = new GroupJdbcDao(groupQueries, jdbcTemplate);
         GroupEntity group = new GroupEntity();
@@ -69,7 +78,8 @@ class GroupJdbcDaoTest {
         Map<String, Object> updatedGroup = jdbcTemplate.queryForMap(
                 groupQueries.getProperty(SELECT_GROUP_BY_ID),
                 GROUP_ID_NUMBER);
-        assertEquals(group, updatedGroup);
+        assertEquals(group.getId(), updatedGroup.get(GROUP_ID_COLUMN));
+        assertEquals(group.getName(), updatedGroup.get(GROUP_NAME_COLUMN));
     }
     
     @Test

@@ -2,6 +2,7 @@ package ua.com.foxminded.university.dao.jdbc;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.util.Map;
 
@@ -43,10 +44,10 @@ class CourseJdbcDaoTest {
     private static final int FIRST_ELEMENT = 0;
     
     @Autowired
-    public JdbcTemplate jdbcTemplate;
+    private JdbcTemplate jdbcTemplate;
     
     @Autowired
-    public Environment queries;
+    private  Environment queries;
     
     @Test
     void getTimetableListByCourseId_GettingDatabaseTimetableData_CorrectData() {
@@ -107,6 +108,21 @@ class CourseJdbcDaoTest {
         assertEquals(EXPECTED_COURSE_NAME, receivedCourse.getName());
         assertEquals(EXPECTED_TEACHER_ID, receivedCourse.getTeacher().getId());
         assertEquals(EXPECTED_COURSE_DESCRIPTION, receivedCourse.getDescription());
+    }
+    
+    @Test
+    void update_UdatingDatabaseWithNullValues_DatabaseHasNoData() {
+        CourseJdbcDao courseDao = new CourseJdbcDao(jdbcTemplate, queries);
+        CourseEntity course = new CourseEntity();
+        course.setId(COURSE_ID_NUMBER);
+        course.setName(EXPECTED_COURSE_NAME);
+        course.setTeacher(new TeacherEntity());
+        courseDao.update(course);
+        Map<String, Object> updatedCourse = jdbcTemplate.queryForMap(
+                queries.getProperty(SELECT_COURSE_BY_ID), 
+                COURSE_ID_NUMBER);
+        assertNull(updatedCourse.get(COURSE_DESCRIPTION_COLUMN));
+        assertNull(updatedCourse.get(TEACHER_ID_COLUMN));
     }
     
     @Test
