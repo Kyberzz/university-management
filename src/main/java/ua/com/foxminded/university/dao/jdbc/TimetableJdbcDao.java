@@ -53,14 +53,7 @@ public class TimetableJdbcDao implements TimetableDao {
                 timetableQueries.getProperty(GET_COURCE_BY_TIMETABLE_ID),
                 preparedStatement -> preparedStatement.setInt(1, id), 
                 resultSet -> {
-                    TimetableEntity timetable = null;
-
-                    while (resultSet.next()) {
-                        CourseEntity course = getCourseEntity(resultSet);
-                        timetable = getTimetableEntity(resultSet);
-                        timetable.setCourse(course);
-                    }
-                    return timetable;
+                    return getTimetableWithCourseData(resultSet);
                 });
         return timetableWithCourseData;
     }
@@ -71,20 +64,11 @@ public class TimetableJdbcDao implements TimetableDao {
                 timetableQueries.getProperty(GET_GROUP_BY_TIMETABLE_ID),
                 preparedStatement -> preparedStatement.setInt(1, id), 
                 resultSet -> {
-                    TimetableEntity timetable = null;
-
-                    while (resultSet.next()) {
-                        timetable = getTimetableEntity(resultSet);
-                        GroupEntity group = new GroupEntity();
-                        group.setId(resultSet.getInt(GROUP_ID));
-                        group.setName(resultSet.getString(GROUP_NAME));
-                        timetable.setGroup(group);
-                    }
-                    return timetable;
+                    return getTimetableWithGroupData(resultSet);
                 });
         return timetableWithGroupData;
     }
-
+    
     @Override
     public TimetableEntity getById(int id) {
         TimetableEntity timetableEntity = jdbcTemplate.query(
@@ -120,6 +104,30 @@ public class TimetableJdbcDao implements TimetableDao {
         return jdbcTemplate.update(timetableQueries.getProperty(INSERT),
                                    preparedStatement -> getPreparedStatementOfInsert(preparedStatement, 
                                                                                      entity));
+    }
+    
+    private TimetableEntity getTimetableWithCourseData(ResultSet resultSet) throws SQLException {
+        TimetableEntity timetable = null;
+
+        while (resultSet.next()) {
+            CourseEntity course = getCourseEntity(resultSet);
+            timetable = getTimetableEntity(resultSet);
+            timetable.setCourse(course);
+        }
+        return timetable;
+    }
+    
+    private TimetableEntity getTimetableWithGroupData(ResultSet resultSet) throws SQLException {
+        TimetableEntity timetable = null;
+
+        while (resultSet.next()) {
+            timetable = getTimetableEntity(resultSet);
+            GroupEntity group = new GroupEntity();
+            group.setId(resultSet.getInt(GROUP_ID));
+            group.setName(resultSet.getString(GROUP_NAME));
+            timetable.setGroup(group);
+        }
+        return timetable;
     }
     
     private CourseEntity getCourseEntity(ResultSet resultSet) throws SQLException {

@@ -44,19 +44,7 @@ public class TeacherJdbcDao implements TeacherDao {
                 teacherQueries.getProperty(GET_COURSE_LIST_BY_TEACHER_ID),
                 preparedStatement -> preparedStatement.setInt(1, id), 
                 resultSet -> {
-                    CourseEntity course = null;
-                    TeacherEntity teacher = null;
-
-                    while (resultSet.next()) {
-                        if (teacher == null) {
-                            teacher = getTeacherEntity(resultSet);
-                            teacher.setCourseList(new ArrayList<>());
-                        }
-
-                        course = getCourseEntity(resultSet);
-                        teacher.getCourseList().add(course);
-                    }
-                    return teacher;
+                    return getTeacherWithCourseList(resultSet);
                 });
         return teacherWithCourseList;
     }
@@ -97,6 +85,22 @@ public class TeacherJdbcDao implements TeacherDao {
                                        preparedStatement.setString(1, entity.getFirstName());
                                        preparedStatement.setString(2, entity.getLastName());
                                    });
+    }
+    
+    private TeacherEntity getTeacherWithCourseList(ResultSet resultSet) throws SQLException {
+        CourseEntity course = null;
+        TeacherEntity teacher = null;
+
+        while (resultSet.next()) {
+            if (teacher == null) {
+                teacher = getTeacherEntity(resultSet);
+                teacher.setCourseList(new ArrayList<>());
+            }
+
+            course = getCourseEntity(resultSet);
+            teacher.getCourseList().add(course);
+        }
+        return teacher;
     }
     
     private CourseEntity getCourseEntity(ResultSet resultSet) throws SQLException {

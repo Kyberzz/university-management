@@ -44,58 +44,68 @@ public class CourseJdbcDao implements CourseDao {
         this.jdbcTemplate = jdbcTemplate;
         this.courseQueries = courseQueries;
     }
-
+    
+    @Override
     public CourseEntity getTimetableListByCourseId(int id) {
         CourseEntity courseWithTimetableList = jdbcTemplate.query(
                 courseQueries.getProperty(GET_TIMETABL_LIST_BY_COURSE_ID), 
                 preparedStatement -> preparedStatement.setInt(1, id),
                 resultSet -> {
-                    CourseEntity course = null;
-                    TimetableEntity timetable = null;
-                    
-                    while(resultSet.next()) {
-                        if(course == null) {
-                            course = getCourseEntity(resultSet);
-                            course.setTimetableList(new ArrayList<>());
-                        } 
-                                                                            
-                        timetable = getTimetableEntity(resultSet);
-                        course.getTimetableList().add(timetable);
-                    }
-                    return course;
+                    return getCourseWithTimetableList(resultSet);
                 });
         return courseWithTimetableList;
     }
     
+    @Override
     public int deleteById(int id) {
         return jdbcTemplate.update(courseQueries.getProperty(DELETE_BY_ID),
                                    preparedStatement -> preparedStatement.setInt(1,id));
     }
     
+    @Override
     public int update(CourseEntity entity) {
         return jdbcTemplate.update(courseQueries.getProperty(UPDATE),
                                    preparedStatement -> getPreparedStatementOfUpdate(preparedStatement, 
                                                                                      entity));
     }
     
+    @Override
     public CourseEntity getById(int id) {
-        CourseEntity courseEntity = jdbcTemplate.query(courseQueries.getProperty(GET_BY_ID), 
-                                                       preparedStatement -> preparedStatement.setInt(1, id),
-                                                       resultSet -> {
-                                                           CourseEntity course = null;
-                                      
-                                                           while(resultSet.next()) {
-                                                               course = getCourseEntity(resultSet);
-                                                           }
-                                                           return course;
-                                                       });
+        CourseEntity courseEntity = jdbcTemplate.query(
+                courseQueries.getProperty(GET_BY_ID), 
+                preparedStatement -> preparedStatement.setInt(1, id),
+                resultSet -> {
+                    CourseEntity course = null;
+                    
+                    while(resultSet.next()) {
+                        course = getCourseEntity(resultSet);
+                    }
+                    return course;
+                });
         return courseEntity;
     }
     
+    @Override
     public int insert(CourseEntity entity) {
         return jdbcTemplate.update(courseQueries.getProperty(INSERT),
                                    preparedStatement -> getPreparedStatementOfInsert(preparedStatement, 
                                                                                      entity));
+    }
+    
+    private CourseEntity getCourseWithTimetableList(ResultSet resultSet) throws SQLException {
+        CourseEntity course = null;
+        TimetableEntity timetable = null;
+        
+        while(resultSet.next()) {
+            if(course == null) {
+                course = getCourseEntity(resultSet);
+                course.setTimetableList(new ArrayList<>());
+            } 
+                                                                
+            timetable = getTimetableEntity(resultSet);
+            course.getTimetableList().add(timetable);
+        }
+        return course;
     }
     
     private TimetableEntity getTimetableEntity (ResultSet resultSet) throws SQLException {

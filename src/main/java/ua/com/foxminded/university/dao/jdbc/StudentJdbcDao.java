@@ -35,31 +35,26 @@ public class StudentJdbcDao implements StudentDao {
         this.jdbcTemplate = jdbcTemplate;
         this.studentQueries = studentQueries;
     }
-
+    
+    @Override
     public StudentEntity getGroupByStudentId(int id) {
-        StudentEntity studentWithGroup = jdbcTemplate.query(
+        StudentEntity studentWithGroupData = jdbcTemplate.query(
                 studentQueries.getProperty(GET_GROUP_BY_STUDENT_ID),
                 preparedStatement -> preparedStatement.setInt(1, id), 
                 resultSet -> {
-                    StudentEntity student = null;
-
-                    while (resultSet.next()) {
-
-                        GroupEntity group = getGroupEntity(resultSet);
-                        student = getStudentEntity(resultSet);
-                        student.setGroup(group);
-                    }
-                    return student;
+                    return getStudentWithGroupData(resultSet);
                 });
-        return studentWithGroup;
+        return studentWithGroupData;
     }
     
+    @Override
     public int insert(StudentEntity entity) {
         return jdbcTemplate.update(studentQueries.getProperty(INSERT), 
                                    preparedStatement -> getPreparedStatementOfInsert(preparedStatement, 
                                                                                      entity));
     }
     
+    @Override
     public StudentEntity getById(int id) {
         StudentEntity studentEntity = jdbcTemplate.query(
                 studentQueries.getProperty(GET_BY_ID),
@@ -75,10 +70,22 @@ public class StudentJdbcDao implements StudentDao {
         return studentEntity;
     }
     
+    @Override
     public int update(StudentEntity entity) {
         return jdbcTemplate.update(studentQueries.getProperty(UPDATE), 
                                    preparedStatement -> getPreparedStetamentOfUdate(preparedStatement, 
                                                                                     entity));
+    }
+    
+    private StudentEntity getStudentWithGroupData(ResultSet resultSet) throws SQLException {
+        StudentEntity student = null;
+
+        while (resultSet.next()) {
+            GroupEntity group = getGroupEntity(resultSet);
+            student = getStudentEntity(resultSet);
+            student.setGroup(group);
+        }
+        return student;
     }
     
     public int deleteById(int id) {

@@ -45,59 +45,37 @@ public class GroupJdbcDao implements GroupDao {
         this.groupQueries = groupQueries;
         this.jdbcTemplate = jdbcTemplate;
     }
-
+    
+    @Override
     public GroupEntity getTimetableListByGroupId(int id) {
         GroupEntity groupWithTimetableList = jdbcTemplate.query(
                 groupQueries.getProperty(GET_TIMETABLE_LIST_BY_GROUP_ID),
                 preparedStatement -> preparedStatement.setInt(1, id), 
                 resultSet -> {
-                    GroupEntity group = null;
-                    TimetableEntity timetable = null;
-
-                    while (resultSet.next()) {
-                        if (group == null) {
-                            group = new GroupEntity();
-                            group.setId(resultSet.getInt(GROUP_ID));
-                            group.setName(resultSet.getString(GROUP_NAME));
-                            group.setTimetableList(new ArrayList<>());
-                        }
-
-                        timetable = getTimetableEntity(resultSet);
-                        group.getTimetableList().add(timetable);
-                    }
-                    return group;
+                    return getGroupWithTimetableList(resultSet);
                 });
         return groupWithTimetableList;
     }
     
+    @Override
     public GroupEntity getStudentListByGroupId(int id) {
         
         GroupEntity groupWithStudentList = jdbcTemplate.query(
                 groupQueries.getProperty(GET_STUDENT_LIST_BY_GROUP_ID),
                 preparedStatement -> preparedStatement.setInt(1, id), 
                 resultSet -> {
-                    GroupEntity group = null;
-                    StudentEntity student = null;
-
-                    while (resultSet.next()) {
-                        if (group == null) {
-                            group = getGroupEntity(resultSet);
-                            group.setStudentList(new ArrayList<>());
-                        }
-
-                        student = getStudentEntity(resultSet);
-                        group.getStudentList().add(student);
-                    }
-                    return group;
+                    return getGroupWithStudentList(resultSet);
                 });
         return groupWithStudentList;
     }
     
+    @Override
     public int insert(GroupEntity entity) {
         return jdbcTemplate.update(groupQueries.getProperty(INSERT),
                                    preparedStatement -> preparedStatement.setString(1, entity.getName()));
     }
     
+    @Override
     public GroupEntity getById(int id) {
         GroupEntity groupEntity = jdbcTemplate.query(groupQueries.getProperty(GET_BY_ID), 
                                   preparedStatement -> preparedStatement.setInt(1, id),
@@ -113,6 +91,7 @@ public class GroupJdbcDao implements GroupDao {
         return groupEntity;
     }
     
+    @Override
     public int update(GroupEntity entity) {
         return jdbcTemplate.update(groupQueries.getProperty(UPDATE),
                                    preparedStatement -> {
@@ -121,9 +100,44 @@ public class GroupJdbcDao implements GroupDao {
                                    });
     }
     
+    @Override
     public int deleteById(int id) {
         return jdbcTemplate.update(groupQueries.getProperty(DELETE_BY_ID), 
                                    preparedStatement -> preparedStatement.setInt(1, id));
+    }
+    
+    private GroupEntity getGroupWithStudentList(ResultSet resultSet) throws SQLException {
+        GroupEntity group = null;
+        StudentEntity student = null;
+
+        while (resultSet.next()) {
+            if (group == null) {
+                group = getGroupEntity(resultSet);
+                group.setStudentList(new ArrayList<>());
+            }
+
+            student = getStudentEntity(resultSet);
+            group.getStudentList().add(student);
+        }
+        return group;
+    }
+    
+    private GroupEntity getGroupWithTimetableList(ResultSet resultSet) throws SQLException {
+        GroupEntity group = null;
+        TimetableEntity timetable = null;
+
+        while (resultSet.next()) {
+            if (group == null) {
+                group = new GroupEntity();
+                group.setId(resultSet.getInt(GROUP_ID));
+                group.setName(resultSet.getString(GROUP_NAME));
+                group.setTimetableList(new ArrayList<>());
+            }
+
+            timetable = getTimetableEntity(resultSet);
+            group.getTimetableList().add(timetable);
+        }
+        return group;
     }
     
     private TimetableEntity getTimetableEntity(ResultSet resultSet) throws SQLException {
