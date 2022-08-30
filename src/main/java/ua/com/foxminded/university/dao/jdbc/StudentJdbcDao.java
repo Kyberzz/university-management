@@ -1,5 +1,9 @@
 package ua.com.foxminded.university.dao.jdbc;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -33,62 +37,86 @@ public class StudentJdbcDao implements StudentDao {
     }
 
     public StudentEntity getGroupByStudentId(int id) {
-        return jdbcTemplate.query(studentQueries.getProperty(GET_GROUP_BY_STUDENT_ID),
-                                  preparedStatement -> preparedStatement.setInt(1, id),
-                                  resultSet -> {
-                                      StudentEntity student = new StudentEntity();
-                                      GroupEntity group = new GroupEntity();
-                                      
-                                      while (resultSet.next()) {
-                                          group.setId(resultSet.getInt(GROUP_ID));
-                                          group.setName(resultSet.getString(GROUP_NAME));
-                                          student.setGroup(group);
-                                          student.setId(resultSet.getInt(STUDENT_ID));
-                                          student.setFirstName(resultSet.getString(FIRST_NAME));
-                                          student.setLastName(resultSet.getString(LAST_NAME));
-                                      }
-                                      return student;
-                                  });
+        StudentEntity studentWithGroup = jdbcTemplate.query(
+                studentQueries.getProperty(GET_GROUP_BY_STUDENT_ID),
+                preparedStatement -> preparedStatement.setInt(1, id), 
+                resultSet -> {
+                    StudentEntity student = null;
+
+                    while (resultSet.next()) {
+
+                        GroupEntity group = getGroupEntity(resultSet);
+                        student = getStudentEntity(resultSet);
+                        student.setGroup(group);
+                    }
+                    return student;
+                });
+        return studentWithGroup;
     }
     
     public int insert(StudentEntity entity) {
         return jdbcTemplate.update(studentQueries.getProperty(INSERT), 
-                                   preparedStatement -> {
-                                       preparedStatement.setString(1, entity.getFirstName());
-                                       preparedStatement.setString(2, entity.getLastName());
-                                       preparedStatement.setInt(3, entity.getGroup().getId());
-                                   });
+                                   preparedStatement -> getPreparedStatementOfInsert(preparedStatement, 
+                                                                                     entity));
     }
     
     public StudentEntity getById(int id) {
-        return jdbcTemplate.query(studentQueries.getProperty(GET_BY_ID), 
-                                  preparedStatement -> preparedStatement.setInt(1, id), 
-                                  resultSet -> {
-                                      StudentEntity student = new StudentEntity();
-                                      
-                                      while (resultSet.next()) {
-                                          student.setId(resultSet.getInt(STUDENT_ID));
-                                          student.setFirstName(resultSet.getString(FIRST_NAME));
-                                          student.setLastName(resultSet.getString(LAST_NAME));
-                                          student.setGroup(new GroupEntity(resultSet.getInt(GROUP_ID)));
-                                      }
-                                      return student;
-                                  });
+        StudentEntity studentEntity = jdbcTemplate.query(
+                studentQueries.getProperty(GET_BY_ID),
+                preparedStatement -> preparedStatement.setInt(1, id), 
+                resultSet -> {
+                    StudentEntity student = null;
+
+                    while (resultSet.next()) {
+                        student = getStudentEntity(resultSet);
+                    }
+                    return student;
+                });
+        return studentEntity;
     }
     
     public int update(StudentEntity entity) {
         return jdbcTemplate.update(studentQueries.getProperty(UPDATE), 
-                                   preparedStatement -> {
-                                       preparedStatement.setString(1, entity.getFirstName());
-                                       preparedStatement.setString(2, entity.getLastName());
-                                       preparedStatement.setInt(3, entity.getGroup().getId());
-                                       preparedStatement.setInt(4, entity.getId());
-                                   });
+                                   preparedStatement -> getPreparedStetamentOfUdate(preparedStatement, 
+                                                                                    entity));
     }
     
     public int deleteById(int id) {
         return jdbcTemplate.update(studentQueries.getProperty(DELETE_BY_ID), 
                                    preparedStatement -> preparedStatement.setInt(1, id));
         
+    }
+    
+    private GroupEntity getGroupEntity(ResultSet resultSet) throws SQLException {
+        GroupEntity group = new GroupEntity();
+        group.setId(resultSet.getInt(GROUP_ID));
+        group.setName(resultSet.getString(GROUP_NAME));
+        return group;
+    }
+    
+    private PreparedStatement getPreparedStatementOfInsert(PreparedStatement preparedStatement, 
+                                                           StudentEntity entity) throws SQLException {
+        preparedStatement.setString(1, entity.getFirstName());
+        preparedStatement.setString(2, entity.getLastName());
+        preparedStatement.setInt(3, entity.getGroup().getId());
+        return preparedStatement;
+    }
+    
+    private StudentEntity getStudentEntity(ResultSet resultSet) throws SQLException {
+        StudentEntity student = new StudentEntity();
+        student.setId(resultSet.getInt(STUDENT_ID));
+        student.setFirstName(resultSet.getString(FIRST_NAME));
+        student.setLastName(resultSet.getString(LAST_NAME));
+        student.setGroup(new GroupEntity(resultSet.getInt(GROUP_ID)));
+        return student;
+    }
+    
+    private PreparedStatement getPreparedStetamentOfUdate(PreparedStatement preparedStatement, 
+                                                          StudentEntity entity) throws SQLException {
+        preparedStatement.setString(1, entity.getFirstName());
+        preparedStatement.setString(2, entity.getLastName());
+        preparedStatement.setInt(3, entity.getGroup().getId());
+        preparedStatement.setInt(4, entity.getId());
+        return preparedStatement;
     }
 }
