@@ -1,7 +1,8 @@
 package ua.com.foxminded.university.dao.jdbc;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -24,7 +25,7 @@ public class CourseJdbcDao implements CourseDao {
     private static final String START_TIME = "start_time";
     private static final String GROUP_ID = "group_id";
     private static final String TIMETABLE_ID = "timetable_id";
-    private static final String GET_TIMETABLES_BY_COURSE_ID = "course.getTimetableListByCourseId";
+    private static final String GET_TIMETABL_LIST_BY_COURSE_ID = "course.getTimetableListByCourseId";
     private static final String UPDATE = "course.update";
     private static final String COURSE_DESCRIPTION = "description";
     private static final String COURSE_NAME = "name";
@@ -44,33 +45,24 @@ public class CourseJdbcDao implements CourseDao {
     }
 
     public CourseEntity getTimetableListByCourseId(int id) {
-        return jdbcTemplate.query(courseQueries.getProperty(GET_TIMETABLES_BY_COURSE_ID), 
-                                  preparedStatement -> preparedStatement.setInt(1, id),
-                                  resultSet -> {
-                                      List<TimetableEntity> timetableList = new ArrayList<>();
-                                      CourseEntity course = new CourseEntity();
-                                      TimetableEntity timetable = new TimetableEntity();
-                                      
-                                      while(resultSet.next()) {
-                                          if(resultSet.getInt(COURSE_ID) != course.getId()) {
-                                              course.setId(resultSet.getInt(COURSE_ID));
-                                              course.setTeacher(new TeacherEntity(resultSet.getInt(TEACHER_ID)));
-                                              course.setName(resultSet.getString(COURSE_NAME));
-                                              course.setDescription(resultSet.getString(COURSE_DESCRIPTION));
-                                          }
-                                          
-                                          timetable.setId(resultSet.getInt(TIMETABLE_ID));
-                                          timetable.setGroup(new GroupEntity(resultSet.getInt(GROUP_ID)));
-                                          timetable.setCourse(course);
-                                          timetable.setStartTime(resultSet.getLong(START_TIME));
-                                          timetable.setEndTime(resultSet.getLong(END_TIME));
-                                          timetable.setDescription(resultSet.getString(TIMETABLE_DESCRIPTION));
-                                          timetable.setWeekDay(WeekDayEntity.valueOf(resultSet.getString(WEEK_DAY)));
-                                          timetableList.add(timetable);
-                                          course.setTimetableList(timetableList);
-                                      }
-                                      return course;
-                                  });
+        CourseEntity courseWithTimetableList = jdbcTemplate.query(
+                courseQueries.getProperty(GET_TIMETABL_LIST_BY_COURSE_ID), 
+                preparedStatement -> preparedStatement.setInt(1, id),
+                resultSet -> {
+                    CourseEntity course = null;
+                    TimetableEntity timetable = null;
+                    
+                    while(resultSet.next()) {
+                        if(resultSet.getInt(COURSE_ID) != course.getId()) {
+                            course = getCourseEntity(resultSet);
+                        }
+                            
+                        timetable = getTimetableEntity(resultSet);
+                        course.getTimetableList().add(timetable);
+                    }
+                    return course;
+                });
+        return courseWithTimetableList;
     }
     
     public int deleteById(int id) {
@@ -80,36 +72,65 @@ public class CourseJdbcDao implements CourseDao {
     
     public int update(CourseEntity entity) {
         return jdbcTemplate.update(courseQueries.getProperty(UPDATE),
-                                   preparedStatement -> {
-                                       preparedStatement.setInt(1, entity.getTeacher().getId());
-                                       preparedStatement.setString(2, entity.getName());
-                                       preparedStatement.setString(3, entity.getDescription());
-                                       preparedStatement.setInt(4, entity.getId());
-                                   });
+                                   preparedStatement -> getPreperedStatementOfUpdate(preparedStatement, 
+                                                                                     entity));
     }
     
     public CourseEntity getById(int id) {
-        return jdbcTemplate.query(courseQueries.getProperty(GET_BY_ID), 
-                                  preparedStatement -> preparedStatement.setInt(1, id),
-                                  resultSet -> {
-                                      CourseEntity course = new CourseEntity();
+        CourseEntity courseEntity = jdbcTemplate.query(courseQueries.getProperty(GET_BY_ID), 
+                                                       preparedStatement -> preparedStatement.setInt(1, id),
+                                                       resultSet -> {
+                                                           CourseEntity course = null;
                                       
-                                      while(resultSet.next()) {
-                                          course.setId(resultSet.getInt(COURSE_ID));
-                                          course.setTeacher(new TeacherEntity(resultSet.getInt(TEACHER_ID)));
-                                          course.setName(resultSet.getString(COURSE_NAME));
-                                          course.setDescription(resultSet.getString(COURSE_DESCRIPTION));
-                                      }
-                                      return course;
-                                  });
+                                                           while(resultSet.next()) {
+                                                               course = getCourseEntity(resultSet);
+                                                           }
+                                                           return course;
+                                                       });
+        return courseEntity;
     }
     
     public int insert(CourseEntity entity) {
         return jdbcTemplate.update(courseQueries.getProperty(INSERT),
-                                   preparedStatement -> {
-                                       preparedStatement.setInt(1, entity.getTeacher().getId());
-                                       preparedStatement.setString(2, entity.getName());
-                                       preparedStatement.setString(3, entity.getDescription());
-                                   });
+                                   preparedStatement -> getPreparedStatementOfUpdate(preparedStatement, 
+                                                                                     entity));
+    }
+    
+    private TimetableEntity getTimetableEntity (ResultSet resultSet) throws SQLException {
+        TimetableEntity timetable = new TimetableEntity();
+        timetable.setId(resultSet.getInt(TIMETABLE_ID));
+        timetable.setGroup(new GroupEntity(resultSet.getInt(GROUP_ID)));
+        timetable.setCourse(new CourseEntity(resultSet.getInt(COURSE_ID)));
+        timetable.setStartTime(resultSet.getLong(START_TIME));
+        timetable.setEndTime(resultSet.getLong(END_TIME));
+        timetable.setDescription(resultSet.getString(TIMETABLE_DESCRIPTION));
+        timetable.setWeekDay(WeekDayEntity.valueOf(resultSet.getString(WEEK_DAY)));
+        return timetable;
+    }
+
+    private PreparedStatement getPreperedStatementOfUpdate(PreparedStatement preparedStatement, 
+                                                           CourseEntity entity) throws SQLException {
+        preparedStatement.setInt(1, entity.getTeacher().getId());
+        preparedStatement.setString(2, entity.getName());
+        preparedStatement.setString(3, entity.getDescription());
+        preparedStatement.setInt(4, entity.getId());
+        return preparedStatement;
+    }
+    
+    private CourseEntity getCourseEntity(ResultSet resultSet) throws SQLException {
+        CourseEntity course = new CourseEntity();
+        course.setId(resultSet.getInt(COURSE_ID));
+        course.setTeacher(new TeacherEntity(resultSet.getInt(TEACHER_ID)));
+        course.setName(resultSet.getString(COURSE_NAME));
+        course.setDescription(resultSet.getString(COURSE_DESCRIPTION));
+        return course;
+    }
+    
+    private PreparedStatement getPreparedStatementOfUpdate(PreparedStatement preparedStatement, 
+                                                           CourseEntity entity) throws SQLException {
+        preparedStatement.setInt(1, entity.getTeacher().getId());
+        preparedStatement.setString(2, entity.getName());
+        preparedStatement.setString(3, entity.getDescription());
+        return preparedStatement;
     }
 }
