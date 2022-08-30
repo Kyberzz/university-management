@@ -1,4 +1,4 @@
-package ua.com.foxminded.university.dao.jdbc;
+package ua.com.foxminded.university.config;
 
 import javax.sql.DataSource;
 
@@ -11,7 +11,7 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 
 @PropertySource({"/queries.properties", "/test-queries.properties"})
 @Configuration
-public class JdbcDaoTestConfig {
+public class TestAppConfig {
     
     @Bean
     public JdbcTemplate jdbcTemplate() {

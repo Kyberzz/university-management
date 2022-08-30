@@ -3,13 +3,13 @@ package ua.com.foxminded.university;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
+import ua.com.foxminded.university.config.AppConfig;
 import ua.com.foxminded.university.dao.CourseDao;
 import ua.com.foxminded.university.dao.GroupDao;
 import ua.com.foxminded.university.dao.StudentDao;
 import ua.com.foxminded.university.dao.TeacherDao;
 import ua.com.foxminded.university.dao.TimetableDao;
 import ua.com.foxminded.university.dao.jdbc.CourseJdbcDao;
-import ua.com.foxminded.university.dao.jdbc.JdbcDaoConfig;
 import ua.com.foxminded.university.dao.jdbc.GroupJdbcDao;
 import ua.com.foxminded.university.dao.jdbc.StudentJdbcDao;
 import ua.com.foxminded.university.dao.jdbc.TeacherJdbcDao;
@@ -37,7 +37,7 @@ public class Boot {
          * System.out.println(student.toString());
          */
 
-        ApplicationContext context = new AnnotationConfigApplicationContext(JdbcDaoConfig.class);
+        ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
        
         CourseDao courseDao = context.getBean("courseJdbcDao", CourseJdbcDao.class);
         CourseEntity course = courseDao.getById(1);

@@ -15,11 +15,12 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import ua.com.foxminded.university.config.TestAppConfig;
 import ua.com.foxminded.university.entity.GroupEntity;
 import ua.com.foxminded.university.entity.StudentEntity;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = JdbcDaoTestConfig.class)
+@ContextConfiguration(classes = TestAppConfig.class)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 class StudentJdbcDaoTest {
     

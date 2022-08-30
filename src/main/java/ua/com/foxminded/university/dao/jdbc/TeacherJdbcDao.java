@@ -29,8 +29,8 @@ public class TeacherJdbcDao implements TeacherDao {
     private static final String TEACHER_ID = "id";
     private static final String GET_BY_ID = "teacher.getById";
     
-    JdbcTemplate jdbcTemplate;
-    Environment teacherQueries;
+    private JdbcTemplate jdbcTemplate;
+    private Environment teacherQueries;
     
     @Autowired
     public TeacherJdbcDao(JdbcTemplate jdbcTemplate, Environment teacherQueries) {

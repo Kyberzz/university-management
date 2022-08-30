@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class CourseModel {
-    private int id;
+    private Integer id;
     private TeacherModel teacher;
     private String name;
     private String description;
@@ -13,15 +13,15 @@ public class CourseModel {
     public CourseModel() {
     }
 
-    public CourseModel(int id) {
+    public CourseModel(Integer id) {
         this.id = id;
     }
     
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

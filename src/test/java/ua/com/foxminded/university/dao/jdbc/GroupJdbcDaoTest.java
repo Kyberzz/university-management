@@ -12,10 +12,11 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import ua.com.foxminded.university.config.TestAppConfig;
 import ua.com.foxminded.university.dao.GroupDao;
 import ua.com.foxminded.university.entity.GroupEntity;
 
-@ContextConfiguration(classes = JdbcDaoTestConfig.class)
+@ContextConfiguration(classes = TestAppConfig.class)
 @ExtendWith(SpringExtension.class)
 class GroupJdbcDaoTest {
     

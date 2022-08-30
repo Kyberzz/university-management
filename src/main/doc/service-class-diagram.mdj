@@ -223,7 +223,7 @@
 											"top": 235,
 											"width": 409.45703125,
 											"height": 14,
-											"text": "+removeCourseOfTeacherById(courseId: int, teacherId: int): int",
+											"text": "+removeCourseOfTeacherById(courseId: int): int",
 											"horizontalAlignment": 0
 										},
 										{
@@ -841,7 +841,7 @@
 											"top": 217,
 											"width": 430.7099609375,
 											"height": 14,
-											"text": "+updateTimetableOfCourse(timetable: T): int",
+											"text": "+updateTimetable(timetable: T): int",
 											"horizontalAlignment": 0
 										},
 										{
@@ -860,7 +860,7 @@
 											"top": 233,
 											"width": 430.7099609375,
 											"height": 14,
-											"text": "+removeTimetableOfCourseById(timetableId: int, courseId: int): int",
+											"text": "+removeTimetableOfCourseById(timetableId: int): int",
 											"horizontalAlignment": 0
 										},
 										{
@@ -917,7 +917,7 @@
 											"top": 281,
 											"width": 430.7099609375,
 											"height": 14,
-											"text": "+removeTimetableOfGroupById(timetableId: int, groupId: int): int",
+											"text": "+removeTimetableOfGroupById(timetableId: int): int",
 											"horizontalAlignment": 0
 										}
 									],
@@ -2246,7 +2246,7 @@
 											"top": 554,
 											"width": 393,
 											"height": 14,
-											"text": "+getCourseListByTeacherById(id: int): T",
+											"text": "+getCourseListByTeacherId(id: int): T",
 											"horizontalAlignment": 0
 										}
 									],
@@ -2499,7 +2499,7 @@
 											"top": 607,
 											"width": 412.587890625,
 											"height": 14,
-											"text": "+updateStudentOfGroup(student: T): int",
+											"text": "+updateStudent(student: T): int",
 											"horizontalAlignment": 0
 										},
 										{
@@ -2518,7 +2518,7 @@
 											"top": 623,
 											"width": 412.587890625,
 											"height": 14,
-											"text": "+removeStudentFromGroupById(studentId: int, groupId: int): int",
+											"text": "+removeStudentFromGroupById(studentId: int): int",
 											"horizontalAlignment": 0
 										}
 									],
@@ -3326,15 +3326,6 @@
 									},
 									"type": "int",
 									"direction": "return"
-								},
-								{
-									"_type": "UMLParameter",
-									"_id": "AAAAAAGC6Mv0L8JXhVU=",
-									"_parent": {
-										"$ref": "AAAAAAGC6MR0IcJFW1I="
-									},
-									"name": "teacherId",
-									"type": "int"
 								}
 							]
 						},
@@ -3490,7 +3481,7 @@
 							"_parent": {
 								"$ref": "AAAAAAGC6M+mLsJ68H0="
 							},
-							"name": "updateTimetableOfCourse",
+							"name": "updateTimetable",
 							"parameters": [
 								{
 									"_type": "UMLParameter",
@@ -3529,15 +3520,6 @@
 										"$ref": "AAAAAAGC6Nd+rMLQ1Mc="
 									},
 									"name": "timetableId",
-									"type": "int"
-								},
-								{
-									"_type": "UMLParameter",
-									"_id": "AAAAAAGC6NgeZsLYS5M=",
-									"_parent": {
-										"$ref": "AAAAAAGC6Nd+rMLQ1Mc="
-									},
-									"name": "courseId",
 									"type": "int"
 								},
 								{
@@ -3626,15 +3608,6 @@
 										"$ref": "AAAAAAGC6Nk/1cLrzM4="
 									},
 									"name": "timetableId",
-									"type": "int"
-								},
-								{
-									"_type": "UMLParameter",
-									"_id": "AAAAAAGC6NoGlsLzTUI=",
-									"_parent": {
-										"$ref": "AAAAAAGC6Nk/1cLrzM4="
-									},
-									"name": "groupId",
 									"type": "int"
 								},
 								{
@@ -4187,7 +4160,7 @@
 							"_parent": {
 								"$ref": "AAAAAAGC6O6zCMPV7CY="
 							},
-							"name": "getCourseListByTeacherById",
+							"name": "getCourseListByTeacherId",
 							"parameters": [
 								{
 									"_type": "UMLParameter",
@@ -4270,7 +4243,7 @@
 							"_parent": {
 								"$ref": "AAAAAAGC6RrHy8SyIbc="
 							},
-							"name": "updateStudentOfGroup",
+							"name": "updateStudent",
 							"parameters": [
 								{
 									"_type": "UMLParameter",
@@ -4309,15 +4282,6 @@
 										"$ref": "AAAAAAGC6SGBWMT41xs="
 									},
 									"name": "studentId",
-									"type": "int"
-								},
-								{
-									"_type": "UMLParameter",
-									"_id": "AAAAAAGC6SJadsUAKoA=",
-									"_parent": {
-										"$ref": "AAAAAAGC6SGBWMT41xs="
-									},
-									"name": "groupId",
 									"type": "int"
 								},
 								{

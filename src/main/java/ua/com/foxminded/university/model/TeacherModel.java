@@ -5,7 +5,7 @@ import java.util.Objects;
 
 public class TeacherModel {
 
-    private int id;
+    private Integer id;
     private String firstName;
     private String lastName;
     private List<CourseModel> courseList;
@@ -13,41 +13,50 @@ public class TeacherModel {
     public TeacherModel() {
     }
 
-    public TeacherModel(int id) {
+    
+    public TeacherModel(Integer id) {
         this.id = id;
     }
-
-    public int getId() {
+    
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+
+    public void setId(Integer id) {
         this.id = id;
     }
+
 
     public String getFirstName() {
         return firstName;
     }
 
+
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
+
 
     public String getLastName() {
         return lastName;
     }
 
+
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
+
 
     public List<CourseModel> getCourseList() {
         return courseList;
     }
 
+
     public void setCourseList(List<CourseModel> courseList) {
         this.courseList = courseList;
     }
+
 
     @Override
     public int hashCode() {

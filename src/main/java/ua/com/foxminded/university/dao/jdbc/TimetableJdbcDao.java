@@ -37,8 +37,8 @@ public class TimetableJdbcDao implements TimetableDao {
     private static final String COURSE_ID = "course_id";
     private static final String TIMETABLE_ID = "id";
     
-    JdbcTemplate jdbcTemplate;
-    Environment timetableQueries;
+    private JdbcTemplate jdbcTemplate;
+    private Environment timetableQueries;
     
     @Autowired
     public TimetableJdbcDao(JdbcTemplate jdbcTemplate, Environment timetableQueries) {

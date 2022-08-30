@@ -1,4 +1,4 @@
-package ua.com.foxminded.university.dao.jdbc;
+package ua.com.foxminded.university.config;
 
 import javax.sql.DataSource;
 
@@ -20,7 +20,7 @@ import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 @PropertySource({"/jdbc.properties", "/queries.properties"})
 @ComponentScan(basePackages = "ua.com.foxminded.university")
 @Configuration
-public class JdbcDaoConfig {
+public class AppConfig {
     
     private static final String SCHEMA_FILENAME = "db-schema.sql";
     private static final String PASSWORD = "jdbc.password";
@@ -60,8 +60,8 @@ public class JdbcDaoConfig {
     private DatabasePopulator databasePopulator() {
         ResourceDatabasePopulator databasePopulator = new ResourceDatabasePopulator();
         databasePopulator.setContinueOnError(true);
-        databasePopulator.addScript(new ClassPathResource(SCHEMA_FILENAME));
-        databasePopulator.addScript(dataScript);
+   //     databasePopulator.addScript(new ClassPathResource(SCHEMA_FILENAME));
+   //     databasePopulator.addScript(dataScript);
         return databasePopulator;
     }
 }

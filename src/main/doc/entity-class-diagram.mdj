@@ -225,6 +225,26 @@
 											"height": 14,
 											"text": "-timetableList: List<TimetableEntity>",
 											"horizontalAlignment": 0
+										},
+										{
+											"_type": "UMLAttributeView",
+											"_id": "AAAAAAGC79DY7362qzM=",
+											"_parent": {
+												"$ref": "AAAAAAGCJWzpILWS8Cs="
+											},
+											"model": {
+												"$ref": "AAAAAAGC79DY336zsnw="
+											},
+											"visible": false,
+											"fillColor": "#777676",
+											"font": "Arial;14;0",
+											"showShadow": false,
+											"left": 43,
+											"top": 147,
+											"width": 342.5009765625,
+											"height": 14,
+											"text": "-teacherList: List<TeacherEntity>",
+											"horizontalAlignment": 0
 										}
 									],
 									"fillColor": "#777676",
@@ -488,7 +508,7 @@
 							"left": 38,
 							"top": 36,
 							"width": 352.5009765625,
-							"height": 282,
+							"height": 298,
 							"nameCompartment": {
 								"$ref": "AAAAAAGCJWzpH7WNgpg="
 							},
@@ -3604,7 +3624,7 @@
 									"font": "Arial;14;0",
 									"showShadow": false,
 									"left": 223,
-									"top": 369,
+									"top": 377,
 									"height": 14,
 									"alpha": 1.5707963267948966,
 									"distance": 15,
@@ -3627,7 +3647,7 @@
 									"font": "Arial;14;0",
 									"showShadow": false,
 									"left": 238,
-									"top": 369,
+									"top": 377,
 									"height": 14,
 									"alpha": 1.5707963267948966,
 									"distance": 30,
@@ -3650,7 +3670,7 @@
 									"font": "Arial;14;0",
 									"showShadow": false,
 									"left": 194,
-									"top": 370,
+									"top": 378,
 									"height": 14,
 									"alpha": -1.5707963267948966,
 									"distance": 15,
@@ -3673,7 +3693,7 @@
 									"font": "Arial;14;0",
 									"showShadow": false,
 									"left": 224,
-									"top": 335,
+									"top": 351,
 									"height": 14,
 									"alpha": 0.5235987755982988,
 									"distance": 30,
@@ -3696,7 +3716,7 @@
 									"font": "Arial;14;0",
 									"showShadow": false,
 									"left": 237,
-									"top": 338,
+									"top": 354,
 									"height": 14,
 									"alpha": 0.7853981633974483,
 									"distance": 40,
@@ -3719,7 +3739,7 @@
 									"font": "Arial;14;0",
 									"showShadow": false,
 									"left": 196,
-									"top": 331,
+									"top": 347,
 									"height": 14,
 									"alpha": -0.5235987755982988,
 									"distance": 25,
@@ -3836,7 +3856,7 @@
 							"tail": {
 								"$ref": "AAAAAAGCJWzpH7WMRYw="
 							},
-							"points": "209:317;209:437",
+							"points": "209:333;209:437",
 							"showVisibility": true,
 							"nameLabel": {
 								"$ref": "AAAAAAGCJi/gnMmXjZM="
@@ -4260,6 +4280,16 @@
 							"name": "timetableList",
 							"visibility": "private",
 							"type": "List<TimetableEntity>"
+						},
+						{
+							"_type": "UMLAttribute",
+							"_id": "AAAAAAGC79DY336zsnw=",
+							"_parent": {
+								"$ref": "AAAAAAGCJWzpHbWKla8="
+							},
+							"name": "teacherList",
+							"visibility": "private",
+							"type": "List<TeacherEntity>"
 						}
 					],
 					"operations": [

@@ -122,7 +122,7 @@ public class CourseJdbcDao implements CourseDao {
 
     private PreparedStatement getPreparedStatementOfUpdate(PreparedStatement preparedStatement, 
                                                            CourseEntity entity) throws SQLException {
-        preparedStatement.setInt(1, entity.getTeacher().getId()); 
+        preparedStatement.setObject(1, entity.getTeacher().getId()); 
         preparedStatement.setString(2, entity.getName());
         preparedStatement.setString(3, entity.getDescription());
         preparedStatement.setInt(4, entity.getId());
@@ -140,7 +140,7 @@ public class CourseJdbcDao implements CourseDao {
     
     private PreparedStatement getPreparedStatementOfInsert(PreparedStatement preparedStatement, 
                                                            CourseEntity entity) throws SQLException {
-        preparedStatement.setInt(1, entity.getTeacher().getId()); 
+        preparedStatement.setObject(1, entity.getTeacher().getId()); 
         preparedStatement.setString(2, entity.getName());
         preparedStatement.setString(3, entity.getDescription());
         return preparedStatement;

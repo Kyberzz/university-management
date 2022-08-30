@@ -5,7 +5,7 @@ import java.util.Objects;
 
 public class GroupModel {
 
-    private int id;
+    private Integer id;
     private String name;
     private List<TimetableModel> timetableList;
     private List<StudentModel> studentList;
@@ -13,15 +13,15 @@ public class GroupModel {
     public GroupModel() {
     }
 
-    public GroupModel(int id) {
+    public GroupModel(Integer id) {
         this.id = id;
     }
-
-    public int getId() {
+    
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

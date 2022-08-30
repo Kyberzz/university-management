@@ -4,7 +4,7 @@ import java.util.Objects;
 
 public class TimetableModel {
 
-    private int id;
+    private Integer id;
     private GroupModel group;
     private CourseModel course;
     private long startTime;
@@ -16,10 +16,10 @@ public class TimetableModel {
         return id;
     }
 
-    public void setId(int id) {
+    public TimetableModel(Integer id) {
         this.id = id;
     }
-
+    
     public GroupModel getGroup() {
         return group;
     }
@@ -66,6 +66,10 @@ public class TimetableModel {
 
     public void setWeekDay(WeekDayModel weekDay) {
         this.weekDay = weekDay;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     @Override
