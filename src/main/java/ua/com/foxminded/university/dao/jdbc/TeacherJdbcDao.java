@@ -1,7 +1,9 @@
 package ua.com.foxminded.university.dao.jdbc;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -38,29 +40,25 @@ public class TeacherJdbcDao implements TeacherDao {
 
     @Override
     public TeacherEntity getCourseListByTeacherId(int id) {
-       return jdbcTemplate.query(teacherQueries.getProperty(GET_COURSE_LIST_BY_TEACHER_ID),
-                                 preparedStatement -> preparedStatement.setInt(1, id), 
-                                 resultSet -> {
-                                     List<CourseEntity> courseList = new ArrayList<>();
-                                     CourseEntity course = new CourseEntity();
-                                     TeacherEntity teacher = new TeacherEntity();
-                                     
-                                     while(resultSet.next()) {
-                                         if (resultSet.getInt(TEACHER_ID) != teacher.getId()) {
-                                             teacher.setId(resultSet.getInt(TEACHER_ID));
-                                             teacher.setFirstName(resultSet.getString(FIRST_NAME));
-                                             teacher.setLastName(resultSet.getString(LAST_NAME));
-                                         }
-                                         
-                                         course.setId(resultSet.getInt(COURSE_ID));
-                                         course.setName(resultSet.getString(COURSE_NAME));
-                                         course.setDescription(resultSet.getString(COURSE_DESCRIPTION));
-                                         course.setTeacher(teacher);
-                                         courseList.add(course);
-                                         teacher.setCourseList(courseList);
-                                     }
-                                     return teacher;
-                                 });
+        TeacherEntity teacherWithCourseList = jdbcTemplate.query(
+                teacherQueries.getProperty(GET_COURSE_LIST_BY_TEACHER_ID),
+                preparedStatement -> preparedStatement.setInt(1, id), 
+                resultSet -> {
+                    CourseEntity course = null;
+                    TeacherEntity teacher = null;
+
+                    while (resultSet.next()) {
+                        if (teacher == null) {
+                            teacher = getTeacherEntity(resultSet);
+                            teacher.setCourseList(new ArrayList<>());
+                        }
+
+                        course = getCourseEntity(resultSet);
+                        teacher.getCourseList().add(course);
+                    }
+                    return teacher;
+                });
+        return teacherWithCourseList;
     }
     
     @Override
@@ -72,27 +70,24 @@ public class TeacherJdbcDao implements TeacherDao {
     @Override
     public int update(TeacherEntity entity) {
         return jdbcTemplate.update(teacherQueries.getProperty(UPDATE), 
-                                   preparedStatement -> {
-                                       preparedStatement.setString(1, entity.getFirstName());
-                                       preparedStatement.setString(2, entity.getLastName());
-                                       preparedStatement.setInt(3, entity.getId());
-                                   });
+                                   preparedStatement -> getPreparedStatementOfUpdate(preparedStatement, 
+                                                                                     entity));
     }
     
     @Override
     public TeacherEntity getById(int id) {
-        return jdbcTemplate.query(teacherQueries.getProperty(GET_BY_ID),
-                                  preparedStatement -> preparedStatement.setInt(1, id), 
-                                  resultSet -> {
-                                      TeacherEntity teacher = new TeacherEntity();
+        TeacherEntity teacherEntity = jdbcTemplate.query(
+                teacherQueries.getProperty(GET_BY_ID),
+                preparedStatement -> preparedStatement.setInt(1, id), 
+                resultSet -> {
+                    TeacherEntity teacher = null;
 
-                                      while (resultSet.next()) {
-                                          teacher.setId(resultSet.getInt(TEACHER_ID));
-                                          teacher.setFirstName(resultSet.getString(FIRST_NAME));
-                                          teacher.setLastName(resultSet.getString(LAST_NAME));
-                                      }
-                                      return teacher;
-                                  });
+                    while (resultSet.next()) {
+                        teacher = getTeacherEntity(resultSet);
+                    }
+                    return teacher;
+                });
+        return teacherEntity;
     }
     
     @Override
@@ -102,5 +97,30 @@ public class TeacherJdbcDao implements TeacherDao {
                                        preparedStatement.setString(1, entity.getFirstName());
                                        preparedStatement.setString(2, entity.getLastName());
                                    });
+    }
+    
+    private CourseEntity getCourseEntity(ResultSet resultSet) throws SQLException {
+        CourseEntity course = new CourseEntity();
+        course.setId(resultSet.getInt(COURSE_ID));
+        course.setName(resultSet.getString(COURSE_NAME));
+        course.setDescription(resultSet.getString(COURSE_DESCRIPTION));
+        course.setTeacher(new TeacherEntity(resultSet.getInt(TEACHER_ID)));
+        return course;
+    }
+    
+    private PreparedStatement getPreparedStatementOfUpdate(PreparedStatement preparedStatement, 
+                                                           TeacherEntity entity) throws SQLException {
+        preparedStatement.setString(1, entity.getFirstName());
+        preparedStatement.setString(2, entity.getLastName());
+        preparedStatement.setInt(3, entity.getId());
+        return preparedStatement;
+    }
+    
+    private TeacherEntity getTeacherEntity(ResultSet resultSet) throws SQLException {
+        TeacherEntity teacher = new TeacherEntity();
+        teacher.setId(resultSet.getInt(TEACHER_ID));
+        teacher.setFirstName(resultSet.getString(FIRST_NAME));
+        teacher.setLastName(resultSet.getString(LAST_NAME));
+        return teacher;
     }
 }
