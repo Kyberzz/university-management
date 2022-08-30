@@ -19,9 +19,9 @@ import ua.com.foxminded.university.entity.GroupEntity;
 import ua.com.foxminded.university.entity.StudentEntity;
 import ua.com.foxminded.university.entity.TeacherEntity;
 import ua.com.foxminded.university.entity.TimetableEntity;
+import ua.com.foxminded.university.model.CourseModel;
 import ua.com.foxminded.university.service.CourseService;
 import ua.com.foxminded.university.service.impl.CourseServiceImpl;
-import ua.com.foxminded.university.service.impl.ServiceImplConfig;
 
 public class Boot {
 
@@ -37,7 +37,7 @@ public class Boot {
          * System.out.println(student.toString());
          */
 
-        ApplicationContext context = new AnnotationConfigApplicationContext(JdbcDaoConfig.class, ServiceImplConfig.class);
+        ApplicationContext context = new AnnotationConfigApplicationContext(JdbcDaoConfig.class);
        
         CourseDao courseDao = context.getBean("courseJdbcDao", CourseJdbcDao.class);
         CourseEntity course = courseDao.getById(1);
@@ -60,8 +60,9 @@ public class Boot {
         TimetableEntity timetable = timetableDao.getById(1);
         System.out.println(timetable.toString());
         
-    //    CourseService courseService = context.getBean("courseServiceImpl", CourseServiceImpl.class);
-    //    int status = courseService.addCourseToTeacherById(course, 2);
+        CourseService<CourseModel> courseService = context.getBean("courseServiceImpl", CourseServiceImpl.class);
+        int status = courseService.removeCourseOfTeacherById(2, 2);
+        System.out.println(status);
         
         
     }

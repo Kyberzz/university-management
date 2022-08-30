@@ -5,7 +5,7 @@ import java.util.Objects;
 
 public class TeacherEntity {
 
-    private int id;
+    private Integer id;
     private String firstName;
     private String lastName;
     private List<CourseEntity> courseList;
@@ -13,15 +13,15 @@ public class TeacherEntity {
     public TeacherEntity() {
     }
 
-    public TeacherEntity(int id) {
+    public TeacherEntity(Integer id) {
         this.id = id;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -47,11 +47,6 @@ public class TeacherEntity {
 
     public void setCourseList(List<CourseEntity> courseList) {
         this.courseList = courseList;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(courseList, firstName, id, lastName);
     }
 
     @Override

@@ -204,7 +204,7 @@
 											"top": 219,
 											"width": 409.45703125,
 											"height": 14,
-											"text": "+udateCourseOfTeacher(course: T): int",
+											"text": "+udateCourse(course: T): int",
 											"horizontalAlignment": 0
 										},
 										{
@@ -3277,7 +3277,7 @@
 							"_parent": {
 								"$ref": "AAAAAAGC6L7Va8HaTEU="
 							},
-							"name": "udateCourseOfTeacher",
+							"name": "udateCourse",
 							"parameters": [
 								{
 									"_type": "UMLParameter",

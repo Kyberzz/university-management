@@ -5,7 +5,7 @@ import java.util.Objects;
 
 public class GroupEntity {
 
-    private int id;
+    private Integer id;
     private String name;
     private List<TimetableEntity> timetableList;
     private List<StudentEntity> studentList;
@@ -13,15 +13,15 @@ public class GroupEntity {
     public GroupEntity() {
     }
 
-    public GroupEntity(int id) {
+    public GroupEntity(Integer id) {
         this.id = id;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -63,8 +63,8 @@ public class GroupEntity {
         if (getClass() != obj.getClass())
             return false;
         GroupEntity other = (GroupEntity) obj;
-        return id == other.id && Objects.equals(name, other.name) && Objects.equals(studentList, other.studentList)
-                && Objects.equals(timetableList, other.timetableList);
+        return Objects.equals(id, other.id) && Objects.equals(name, other.name)
+                && Objects.equals(studentList, other.studentList) && Objects.equals(timetableList, other.timetableList);
     }
 
     @Override

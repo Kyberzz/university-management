@@ -4,7 +4,7 @@ import java.util.Objects;
 
 public class TimetableEntity {
 
-    private int id;
+    private Integer id;
     private GroupEntity group;
     private CourseEntity course;
     private long startTime;
@@ -12,11 +12,18 @@ public class TimetableEntity {
     private String description;
     private WeekDayEntity weekDay;
     
-    public int getId() {
+    public TimetableEntity() {
+    }
+
+    public TimetableEntity(Integer id) {
+        this.id = id;
+    }
+    
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -66,11 +73,6 @@ public class TimetableEntity {
 
     public void setWeekDay(WeekDayEntity weekDay) {
         this.weekDay = weekDay;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(course, description, endTime, group, id, startTime, weekDay);
     }
 
     @Override
