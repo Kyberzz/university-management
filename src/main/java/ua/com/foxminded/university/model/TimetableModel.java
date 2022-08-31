@@ -12,14 +12,21 @@ public class TimetableModel {
     private String description;
     private WeekDayModel weekDay;
     
-    public int getId() {
-        return id;
+    public TimetableModel() {
     }
 
     public TimetableModel(Integer id) {
         this.id = id;
     }
-    
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
     public GroupModel getGroup() {
         return group;
     }
@@ -68,10 +75,6 @@ public class TimetableModel {
         this.weekDay = weekDay;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
     @Override
     public int hashCode() {
         return Objects.hash(course, description, endTime, group, id, startTime, weekDay);
@@ -87,13 +90,13 @@ public class TimetableModel {
             return false;
         TimetableModel other = (TimetableModel) obj;
         return Objects.equals(course, other.course) && Objects.equals(description, other.description)
-                && endTime == other.endTime && Objects.equals(group, other.group) && id == other.id
+                && endTime == other.endTime && Objects.equals(group, other.group) && Objects.equals(id, other.id)
                 && startTime == other.startTime && weekDay == other.weekDay;
     }
 
     @Override
     public String toString() {
-        return "TimetableEntity [id=" + id + ", group=" + group + ", course=" + course + ", startTime=" + startTime
+        return "TimetableModel [id=" + id + ", group=" + group + ", course=" + course + ", startTime=" + startTime
                 + ", endTime=" + endTime + ", description=" + description + ", weekDay=" + weekDay + "]";
     }
 }

@@ -20,6 +20,7 @@ import ua.com.foxminded.university.entity.StudentEntity;
 import ua.com.foxminded.university.entity.TeacherEntity;
 import ua.com.foxminded.university.entity.TimetableEntity;
 import ua.com.foxminded.university.model.CourseModel;
+import ua.com.foxminded.university.model.TeacherModel;
 import ua.com.foxminded.university.service.CourseService;
 import ua.com.foxminded.university.service.impl.CourseServiceImpl;
 
@@ -60,8 +61,14 @@ public class Boot {
         TimetableEntity timetable = timetableDao.getById(1);
         System.out.println(timetable.toString());
         
+        CourseModel courseModel = new CourseModel();
+        courseModel.setDescription("something");
+        courseModel.setId(3);
+        courseModel.setName("Philosophy");
+        courseModel.setTeacher(new TeacherModel(1));
+        
         CourseService<CourseModel> courseService = context.getBean("courseServiceImpl", CourseServiceImpl.class);
-        int status = courseService.removeCourseOfTeacherById(2, 2);
+        int status = courseService.updateCourse(courseModel);
         System.out.println(status);
         
         

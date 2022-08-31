@@ -16,7 +16,7 @@ create sequence university.courses_id_seq as integer;
 create table university.courses (
     id integer default nextval('university.courses_id_seq'::regclass) primary key,
     teacher_id integer references university.teachers(id) on delete set null,
-    name varchar collate pg_catalog."default" not null unique,
+    name varchar collate pg_catalog."default" not null,
     description varchar collate pg_catalog."default"
 )
 tablespace pg_default;

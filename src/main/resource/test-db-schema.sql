@@ -12,7 +12,7 @@ create sequence university.courses_id_seq as integer;
 create table university.courses (
     id integer default nextval('university.courses_id_seq') primary key,
     teacher_id integer references university.teachers(id) on delete set null,
-    name varchar not null unique,
+    name varchar not null,
     description varchar
 );
 
