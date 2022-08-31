@@ -22,6 +22,7 @@ public class TeacherServiceImpl implements TeacherService<TeacherModel> {
         this.teacherDao = teacherDao;
     }
     
+    @Override
     public TeacherModel getCourseListByTeacherId(int id) {
         TeacherEntity teacherEntityCourseList = teacherDao.getCourseListByTeacherId(id);
         TeacherModel teacherModelCourseList = new TeacherModel();
