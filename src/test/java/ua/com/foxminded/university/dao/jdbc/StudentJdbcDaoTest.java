@@ -1,7 +1,9 @@
 package ua.com.foxminded.university.dao.jdbc;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.sql.SQLException;
 import java.util.Map;
@@ -28,7 +30,7 @@ class StudentJdbcDaoTest {
     private static final String GROUP_NAME = "rs-01";
     private static final String LAST_NAME_COLUMN = "last_name";
     private static final String FIRST_NAME_COLUMN = "first_name";
-    private static final String GROUP_ID = "group_id";
+    private static final String GROUP_ID_COLUMN = "group_id";
     private static final String SELECT_STUDENT_BY_NAME = "test.selectStudentByName";
     private static final String LAST_NAME_STUDENT = "Smith";
     private static final String FIRST_NAME_STUDENT = "Alex";
@@ -46,6 +48,21 @@ class StudentJdbcDaoTest {
     private Environment queries;
     
     @Test
+    void update_UdatingDatabaseWithNull_DatabaseHasNoData() {
+        StudentJdbcDao studentDao = new StudentJdbcDao(jdbcTemplate, queries);
+        StudentEntity student = new StudentEntity();
+        student.setFirstName(FIRST_NAME_STUDENT);
+        student.setGroup(new GroupEntity());
+        student.setId(STUDENT_ID_NUMBER);
+        student.setLastName(LAST_NAME_STUDENT);
+        studentDao.update(student);
+        Map<String, Object> updatedStudent = jdbcTemplate.queryForMap(
+                queries.getProperty(SELECT_STUDENT_BY_ID), 
+                STUDENT_ID_NUMBER);
+        assertNull(updatedStudent.get(GROUP_ID_COLUMN));
+    }
+    
+    @Test
     void update_UdatingDatabaseData_DatabaseHasCorrectData() {
         StudentJdbcDao studentDao = new StudentJdbcDao(jdbcTemplate, queries);
         StudentEntity student = new StudentEntity();
@@ -60,7 +77,7 @@ class StudentJdbcDaoTest {
         assertEquals(NEW_FIRST_NAME_STUDENT, databaseStudent.get(FIRST_NAME_COLUMN));
         assertEquals(NEW_LAST_NAME_STUDENT, databaseStudent.get(LAST_NAME_COLUMN));
         assertEquals(STUDENT_ID_NUMBER, databaseStudent.get(STUDENT_ID));
-        assertEquals(GROUP_ID_NUMBER, databaseStudent.get(GROUP_ID));
+        assertEquals(GROUP_ID_NUMBER, databaseStudent.get(GROUP_ID_COLUMN));
     }
     
     @Test
@@ -100,7 +117,7 @@ class StudentJdbcDaoTest {
         
         assertEquals(NEW_FIRST_NAME_STUDENT, databaseStudent.get(FIRST_NAME_COLUMN).toString());
         assertEquals(NEW_LAST_NAME_STUDENT, databaseStudent.get(LAST_NAME_COLUMN).toString());
-        assertEquals(GROUP_ID_NUMBER, databaseStudent.get(GROUP_ID));
+        assertEquals(GROUP_ID_NUMBER, databaseStudent.get(GROUP_ID_COLUMN));
     }
     
     @Test

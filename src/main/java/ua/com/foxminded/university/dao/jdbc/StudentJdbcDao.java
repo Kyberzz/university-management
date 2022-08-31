@@ -122,7 +122,7 @@ public class StudentJdbcDao implements StudentDao {
                                                           StudentEntity entity) throws SQLException {
         preparedStatement.setString(1, entity.getFirstName());
         preparedStatement.setString(2, entity.getLastName());
-        preparedStatement.setInt(3, entity.getGroup().getId());
+        preparedStatement.setObject(3, entity.getGroup().getId());
         preparedStatement.setInt(4, entity.getId());
         return preparedStatement;
     }

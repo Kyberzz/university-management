@@ -26,6 +26,7 @@ import ua.com.foxminded.university.entity.WeekDayEntity;
 @ExtendWith(SpringExtension.class)
 class TimetableJdbcDaoTest {
     
+    private static final String COURSE_DESCRIPTION_COLUMN = "description";
     private static final String WEEK_DAY_COLUMN = "week_day";
     private static final String START_TIME_COLUMN = "start_time";
     private static final String TIMETABLE_ID_COLUMN = "id";
@@ -35,7 +36,7 @@ class TimetableJdbcDaoTest {
     private static final String COURSE_ID_COLUMN = "course_id";
     private static final String SELECT_TIMETABLE_BY_ID = "test.selectTimetableById";
     private static final String COURSE_NAME = "Physics";
-    private static final String WEEK_DAY = "MONDAY";
+    private static final String WEEK_DAY_VALUE = "MONDAY";
     private static final String COURSE_DESCRIPTION = "some description";
     private static final String TIMETABLE_DESCRIPTION = "some description";
     private static final long START_TIME = 36360000;
@@ -61,7 +62,7 @@ class TimetableJdbcDaoTest {
         timetable.setGroup(new GroupEntity(GROUP_ID_NUMBER));
         timetable.setId(TIMETABLE_ID_NUMBER);
         timetable.setStartTime(START_TIME);
-        timetable.setWeekDay(WeekDayEntity.valueOf(WEEK_DAY));
+        timetable.setWeekDay(WeekDayEntity.valueOf(WEEK_DAY_VALUE));
        
         TimetableDao timetableDao = new TimetableJdbcDao(jdbcTemplate, timetableQueries);
         timetableDao.insert(timetable);
@@ -75,7 +76,7 @@ class TimetableJdbcDaoTest {
         assertEquals(GROUP_ID_NUMBER, insertedTimetable.get(GROUP_ID_COLUMN));
         assertEquals(TIMETABLE_ID_NUMBER, insertedTimetable.get(TIMETABLE_ID_COLUMN));
         assertEquals(START_TIME, insertedTimetable.get(START_TIME_COLUMN));
-        assertEquals(WEEK_DAY, insertedTimetable.get(WEEK_DAY_COLUMN));
+        assertEquals(WEEK_DAY_VALUE, insertedTimetable.get(WEEK_DAY_COLUMN));
     }
     
     @Test
@@ -89,7 +90,30 @@ class TimetableJdbcDaoTest {
         assertEquals(GROUP_ID_NUMBER, receivedTimetable.getGroup().getId());
         assertEquals(TIMETABLE_ID_NUMBER, receivedTimetable.getId());
         assertEquals(START_TIME, receivedTimetable.getStartTime());
-        assertEquals(WEEK_DAY, receivedTimetable.getWeekDay().toString());
+        assertEquals(WEEK_DAY_VALUE, receivedTimetable.getWeekDay().toString());
+    }
+    
+    @Test
+    void update_UdatingTimetableDatabaseDataWithNullValues_DatabaseHasNoData() {
+        
+        
+        TimetableEntity timetable = new TimetableEntity();
+        timetable.setCourse(new CourseEntity());
+        timetable.setDescription(null);
+        timetable.setEndTime(END_TIME);
+        timetable.setGroup(new GroupEntity());
+        timetable.setId(TIMETABLE_ID_NUMBER);
+        timetable.setStartTime(START_TIME);
+        timetable.setWeekDay(WeekDayEntity.valueOf(WEEK_DAY_VALUE));
+        TimetableDao timetableDao = new TimetableJdbcDao(jdbcTemplate, timetableQueries);
+        timetableDao.update(timetable);
+        Map<String, Object> updatedTimetable = jdbcTemplate.queryForMap(
+                timetableQueries.getProperty(SELECT_TIMETABLE_BY_ID), 
+                TIMETABLE_ID_NUMBER);
+        
+        assertNull(updatedTimetable.get(COURSE_DESCRIPTION_COLUMN));
+        assertNull(updatedTimetable.get(GROUP_ID_COLUMN));
+        assertNull(updatedTimetable.get(COURSE_ID_COLUMN));
     }
     
     @Test
@@ -101,7 +125,7 @@ class TimetableJdbcDaoTest {
         timetable.setGroup(new GroupEntity(GROUP_ID_NUMBER));
         timetable.setId(TIMETABLE_ID);
         timetable.setStartTime(START_TIME);
-        timetable.setWeekDay(WeekDayEntity.valueOf(WEEK_DAY));
+        timetable.setWeekDay(WeekDayEntity.valueOf(WEEK_DAY_VALUE));
         TimetableDao timetableDao = new TimetableJdbcDao(jdbcTemplate, timetableQueries);
         timetableDao.update(timetable);
         Map<String, Object> updatedTimetable = jdbcTemplate.queryForMap(timetableQueries.getProperty(
@@ -114,7 +138,7 @@ class TimetableJdbcDaoTest {
         assertEquals(GROUP_ID_NUMBER, updatedTimetable.get(GROUP_ID_COLUMN));
         assertEquals(TIMETABLE_ID, updatedTimetable.get(TIMETABLE_ID_COLUMN));
         assertEquals(START_TIME, updatedTimetable.get(START_TIME_COLUMN));
-        assertEquals(WEEK_DAY, updatedTimetable.get(WEEK_DAY_COLUMN));
+        assertEquals(WEEK_DAY_VALUE, updatedTimetable.get(WEEK_DAY_COLUMN));
     }
     
     @Test
@@ -142,7 +166,7 @@ class TimetableJdbcDaoTest {
         assertEquals(GROUP_ID_NUMBER, receivedTimetableData.getGroup().getId());
         assertEquals(START_TIME, receivedTimetableData.getStartTime());
         assertEquals(TIMETABLE_ID_NUMBER, receivedTimetableData.getId());
-        assertEquals(WEEK_DAY, receivedTimetableData.getWeekDay().toString());
+        assertEquals(WEEK_DAY_VALUE, receivedTimetableData.getWeekDay().toString());
     }
     
     @Test
@@ -156,6 +180,6 @@ class TimetableJdbcDaoTest {
         assertEquals(GROUP_ID_NUMBER, timetable.getGroup().getId());
         assertEquals(TIMETABLE_ID_NUMBER, timetable.getId());
         assertEquals(START_TIME, timetable.getStartTime());
-        assertEquals(WEEK_DAY, timetable.getWeekDay().toString());
+        assertEquals(WEEK_DAY_VALUE, timetable.getWeekDay().toString());
     }
 }

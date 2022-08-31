@@ -147,7 +147,7 @@
 											"top": 67,
 											"width": 342.5009765625,
 											"height": 14,
-											"text": "-id: int",
+											"text": "-id: Integer",
 											"horizontalAlignment": 0
 										},
 										{
@@ -652,7 +652,7 @@
 											"top": 67,
 											"width": 257.4072265625,
 											"height": 14,
-											"text": "-id: int",
+											"text": "-id: Integer",
 											"horizontalAlignment": 0
 										},
 										{
@@ -1232,7 +1232,7 @@
 											"top": 67,
 											"width": 342.5009765625,
 											"height": 14,
-											"text": "-id: int",
+											"text": "-id: Integer",
 											"horizontalAlignment": 0
 										},
 										{
@@ -1660,7 +1660,7 @@
 											"top": 468,
 											"width": 296.078125,
 											"height": 14,
-											"text": "-id: int",
+											"text": "-id: Integer",
 											"horizontalAlignment": 0
 										},
 										{
@@ -4237,7 +4237,7 @@
 							},
 							"name": "id",
 							"visibility": "private",
-							"type": "int"
+							"type": "Integer"
 						},
 						{
 							"_type": "UMLAttribute",
@@ -4591,7 +4591,7 @@
 							},
 							"name": "id",
 							"visibility": "private",
-							"type": "int"
+							"type": "Integer"
 						},
 						{
 							"_type": "UMLAttribute",
@@ -4932,7 +4932,7 @@
 							},
 							"name": "id",
 							"visibility": "private",
-							"type": "int"
+							"type": "Integer"
 						},
 						{
 							"_type": "UMLAttribute",
@@ -5152,7 +5152,7 @@
 							},
 							"name": "id",
 							"visibility": "private",
-							"type": "int"
+							"type": "Integer"
 						},
 						{
 							"_type": "UMLAttribute",

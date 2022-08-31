@@ -153,8 +153,8 @@ public class TimetableJdbcDao implements TimetableDao {
     
     private PreparedStatement getPreparedStatementOfUpdate(PreparedStatement preparedStatement, 
                                                            TimetableEntity entity) throws SQLException {
-        preparedStatement.setInt(1, entity.getGroup().getId());
-        preparedStatement.setInt(2, entity.getCourse().getId());
+        preparedStatement.setObject(1, entity.getGroup().getId());
+        preparedStatement.setObject(2, entity.getCourse().getId());
         preparedStatement.setLong(3, entity.getStartTime());
         preparedStatement.setLong(4, entity.getEndTime());
         preparedStatement.setString(5, entity.getDescription());
