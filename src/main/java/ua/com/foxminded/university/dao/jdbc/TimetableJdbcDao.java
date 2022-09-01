@@ -1,7 +1,6 @@
 package ua.com.foxminded.university.dao.jdbc;
 
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,12 +9,12 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import ua.com.foxminded.university.dao.TimetableDao;
+import ua.com.foxminded.university.dao.jdbc.mapper.CourseMapper;
+import ua.com.foxminded.university.dao.jdbc.mapper.GroupMapper;
 import ua.com.foxminded.university.dao.jdbc.mapper.TimetableMapper;
 import ua.com.foxminded.university.entity.CourseEntity;
 import ua.com.foxminded.university.entity.GroupEntity;
-import ua.com.foxminded.university.entity.TeacherEntity;
 import ua.com.foxminded.university.entity.TimetableEntity;
-import ua.com.foxminded.university.entity.WeekDayEntity;
 
 @Repository
 public class TimetableJdbcDao implements TimetableDao {
@@ -26,17 +25,6 @@ public class TimetableJdbcDao implements TimetableDao {
     private static final String DELETE_BY_ID = "timetable.deleteById";
     private static final String GET_BY_ID = "timetable.getById";
     private static final String INSERT = "timetable.insert";
-    private static final String GROUP_NAME = "group_name";
-    private static final String WEEK_DAY_COLUMN = "week_day";
-    private static final String TIMETABLE_DESCRIPTION = "description";
-    private static final String END_TIME = "end_time";
-    private static final String START_TIME = "start_time";
-    private static final String GROUP_ID = "group_id";
-    private static final String TEACHER_ID = "teacher_id";
-    private static final String COURSE_DESCRIPTION = "course_description";
-    private static final String COURSE_NAME = "course_name";
-    private static final String COURSE_ID = "course_id";
-    private static final String TIMETABLE_ID = "id";
     
     private JdbcTemplate jdbcTemplate;
     private Environment queries;
@@ -50,24 +38,34 @@ public class TimetableJdbcDao implements TimetableDao {
     
     @Override
     public TimetableEntity getCourseByTimetableId(int id) {
-        TimetableEntity timetableWithCourseData = jdbcTemplate.query(
-                queries.getProperty(GET_COURCE_BY_TIMETABLE_ID),
-                preparedStatement -> preparedStatement.setInt(1, id), 
-                resultSet -> {
-                    return getTimetableWithCourseData(resultSet);
-                });
-        return timetableWithCourseData;
+        TimetableEntity timetableWithCourseList = jdbcTemplate.queryForObject(
+                queries.getProperty(GET_COURCE_BY_TIMETABLE_ID), 
+                (resultSet, rowNum) -> {
+                    TimetableMapper timetableMapper = new TimetableMapper();
+                    TimetableEntity timetable = timetableMapper.mapRow(resultSet, rowNum);
+                    CourseMapper courseMapper = new CourseMapper();
+                    CourseEntity course = courseMapper.mapRow(resultSet, rowNum);
+                    timetable.setCourse(course);
+                    return timetable;
+                }, 
+                id);
+        return timetableWithCourseList;
     }
     
     @Override
     public TimetableEntity getGroupByTimetableId(int id) {
-        TimetableEntity timetableWithGroupData = jdbcTemplate.query(
-                queries.getProperty(GET_GROUP_BY_TIMETABLE_ID),
-                preparedStatement -> preparedStatement.setInt(1, id), 
-                resultSet -> {
-                    return getTimetableWithGroupData(resultSet);
-                });
-        return timetableWithGroupData;
+        TimetableEntity timetableWithGroupList = jdbcTemplate.queryForObject(
+                queries.getProperty(GET_GROUP_BY_TIMETABLE_ID), 
+                (resultSet, rowNum) -> {
+                    TimetableMapper timetableMapper = new TimetableMapper();
+                    TimetableEntity timetable = timetableMapper.mapRow(resultSet, rowNum);
+                    GroupMapper groupMapper = new GroupMapper();
+                    GroupEntity group = groupMapper.mapRow(resultSet, rowNum);
+                    timetable.setGroup(group);
+                    return timetable;
+                }, 
+                id);
+        return timetableWithGroupList;
     }
     
     @Override
@@ -96,51 +94,6 @@ public class TimetableJdbcDao implements TimetableDao {
         return jdbcTemplate.update(queries.getProperty(INSERT),
                                    preparedStatement -> getPreparedStatementOfInsert(preparedStatement, 
                                                                                      entity));
-    }
-    
-    private TimetableEntity getTimetableWithCourseData(ResultSet resultSet) throws SQLException {
-        TimetableEntity timetable = null;
-
-        while (resultSet.next()) {
-            CourseEntity course = getCourseEntity(resultSet);
-            timetable = getTimetableEntity(resultSet);
-            timetable.setCourse(course);
-        }
-        return timetable;
-    }
-    
-    private TimetableEntity getTimetableWithGroupData(ResultSet resultSet) throws SQLException {
-        TimetableEntity timetable = null;
-
-        while (resultSet.next()) {
-            timetable = getTimetableEntity(resultSet);
-            GroupEntity group = new GroupEntity();
-            group.setId(resultSet.getInt(GROUP_ID));
-            group.setName(resultSet.getString(GROUP_NAME));
-            timetable.setGroup(group);
-        }
-        return timetable;
-    }
-    
-    private CourseEntity getCourseEntity(ResultSet resultSet) throws SQLException {
-        CourseEntity course = new CourseEntity();
-        course.setId(resultSet.getInt(COURSE_ID));
-        course.setName(resultSet.getString(COURSE_NAME));
-        course.setDescription(resultSet.getString(COURSE_DESCRIPTION));
-        course.setTeacher(new TeacherEntity(resultSet.getInt(TEACHER_ID)));
-        return course;
-    }
-    
-    private TimetableEntity getTimetableEntity(ResultSet resultSet) throws SQLException {
-        TimetableEntity timetable = new TimetableEntity();
-        timetable.setId(resultSet.getInt(TIMETABLE_ID));
-        timetable.setGroup(new GroupEntity(resultSet.getInt(GROUP_ID)));
-        timetable.setCourse(new CourseEntity(resultSet.getInt(COURSE_ID)));
-        timetable.setStartTime(resultSet.getLong(START_TIME));
-        timetable.setEndTime(resultSet.getLong(END_TIME));
-        timetable.setDescription(resultSet.getString(TIMETABLE_DESCRIPTION));
-        timetable.setWeekDay(WeekDayEntity.valueOf(resultSet.getString(WEEK_DAY_COLUMN)));
-        return timetable;
     }
     
     private PreparedStatement getPreparedStatementOfUpdate(PreparedStatement preparedStatement, 
