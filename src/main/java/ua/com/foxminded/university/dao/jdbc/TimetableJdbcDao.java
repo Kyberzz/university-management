@@ -10,6 +10,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import ua.com.foxminded.university.dao.TimetableDao;
+import ua.com.foxminded.university.dao.jdbc.mapper.TimetableMapper;
 import ua.com.foxminded.university.entity.CourseEntity;
 import ua.com.foxminded.university.entity.GroupEntity;
 import ua.com.foxminded.university.entity.TeacherEntity;
@@ -38,19 +39,19 @@ public class TimetableJdbcDao implements TimetableDao {
     private static final String TIMETABLE_ID = "id";
     
     private JdbcTemplate jdbcTemplate;
-    private Environment timetableQueries;
+    private Environment queries;
     
     @Autowired
     public TimetableJdbcDao(JdbcTemplate jdbcTemplate, Environment timetableQueries) {
         this.jdbcTemplate = jdbcTemplate;
-        this.timetableQueries = timetableQueries;
+        this.queries = timetableQueries;
     }
     
     
     @Override
     public TimetableEntity getCourseByTimetableId(int id) {
         TimetableEntity timetableWithCourseData = jdbcTemplate.query(
-                timetableQueries.getProperty(GET_COURCE_BY_TIMETABLE_ID),
+                queries.getProperty(GET_COURCE_BY_TIMETABLE_ID),
                 preparedStatement -> preparedStatement.setInt(1, id), 
                 resultSet -> {
                     return getTimetableWithCourseData(resultSet);
@@ -61,7 +62,7 @@ public class TimetableJdbcDao implements TimetableDao {
     @Override
     public TimetableEntity getGroupByTimetableId(int id) {
         TimetableEntity timetableWithGroupData = jdbcTemplate.query(
-                timetableQueries.getProperty(GET_GROUP_BY_TIMETABLE_ID),
+                queries.getProperty(GET_GROUP_BY_TIMETABLE_ID),
                 preparedStatement -> preparedStatement.setInt(1, id), 
                 resultSet -> {
                     return getTimetableWithGroupData(resultSet);
@@ -71,37 +72,28 @@ public class TimetableJdbcDao implements TimetableDao {
     
     @Override
     public TimetableEntity getById(int id) {
-        TimetableEntity timetableEntity = jdbcTemplate.query(
-                timetableQueries.getProperty(GET_BY_ID),
-                preparedStatament -> preparedStatament.setInt(1, id), 
-                resultSet -> {
-                    TimetableEntity timetable = null;
-
-                    while (resultSet.next()) {
-                        timetable = getTimetableEntity(resultSet);
-
-                    }
-                    return timetable;
-                });
-        return timetableEntity;
+        TimetableEntity timetable = jdbcTemplate.queryForObject(queries.getProperty(GET_BY_ID), 
+                                                                new TimetableMapper(), 
+                                                                id);
+        return timetable;
     }
 
     @Override
     public int update(TimetableEntity entity) {
-        return jdbcTemplate.update(timetableQueries.getProperty(UPDATE),
+        return jdbcTemplate.update(queries.getProperty(UPDATE),
                                    preparedStatement -> getPreparedStatementOfUpdate(preparedStatement, 
                                                                                      entity));
     }
     
     @Override
     public int deleteById(int id) {
-        return jdbcTemplate.update(timetableQueries.getProperty(DELETE_BY_ID),
+        return jdbcTemplate.update(queries.getProperty(DELETE_BY_ID),
                                    preparedStatement -> preparedStatement.setInt(1, id));
     }
     
     @Override
     public int insert(TimetableEntity entity) {
-        return jdbcTemplate.update(timetableQueries.getProperty(INSERT),
+        return jdbcTemplate.update(queries.getProperty(INSERT),
                                    preparedStatement -> getPreparedStatementOfInsert(preparedStatement, 
                                                                                      entity));
     }

@@ -11,6 +11,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import ua.com.foxminded.university.dao.CourseDao;
+import ua.com.foxminded.university.dao.jdbc.mapper.CourseMapper;
 import ua.com.foxminded.university.entity.CourseEntity;
 import ua.com.foxminded.university.entity.GroupEntity;
 import ua.com.foxminded.university.entity.TeacherEntity;
@@ -37,57 +38,51 @@ public class CourseJdbcDao implements CourseDao {
     private static final String DELETE_BY_ID = "course.deleteById";
     
     private JdbcTemplate jdbcTemplate;
-    private Environment courseQueries;
+    private Environment queries;
     
     @Autowired
     public CourseJdbcDao(JdbcTemplate jdbcTemplate, Environment courseQueries) {
         this.jdbcTemplate = jdbcTemplate;
-        this.courseQueries = courseQueries;
+        this.queries = courseQueries;
     }
     
     @Override
     public CourseEntity getTimetableListByCourseId(int id) {
+        
         CourseEntity courseWithTimetableList = jdbcTemplate.query(
-                courseQueries.getProperty(GET_TIMETABL_LIST_BY_COURSE_ID), 
+                queries.getProperty(GET_TIMETABL_LIST_BY_COURSE_ID), 
                 preparedStatement -> preparedStatement.setInt(1, id),
                 resultSet -> {
                     return getCourseWithTimetableList(resultSet);
                 });
         return courseWithTimetableList;
+        
     }
     
     @Override
     public int deleteById(int id) {
-        return jdbcTemplate.update(courseQueries.getProperty(DELETE_BY_ID),
+        return jdbcTemplate.update(queries.getProperty(DELETE_BY_ID),
                                    preparedStatement -> preparedStatement.setInt(1,id));
     }
     
     @Override
     public int update(CourseEntity entity) {
-        return jdbcTemplate.update(courseQueries.getProperty(UPDATE),
+        return jdbcTemplate.update(queries.getProperty(UPDATE),
                                    preparedStatement -> getPreparedStatementOfUpdate(preparedStatement, 
                                                                                      entity));
     }
     
     @Override
     public CourseEntity getById(int id) {
-        CourseEntity courseEntity = jdbcTemplate.query(
-                courseQueries.getProperty(GET_BY_ID), 
-                preparedStatement -> preparedStatement.setInt(1, id),
-                resultSet -> {
-                    CourseEntity course = null;
-                    
-                    while(resultSet.next()) {
-                        course = getCourseEntity(resultSet);
-                    }
-                    return course;
-                });
+        CourseEntity courseEntity = jdbcTemplate.queryForObject(queries.getProperty(GET_BY_ID), 
+                                                                new CourseMapper(), 
+                                                                id);
         return courseEntity;
     }
     
     @Override
     public int insert(CourseEntity entity) {
-        return jdbcTemplate.update(courseQueries.getProperty(INSERT),
+        return jdbcTemplate.update(queries.getProperty(INSERT),
                                    preparedStatement -> getPreparedStatementOfInsert(preparedStatement, 
                                                                                      entity));
     }
