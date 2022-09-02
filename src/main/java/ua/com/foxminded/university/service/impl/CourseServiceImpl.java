@@ -40,8 +40,9 @@ public class CourseServiceImpl implements CourseService<CourseModel> {
     public CourseModel getTimetableListByCourseId(int id) {
         CourseEntity courseEntityTimetableList = courseDao.getTimetableListByCourseId(id);
         CourseModel courseModelTimetableList = new CourseModel();
-        
-        List<TimetableModel> timetableList = courseEntityTimetableList.getTimetableList().stream()
+
+        List<TimetableModel> timetableList = courseEntityTimetableList.getTimetableList()
+                .stream()
                 .map(entity -> {
                     TimetableModel model = new TimetableModel();
                     model.setCourse(new CourseModel(entity.getCourse().getId()));

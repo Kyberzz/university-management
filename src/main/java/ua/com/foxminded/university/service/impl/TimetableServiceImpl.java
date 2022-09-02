@@ -30,7 +30,7 @@ public class TimetableServiceImpl implements TimetableService<TimetableModel> {
         timetableEntity.setGroup(new GroupEntity(timetableModel.getGroup().getId()));
         timetableEntity.setId(timetableModel.getId());
         timetableEntity.setStartTime(timetableModel.getStartTime());
-        timetableEntity.setWeekDay(WeekDayEntity.valueOf(timetableEntity.getWeekDay().toString()));
+        timetableEntity.setWeekDay(WeekDayEntity.valueOf(timetableModel.getWeekDay().toString()));
         return timetableDao.update(timetableEntity);
     }
 }
