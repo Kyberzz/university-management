@@ -3,7 +3,6 @@ package ua.com.foxminded.university.dao.jdbc;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -25,21 +24,23 @@ public class StudentJdbcDao implements StudentDao {
     
     private JdbcTemplate jdbcTemplate;
     private Environment queries;
+    private StudentMapper studentMapper;
+    private GroupMapper groupMapper;
     
-    @Autowired
-    public StudentJdbcDao(JdbcTemplate jdbcTemplate, Environment studentQueries) {
+    public StudentJdbcDao(JdbcTemplate jdbcTemplate, Environment queries, StudentMapper studentMapper,
+            GroupMapper groupMapper) {
         this.jdbcTemplate = jdbcTemplate;
-        this.queries = studentQueries;
+        this.queries = queries;
+        this.studentMapper = studentMapper;
+        this.groupMapper = groupMapper;
     }
-    
+
     @Override
     public StudentEntity getGroupByStudentId(int id) {
         StudentEntity studentWithGroupData = jdbcTemplate.queryForObject(
                 queries.getProperty(GET_GROUP_BY_STUDENT_ID), 
                 (resultSet, rowNum) -> {
-                    StudentMapper studentMapper = new StudentMapper();
                     StudentEntity student = studentMapper.mapRow(resultSet, rowNum);
-                    GroupMapper groupMapper = new GroupMapper();
                     GroupEntity group = groupMapper.mapRow(resultSet, rowNum);
                     student.setGroup(group);
                     return student;
@@ -58,8 +59,8 @@ public class StudentJdbcDao implements StudentDao {
     @Override
     public StudentEntity getById(int id) {
         StudentEntity student = jdbcTemplate.queryForObject(queries.getProperty(GET_BY_ID), 
-                                                            new StudentMapper(), 
-                                                            id);
+        (resultSet, rowNum) -> studentMapper.mapRow(resultSet, rowNum), 
+        id);
         return student;
     }
     

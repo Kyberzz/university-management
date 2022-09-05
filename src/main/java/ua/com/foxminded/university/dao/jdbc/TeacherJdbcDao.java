@@ -4,7 +4,6 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -26,11 +25,15 @@ public class TeacherJdbcDao implements TeacherDao {
     
     private JdbcTemplate jdbcTemplate;
     private Environment queries;
-    
-    @Autowired
-    public TeacherJdbcDao(JdbcTemplate jdbcTemplate, Environment teacherQueries) {
+    private TeacherMapper teacherMapper;
+    private CourseMapper courseMapper;
+
+    public TeacherJdbcDao(JdbcTemplate jdbcTemplate, Environment queries, TeacherMapper teacherMapper,
+            CourseMapper courseMapper) {
         this.jdbcTemplate = jdbcTemplate;
-        this.queries = teacherQueries;
+        this.queries = queries;
+        this.teacherMapper = teacherMapper;
+        this.courseMapper = courseMapper;
     }
 
     @Override
@@ -41,12 +44,10 @@ public class TeacherJdbcDao implements TeacherDao {
                     TeacherEntity teacher = null;
                     
                     if (teacher == null) {
-                        TeacherMapper teacherMapper = new TeacherMapper();
                         teacher = teacherMapper.mapRow(resultSet, rowNum);
                         teacher.setCourseList(new ArrayList<>());
                     }
 
-                    CourseMapper courseMapper = new CourseMapper();
                     CourseEntity course = courseMapper.mapRow(resultSet, rowNum);
                     teacher.getCourseList().add(course);
                     return teacher;
@@ -71,11 +72,7 @@ public class TeacherJdbcDao implements TeacherDao {
     @Override
     public TeacherEntity getById(int id) {
         TeacherEntity teacherEntity = jdbcTemplate.queryForObject(queries.getProperty(GET_BY_ID),
-                (resultSet, rowNum) -> {
-                    TeacherMapper teacherMapper = new TeacherMapper();
-                    TeacherEntity teacher = teacherMapper.mapRow(resultSet, rowNum);
-                    return teacher;
-                },
+                (resultSet, rowNum) -> teacherMapper.mapRow(resultSet, rowNum),
                 id);
         return teacherEntity;
     }

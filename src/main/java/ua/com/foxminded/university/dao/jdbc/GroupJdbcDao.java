@@ -2,7 +2,6 @@ package ua.com.foxminded.university.dao.jdbc;
 
 import java.util.ArrayList;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -27,13 +26,19 @@ public class GroupJdbcDao implements GroupDao {
     
     private Environment queries;
     private JdbcTemplate jdbcTemplate;
+    private GroupMapper groupMapper;
+    private StudentMapper studentMapper;
+    private TimetableMapper timetableMapper;
     
-    @Autowired
-    public GroupJdbcDao(Environment groupQueries, JdbcTemplate jdbcTemplate) {
-        this.queries = groupQueries;
+    public GroupJdbcDao(Environment queries, JdbcTemplate jdbcTemplate, GroupMapper groupMapper,
+            StudentMapper studentMapper, TimetableMapper timetableMapper) {
+        this.queries = queries;
         this.jdbcTemplate = jdbcTemplate;
+        this.groupMapper = groupMapper;
+        this.studentMapper = studentMapper;
+        this.timetableMapper = timetableMapper;
     }
-    
+
     @Override
     public GroupEntity getTimetableListByGroupId(int id) {
         GroupEntity groupWithTimetableList = jdbcTemplate.queryForObject(
@@ -42,12 +47,10 @@ public class GroupJdbcDao implements GroupDao {
                     GroupEntity group = null;
                     
                     if (group == null) {
-                        GroupMapper groupMapper = new GroupMapper();
                         group = groupMapper.mapRow(resultSet, rowNum);
                         group.setTimetableList(new ArrayList<>());
                     }
                     
-                    TimetableMapper timetableMapper = new TimetableMapper();
                     TimetableEntity timetable = timetableMapper.mapRow(resultSet, rowNum);
                     group.getTimetableList().add(timetable);
                     return group;
@@ -64,12 +67,10 @@ public class GroupJdbcDao implements GroupDao {
                     GroupEntity group = null;
                     
                     if (group == null) {
-                        GroupMapper groupMapper = new GroupMapper();
                         group = groupMapper.mapRow(resultSet, rowNum);
                         group.setStudentList(new ArrayList<>());
                     }
                     
-                    StudentMapper studentMapper = new StudentMapper();
                     StudentEntity student = studentMapper.mapRow(resultSet, rowNum);
                     group.getStudentList().add(student);
                     return group;
@@ -87,8 +88,8 @@ public class GroupJdbcDao implements GroupDao {
     @Override
     public GroupEntity getById(int id) {
         GroupEntity group = jdbcTemplate.queryForObject(queries.getProperty(GET_BY_ID), 
-                                                        new GroupMapper(), 
-                                                        id);
+                (resultSet, rowNum) -> groupMapper.mapRow(resultSet, rowNum), 
+                id);
         return group;
     }
     

@@ -71,6 +71,5 @@ public class Boot {
         int status = courseService.updateCourse(courseModel);
         System.out.println(status);
         
-        
     }
 }

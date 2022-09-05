@@ -28,22 +28,26 @@ public class TimetableJdbcDao implements TimetableDao {
     
     private JdbcTemplate jdbcTemplate;
     private Environment queries;
+    private TimetableMapper timetableMapper;
+    private CourseMapper courseMapper;
+    private GroupMapper groupMapper;
     
     @Autowired
-    public TimetableJdbcDao(JdbcTemplate jdbcTemplate, Environment timetableQueries) {
+    public TimetableJdbcDao(JdbcTemplate jdbcTemplate, Environment queries, TimetableMapper timetableMapper,
+            CourseMapper courseMapper, GroupMapper groupMapper) {
         this.jdbcTemplate = jdbcTemplate;
-        this.queries = timetableQueries;
+        this.queries = queries;
+        this.timetableMapper = timetableMapper;
+        this.courseMapper = courseMapper;
+        this.groupMapper = groupMapper;
     }
-    
-    
+
     @Override
     public TimetableEntity getCourseByTimetableId(int id) {
         TimetableEntity timetableWithCourseList = jdbcTemplate.queryForObject(
                 queries.getProperty(GET_COURCE_BY_TIMETABLE_ID), 
                 (resultSet, rowNum) -> {
-                    TimetableMapper timetableMapper = new TimetableMapper();
                     TimetableEntity timetable = timetableMapper.mapRow(resultSet, rowNum);
-                    CourseMapper courseMapper = new CourseMapper();
                     CourseEntity course = courseMapper.mapRow(resultSet, rowNum);
                     timetable.setCourse(course);
                     return timetable;
@@ -57,9 +61,7 @@ public class TimetableJdbcDao implements TimetableDao {
         TimetableEntity timetableWithGroupList = jdbcTemplate.queryForObject(
                 queries.getProperty(GET_GROUP_BY_TIMETABLE_ID), 
                 (resultSet, rowNum) -> {
-                    TimetableMapper timetableMapper = new TimetableMapper();
                     TimetableEntity timetable = timetableMapper.mapRow(resultSet, rowNum);
-                    GroupMapper groupMapper = new GroupMapper();
                     GroupEntity group = groupMapper.mapRow(resultSet, rowNum);
                     timetable.setGroup(group);
                     return timetable;
@@ -71,8 +73,8 @@ public class TimetableJdbcDao implements TimetableDao {
     @Override
     public TimetableEntity getById(int id) {
         TimetableEntity timetable = jdbcTemplate.queryForObject(queries.getProperty(GET_BY_ID), 
-                                                                new TimetableMapper(), 
-                                                                id);
+                (resultSet, rowNum) -> timetableMapper.mapRow(resultSet, id), 
+                id);
         return timetable;
     }
 

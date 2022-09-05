@@ -22,29 +22,21 @@ import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 @Configuration
 public class AppConfig {
     
-    private static final String SCHEMA_FILENAME = "db-schema.sql";
     private static final String PASSWORD = "jdbc.password";
     private static final String USERNAME = "jdbc.username";
     private static final String URL = "jdbc.url";
     private static final String DRIVER_CLASS_NAME = "jdbc.driverClassName";
     
+    private Environment environment;
+    
     @Autowired
-    Environment environment;
-    
-    @Value("/test-db-data.sql")
-    private Resource dataScript;
-    
+    public AppConfig(Environment environment) {
+        this.environment = environment;
+    }
+
     @Bean
     public JdbcTemplate jdbcTemplate() {
         return new JdbcTemplate(dataSource());
-    }
-    
-    @Bean
-    public DataSourceInitializer dataSourceInitializer(DataSource dataSource) {
-        DataSourceInitializer initializer = new DataSourceInitializer();
-        initializer.setDataSource(dataSource());
-        initializer.setDatabasePopulator(databasePopulator());
-        return initializer;
     }
     
     @Bean
@@ -55,13 +47,5 @@ public class AppConfig {
         dataSource.setUsername(environment.getProperty(USERNAME));
         dataSource.setPassword(environment.getProperty(PASSWORD));
         return dataSource;
-    }
-    
-    private DatabasePopulator databasePopulator() {
-        ResourceDatabasePopulator databasePopulator = new ResourceDatabasePopulator();
-        databasePopulator.setContinueOnError(true);
-   //     databasePopulator.addScript(new ClassPathResource(SCHEMA_FILENAME));
-   //     databasePopulator.addScript(dataScript);
-        return databasePopulator;
     }
 }

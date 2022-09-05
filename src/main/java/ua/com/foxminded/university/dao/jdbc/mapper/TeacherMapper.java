@@ -4,9 +4,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 
 import ua.com.foxminded.university.entity.TeacherEntity;
 
+@Component
 public final class TeacherMapper implements RowMapper<TeacherEntity> {
     
     private static final String TEACHER_ID = "teacher_id";

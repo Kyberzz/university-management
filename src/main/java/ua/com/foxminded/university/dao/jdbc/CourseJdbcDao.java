@@ -26,13 +26,18 @@ public class CourseJdbcDao implements CourseDao {
     
     private JdbcTemplate jdbcTemplate;
     private Environment queries;
+    private CourseMapper courseMapper;
+    private TimetableMapper timetableMapper;
     
     @Autowired
-    public CourseJdbcDao(JdbcTemplate jdbcTemplate, Environment courseQueries) {
+    public CourseJdbcDao(JdbcTemplate jdbcTemplate, Environment queries, CourseMapper courseMapper,
+            TimetableMapper timetableMapper) {
         this.jdbcTemplate = jdbcTemplate;
-        this.queries = courseQueries;
+        this.queries = queries;
+        this.courseMapper = courseMapper;
+        this.timetableMapper = timetableMapper;
     }
-    
+
     @Override
     public CourseEntity getTimetableListByCourseId(int id) {
         CourseEntity courseWhithTimetableList = jdbcTemplate.queryForObject(
@@ -40,12 +45,10 @@ public class CourseJdbcDao implements CourseDao {
                 (resultSet, rowNum) -> {
                     CourseEntity course = null;
                     if (course == null) {
-                        CourseMapper courseMapper = new CourseMapper();
                         course = courseMapper.mapRow(resultSet, rowNum);
                         course.setTimetableList(new ArrayList<>());
                     }
                     
-                    TimetableMapper timetableMapper = new TimetableMapper();
                     TimetableEntity timetable = timetableMapper.mapRow(resultSet, id);
                     course.getTimetableList().add(timetable);
                     return course;
@@ -70,8 +73,8 @@ public class CourseJdbcDao implements CourseDao {
     @Override
     public CourseEntity getById(int id) {
         CourseEntity courseEntity = jdbcTemplate.queryForObject(queries.getProperty(GET_BY_ID), 
-                                                                new CourseMapper(), 
-                                                                id);
+                (resultSet, rowNum) -> courseMapper.mapRow(resultSet, rowNum), 
+                id);
         return courseEntity;
     }
     
