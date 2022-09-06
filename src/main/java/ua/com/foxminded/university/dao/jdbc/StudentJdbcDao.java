@@ -37,8 +37,9 @@ public class StudentJdbcDao implements StudentDao {
 
     @Override
     public StudentEntity getGroupByStudentId(int id) {
+        String sqlGetGroupByStudentId = queries.getProperty(GET_GROUP_BY_STUDENT_ID);
         StudentEntity studentWithGroupData = jdbcTemplate.queryForObject(
-                queries.getProperty(GET_GROUP_BY_STUDENT_ID), 
+                sqlGetGroupByStudentId, 
                 (resultSet, rowNum) -> {
                     StudentEntity student = studentMapper.mapRow(resultSet, rowNum);
                     GroupEntity group = groupMapper.mapRow(resultSet, rowNum);
@@ -51,14 +52,16 @@ public class StudentJdbcDao implements StudentDao {
     
     @Override
     public int insert(StudentEntity entity) {
-        return jdbcTemplate.update(queries.getProperty(INSERT), 
+        String sqlInsertStudent = queries.getProperty(INSERT);
+        return jdbcTemplate.update(sqlInsertStudent, 
                                    preparedStatement -> getPreparedStatementOfInsert(preparedStatement, 
                                                                                      entity));
     }
     
     @Override
     public StudentEntity getById(int id) {
-        StudentEntity student = jdbcTemplate.queryForObject(queries.getProperty(GET_BY_ID), 
+        String sqlGetStudentById = queries.getProperty(GET_BY_ID);
+        StudentEntity student = jdbcTemplate.queryForObject(sqlGetStudentById, 
         (resultSet, rowNum) -> studentMapper.mapRow(resultSet, rowNum), 
         id);
         return student;
@@ -66,13 +69,15 @@ public class StudentJdbcDao implements StudentDao {
     
     @Override
     public int update(StudentEntity entity) {
-        return jdbcTemplate.update(queries.getProperty(UPDATE), 
+        String sqlUdateStudent = queries.getProperty(UPDATE);
+        return jdbcTemplate.update(sqlUdateStudent, 
                                    preparedStatement -> getPreparedStetamentOfUdate(preparedStatement, 
                                                                                     entity));
     }
     
     public int deleteById(int id) {
-        return jdbcTemplate.update(queries.getProperty(DELETE_BY_ID), 
+        String sqlDeleteStudentById = queries.getProperty(DELETE_BY_ID);
+        return jdbcTemplate.update(sqlDeleteStudentById, 
                                    preparedStatement -> preparedStatement.setInt(1, id));
         
     }

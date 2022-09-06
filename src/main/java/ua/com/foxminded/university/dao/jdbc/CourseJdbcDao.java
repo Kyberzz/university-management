@@ -40,8 +40,9 @@ public class CourseJdbcDao implements CourseDao {
 
     @Override
     public CourseEntity getTimetableListByCourseId(int id) {
+        String sqlGetTimetableListByCourseId = queries.getProperty(GET_TIMETABL_LIST_BY_COURSE_ID);
         CourseEntity courseWhithTimetableList = jdbcTemplate.queryForObject(
-                queries.getProperty(GET_TIMETABL_LIST_BY_COURSE_ID),
+                sqlGetTimetableListByCourseId,                                   
                 (resultSet, rowNum) -> {
                     CourseEntity course = null;
                     if (course == null) {
@@ -59,20 +60,23 @@ public class CourseJdbcDao implements CourseDao {
     
     @Override
     public int deleteById(int id) {
-        return jdbcTemplate.update(queries.getProperty(DELETE_BY_ID),
+        String sqlDeleteCourseById = queries.getProperty(DELETE_BY_ID);
+        return jdbcTemplate.update(sqlDeleteCourseById,
                                    preparedStatement -> preparedStatement.setInt(1,id));
     }
     
     @Override
     public int update(CourseEntity entity) {
-        return jdbcTemplate.update(queries.getProperty(UPDATE),
+        String sqlUpdateCourse = queries.getProperty(UPDATE);
+        return jdbcTemplate.update(sqlUpdateCourse,
                                    preparedStatement -> getPreparedStatementOfUpdate(preparedStatement, 
                                                                                      entity));
     }
     
     @Override
     public CourseEntity getById(int id) {
-        CourseEntity courseEntity = jdbcTemplate.queryForObject(queries.getProperty(GET_BY_ID), 
+        String sqlGetCourseById = queries.getProperty(GET_BY_ID);
+        CourseEntity courseEntity = jdbcTemplate.queryForObject(sqlGetCourseById, 
                 (resultSet, rowNum) -> courseMapper.mapRow(resultSet, rowNum), 
                 id);
         return courseEntity;
@@ -80,7 +84,8 @@ public class CourseJdbcDao implements CourseDao {
     
     @Override
     public int insert(CourseEntity entity) {
-        return jdbcTemplate.update(queries.getProperty(INSERT),
+        String sqlInsertCourse = queries.getProperty(INSERT);
+        return jdbcTemplate.update(sqlInsertCourse,
                                    preparedStatement -> getPreparedStatementOfInsert(preparedStatement, 
                                                                                      entity));
     }

@@ -44,8 +44,9 @@ public class TimetableJdbcDao implements TimetableDao {
 
     @Override
     public TimetableEntity getCourseByTimetableId(int id) {
+        String sqlGetCourseByTimetalbeId = queries.getProperty(GET_COURCE_BY_TIMETABLE_ID);
         TimetableEntity timetableWithCourseList = jdbcTemplate.queryForObject(
-                queries.getProperty(GET_COURCE_BY_TIMETABLE_ID), 
+                sqlGetCourseByTimetalbeId, 
                 (resultSet, rowNum) -> {
                     TimetableEntity timetable = timetableMapper.mapRow(resultSet, rowNum);
                     CourseEntity course = courseMapper.mapRow(resultSet, rowNum);
@@ -58,8 +59,9 @@ public class TimetableJdbcDao implements TimetableDao {
     
     @Override
     public TimetableEntity getGroupByTimetableId(int id) {
+        String sqlGetGroupByTimetableId = queries.getProperty(GET_GROUP_BY_TIMETABLE_ID);
         TimetableEntity timetableWithGroupList = jdbcTemplate.queryForObject(
-                queries.getProperty(GET_GROUP_BY_TIMETABLE_ID), 
+                sqlGetGroupByTimetableId, 
                 (resultSet, rowNum) -> {
                     TimetableEntity timetable = timetableMapper.mapRow(resultSet, rowNum);
                     GroupEntity group = groupMapper.mapRow(resultSet, rowNum);
@@ -72,7 +74,8 @@ public class TimetableJdbcDao implements TimetableDao {
     
     @Override
     public TimetableEntity getById(int id) {
-        TimetableEntity timetable = jdbcTemplate.queryForObject(queries.getProperty(GET_BY_ID), 
+        String slqGetTimetableById = queries.getProperty(GET_BY_ID);
+        TimetableEntity timetable = jdbcTemplate.queryForObject(slqGetTimetableById, 
                 (resultSet, rowNum) -> timetableMapper.mapRow(resultSet, id), 
                 id);
         return timetable;
@@ -80,20 +83,23 @@ public class TimetableJdbcDao implements TimetableDao {
 
     @Override
     public int update(TimetableEntity entity) {
-        return jdbcTemplate.update(queries.getProperty(UPDATE),
+        String sqlUpdateTimetable = queries.getProperty(UPDATE);
+        return jdbcTemplate.update(sqlUpdateTimetable,
                                    preparedStatement -> getPreparedStatementOfUpdate(preparedStatement, 
                                                                                      entity));
     }
     
     @Override
     public int deleteById(int id) {
-        return jdbcTemplate.update(queries.getProperty(DELETE_BY_ID),
+        String slqDeleteTimetableById = queries.getProperty(DELETE_BY_ID);
+        return jdbcTemplate.update(slqDeleteTimetableById,
                                    preparedStatement -> preparedStatement.setInt(1, id));
     }
     
     @Override
     public int insert(TimetableEntity entity) {
-        return jdbcTemplate.update(queries.getProperty(INSERT),
+        String sqlInsertTimetable = queries.getProperty(INSERT);
+        return jdbcTemplate.update(sqlInsertTimetable,
                                    preparedStatement -> getPreparedStatementOfInsert(preparedStatement, 
                                                                                      entity));
     }

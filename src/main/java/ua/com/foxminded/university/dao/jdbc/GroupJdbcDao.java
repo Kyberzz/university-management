@@ -41,8 +41,9 @@ public class GroupJdbcDao implements GroupDao {
 
     @Override
     public GroupEntity getTimetableListByGroupId(int id) {
+        String sqlGetTimetableListByGroupId =  queries.getProperty(GET_TIMETABLE_LIST_BY_GROUP_ID);
         GroupEntity groupWithTimetableList = jdbcTemplate.queryForObject(
-                queries.getProperty(GET_TIMETABLE_LIST_BY_GROUP_ID), 
+                sqlGetTimetableListByGroupId, 
                 (resultSet, rowNum) -> {
                     GroupEntity group = null;
                     
@@ -61,8 +62,9 @@ public class GroupJdbcDao implements GroupDao {
     
     @Override
     public GroupEntity getStudentListByGroupId(int id) {
+        String sqlGetStudentListByGroupId = queries.getProperty(GET_STUDENT_LIST_BY_GROUP_ID);
         GroupEntity groupWithStudentList = jdbcTemplate.queryForObject(
-                queries.getProperty(GET_STUDENT_LIST_BY_GROUP_ID), 
+                sqlGetStudentListByGroupId, 
                 (resultSet, rowNum) -> {
                     GroupEntity group = null;
                     
@@ -81,13 +83,15 @@ public class GroupJdbcDao implements GroupDao {
     
     @Override
     public int insert(GroupEntity entity) {
-        return jdbcTemplate.update(queries.getProperty(INSERT),
+        String sqlInsertGroup = queries.getProperty(INSERT);
+        return jdbcTemplate.update(sqlInsertGroup,
                                    preparedStatement -> preparedStatement.setString(1, entity.getName()));
     }
     
     @Override
     public GroupEntity getById(int id) {
-        GroupEntity group = jdbcTemplate.queryForObject(queries.getProperty(GET_BY_ID), 
+        String sqlGetGroupById = queries.getProperty(GET_BY_ID);
+        GroupEntity group = jdbcTemplate.queryForObject(sqlGetGroupById, 
                 (resultSet, rowNum) -> groupMapper.mapRow(resultSet, rowNum), 
                 id);
         return group;
@@ -95,7 +99,8 @@ public class GroupJdbcDao implements GroupDao {
     
     @Override
     public int update(GroupEntity entity) {
-        return jdbcTemplate.update(queries.getProperty(UPDATE),
+        String sqlUpdateGroup = queries.getProperty(UPDATE);
+        return jdbcTemplate.update(sqlUpdateGroup,
                                    preparedStatement -> {
                                        preparedStatement.setString(1, entity.getName());
                                        preparedStatement.setInt(2, entity.getId());
@@ -104,7 +109,8 @@ public class GroupJdbcDao implements GroupDao {
     
     @Override
     public int deleteById(int id) {
-        return jdbcTemplate.update(queries.getProperty(DELETE_BY_ID), 
+        String sqlDeleteGroupById = queries.getProperty(DELETE_BY_ID);
+        return jdbcTemplate.update(sqlDeleteGroupById, 
                                    preparedStatement -> preparedStatement.setInt(1, id));
     }
 }

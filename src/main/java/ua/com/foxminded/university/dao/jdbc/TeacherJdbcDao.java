@@ -38,8 +38,9 @@ public class TeacherJdbcDao implements TeacherDao {
 
     @Override
     public TeacherEntity getCourseListByTeacherId(int id) {
+        String sqlGetCourseListByTeacherId = queries.getProperty(GET_COURSE_LIST_BY_TEACHER_ID);
         TeacherEntity teacherWithCourseList = jdbcTemplate.queryForObject(
-                queries.getProperty(GET_COURSE_LIST_BY_TEACHER_ID), 
+                sqlGetCourseListByTeacherId, 
                 (resultSet, rowNum) -> {
                     TeacherEntity teacher = null;
                     
@@ -58,20 +59,23 @@ public class TeacherJdbcDao implements TeacherDao {
     
     @Override
     public int deleteById(int id) {
-        return jdbcTemplate.update(queries.getProperty(DELETE_BY_ID), 
+        String sqlDeleteTeacherByid = queries.getProperty(DELETE_BY_ID);
+        return jdbcTemplate.update(sqlDeleteTeacherByid, 
                                    preparedStatement -> preparedStatement.setInt(1, id));
     }
     
     @Override
     public int update(TeacherEntity entity) {
-        return jdbcTemplate.update(queries.getProperty(UPDATE), 
+        String sqlUpdateTeacher = queries.getProperty(UPDATE);
+        return jdbcTemplate.update(sqlUpdateTeacher, 
                                    preparedStatement -> getPreparedStatementOfUpdate(preparedStatement, 
                                                                                      entity));
     }
     
     @Override
     public TeacherEntity getById(int id) {
-        TeacherEntity teacherEntity = jdbcTemplate.queryForObject(queries.getProperty(GET_BY_ID),
+        String sqlGetTeacherById = queries.getProperty(GET_BY_ID);
+        TeacherEntity teacherEntity = jdbcTemplate.queryForObject(sqlGetTeacherById,
                 (resultSet, rowNum) -> teacherMapper.mapRow(resultSet, rowNum),
                 id);
         return teacherEntity;
@@ -79,7 +83,8 @@ public class TeacherJdbcDao implements TeacherDao {
     
     @Override
     public int insert(TeacherEntity entity) {
-        return jdbcTemplate.update(queries.getProperty(INSERT), 
+        String sqlInsertTeacher = queries.getProperty(INSERT);
+        return jdbcTemplate.update(sqlInsertTeacher, 
                                    preparedStatement -> {
                                        preparedStatement.setString(1, entity.getFirstName());
                                        preparedStatement.setString(2, entity.getLastName());
