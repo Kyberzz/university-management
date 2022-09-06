@@ -1,11 +1,11 @@
-package ua.com.foxminded.universitymanagement.entity;
+package ua.com.foxminded.university.model;
 
 import java.util.Objects;
 
-public class StudentEntity {
+public class StudentModel {
 
     private int id;
-    private GroupEntity group;
+    private GroupModel group;
     private String firstName;
     private String lastName;
 
@@ -17,11 +17,11 @@ public class StudentEntity {
         this.id = id;
     }
 
-    public GroupEntity getGroup() {
+    public GroupModel getGroup() {
         return group;
     }
 
-    public void setGroup(GroupEntity group) {
+    public void setGroup(GroupModel group) {
         this.group = group;
     }
 
@@ -54,8 +54,14 @@ public class StudentEntity {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        StudentEntity other = (StudentEntity) obj;
+        StudentModel other = (StudentModel) obj;
         return Objects.equals(firstName, other.firstName) && Objects.equals(group, other.group) && id == other.id
                 && Objects.equals(lastName, other.lastName);
+    }
+
+    @Override
+    public String toString() {
+        return "StudentEntity [id=" + id + ", group=" + group + ", firstName=" + firstName + ", lastName=" + lastName
+                + "]";
     }
 }

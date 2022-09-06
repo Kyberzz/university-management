@@ -1,22 +1,29 @@
-package ua.com.foxminded.universitymanagement.entity;
+package ua.com.foxminded.university.entity;
 
 import java.util.Objects;
 
 public class TimetableEntity {
 
-    private int id;
+    private Integer id;
     private GroupEntity group;
     private CourseEntity course;
     private long startTime;
     private long endTime;
     private String description;
     private WeekDayEntity weekDay;
+    
+    public TimetableEntity() {
+    }
 
-    public int getId() {
+    public TimetableEntity(Integer id) {
+        this.id = id;
+    }
+    
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -69,11 +76,6 @@ public class TimetableEntity {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(course, description, endTime, group, id, startTime, weekDay);
-    }
-
-    @Override
     public boolean equals(Object obj) {
         if (this == obj)
             return true;
@@ -85,5 +87,11 @@ public class TimetableEntity {
         return Objects.equals(course, other.course) && Objects.equals(description, other.description)
                 && endTime == other.endTime && Objects.equals(group, other.group) && id == other.id
                 && startTime == other.startTime && weekDay == other.weekDay;
+    }
+
+    @Override
+    public String toString() {
+        return "TimetableEntity [id=" + id + ", group=" + group + ", course=" + course + ", startTime=" + startTime
+                + ", endTime=" + endTime + ", description=" + description + ", weekDay=" + weekDay + "]";
     }
 }

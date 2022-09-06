@@ -1,20 +1,27 @@
-package ua.com.foxminded.universitymanagement.entity;
+package ua.com.foxminded.university.entity;
 
 import java.util.List;
 import java.util.Objects;
 
 public class TeacherEntity {
 
-    private int id;
+    private Integer id;
     private String firstName;
     private String lastName;
     private List<CourseEntity> courseList;
+    
+    public TeacherEntity() {
+    }
 
-    public int getId() {
+    public TeacherEntity(Integer id) {
+        this.id = id;
+    }
+
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -43,11 +50,6 @@ public class TeacherEntity {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(courseList, firstName, id, lastName);
-    }
-
-    @Override
     public boolean equals(Object obj) {
         if (this == obj)
             return true;
@@ -58,5 +60,11 @@ public class TeacherEntity {
         TeacherEntity other = (TeacherEntity) obj;
         return Objects.equals(courseList, other.courseList) && Objects.equals(firstName, other.firstName)
                 && id == other.id && Objects.equals(lastName, other.lastName);
+    }
+
+    @Override
+    public String toString() {
+        return "TeacherEntity [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", courseList="
+                + courseList + "]";
     }
 }
