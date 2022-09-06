@@ -54,7 +54,7 @@ class TimetableJdbcDaoTest {
     private JdbcTemplate jdbcTemplate;
     
     @Autowired
-    private Environment timetableQueries;
+    private Environment queries;
     
     @Autowired
     private TimetableMapper timetableMapper;
@@ -77,12 +77,12 @@ class TimetableJdbcDaoTest {
         timetable.setStartTime(START_TIME);
         timetable.setWeekDay(WeekDayEntity.valueOf(WEEK_DAY_VALUE));
        
-        TimetableDao timetableDao = new TimetableJdbcDao(jdbcTemplate, timetableQueries, timetableMapper, 
+        TimetableDao timetableDao = new TimetableJdbcDao(jdbcTemplate, queries, timetableMapper, 
                                                          courseMapper, groupMapper);
         timetableDao.insert(timetable);
-        Map<String, Object> insertedTimetable = jdbcTemplate.queryForMap(
-                timetableQueries.getProperty(SELECT_TIMETABLE_BY_ID), 
-                TIMETABLE_ID_NUMBER);
+        String sqlSelectTimetableById = queries.getProperty(SELECT_TIMETABLE_BY_ID);
+        Map<String, Object> insertedTimetable = jdbcTemplate.queryForMap(sqlSelectTimetableById, 
+                                                                         TIMETABLE_ID_NUMBER);
         
         assertEquals(COURSE_ID_NUMBER, insertedTimetable.get(COURSE_ID_COLUMN));
         assertEquals(TIMETABLE_DESCRIPTION, insertedTimetable.get(TIMETABLE_DESCRIPTION_COLUMN));
@@ -95,7 +95,7 @@ class TimetableJdbcDaoTest {
     
     @Test
     void getById_ReceivingTimetableDatabaseData_CorrectReceivedData() {
-        TimetableDao timetableDao = new TimetableJdbcDao(jdbcTemplate, timetableQueries, timetableMapper, 
+        TimetableDao timetableDao = new TimetableJdbcDao(jdbcTemplate, queries, timetableMapper, 
                                                          courseMapper, groupMapper);
         TimetableEntity receivedTimetable = timetableDao.getById(TIMETABLE_ID_NUMBER);
         
@@ -120,12 +120,12 @@ class TimetableJdbcDaoTest {
         timetable.setId(TIMETABLE_ID_NUMBER);
         timetable.setStartTime(START_TIME);
         timetable.setWeekDay(WeekDayEntity.valueOf(WEEK_DAY_VALUE));
-        TimetableDao timetableDao = new TimetableJdbcDao(jdbcTemplate, timetableQueries, timetableMapper, 
+        TimetableDao timetableDao = new TimetableJdbcDao(jdbcTemplate, queries, timetableMapper, 
                                                          courseMapper, groupMapper);
         timetableDao.update(timetable);
-        Map<String, Object> updatedTimetable = jdbcTemplate.queryForMap(
-                timetableQueries.getProperty(SELECT_TIMETABLE_BY_ID), 
-                TIMETABLE_ID_NUMBER);
+        String sqlSelectTimetableById = queries.getProperty(SELECT_TIMETABLE_BY_ID);
+        Map<String, Object> updatedTimetable = jdbcTemplate.queryForMap(sqlSelectTimetableById, 
+                                                                        TIMETABLE_ID_NUMBER);
         
         assertNull(updatedTimetable.get(COURSE_DESCRIPTION_COLUMN));
         assertNull(updatedTimetable.get(GROUP_ID_COLUMN));
@@ -142,12 +142,12 @@ class TimetableJdbcDaoTest {
         timetable.setId(TIMETABLE_ID);
         timetable.setStartTime(START_TIME);
         timetable.setWeekDay(WeekDayEntity.valueOf(WEEK_DAY_VALUE));
-        TimetableDao timetableDao = new TimetableJdbcDao(jdbcTemplate, timetableQueries, timetableMapper, 
+        TimetableDao timetableDao = new TimetableJdbcDao(jdbcTemplate, queries, timetableMapper, 
                                                          courseMapper, groupMapper);
         timetableDao.update(timetable);
-        Map<String, Object> updatedTimetable = jdbcTemplate.queryForMap(timetableQueries.getProperty(
-                SELECT_TIMETABLE_BY_ID), 
-                TIMETABLE_ID);
+        String sqlSelectTimetableById = queries.getProperty(SELECT_TIMETABLE_BY_ID);
+        Map<String, Object> updatedTimetable = jdbcTemplate.queryForMap(sqlSelectTimetableById, 
+                                                                        TIMETABLE_ID);
        
         assertEquals(COURSE_ID_NUMBER, updatedTimetable.get(COURSE_ID_COLUMN));
         assertEquals(TIMETABLE_DESCRIPTION, updatedTimetable.get(TIMETABLE_DESCRIPTION_COLUMN));
@@ -160,19 +160,20 @@ class TimetableJdbcDaoTest {
     
     @Test
     void deleteById_DeletingTimetableDatabaseData_DatabaseHaNoData() {
-        TimetableDao timetableDao = new TimetableJdbcDao(jdbcTemplate, timetableQueries, timetableMapper, 
+        TimetableDao timetableDao = new TimetableJdbcDao(jdbcTemplate, queries, timetableMapper, 
                                                          courseMapper, groupMapper);
         timetableDao.deleteById(TIMETABLE_ID_NUMBER);
-        jdbcTemplate.query(timetableQueries.getProperty(SELECT_TIMETABLE_BY_ID), 
-                                                        preparedStatement -> preparedStatement.setInt(1, TIMETABLE_ID_NUMBER),
-                                                        resultSet -> {
-                                                            assertTrue(!resultSet.next());
-                                                        });
+        String sqlSelectTimetableById = queries.getProperty(SELECT_TIMETABLE_BY_ID);
+        jdbcTemplate.query(sqlSelectTimetableById, 
+                           preparedStatement -> preparedStatement.setInt(1, TIMETABLE_ID_NUMBER),
+                           resultSet -> {
+                               assertTrue(!resultSet.next());
+                           });
     }
     
     @Test
     void getCourseByTimetableId_ReceivingTimetableDatabaseData_CorrectReceivedData() {
-        TimetableDao timetableDao = new TimetableJdbcDao(jdbcTemplate, timetableQueries, timetableMapper, 
+        TimetableDao timetableDao = new TimetableJdbcDao(jdbcTemplate, queries, timetableMapper, 
                                                          courseMapper, groupMapper);
         TimetableEntity receivedTimetableData = timetableDao.getCourseByTimetableId(TIMETABLE_ID_NUMBER);
         
@@ -190,7 +191,7 @@ class TimetableJdbcDaoTest {
     
     @Test
     void getGroupByTimetableId_ReceivingTimetableDatabaseData_CorrectReceivedData() {
-        TimetableDao timetableDao = new TimetableJdbcDao(jdbcTemplate, timetableQueries, timetableMapper, 
+        TimetableDao timetableDao = new TimetableJdbcDao(jdbcTemplate, queries, timetableMapper, 
                                                          courseMapper, groupMapper);
         TimetableEntity timetable = timetableDao.getGroupByTimetableId(TIMETABLE_ID_NUMBER);
         

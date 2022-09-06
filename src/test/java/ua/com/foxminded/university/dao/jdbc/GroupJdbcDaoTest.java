@@ -65,9 +65,9 @@ class GroupJdbcDaoTest {
         GroupEntity group = new GroupEntity();
         group.setName(NEW_GROUP_NAME);
         groupDao.insert(group);
-        Map<String, Object> insertedGroup = jdbcTemplate.queryForMap(
-                groupQueries.getProperty(SELECT_GROUP_BY_ID), 
-                INSERTED_GROUP_ID);
+        String sqlSelectGroupById = groupQueries.getProperty(SELECT_GROUP_BY_ID);
+        Map<String, Object> insertedGroup = jdbcTemplate.queryForMap(sqlSelectGroupById, 
+                                                                     INSERTED_GROUP_ID);
         assertEquals(NEW_GROUP_NAME, insertedGroup.get(GROUP_NAME_COLUMN));
     }
     
@@ -89,10 +89,10 @@ class GroupJdbcDaoTest {
         group.setId(GROUP_ID_NUMBER);
         group.setName(EXPECTED_GROUP_NAME);
         groupDao.update(group);
+        String sqlSelectGroupById = groupQueries.getProperty(SELECT_GROUP_BY_ID);
         
-        Map<String, Object> updatedGroup = jdbcTemplate.queryForMap(
-                groupQueries.getProperty(SELECT_GROUP_BY_ID),
-                GROUP_ID_NUMBER);
+        Map<String, Object> updatedGroup = jdbcTemplate.queryForMap(sqlSelectGroupById,
+                                                                    GROUP_ID_NUMBER);
         assertEquals(group.getId(), updatedGroup.get(GROUP_ID_COLUMN));
         assertEquals(group.getName(), updatedGroup.get(GROUP_NAME_COLUMN));
     }
@@ -102,7 +102,8 @@ class GroupJdbcDaoTest {
         GroupDao groupDao = new GroupJdbcDao(groupQueries, jdbcTemplate, groupMapper, 
                                              studentMapper, timetableMapper);
         groupDao.deleteById(GROUP_ID_NUMBER);
-        jdbcTemplate.query(groupQueries.getProperty(SELECT_GROUP_BY_ID),
+        String sqlSelectGroupById = groupQueries.getProperty(SELECT_GROUP_BY_ID);
+        jdbcTemplate.query(sqlSelectGroupById,
                            preparedStatement -> preparedStatement.setInt(1, GROUP_ID_NUMBER),
                            resultSet -> {
                                assertTrue(!resultSet.next());

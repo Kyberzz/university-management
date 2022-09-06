@@ -43,22 +43,23 @@ class TeacherJdbcDaoTest {
     private JdbcTemplate jdbcTemplate;
     
     @Autowired
-    private Environment teacherQueries;
+    private Environment queries;
     
     @Autowired
     private TeacherMapper teacherMapper;
     
     @Autowired
     private CourseMapper courseMapper;
-
+    
+    @Test
     void insert_InsertingTeacherDatabaseData_DatabaseHasCorrectData() {
         TeacherEntity teacher = new TeacherEntity();
         teacher.setFirstName(TEACHER_FIRST_NAME);
         teacher.setLastName(TEACHER_LAST_NAME);
-        TeacherDao teacherDao = new TeacherJdbcDao(jdbcTemplate, teacherQueries, teacherMapper, courseMapper);
+        TeacherDao teacherDao = new TeacherJdbcDao(jdbcTemplate, queries, teacherMapper, courseMapper);
         teacherDao.insert(teacher);
-        
-        Map<String, Object> insertedTeacher = jdbcTemplate.queryForMap(SELECT_TEACHER_BY_ID, 
+        String sqlSelectTeacherById = queries.getProperty(SELECT_TEACHER_BY_ID);
+        Map<String, Object> insertedTeacher = jdbcTemplate.queryForMap(sqlSelectTeacherById, 
                                                                        NEW_TEACHER_ID);
         
         assertEquals(TEACHER_FIRST_NAME, insertedTeacher.get(TEACHER_FIRST_NAME_COLUMN));
@@ -67,7 +68,7 @@ class TeacherJdbcDaoTest {
     
     @Test
     void getById_ReceivingTeacherDatabaseData_CorrectReceivedData() {
-        TeacherDao teacherDao = new TeacherJdbcDao(jdbcTemplate, teacherQueries, teacherMapper, courseMapper);
+        TeacherDao teacherDao = new TeacherJdbcDao(jdbcTemplate, queries, teacherMapper, courseMapper);
         TeacherEntity teacher = teacherDao.getById(TEACHER_ID_NUMBER);
         
         assertEquals(TEACHER_FIRST_NAME, teacher.getFirstName());
@@ -77,15 +78,15 @@ class TeacherJdbcDaoTest {
     
     @Test
     void update_UpdatingTeacherDatabaseData_DatabaseHasCorrectData() {
-        TeacherDao teacherDao = new TeacherJdbcDao(jdbcTemplate, teacherQueries, teacherMapper, courseMapper);
+        TeacherDao teacherDao = new TeacherJdbcDao(jdbcTemplate, queries, teacherMapper, courseMapper);
         TeacherEntity teacherData = new TeacherEntity();
         teacherData.setFirstName(TEACHER_FIRST_NAME);
         teacherData.setLastName(TEACHER_LAST_NAME);
         teacherData.setId(TEACHER_ID);
         teacherDao.update(teacherData);
-        Map<String, Object> updatedTeacherData = jdbcTemplate.queryForMap(
-                teacherQueries.getProperty(SELECT_TEACHER_BY_ID), 
-                TEACHER_ID);
+        String sqlSelectTeacherById = queries.getProperty(SELECT_TEACHER_BY_ID);
+        Map<String, Object> updatedTeacherData = jdbcTemplate.queryForMap(sqlSelectTeacherById, 
+                                                                          TEACHER_ID);
         
         assertEquals(TEACHER_ID, updatedTeacherData.get(TEACHER_ID_COLUMN));
         assertEquals(TEACHER_FIRST_NAME, updatedTeacherData.get(TEACHER_FIRST_NAME_COLUMN));
@@ -94,9 +95,10 @@ class TeacherJdbcDaoTest {
     
     @Test
     void deleteById_DeletingTeacherDatabaseData_DatabaseHasNoData() {
-        TeacherDao teacherDao = new TeacherJdbcDao(jdbcTemplate, teacherQueries, teacherMapper, courseMapper);
+        TeacherDao teacherDao = new TeacherJdbcDao(jdbcTemplate, queries, teacherMapper, courseMapper);
         teacherDao.deleteById(TEACHER_ID_NUMBER);
-        jdbcTemplate.query(teacherQueries.getProperty(SELECT_TEACHER_BY_ID), 
+        String sqlSelectTeacherById = queries.getProperty(SELECT_TEACHER_BY_ID);
+        jdbcTemplate.query(sqlSelectTeacherById, 
                            preparedStatement -> preparedStatement.setInt(1, TEACHER_ID_NUMBER), 
                            resultSet -> {
                                assertTrue(!resultSet.next());
@@ -105,7 +107,7 @@ class TeacherJdbcDaoTest {
     
     @Test
     void getCourseListByTeacherId_ReceivingTeacherDatabaseData_CorrectReceivedData() {
-        TeacherDao teacherDao = new TeacherJdbcDao(jdbcTemplate, teacherQueries, teacherMapper, courseMapper);
+        TeacherDao teacherDao = new TeacherJdbcDao(jdbcTemplate, queries, teacherMapper, courseMapper);
         TeacherEntity teacherData = teacherDao.getCourseListByTeacherId(TEACHER_ID_NUMBER);
         
         assertEquals(TEACHER_ID_NUMBER, teacherData.getId());

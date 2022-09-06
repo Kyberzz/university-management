@@ -57,6 +57,7 @@ class CourseJdbcDaoTest {
     @Autowired
     private TimetableMapper timetableMapper;
     
+    
     @Test
     void getTimetableListByCourseId_GettingDatabaseTimetableData_CorrectData() {
         CourseJdbcDao courseDao = new CourseJdbcDao(jdbcTemplate, queries, courseMapper, timetableMapper);
@@ -98,7 +99,9 @@ class CourseJdbcDaoTest {
         course.setTeacher(new TeacherEntity(EXPECTED_TEACHER_ID));
         course.setDescription(EXPECTED_COURSE_DESCRIPTION);
         courseDao.insert(course);
-        Map<String, Object> insertedCourse = jdbcTemplate.queryForMap(queries.getProperty(SELECT_COURSE_BY_ID), 
+        String sqlSelectCourseById = queries.getProperty(SELECT_COURSE_BY_ID);
+        
+        Map<String, Object> insertedCourse = jdbcTemplate.queryForMap(sqlSelectCourseById, 
                                                                       EXPECTED_COURSE_ID);
        
         assertEquals(EXPECTED_COURSE_ID, insertedCourse.get(COURSE_ID_COLUMN));
@@ -126,9 +129,9 @@ class CourseJdbcDaoTest {
         course.setName(EXPECTED_COURSE_NAME);
         course.setTeacher(new TeacherEntity());
         courseDao.update(course);
-        Map<String, Object> updatedCourse = jdbcTemplate.queryForMap(
-                queries.getProperty(SELECT_COURSE_BY_ID), 
-                COURSE_ID_NUMBER);
+        String sqlSelectCourseById = queries.getProperty(SELECT_COURSE_BY_ID);
+        Map<String, Object> updatedCourse = jdbcTemplate.queryForMap(sqlSelectCourseById, 
+                                                                     COURSE_ID_NUMBER);
         assertNull(updatedCourse.get(COURSE_DESCRIPTION_COLUMN));
         assertNull(updatedCourse.get(TEACHER_ID_COLUMN));
     }
@@ -142,9 +145,9 @@ class CourseJdbcDaoTest {
         course.setDescription(EXPECTED_COURSE_DESCRIPTION);
         course.setTeacher(new TeacherEntity(EXPECTED_TEACHER_ID));
         courseDao.update(course);
-        Map<String, Object> databaseCourse = jdbcTemplate.queryForMap(
-                queries.getProperty(SELECT_COURSE_BY_ID), 
-                COURSE_ID_NUMBER);
+        String sqlSelectCourseById = queries.getProperty(SELECT_COURSE_BY_ID);
+        Map<String, Object> databaseCourse = jdbcTemplate.queryForMap(sqlSelectCourseById, 
+                                                                      COURSE_ID_NUMBER);
         assertEquals(COURSE_ID_NUMBER, databaseCourse.get(COURSE_ID_COLUMN));
         assertEquals(NEW_COURSE_NAME, databaseCourse.get(COURSE_NAME_COLUMN));
         assertEquals(EXPECTED_COURSE_DESCRIPTION, databaseCourse.get(COURSE_DESCRIPTION_COLUMN));
@@ -155,7 +158,8 @@ class CourseJdbcDaoTest {
     void deleteById_DeletingDatabaseCourseData_DatabaseHasNoCourseData() {
         CourseJdbcDao courseDao = new CourseJdbcDao(jdbcTemplate, queries, courseMapper, timetableMapper);
         courseDao.deleteById(COURSE_ID_NUMBER);
-        jdbcTemplate.query(queries.getProperty(SELECT_COURSE_BY_ID),
+        String sqlSelectCourseById = queries.getProperty(SELECT_COURSE_BY_ID);
+        jdbcTemplate.query(sqlSelectCourseById,
                            preparedStatement -> preparedStatement.setInt(1, COURSE_ID_NUMBER), 
                            resultSet -> {
                                assertTrue(!resultSet.next());

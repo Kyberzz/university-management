@@ -64,9 +64,9 @@ class StudentJdbcDaoTest {
         student.setId(STUDENT_ID_NUMBER);
         student.setLastName(LAST_NAME_STUDENT);
         studentDao.update(student);
-        Map<String, Object> updatedStudent = jdbcTemplate.queryForMap(
-                queries.getProperty(SELECT_STUDENT_BY_ID), 
-                STUDENT_ID_NUMBER);
+        String sqlSelectStudentById = queries.getProperty(SELECT_STUDENT_BY_ID);
+        Map<String, Object> updatedStudent = jdbcTemplate.queryForMap(sqlSelectStudentById, 
+                                                                      STUDENT_ID_NUMBER);
         assertNull(updatedStudent.get(GROUP_ID_COLUMN));
     }
     
@@ -79,9 +79,9 @@ class StudentJdbcDaoTest {
         student.setId(STUDENT_ID_NUMBER);
         student.setGroup(new GroupEntity(GROUP_ID_NUMBER));
         studentDao.update(student);
-        Map<String, Object> databaseStudent = jdbcTemplate.queryForMap(
-                queries.getProperty(SELECT_STUDENT_BY_ID), 
-                STUDENT_ID_NUMBER);
+        String sqlSelectStudentById = queries.getProperty(SELECT_STUDENT_BY_ID);
+        Map<String, Object> databaseStudent = jdbcTemplate.queryForMap(sqlSelectStudentById, 
+                                                                       STUDENT_ID_NUMBER);
         assertEquals(NEW_FIRST_NAME_STUDENT, databaseStudent.get(FIRST_NAME_COLUMN));
         assertEquals(NEW_LAST_NAME_STUDENT, databaseStudent.get(LAST_NAME_COLUMN));
         assertEquals(STUDENT_ID_NUMBER, databaseStudent.get(STUDENT_ID));
@@ -92,12 +92,12 @@ class StudentJdbcDaoTest {
     void deleteById_DeletingStudentDatabaseData_NoStudentDatabaseData() throws SQLException {
         StudentJdbcDao studentDao = new StudentJdbcDao(jdbcTemplate, queries, studentMapper, groupMapper);
         studentDao.deleteById(STUDENT_ID_NUMBER);
-        jdbcTemplate.query(
-                queries.getProperty(SELECT_STUDENT_BY_ID),
-                preperadStatement -> preperadStatement.setInt(1, STUDENT_ID_NUMBER),
-                resultSet -> {
-                    assertTrue(!resultSet.next());
-                });
+        String sqlSelectStudentById = queries.getProperty(SELECT_STUDENT_BY_ID);
+        jdbcTemplate.query(sqlSelectStudentById,
+                           preperadStatement -> preperadStatement.setInt(1, STUDENT_ID_NUMBER),
+                           resultSet -> {
+                               assertTrue(!resultSet.next());
+                           });
     }
     
     @Test
@@ -120,8 +120,8 @@ class StudentJdbcDaoTest {
         student.setLastName(NEW_LAST_NAME_STUDENT);
         student.setGroup(new GroupEntity(GROUP_ID_NUMBER));
         studentDao.insert(student);
-        Map<String,Object> databaseStudent = jdbcTemplate.queryForMap(
-                queries.getProperty(SELECT_STUDENT_BY_NAME));
+        String sqlSelectStudentByName =  queries.getProperty(SELECT_STUDENT_BY_NAME);
+        Map<String,Object> databaseStudent = jdbcTemplate.queryForMap(sqlSelectStudentByName);
         
         assertEquals(NEW_FIRST_NAME_STUDENT, databaseStudent.get(FIRST_NAME_COLUMN).toString());
         assertEquals(NEW_LAST_NAME_STUDENT, databaseStudent.get(LAST_NAME_COLUMN).toString());
