@@ -18,6 +18,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import ua.com.foxminded.university.config.TestAppConfig;
+import ua.com.foxminded.university.dao.jdbc.mapper.GroupMapper;
+import ua.com.foxminded.university.dao.jdbc.mapper.StudentMapper;
 import ua.com.foxminded.university.entity.GroupEntity;
 import ua.com.foxminded.university.entity.StudentEntity;
 
@@ -47,9 +49,15 @@ class StudentJdbcDaoTest {
     @Autowired
     private Environment queries;
     
+    @Autowired
+    private StudentMapper studentMapper;
+    
+    @Autowired
+    private GroupMapper groupMapper;
+    
     @Test
     void update_UdatingDatabaseWithNull_DatabaseHasNoData() {
-        StudentJdbcDao studentDao = new StudentJdbcDao(jdbcTemplate, queries);
+        StudentJdbcDao studentDao = new StudentJdbcDao(jdbcTemplate, queries, studentMapper, groupMapper);
         StudentEntity student = new StudentEntity();
         student.setFirstName(FIRST_NAME_STUDENT);
         student.setGroup(new GroupEntity());
@@ -64,7 +72,7 @@ class StudentJdbcDaoTest {
     
     @Test
     void update_UdatingDatabaseData_DatabaseHasCorrectData() {
-        StudentJdbcDao studentDao = new StudentJdbcDao(jdbcTemplate, queries);
+        StudentJdbcDao studentDao = new StudentJdbcDao(jdbcTemplate, queries, studentMapper, groupMapper);
         StudentEntity student = new StudentEntity();
         student.setFirstName(NEW_FIRST_NAME_STUDENT);
         student.setLastName(NEW_LAST_NAME_STUDENT);
@@ -82,7 +90,7 @@ class StudentJdbcDaoTest {
     
     @Test
     void deleteById_DeletingStudentDatabaseData_NoStudentDatabaseData() throws SQLException {
-        StudentJdbcDao studentDao = new StudentJdbcDao(jdbcTemplate, queries);
+        StudentJdbcDao studentDao = new StudentJdbcDao(jdbcTemplate, queries, studentMapper, groupMapper);
         studentDao.deleteById(STUDENT_ID_NUMBER);
         jdbcTemplate.query(
                 queries.getProperty(SELECT_STUDENT_BY_ID),
@@ -94,7 +102,7 @@ class StudentJdbcDaoTest {
     
     @Test
     void getGroupByStudentId_GettingDatabaseData_CorrectReceivedData() {
-        StudentJdbcDao studentDao = new StudentJdbcDao(jdbcTemplate, queries);
+        StudentJdbcDao studentDao = new StudentJdbcDao(jdbcTemplate, queries, studentMapper, groupMapper);
         StudentEntity studentData = studentDao.getGroupByStudentId(GROUP_ID_NUMBER);
         
         assertEquals(STUDENT_ID_NUMBER, studentData.getId());
@@ -106,7 +114,7 @@ class StudentJdbcDaoTest {
     
     @Test
     void insert_InsertingStudentToDatabase_CorrectInsertedData() {
-        StudentJdbcDao studentDao = new StudentJdbcDao(jdbcTemplate, queries);
+        StudentJdbcDao studentDao = new StudentJdbcDao(jdbcTemplate, queries, studentMapper, groupMapper);
         StudentEntity student = new StudentEntity();
         student.setFirstName(NEW_FIRST_NAME_STUDENT);
         student.setLastName(NEW_LAST_NAME_STUDENT);
@@ -122,7 +130,7 @@ class StudentJdbcDaoTest {
     
     @Test
     void getById_GettingStudent_CorrectStudentData() {
-        StudentJdbcDao studentDao = new StudentJdbcDao(jdbcTemplate, queries);
+        StudentJdbcDao studentDao = new StudentJdbcDao(jdbcTemplate, queries, studentMapper, groupMapper);
         StudentEntity student = studentDao.getById(STUDENT_ID_NUMBER);
         StudentEntity expectedResult = new StudentEntity();
         expectedResult.setId(STUDENT_ID_NUMBER);

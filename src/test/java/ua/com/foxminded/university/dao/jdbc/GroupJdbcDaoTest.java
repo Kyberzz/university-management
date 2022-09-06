@@ -16,6 +16,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import ua.com.foxminded.university.config.TestAppConfig;
 import ua.com.foxminded.university.dao.GroupDao;
+import ua.com.foxminded.university.dao.jdbc.mapper.GroupMapper;
+import ua.com.foxminded.university.dao.jdbc.mapper.StudentMapper;
+import ua.com.foxminded.university.dao.jdbc.mapper.TimetableMapper;
 import ua.com.foxminded.university.entity.GroupEntity;
 
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
@@ -46,9 +49,19 @@ class GroupJdbcDaoTest {
     @Autowired
     private Environment groupQueries;
     
+    @Autowired
+    private GroupMapper groupMapper;
+    
+    @Autowired
+    private StudentMapper studentMapper;
+    
+    @Autowired
+    private TimetableMapper timetableMapper;
+    
     @Test
     void insert_InsertingDataOfGroupToDatabase_DatabaseHasCorrectData() {
-        GroupDao groupDao = new GroupJdbcDao(groupQueries, jdbcTemplate);
+        GroupDao groupDao = new GroupJdbcDao(groupQueries, jdbcTemplate, groupMapper, 
+                                             studentMapper, timetableMapper);
         GroupEntity group = new GroupEntity();
         group.setName(NEW_GROUP_NAME);
         groupDao.insert(group);
@@ -60,7 +73,8 @@ class GroupJdbcDaoTest {
     
     @Test
     void getById_ReceivingDatabaseDataOfGroup_CorrectReceivedData() {
-        GroupDao groupDao = new GroupJdbcDao(groupQueries, jdbcTemplate);
+        GroupDao groupDao = new GroupJdbcDao(groupQueries, jdbcTemplate, groupMapper, 
+                                             studentMapper, timetableMapper);
         GroupEntity group = groupDao.getById(GROUP_ID_NUMBER);
         
         assertEquals(GROUP_ID_NUMBER, group.getId());
@@ -69,7 +83,8 @@ class GroupJdbcDaoTest {
     
     @Test
     void update_UpdatingDatabaseDataOfGroup_DatabaseHasCorrectData() {
-        GroupDao groupDao = new GroupJdbcDao(groupQueries, jdbcTemplate);
+        GroupDao groupDao = new GroupJdbcDao(groupQueries, jdbcTemplate, groupMapper, 
+                                             studentMapper, timetableMapper);
         GroupEntity group = new GroupEntity();
         group.setId(GROUP_ID_NUMBER);
         group.setName(EXPECTED_GROUP_NAME);
@@ -84,7 +99,8 @@ class GroupJdbcDaoTest {
     
     @Test
     void deleteById_DeletingDatabaseDataOfGroup_DatabaseHasNoData() {
-        GroupDao groupDao = new GroupJdbcDao(groupQueries, jdbcTemplate);
+        GroupDao groupDao = new GroupJdbcDao(groupQueries, jdbcTemplate, groupMapper, 
+                                             studentMapper, timetableMapper);
         groupDao.deleteById(GROUP_ID_NUMBER);
         jdbcTemplate.query(groupQueries.getProperty(SELECT_GROUP_BY_ID),
                            preparedStatement -> preparedStatement.setInt(1, GROUP_ID_NUMBER),
@@ -95,7 +111,8 @@ class GroupJdbcDaoTest {
     
     @Test
     void getTimetableListByGroupId_GettingDataFromDatabase_CorrectRecevedData() {
-        GroupDao groupDao = new GroupJdbcDao(groupQueries, jdbcTemplate);
+        GroupDao groupDao = new GroupJdbcDao(groupQueries, jdbcTemplate, groupMapper, 
+                                             studentMapper, timetableMapper);
         GroupEntity receivedGroupData = groupDao.getTimetableListByGroupId(GROUP_ID_NUMBER);
         
         assertEquals(GROUP_ID_NUMBER, receivedGroupData.getId());
@@ -121,7 +138,8 @@ class GroupJdbcDaoTest {
     
     @Test
     void getStudentListByGroupId_GettingDataFromDatabase_CorrectReceivedData() {
-        GroupDao groupDao = new GroupJdbcDao(groupQueries, jdbcTemplate);
+        GroupDao groupDao = new GroupJdbcDao(groupQueries, jdbcTemplate, groupMapper, 
+                                             studentMapper, timetableMapper);
         GroupEntity receivedGroupData = groupDao.getStudentListByGroupId(GROUP_ID_NUMBER);
         
         assertEquals(GROUP_ID_NUMBER, receivedGroupData.getId());

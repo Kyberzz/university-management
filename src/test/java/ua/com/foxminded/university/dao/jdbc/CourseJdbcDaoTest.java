@@ -17,6 +17,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import ua.com.foxminded.university.config.TestAppConfig;
+import ua.com.foxminded.university.dao.jdbc.mapper.CourseMapper;
+import ua.com.foxminded.university.dao.jdbc.mapper.TimetableMapper;
 import ua.com.foxminded.university.entity.CourseEntity;
 import ua.com.foxminded.university.entity.TeacherEntity;
 
@@ -49,9 +51,15 @@ class CourseJdbcDaoTest {
     @Autowired
     private  Environment queries;
     
+    @Autowired
+    private CourseMapper courseMapper;
+    
+    @Autowired
+    private TimetableMapper timetableMapper;
+    
     @Test
     void getTimetableListByCourseId_GettingDatabaseTimetableData_CorrectData() {
-        CourseJdbcDao courseDao = new CourseJdbcDao(jdbcTemplate, queries);
+        CourseJdbcDao courseDao = new CourseJdbcDao(jdbcTemplate, queries, courseMapper, timetableMapper);
         CourseEntity receivedCourse = courseDao.getTimetableListByCourseId(COURSE_ID_NUMBER);
         
         assertEquals(COURSE_ID_NUMBER, receivedCourse.getId());
@@ -84,7 +92,7 @@ class CourseJdbcDaoTest {
     
     @Test
     void insert_InsertingCourseDataToDatabase_DatabaseHasCorrectData() {
-        CourseJdbcDao courseDao = new CourseJdbcDao(jdbcTemplate, queries);
+        CourseJdbcDao courseDao = new CourseJdbcDao(jdbcTemplate, queries, courseMapper, timetableMapper);
         CourseEntity course = new CourseEntity();
         course.setName(NEW_COURSE_NAME);
         course.setTeacher(new TeacherEntity(EXPECTED_TEACHER_ID));
@@ -101,7 +109,7 @@ class CourseJdbcDaoTest {
     
     @Test
     void getById_GettingDatabaseCourseData_CorrectData() {
-        CourseJdbcDao courseDao = new CourseJdbcDao(jdbcTemplate, queries);
+        CourseJdbcDao courseDao = new CourseJdbcDao(jdbcTemplate, queries, courseMapper, timetableMapper);
         CourseEntity receivedCourse = courseDao.getById(COURSE_ID_NUMBER);
         
         assertEquals(COURSE_ID_NUMBER, receivedCourse.getId());
@@ -112,7 +120,7 @@ class CourseJdbcDaoTest {
     
     @Test
     void update_UdatingDatabaseWithNullValues_DatabaseHasNoData() {
-        CourseJdbcDao courseDao = new CourseJdbcDao(jdbcTemplate, queries);
+        CourseJdbcDao courseDao = new CourseJdbcDao(jdbcTemplate, queries, courseMapper, timetableMapper);
         CourseEntity course = new CourseEntity();
         course.setId(COURSE_ID_NUMBER);
         course.setName(EXPECTED_COURSE_NAME);
@@ -127,7 +135,7 @@ class CourseJdbcDaoTest {
     
     @Test
     void update_UpdatingDatabaseCourseData_DatabaseHasCorrectData() {
-        CourseJdbcDao courseDao = new CourseJdbcDao(jdbcTemplate, queries);
+        CourseJdbcDao courseDao = new CourseJdbcDao(jdbcTemplate, queries, courseMapper, timetableMapper);
         CourseEntity course = new CourseEntity();
         course.setId(COURSE_ID_NUMBER);
         course.setName(NEW_COURSE_NAME);
@@ -145,7 +153,7 @@ class CourseJdbcDaoTest {
     
     @Test
     void deleteById_DeletingDatabaseCourseData_DatabaseHasNoCourseData() {
-        CourseJdbcDao courseDao = new CourseJdbcDao(jdbcTemplate, queries);
+        CourseJdbcDao courseDao = new CourseJdbcDao(jdbcTemplate, queries, courseMapper, timetableMapper);
         courseDao.deleteById(COURSE_ID_NUMBER);
         jdbcTemplate.query(queries.getProperty(SELECT_COURSE_BY_ID),
                            preparedStatement -> preparedStatement.setInt(1, COURSE_ID_NUMBER), 
