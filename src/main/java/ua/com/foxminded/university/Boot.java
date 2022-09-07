@@ -1,5 +1,7 @@
 package ua.com.foxminded.university;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
@@ -25,7 +27,9 @@ import ua.com.foxminded.university.service.CourseService;
 import ua.com.foxminded.university.service.impl.CourseServiceImpl;
 
 public class Boot {
-
+    
+    private static final Logger logger = LoggerFactory.getLogger(Boot.class);
+    
     public static void main(String[] arg) {
 
         /*
@@ -37,39 +41,43 @@ public class Boot {
          * System.out.println(timetable.toString());
          * System.out.println(student.toString());
          */
+        
+        try {
+            ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
+            
+            CourseDao courseDao = context.getBean("courseJdbcDao", CourseJdbcDao.class);
+            CourseEntity course = courseDao.getById(1);
+            System.out.println(course.toString());
 
-        ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-       
-        CourseDao courseDao = context.getBean("courseJdbcDao", CourseJdbcDao.class);
-        CourseEntity course = courseDao.getById(1);
-        System.out.println(course.toString());
+            GroupDao groupDao = context.getBean("groupJdbcDao", GroupJdbcDao.class);
+            GroupEntity group = groupDao.getById(1);
+            System.out.println(group.toString());
 
-        GroupDao groupDao = context.getBean("groupJdbcDao", GroupJdbcDao.class);
-        GroupEntity group = groupDao.getById(1);
-        System.out.println(group.toString());
+            StudentDao studentDao = context.getBean("studentJdbcDao", StudentJdbcDao.class);
+            StudentEntity student = studentDao.getGroupByStudentId(1);
+            System.out.println(student.toString());
 
-        StudentDao studentDao = context.getBean("studentJdbcDao", StudentJdbcDao.class);
-        StudentEntity student = studentDao.getGroupByStudentId(1);
-        System.out.println(student.toString());
-
-        TeacherDao teacherDao = context.getBean("teacherJdbcDao", TeacherJdbcDao.class);
-        TeacherEntity teacher = teacherDao.getById(1);
-        System.out.println(teacher.toString());
-        
-        
-        TimetableDao timetableDao = context.getBean("timetableJdbcDao", TimetableJdbcDao.class);
-        TimetableEntity timetable = timetableDao.getById(1);
-        System.out.println(timetable.toString());
-        
-        CourseModel courseModel = new CourseModel();
-        courseModel.setDescription("something");
-        courseModel.setId(3);
-        courseModel.setName("Philosophy");
-        courseModel.setTeacher(new TeacherModel(1));
-        
-        CourseService<CourseModel> courseService = context.getBean("courseServiceImpl", CourseServiceImpl.class);
-        int status = courseService.updateCourse(courseModel);
-        System.out.println(status);
-        
+            TeacherDao teacherDao = context.getBean("teacherJdbcDao", TeacherJdbcDao.class);
+            TeacherEntity teacher = teacherDao.getById(1);
+            System.out.println(teacher.toString());
+            
+            
+            TimetableDao timetableDao = context.getBean("timetableJdbcDao", TimetableJdbcDao.class);
+            TimetableEntity timetable = timetableDao.getById(1);
+            System.out.println(timetable.toString());
+            
+            CourseModel courseModel = new CourseModel();
+            courseModel.setDescription("something");
+            courseModel.setId(3);
+            courseModel.setName("Philosophy");
+            courseModel.setTeacher(new TeacherModel(1));
+            
+            CourseService<CourseModel> courseService = context.getBean("courseServiceImpl", CourseServiceImpl.class);
+            int status = courseService.updateCourse(courseModel);
+            System.out.println(status);
+            
+        } catch (Exception e) {
+            logger.error("Error");
+        }
     }
 }
