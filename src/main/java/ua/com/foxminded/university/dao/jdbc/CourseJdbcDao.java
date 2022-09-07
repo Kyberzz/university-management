@@ -22,7 +22,7 @@ import ua.com.foxminded.university.entity.TimetableEntity;
 @Repository
 public class CourseJdbcDao implements CourseDao {
     
-    private static Logger logger = LoggerFactory.getLogger(CourseJdbcDao.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CourseJdbcDao.class);
     private static final String GET_TIMETABLE_LIST_BY_COURSE_ID_ERROR = "Getting the timetable list "
             + "by course id failed.";
     private static final String INSERT_ERROR = "Inserting the course to the database failed.";
@@ -70,7 +70,7 @@ public class CourseJdbcDao implements CourseDao {
                     id);
             return courseWhithTimetableList;
         } catch (DataAccessException e) {
-            logger.error(GET_TIMETABLE_LIST_BY_COURSE_ID_ERROR, e);
+            LOGGER.error(GET_TIMETABLE_LIST_BY_COURSE_ID_ERROR, e);
             throw new DaoException(DELETE_BY_ID, e);
         }
     }
@@ -82,7 +82,7 @@ public class CourseJdbcDao implements CourseDao {
             return jdbcTemplate.update(sqlDeleteCourseById,
                                        preparedStatement -> preparedStatement.setInt(1,id));
         } catch (DataAccessException e) {
-            logger.error(DELETE_BY_ID_ERROR, e);
+            LOGGER.error(DELETE_BY_ID_ERROR, e);
             throw new DaoException(DELETE_BY_ID_ERROR, e);
         }
     }
@@ -96,11 +96,11 @@ public class CourseJdbcDao implements CourseDao {
                         try {
                             getPreparedStatementOfUpdate(preparedStatement,entity);
                         } catch (DaoException e) {
-                            logger.error(UPDATE_ERROR);
+                            LOGGER.error(UPDATE_ERROR);
                         }
                     });
         } catch (DataAccessException e) {
-            logger.error(UPDATE_ERROR, e);
+            LOGGER.error(UPDATE_ERROR, e);
             throw new DaoException(UPDATE_ERROR, e);
         }
     }
@@ -114,7 +114,7 @@ public class CourseJdbcDao implements CourseDao {
                     id);
             return courseEntity;
         } catch (DataAccessException e) {
-            logger.error(GET_BY_ID_ERROR, e);
+            LOGGER.error(GET_BY_ID_ERROR, e);
             throw new DaoException(GET_BY_ID_ERROR, e);
         }
     }
@@ -128,11 +128,11 @@ public class CourseJdbcDao implements CourseDao {
                                         try {
                                             getPreparedStatementOfInsert(preparedStatement, entity);
                                         } catch (DaoException e) {
-                                            logger.error(INSERT_ERROR);
+                                            LOGGER.error(INSERT_ERROR);
                                         }
                                     });
         } catch (DataAccessException e) {
-            logger.error(INSERT_ERROR);
+            LOGGER.error(INSERT_ERROR);
             throw new DaoException(INSERT_ERROR, e);
         }
     }
@@ -146,7 +146,7 @@ public class CourseJdbcDao implements CourseDao {
             preparedStatement.setInt(4, entity.getId());
             return preparedStatement;
         } catch (SQLException e) {
-            logger.error(GET_PREPARED_STATEMENT_ERROR, e);
+            LOGGER.error(GET_PREPARED_STATEMENT_ERROR, e);
             throw new DaoException(GET_PREPARED_STATEMENT_ERROR, e);
         }
     }
@@ -159,7 +159,7 @@ public class CourseJdbcDao implements CourseDao {
             preparedStatement.setString(3, entity.getDescription());
             return preparedStatement;
         } catch (SQLException e) {
-            logger.error(GET_PREPARED_STATEMENT_ERROR, e);
+            LOGGER.error(GET_PREPARED_STATEMENT_ERROR, e);
             throw new DaoException(GET_PREPARED_STATEMENT_ERROR, e);
         }
     }
