@@ -125,12 +125,12 @@ public class CourseJdbcDao implements CourseDao {
             String sqlInsertCourse = queries.getProperty(INSERT);
             return jdbcTemplate.update(sqlInsertCourse,
                                        preparedStatement -> {
-                                        try {
-                                            getPreparedStatementOfInsert(preparedStatement, entity);
-                                        } catch (DaoException e) {
-                                            LOGGER.error(INSERT_ERROR);
+                                           try {
+                                               getPreparedStatementOfInsert(preparedStatement, entity);
+                                           } catch (DaoException e) {
+                                               LOGGER.error(INSERT_ERROR);
                                         }
-                                    });
+                                       });
         } catch (DataAccessException e) {
             LOGGER.error(INSERT_ERROR);
             throw new DaoException(INSERT_ERROR, e);
