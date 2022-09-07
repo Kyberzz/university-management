@@ -19,11 +19,11 @@ public final class CourseMapper implements RowMapper<CourseEntity> {
     
     @Override
     public CourseEntity mapRow(ResultSet resultSet, int rowNum) throws SQLException {
-            CourseEntity course = new CourseEntity();
-            course.setId(resultSet.getInt(ID));
-            course.setDescription(resultSet.getString(DESCRIPTION));
-            course.setName(resultSet.getString(NAME));
-            course.setTeacher(new TeacherEntity(resultSet.getInt(TEACHER_ID)));
-            return course;
+        CourseEntity course = new CourseEntity();
+        course.setId(resultSet.getInt(ID));
+        course.setDescription(resultSet.getString(DESCRIPTION));
+        course.setName(resultSet.getString(NAME));
+        course.setTeacher(new TeacherEntity(resultSet.getInt(TEACHER_ID)));
+        return course;
     }
 }

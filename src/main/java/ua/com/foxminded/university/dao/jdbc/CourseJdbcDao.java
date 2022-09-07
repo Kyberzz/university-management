@@ -1,7 +1,5 @@
 package ua.com.foxminded.university.dao.jdbc;
 
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 import org.slf4j.Logger;
@@ -22,14 +20,7 @@ import ua.com.foxminded.university.entity.TimetableEntity;
 @Repository
 public class CourseJdbcDao implements CourseDao {
     
-    private static final Logger LOGGER = LoggerFactory.getLogger(CourseJdbcDao.class);
-    private static final String GET_TIMETABLE_LIST_BY_COURSE_ID_ERROR = "Getting the timetable list "
-            + "by course id failed.";
-    private static final String INSERT_ERROR = "Inserting the course to the database failed.";
-    private static final String GET_BY_ID_ERROR = "Getting the course by its id failed.";
-    private static final String DELETE_BY_ID_ERROR = "Deleting the course by its id failed.";
-    private static final String UPDATE_ERROR = "Updating the course data failed.";
-    private static final String GET_PREPARED_STATEMENT_ERROR = "Setting the prepared statement failed.";
+    private static final Logger logger = LoggerFactory.getLogger(CourseJdbcDao.class);
     private static final String GET_TIMETABLE_LIST_BY_COURSE_ID = "course.getTimetableListByCourseId";
     private static final String UPDATE = "course.update";
     private static final String GET_BY_ID = "course.getById";
@@ -52,6 +43,8 @@ public class CourseJdbcDao implements CourseDao {
 
     @Override
     public CourseEntity getTimetableListByCourseId(int id) throws DaoException {
+        String errorMessage = "Getting the timetable list by course id failed.";
+        
         try {
             String sqlGetTimetableListByCourseId = queries.getProperty(GET_TIMETABLE_LIST_BY_COURSE_ID);
             CourseEntity courseWhithTimetableList = jdbcTemplate.queryForObject(
@@ -70,43 +63,48 @@ public class CourseJdbcDao implements CourseDao {
                     id);
             return courseWhithTimetableList;
         } catch (DataAccessException e) {
-            LOGGER.error(GET_TIMETABLE_LIST_BY_COURSE_ID_ERROR, e);
-            throw new DaoException(DELETE_BY_ID, e);
+            logger.error(errorMessage, e);
+            throw new DaoException(errorMessage, e);
         }
     }
     
     @Override
     public int deleteById(int id) throws DaoException {
+        String errorMessage = "Deleting the course by its id failed.";
+        
         try {
             String sqlDeleteCourseById = queries.getProperty(DELETE_BY_ID);
             return jdbcTemplate.update(sqlDeleteCourseById,
                                        preparedStatement -> preparedStatement.setInt(1,id));
         } catch (DataAccessException e) {
-            LOGGER.error(DELETE_BY_ID_ERROR, e);
-            throw new DaoException(DELETE_BY_ID_ERROR, e);
+            logger.error(errorMessage, e);
+            throw new DaoException(errorMessage, e);
         }
     }
     
     @Override
     public int update(CourseEntity entity) throws DaoException {
+        String errorMessage = "Updating the course data failed.";
+        
         try {
             String sqlUpdateCourse = queries.getProperty(UPDATE);
             return jdbcTemplate.update(sqlUpdateCourse,
                     preparedStatement -> {
-                        try {
-                            getPreparedStatementOfUpdate(preparedStatement,entity);
-                        } catch (DaoException e) {
-                            LOGGER.error(UPDATE_ERROR);
-                        }
+                        preparedStatement.setObject(1, entity.getTeacher().getId()); 
+                        preparedStatement.setString(2, entity.getName());
+                        preparedStatement.setString(3, entity.getDescription());
+                        preparedStatement.setInt(4, entity.getId());
                     });
         } catch (DataAccessException e) {
-            LOGGER.error(UPDATE_ERROR, e);
-            throw new DaoException(UPDATE_ERROR, e);
+            logger.error(errorMessage, e);
+            throw new DaoException(errorMessage, e);
         }
     }
     
     @Override
     public CourseEntity getById(int id) throws DaoException {
+        String errorMessage = "Getting the database course data by its id failed.";
+        
         try {
             String sqlGetCourseById = queries.getProperty(GET_BY_ID);
             CourseEntity courseEntity = jdbcTemplate.queryForObject(sqlGetCourseById, 
@@ -114,53 +112,26 @@ public class CourseJdbcDao implements CourseDao {
                     id);
             return courseEntity;
         } catch (DataAccessException e) {
-            LOGGER.error(GET_BY_ID_ERROR, e);
-            throw new DaoException(GET_BY_ID_ERROR, e);
+            logger.error(errorMessage, e);
+            throw new DaoException(errorMessage, e);
         }
     }
     
     @Override
     public int insert(CourseEntity entity) throws DaoException {
+        String errorMessage = "Inserting the course to the database failed.";
+        
         try {
             String sqlInsertCourse = queries.getProperty(INSERT);
             return jdbcTemplate.update(sqlInsertCourse,
                                        preparedStatement -> {
-                                           try {
-                                               getPreparedStatementOfInsert(preparedStatement, entity);
-                                           } catch (DaoException e) {
-                                               LOGGER.error(INSERT_ERROR);
-                                        }
+                                           preparedStatement.setObject(1, entity.getTeacher().getId()); 
+                                           preparedStatement.setString(2, entity.getName());
+                                           preparedStatement.setString(3, entity.getDescription());
                                        });
         } catch (DataAccessException e) {
-            LOGGER.error(INSERT_ERROR);
-            throw new DaoException(INSERT_ERROR, e);
-        }
-    }
-    
-    private PreparedStatement getPreparedStatementOfUpdate(PreparedStatement preparedStatement, 
-                                                           CourseEntity entity) throws DaoException {
-        try {
-            preparedStatement.setObject(1, entity.getTeacher().getId()); 
-            preparedStatement.setString(2, entity.getName());
-            preparedStatement.setString(3, entity.getDescription());
-            preparedStatement.setInt(4, entity.getId());
-            return preparedStatement;
-        } catch (SQLException e) {
-            LOGGER.error(GET_PREPARED_STATEMENT_ERROR, e);
-            throw new DaoException(GET_PREPARED_STATEMENT_ERROR, e);
-        }
-    }
-    
-    private PreparedStatement getPreparedStatementOfInsert(PreparedStatement preparedStatement, 
-                                                           CourseEntity entity) throws DaoException {
-        try {
-            preparedStatement.setObject(1, entity.getTeacher().getId()); 
-            preparedStatement.setString(2, entity.getName());
-            preparedStatement.setString(3, entity.getDescription());
-            return preparedStatement;
-        } catch (SQLException e) {
-            LOGGER.error(GET_PREPARED_STATEMENT_ERROR, e);
-            throw new DaoException(GET_PREPARED_STATEMENT_ERROR, e);
+            logger.error(errorMessage);
+            throw new DaoException(errorMessage, e);
         }
     }
 }
