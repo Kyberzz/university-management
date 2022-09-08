@@ -52,13 +52,19 @@ public class CourseJdbcDao implements CourseDao {
                         if (course == null) {
                             course = courseMapper.mapRow(resultSet, rowNum);
                             course.setTimetableList(new ArrayList<>());
+                            logger.debug("The CourseEntity with id={} has been populated by the CourseMapper.", 
+                                         course.getId());
                         }
                         
                         TimetableEntity timetable = timetableMapper.mapRow(resultSet, id);
                         course.getTimetableList().add(timetable);
+                        logger.debug("To the CourseEntity with id={} has been added TimetableEntity with id={}",
+                                     course.getId(), timetable.getId());
                         return course;
                     },
                     id);
+            logger.info("The CourseEntity object with id={} having its TimetableEntity objects "
+                    + "has been received from the database", courseWhithTimetableList.getId());
             return courseWhithTimetableList;
         } catch (DataAccessException e) {
             String errorMessage = "Getting the timetable list by course id failed.";

@@ -46,9 +46,10 @@ public class Boot {
             ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
             
             CourseDao courseDao = context.getBean("courseJdbcDao", CourseJdbcDao.class);
-            CourseEntity course = courseDao.getById(1);
+            CourseEntity course = courseDao.getTimetableListByCourseId(1);
             System.out.println(course.toString());
-
+            
+            /*
             GroupDao groupDao = context.getBean("groupJdbcDao", GroupJdbcDao.class);
             GroupEntity group = groupDao.getById(1);
             System.out.println(group.toString());
@@ -75,6 +76,7 @@ public class Boot {
             CourseService<CourseModel> courseService = context.getBean("courseServiceImpl", CourseServiceImpl.class);
             int status = courseService.updateCourse(courseModel);
             System.out.println(status);
+            */
             
         } catch (Exception e) {
             logger.error("Error");
