@@ -1,7 +1,5 @@
 package ua.com.foxminded.university.dao.jdbc;
 
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 import org.slf4j.Logger;
@@ -21,14 +19,7 @@ import ua.com.foxminded.university.entity.TeacherEntity;
 @Repository
 public class TeacherJdbcDao implements TeacherDao {
     
-    private static final Logger LOGGER = LoggerFactory.getLogger(TeacherJdbcDao.class);
-    private static final String INSERT_ERROR = "Inserting the database teacher data failed.";
-    private static final String GET_BY_ID_ERROR = "Getting the database teacher data failed.";
-    private static final String GET_PREPARED_STATEMENT_ERROR = "Setting the prepared statement failed.";
-    private static final String UPDATE_ERROR = "Updating the database teacher data failed.";
-    private static final String DELETE_BY_ID_ERROR = "Deleting the database teacher data failed.";
-    private static final String GET_COURSE_LIST_BY_TEACHER_ID_ERROR = "Getting the course list data "
-            + "by the teacher id from the database failed.";
+    private static final Logger logger = LoggerFactory.getLogger(TeacherJdbcDao.class);
     private static final String GET_COURSE_LIST_BY_TEACHER_ID = "teacher.getCourseListByTeacherId";
     private static final String DELETE_BY_ID = "teacher.deleteById";
     private static final String UPDATE = "teacher.update";
@@ -69,8 +60,9 @@ public class TeacherJdbcDao implements TeacherDao {
                     id);
             return teacherWithCourseList;
         } catch (DataAccessException e) {
-            LOGGER.error(GET_COURSE_LIST_BY_TEACHER_ID_ERROR, e);
-            throw new DaoException(GET_COURSE_LIST_BY_TEACHER_ID_ERROR, e);
+            String errorMessage = "Getting the course list data by the teacher id from the database failed.";
+            logger.error(errorMessage, e);
+            throw new DaoException(errorMessage, e);
         }
     }
     
@@ -81,8 +73,9 @@ public class TeacherJdbcDao implements TeacherDao {
             return jdbcTemplate.update(sqlDeleteTeacherByid, 
                                        preparedStatement -> preparedStatement.setInt(1, id));
         } catch (DataAccessException e) {
-            LOGGER.error(DELETE_BY_ID_ERROR, e);
-            throw new DaoException(DELETE_BY_ID_ERROR, e);
+            String errorMessage = "Deleting the database teacher data failed.";
+            logger.error(errorMessage, e);
+            throw new DaoException(errorMessage, e);
         }
     }
     
@@ -92,16 +85,14 @@ public class TeacherJdbcDao implements TeacherDao {
             String sqlUpdateTeacher = queries.getProperty(UPDATE);
             return jdbcTemplate.update(sqlUpdateTeacher, 
                                        preparedStatement -> {
-                                        try {
-                                            getPreparedStatementOfUpdate(preparedStatement, entity);
-                                        } catch (DaoException e) {
-                                            LOGGER.error(UPDATE_ERROR, e);
-                                        }
-                                    });
-            
+                                           preparedStatement.setString(1, entity.getFirstName());
+                                           preparedStatement.setString(2, entity.getLastName());
+                                           preparedStatement.setInt(3, entity.getId());
+                                       });
         } catch (DataAccessException e){
-            LOGGER.error(UPDATE_ERROR, e);
-            throw new DaoException(UPDATE_ERROR, e);
+            String errorMessage = "Updating the database teacher data failed.";
+            logger.error(errorMessage, e);
+            throw new DaoException(errorMessage, e);
         }
     }
     
@@ -114,8 +105,9 @@ public class TeacherJdbcDao implements TeacherDao {
                     id);
             return teacherEntity;
         } catch (DataAccessException e) {
-            LOGGER.error(GET_BY_ID_ERROR, e);
-            throw new DaoException(GET_BY_ID_ERROR, e);
+            String errorMessage = "Getting the database teacher data failed.";
+            logger.error(errorMessage, e);
+            throw new DaoException(errorMessage, e);
         }
     }
     
@@ -129,21 +121,9 @@ public class TeacherJdbcDao implements TeacherDao {
                                            preparedStatement.setString(2, entity.getLastName());
                                        });
         } catch (DataAccessException e) {
-            LOGGER.error(INSERT_ERROR, e);
-            throw new DaoException(INSERT_ERROR, e);
-        }
-    }
-    
-    private PreparedStatement getPreparedStatementOfUpdate(PreparedStatement preparedStatement, 
-                                                           TeacherEntity entity) throws DaoException {
-        try {
-            preparedStatement.setString(1, entity.getFirstName());
-            preparedStatement.setString(2, entity.getLastName());
-            preparedStatement.setInt(3, entity.getId());
-            return preparedStatement;
-        } catch (SQLException e) {
-            LOGGER.error(GET_PREPARED_STATEMENT_ERROR, e);
-            throw new DaoException(GET_PREPARED_STATEMENT_ERROR, e);
+            String errorMessage = "Inserting the database teacher data failed.";
+            logger.error(errorMessage, e);
+            throw new DaoException(errorMessage, e);
         }
     }
 }

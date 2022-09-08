@@ -43,8 +43,6 @@ public class CourseJdbcDao implements CourseDao {
 
     @Override
     public CourseEntity getTimetableListByCourseId(int id) throws DaoException {
-        String errorMessage = "Getting the timetable list by course id failed.";
-        
         try {
             String sqlGetTimetableListByCourseId = queries.getProperty(GET_TIMETABLE_LIST_BY_COURSE_ID);
             CourseEntity courseWhithTimetableList = jdbcTemplate.queryForObject(
@@ -63,6 +61,7 @@ public class CourseJdbcDao implements CourseDao {
                     id);
             return courseWhithTimetableList;
         } catch (DataAccessException e) {
+            String errorMessage = "Getting the timetable list by course id failed.";
             logger.error(errorMessage, e);
             throw new DaoException(errorMessage, e);
         }
@@ -70,13 +69,12 @@ public class CourseJdbcDao implements CourseDao {
     
     @Override
     public int deleteById(int id) throws DaoException {
-        String errorMessage = "Deleting the course by its id failed.";
-        
         try {
             String sqlDeleteCourseById = queries.getProperty(DELETE_BY_ID);
             return jdbcTemplate.update(sqlDeleteCourseById,
                                        preparedStatement -> preparedStatement.setInt(1,id));
         } catch (DataAccessException e) {
+            String errorMessage = "Deleting the course by its id failed.";
             logger.error(errorMessage, e);
             throw new DaoException(errorMessage, e);
         }
@@ -84,8 +82,6 @@ public class CourseJdbcDao implements CourseDao {
     
     @Override
     public int update(CourseEntity entity) throws DaoException {
-        String errorMessage = "Updating the course data failed.";
-        
         try {
             String sqlUpdateCourse = queries.getProperty(UPDATE);
             return jdbcTemplate.update(sqlUpdateCourse,
@@ -96,6 +92,7 @@ public class CourseJdbcDao implements CourseDao {
                         preparedStatement.setInt(4, entity.getId());
                     });
         } catch (DataAccessException e) {
+            String errorMessage = "Updating the course data failed.";
             logger.error(errorMessage, e);
             throw new DaoException(errorMessage, e);
         }
@@ -103,8 +100,6 @@ public class CourseJdbcDao implements CourseDao {
     
     @Override
     public CourseEntity getById(int id) throws DaoException {
-        String errorMessage = "Getting the database course data by its id failed.";
-        
         try {
             String sqlGetCourseById = queries.getProperty(GET_BY_ID);
             CourseEntity courseEntity = jdbcTemplate.queryForObject(sqlGetCourseById, 
@@ -112,6 +107,7 @@ public class CourseJdbcDao implements CourseDao {
                     id);
             return courseEntity;
         } catch (DataAccessException e) {
+            String errorMessage = "Getting the database course data by its id failed.";
             logger.error(errorMessage, e);
             throw new DaoException(errorMessage, e);
         }
@@ -119,8 +115,6 @@ public class CourseJdbcDao implements CourseDao {
     
     @Override
     public int insert(CourseEntity entity) throws DaoException {
-        String errorMessage = "Inserting the course to the database failed.";
-        
         try {
             String sqlInsertCourse = queries.getProperty(INSERT);
             return jdbcTemplate.update(sqlInsertCourse,
@@ -130,6 +124,7 @@ public class CourseJdbcDao implements CourseDao {
                                            preparedStatement.setString(3, entity.getDescription());
                                        });
         } catch (DataAccessException e) {
+            String errorMessage = "Inserting the course to the database failed.";
             logger.error(errorMessage);
             throw new DaoException(errorMessage, e);
         }

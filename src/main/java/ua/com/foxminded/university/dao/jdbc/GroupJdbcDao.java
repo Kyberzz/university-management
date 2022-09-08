@@ -21,16 +21,7 @@ import ua.com.foxminded.university.entity.TimetableEntity;
 @Repository
 public class GroupJdbcDao implements GroupDao {
     
-    private static final Logger LOGGER = LoggerFactory.getLogger(GroupJdbcDao.class);
-    private static final String DELETE_BY_ID_ERROR = "Deleting the group data from the database failed.";
-    private static final String UPDATE_ERROR = "Updating the database group data failed.";
-    private static final String GET_TIMETABLE_LIST_BY_GROUP_ID_ERROR = "Getting the timetable list "
-            + "by its group id failed.";
-    private static final String GET_STUDENT_LIST_BY_GROUP_ID_ERROR = "Getting the student list "
-            + "by its group id failed.";
-    
-    private static final String GET_BY_ID_ERROR = "Getting the group data by its id from the database failed.";
-    private static final String INSERT_ERROR = "Inserting the group data to the database failed.";
+    private static final Logger logger = LoggerFactory.getLogger(GroupJdbcDao.class);
     private static final String GET_TIMETABLE_LIST_BY_GROUP_ID = "group.getTimetableListByGroupId";
     private static final String GET_STUDENT_LIST_BY_GROUP_ID = "group.getStudentListByGroupId";
     private static final String INSERT = "group.insert";
@@ -55,6 +46,7 @@ public class GroupJdbcDao implements GroupDao {
 
     @Override
     public GroupEntity getTimetableListByGroupId(int id) throws DaoException {
+        
         try {
             String sqlGetTimetableListByGroupId =  queries.getProperty(GET_TIMETABLE_LIST_BY_GROUP_ID);
             GroupEntity groupWithTimetableList = jdbcTemplate.queryForObject(
@@ -74,8 +66,9 @@ public class GroupJdbcDao implements GroupDao {
                     id);
             return groupWithTimetableList;
         } catch (DataAccessException e) {
-            LOGGER.error(GET_TIMETABLE_LIST_BY_GROUP_ID_ERROR, e);
-            throw new DaoException(GET_TIMETABLE_LIST_BY_GROUP_ID_ERROR, e);
+            String errorMessage = "Getting the timetable list by its group id failed.";
+            logger.error(errorMessage, e);
+            throw new DaoException(errorMessage, e);
         }
     }
     
@@ -100,8 +93,9 @@ public class GroupJdbcDao implements GroupDao {
                     id);
             return groupWithStudentList;
         } catch (DataAccessException e) {
-            LOGGER.error(GET_STUDENT_LIST_BY_GROUP_ID_ERROR, e);
-            throw new DaoException(GET_STUDENT_LIST_BY_GROUP_ID_ERROR, e);
+            String errorMessage = "Getting the student list by its group id failed.";
+            logger.error(errorMessage, e);
+            throw new DaoException(errorMessage, e);
         }
     }
     
@@ -112,8 +106,9 @@ public class GroupJdbcDao implements GroupDao {
             return jdbcTemplate.update(sqlInsertGroup,
                                        preparedStatement -> preparedStatement.setString(1, entity.getName()));
         } catch (DataAccessException e) {
-            LOGGER.error(INSERT_ERROR, e);
-            throw new DaoException(INSERT_ERROR, e);
+            String errorMessage = "Inserting the group data to the database failed.";
+            logger.error(errorMessage, e);
+            throw new DaoException(errorMessage, e);
         }
     }
     
@@ -126,8 +121,9 @@ public class GroupJdbcDao implements GroupDao {
                     id);
             return group;
         } catch (DataAccessException e) {
-            LOGGER.error(GET_BY_ID_ERROR, e);
-            throw new DaoException(GET_BY_ID_ERROR, e);
+            String errorMessage = "Getting the group data by its id from the database failed.";
+            logger.error(errorMessage, e);
+            throw new DaoException(errorMessage, e);
         }
     }
     
@@ -141,8 +137,9 @@ public class GroupJdbcDao implements GroupDao {
                                            preparedStatement.setInt(2, entity.getId());
                                        });
         } catch (DataAccessException e) {
-            LOGGER.error(UPDATE_ERROR, e);
-            throw new DaoException(UPDATE_ERROR, e);
+            String errorMessage = "Updating the database group data failed.";
+            logger.error(errorMessage, e);
+            throw new DaoException(errorMessage, e);
         }
     }
     
@@ -153,8 +150,9 @@ public class GroupJdbcDao implements GroupDao {
             return jdbcTemplate.update(sqlDeleteGroupById, 
                                        preparedStatement -> preparedStatement.setInt(1, id));
         } catch (DataAccessException e) {
-            LOGGER.error(DELETE_BY_ID_ERROR, e);
-            throw new DaoException(DELETE_BY_ID_ERROR, e);
+            String errorMessage = "Deleting the group data from the database failed.";
+            logger.error(errorMessage, e);
+            throw new DaoException(errorMessage, e);
         }
     }
 }

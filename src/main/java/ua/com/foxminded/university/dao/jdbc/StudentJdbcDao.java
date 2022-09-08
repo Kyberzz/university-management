@@ -1,8 +1,5 @@
 package ua.com.foxminded.university.dao.jdbc;
 
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
@@ -20,14 +17,7 @@ import ua.com.foxminded.university.entity.StudentEntity;
 @Repository
 public class StudentJdbcDao implements StudentDao {
     
-    private static final Logger LOGGER = LoggerFactory.getLogger(StudentJdbcDao.class);
-    private static final String DELETE_BY_ID_ERROR = "Deleting the database student data failed.";
-    private static final String UPDATE_ERROR = "Updating the database studen data failed.";
-    private static final String GET_BY_ID_ERROR = "Getting the database student data by its id failed.";
-    private static final String SETTING_PREPARED_STATEMENT_ERROR = "Setting the prepared statement failed.";
-    private static final String INSERT_ERROR = "Inserting the student data to the database failed.";
-    private static final String GET_GROUP_BY_STUDENT_ID_ERROR = "Getting the student data "
-            + "by its id from the database failed.";
+    private static final Logger logger = LoggerFactory.getLogger(StudentJdbcDao.class);
     private static final String DELETE_BY_ID = "student.deleteById";
     private static final String UPDATE = "student.update";
     private static final String GET_BY_ID = "student.getById";
@@ -62,8 +52,9 @@ public class StudentJdbcDao implements StudentDao {
                     id);
             return studentWithGroupData;
         } catch (DataAccessException e) {
-            LOGGER.error(GET_GROUP_BY_STUDENT_ID_ERROR, e);
-            throw new DaoException(GET_GROUP_BY_STUDENT_ID_ERROR, e);
+            String errorMessage = "Getting the student data by its id from the database failed.";
+            logger.error(errorMessage, e);
+            throw new DaoException(errorMessage, e);
         }
     }
     
@@ -73,15 +64,14 @@ public class StudentJdbcDao implements StudentDao {
             String sqlInsertStudent = queries.getProperty(INSERT);
             return jdbcTemplate.update(sqlInsertStudent, 
                                        preparedStatement -> {
-                                        try {
-                                                getPreparedStatementOfInsert(preparedStatement, entity);
-                                            } catch (DaoException e) {
-                                                LOGGER.error(INSERT_ERROR);
-                                            }
+                                           preparedStatement.setString(1, entity.getFirstName());
+                                           preparedStatement.setString(2, entity.getLastName());
+                                           preparedStatement.setInt(3, entity.getGroup().getId());
                                        });
         } catch (DataAccessException e) {
-            LOGGER.error(INSERT_ERROR, e);
-            throw new DaoException(INSERT_ERROR, e);
+            String errorMessage = "Inserting the student data to the database failed.";
+            logger.error(errorMessage, e);
+            throw new DaoException(errorMessage, e);
         }
     }
     
@@ -94,8 +84,9 @@ public class StudentJdbcDao implements StudentDao {
             id);
             return student;
         } catch (DataAccessException e) {
-            LOGGER.error(GET_BY_ID_ERROR, e);
-            throw new DaoException(GET_BY_ID_ERROR, e);
+            String errorMessage = "Getting the database student data by its id failed.";
+            logger.error(errorMessage, e);
+            throw new DaoException(errorMessage, e);
         }
     }
     
@@ -105,15 +96,15 @@ public class StudentJdbcDao implements StudentDao {
             String sqlUdateStudent = queries.getProperty(UPDATE);
             return jdbcTemplate.update(sqlUdateStudent, 
                                        preparedStatement -> {
-                                        try {
-                                            getPreparedStetamentOfUdate(preparedStatement, entity);
-                                        } catch (DaoException e) {
-                                            LOGGER.error(UPDATE_ERROR);
-                                        }
-                                    });
+                                           preparedStatement.setString(1, entity.getFirstName());
+                                           preparedStatement.setString(2, entity.getLastName());
+                                           preparedStatement.setObject(3, entity.getGroup().getId());
+                                           preparedStatement.setInt(4, entity.getId());
+                                       });
         } catch (DataAccessException e) {
-            LOGGER.error(UPDATE_ERROR, e);
-            throw new DaoException(UPDATE_ERROR, e);
+            String errorMessage = "Updating the database studen data failed.";
+            logger.error(errorMessage, e);
+            throw new DaoException(errorMessage, e);
         }
     }
     
@@ -123,35 +114,9 @@ public class StudentJdbcDao implements StudentDao {
             return jdbcTemplate.update(sqlDeleteStudentById, 
                                        preparedStatement -> preparedStatement.setInt(1, id));
         } catch (DataAccessException e) {
-            LOGGER.error(DELETE_BY_ID_ERROR, e);
-            throw new DaoException(DELETE_BY_ID_ERROR, e);
-        }
-    }
-    
-    private PreparedStatement getPreparedStatementOfInsert(PreparedStatement preparedStatement, 
-                                                           StudentEntity entity) throws DaoException {
-        try {
-            preparedStatement.setString(1, entity.getFirstName());
-            preparedStatement.setString(2, entity.getLastName());
-            preparedStatement.setInt(3, entity.getGroup().getId());
-            return preparedStatement;
-        } catch (SQLException e) {
-            LOGGER.error(SETTING_PREPARED_STATEMENT_ERROR, e);
-            throw new DaoException(SETTING_PREPARED_STATEMENT_ERROR, e);
-        }
-    }
-    
-    private PreparedStatement getPreparedStetamentOfUdate(PreparedStatement preparedStatement, 
-                                                          StudentEntity entity) throws DaoException {
-        try {
-            preparedStatement.setString(1, entity.getFirstName());
-            preparedStatement.setString(2, entity.getLastName());
-            preparedStatement.setObject(3, entity.getGroup().getId());
-            preparedStatement.setInt(4, entity.getId());
-            return preparedStatement;
-        } catch (SQLException e) {
-            LOGGER.error(SETTING_PREPARED_STATEMENT_ERROR, e);
-            throw new DaoException(SETTING_PREPARED_STATEMENT_ERROR, e);
+            String errorMessage = "Deleting the database student data failed.";
+            logger.error(errorMessage, e);
+            throw new DaoException(errorMessage, e);
         }
     }
 }
