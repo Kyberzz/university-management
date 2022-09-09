@@ -3,10 +3,13 @@ package ua.com.foxminded.university.service.impl;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ua.com.foxminded.university.dao.CourseDao;
+import ua.com.foxminded.university.dao.DaoException;
 import ua.com.foxminded.university.entity.CourseEntity;
 import ua.com.foxminded.university.entity.TeacherEntity;
 import ua.com.foxminded.university.model.CourseModel;
@@ -15,9 +18,12 @@ import ua.com.foxminded.university.model.TeacherModel;
 import ua.com.foxminded.university.model.TimetableModel;
 import ua.com.foxminded.university.model.WeekDayModel;
 import ua.com.foxminded.university.service.CourseService;
+import ua.com.foxminded.university.service.ServiceException;
 
 @Service
 public class CourseServiceImpl implements CourseService<CourseModel> {
+    
+    private static final Logger logger = LoggerFactory.getLogger(CourseServiceImpl.class);
     
     private CourseDao courseDao;
     
@@ -27,20 +33,41 @@ public class CourseServiceImpl implements CourseService<CourseModel> {
     }
     
     @Override
-    public int updateCourse(CourseModel courseModel) {
+    public int updateCourse(CourseModel courseModel) throws ServiceException {
+        logger.info("Update the database course data, where course id={}", courseModel.getId());
         CourseEntity courseEntity = new CourseEntity();
         courseEntity.setDescription(courseModel.getDescription());
         courseEntity.setId(courseModel.getId());
         courseEntity.setName(courseModel.getName());
         courseEntity.setTeacher(new TeacherEntity(courseModel.getTeacher().getId()));
-        return courseDao.update(courseEntity);
+        
+        try {
+            int udatedCourseQuantity = courseDao.update(courseEntity);
+            logger.debug("Udating the database course data is completed, where course id={}", 
+                         courseModel.getId() );
+            return udatedCourseQuantity;
+        } catch (DaoException e) {
+            String errorMessage = "Updating the course faled.";
+            logger.error(errorMessage, e);
+            throw new ServiceException(errorMessage, e);
+        }
     }
    
     @Override
-    public CourseModel getTimetableListByCourseId(int id) {
-        CourseEntity courseEntityTimetableList = courseDao.getTimetableListByCourseId(id);
+    public CourseModel getTimetableListByCourseId(int id) throws ServiceException {
+        CourseEntity courseEntityTimetableList = null;
+        
+        try {
+            logger.info("Get the timetable list by the course id, where course id={}", id);
+            courseEntityTimetableList = courseDao.getTimetableListByCourseId(id);
+        } catch (DaoException e) {
+            String errorMessage = "Getting timetable list of course by its id faled.";
+            logger.error(errorMessage, e);
+            throw new ServiceException(errorMessage, e);
+            
+        }
+       
         CourseModel courseModelTimetableList = new CourseModel();
-
         List<TimetableModel> timetableList = courseEntityTimetableList.getTimetableList()
                 .stream()
                 .map(entity -> {
@@ -61,6 +88,8 @@ public class CourseServiceImpl implements CourseService<CourseModel> {
         courseModelTimetableList.setName(courseEntityTimetableList.getName());
         courseModelTimetableList.setTeacher(new TeacherModel(courseEntityTimetableList.getTeacher()
                                                                                       .getId()));
+        logger.debug("Getting timetable list by course id is completed, where course id={}", 
+                     courseEntityTimetableList.getId());
         return courseModelTimetableList;
     }
 }
