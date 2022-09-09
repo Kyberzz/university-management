@@ -17,6 +17,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import ua.com.foxminded.university.config.TestAppConfig;
+import ua.com.foxminded.university.dao.DaoException;
 import ua.com.foxminded.university.dao.jdbc.mapper.CourseMapper;
 import ua.com.foxminded.university.dao.jdbc.mapper.TimetableMapper;
 import ua.com.foxminded.university.entity.CourseEntity;
@@ -38,6 +39,7 @@ class CourseJdbcDaoTest {
     private static final String MONDAY = "MONDAY";
     private static final long EXPECTED_END_TIME = 39360000;
     private static final long EXPECTED_START_TIME = 36360000;
+    private static final int TIMETABLES_QUANTITY = 2;
     private static final int COURSE_ID_NUMBER = 2;
     private static final int EXPECTED_GROUP_ID = 1;
     private static final int EXPECTED_TIMETABLE_ID = 2;
@@ -59,40 +61,26 @@ class CourseJdbcDaoTest {
     
     
     @Test
-    void getTimetableListByCourseId_GettingDatabaseTimetableData_CorrectData() {
+    void getTimetableListByCourseId_GettingDatabaseTimetableData_CorrectData() throws DaoException {
         CourseJdbcDao courseDao = new CourseJdbcDao(jdbcTemplate, queries, courseMapper, timetableMapper);
         CourseEntity receivedCourse = courseDao.getTimetableListByCourseId(COURSE_ID_NUMBER);
         
         assertEquals(COURSE_ID_NUMBER, receivedCourse.getId());
         assertEquals(EXPECTED_COURSE_NAME, receivedCourse.getName());
-        assertEquals(EXPECTED_TEACHER_ID, receivedCourse.getTeacher()
-                                                        .getId());
-        assertEquals(COURSE_ID_NUMBER, receivedCourse.getTimetableList()
-                                                     .get(FIRST_ELEMENT)
-                                                     .getCourse()
-                                                     .getId());
-        assertEquals(EXPECTED_START_TIME, receivedCourse.getTimetableList()
-                                                        .get(FIRST_ELEMENT)
-                                                        .getStartTime());
-        assertEquals(EXPECTED_END_TIME, receivedCourse.getTimetableList()
-                                                      .get(FIRST_ELEMENT)
-                                                      .getEndTime());
-        assertEquals(EXPECTED_GROUP_ID, receivedCourse.getTimetableList()
-                                                      .get(FIRST_ELEMENT)
-                                                      .getGroup()
-                                                      .getId());
-        assertEquals(EXPECTED_TIMETABLE_ID, receivedCourse.getTimetableList()
-                                                          .get(FIRST_ELEMENT)
-                                                          .getId());
-        assertEquals(MONDAY, receivedCourse.getTimetableList()
-                                           .get(FIRST_ELEMENT)
-                                           .getWeekDay()
-                                           .toString());
-        
+        assertEquals(EXPECTED_TEACHER_ID, receivedCourse.getTeacher().getId());
+        assertEquals(COURSE_ID_NUMBER, receivedCourse.getTimetableList().get(FIRST_ELEMENT).getCourse()
+                                                                                           .getId());
+        assertEquals(EXPECTED_START_TIME, receivedCourse.getTimetableList().get(FIRST_ELEMENT).getStartTime());
+        assertEquals(EXPECTED_END_TIME, receivedCourse.getTimetableList().get(FIRST_ELEMENT).getEndTime());
+        assertEquals(EXPECTED_GROUP_ID, receivedCourse.getTimetableList().get(FIRST_ELEMENT).getGroup()
+                                                                                            .getId());
+        assertEquals(EXPECTED_TIMETABLE_ID, receivedCourse.getTimetableList().get(FIRST_ELEMENT).getId());
+        assertEquals(MONDAY, receivedCourse.getTimetableList().get(FIRST_ELEMENT).getWeekDay().toString());
+        assertEquals(TIMETABLES_QUANTITY, receivedCourse.getTimetableList().size());
     }
     
     @Test
-    void insert_InsertingCourseDataToDatabase_DatabaseHasCorrectData() {
+    void insert_InsertingCourseDataToDatabase_DatabaseHasCorrectData() throws DaoException {
         CourseJdbcDao courseDao = new CourseJdbcDao(jdbcTemplate, queries, courseMapper, timetableMapper);
         CourseEntity course = new CourseEntity();
         course.setName(NEW_COURSE_NAME);
@@ -111,7 +99,7 @@ class CourseJdbcDaoTest {
     }
     
     @Test
-    void getById_GettingDatabaseCourseData_CorrectData() {
+    void getById_GettingDatabaseCourseData_CorrectData() throws DaoException {
         CourseJdbcDao courseDao = new CourseJdbcDao(jdbcTemplate, queries, courseMapper, timetableMapper);
         CourseEntity receivedCourse = courseDao.getById(COURSE_ID_NUMBER);
         
@@ -122,7 +110,7 @@ class CourseJdbcDaoTest {
     }
     
     @Test
-    void update_UdatingDatabaseWithNullValues_DatabaseHasNoData() {
+    void update_UdatingDatabaseWithNullValues_DatabaseHasNoData() throws DaoException {
         CourseJdbcDao courseDao = new CourseJdbcDao(jdbcTemplate, queries, courseMapper, timetableMapper);
         CourseEntity course = new CourseEntity();
         course.setId(COURSE_ID_NUMBER);
@@ -137,7 +125,7 @@ class CourseJdbcDaoTest {
     }
     
     @Test
-    void update_UpdatingDatabaseCourseData_DatabaseHasCorrectData() {
+    void update_UpdatingDatabaseCourseData_DatabaseHasCorrectData() throws DaoException {
         CourseJdbcDao courseDao = new CourseJdbcDao(jdbcTemplate, queries, courseMapper, timetableMapper);
         CourseEntity course = new CourseEntity();
         course.setId(COURSE_ID_NUMBER);
@@ -155,7 +143,7 @@ class CourseJdbcDaoTest {
     }
     
     @Test
-    void deleteById_DeletingDatabaseCourseData_DatabaseHasNoCourseData() {
+    void deleteById_DeletingDatabaseCourseData_DatabaseHasNoCourseData() throws DaoException {
         CourseJdbcDao courseDao = new CourseJdbcDao(jdbcTemplate, queries, courseMapper, timetableMapper);
         courseDao.deleteById(COURSE_ID_NUMBER);
         String sqlSelectCourseById = queries.getProperty(SELECT_COURSE_BY_ID);

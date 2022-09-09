@@ -46,20 +46,22 @@ public class CourseJdbcDao implements CourseDao {
         try {
             logger.debug("Get timetable list by course id, where course id={}", id);
             String query = queries.getProperty(GET_TIMETABLE_LIST_BY_COURSE_ID);
-            CourseEntity courseWhithTimetableList = jdbcTemplate.queryForObject(
-                    query,                                   
-                    (resultSet, rowNum) -> {
+            CourseEntity courseWhithTimetableList = jdbcTemplate.query(query, 
+                    preparedStatement -> preparedStatement.setInt(1, id), 
+                    (resultSet) -> {
                         CourseEntity course = null;
-                        if (course == null) {
-                            course = courseMapper.mapRow(resultSet, rowNum);
-                            course.setTimetableList(new ArrayList<>());
-                        }
                         
-                        TimetableEntity timetable = timetableMapper.mapRow(resultSet, id);
-                        course.getTimetableList().add(timetable);
+                        while(resultSet.next()) {
+                            if (course == null) {
+                                course = courseMapper.mapRow(resultSet, resultSet.getRow());
+                                course.setTimetableList(new ArrayList<>());
+                            }
+                            
+                            TimetableEntity timetable = timetableMapper.mapRow(resultSet, id);
+                            course.getTimetableList().add(timetable);
+                        }
                         return course;
-                    },
-                    id);
+                    });
             logger.trace("Getting timetable list by the course id is completed, where course id={}.", 
                          courseWhithTimetableList.getId());
             return courseWhithTimetableList;

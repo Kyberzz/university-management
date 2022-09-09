@@ -33,8 +33,8 @@ public class Boot {
     private static final Logger logger = LoggerFactory.getLogger(Boot.class);
     
     public static void main(String[] arg) {
-        LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
-        StatusPrinter.print(loggerContext);
+     //   LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
+     //   StatusPrinter.print(loggerContext);
         
 
         /*

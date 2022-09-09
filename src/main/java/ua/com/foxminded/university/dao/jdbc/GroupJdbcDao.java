@@ -49,21 +49,22 @@ public class GroupJdbcDao implements GroupDao {
         
         try {
             String sqlGetTimetableListByGroupId =  queries.getProperty(GET_TIMETABLE_LIST_BY_GROUP_ID);
-            GroupEntity groupWithTimetableList = jdbcTemplate.queryForObject(
-                    sqlGetTimetableListByGroupId, 
-                    (resultSet, rowNum) -> {
+            GroupEntity groupWithTimetableList = jdbcTemplate.query(sqlGetTimetableListByGroupId,
+                    preparedStatement -> preparedStatement.setInt(1, id),
+                    (resultSet) -> {
                         GroupEntity group = null;
                         
-                        if (group == null) {
-                            group = groupMapper.mapRow(resultSet, rowNum);
-                            group.setTimetableList(new ArrayList<>());
+                        while(resultSet.next()) {
+                            if (group == null) {
+                                group = groupMapper.mapRow(resultSet, resultSet.getRow());
+                                group.setTimetableList(new ArrayList<>());
+                            }
+                            
+                            TimetableEntity timetable = timetableMapper.mapRow(resultSet, resultSet.getRow());
+                            group.getTimetableList().add(timetable);
                         }
-                        
-                        TimetableEntity timetable = timetableMapper.mapRow(resultSet, rowNum);
-                        group.getTimetableList().add(timetable);
                         return group;
-                    }, 
-                    id);
+                    });
             return groupWithTimetableList;
         } catch (DataAccessException e) {
             String errorMessage = "Getting the timetable list by its group id failed.";
@@ -76,21 +77,21 @@ public class GroupJdbcDao implements GroupDao {
     public GroupEntity getStudentListByGroupId(int id) throws DaoException {
         try {
             String sqlGetStudentListByGroupId = queries.getProperty(GET_STUDENT_LIST_BY_GROUP_ID);
-            GroupEntity groupWithStudentList = jdbcTemplate.queryForObject(
-                    sqlGetStudentListByGroupId, 
-                    (resultSet, rowNum) -> {
+            GroupEntity groupWithStudentList = jdbcTemplate.query(sqlGetStudentListByGroupId,
+                    preparedStatement -> preparedStatement.setInt(1, id), 
+                    (resultSet) -> {
                         GroupEntity group = null;
-                        
-                        if (group == null) {
-                            group = groupMapper.mapRow(resultSet, rowNum);
-                            group.setStudentList(new ArrayList<>());
+
+                        while (resultSet.next()) {
+                            if (group == null) {
+                                group = groupMapper.mapRow(resultSet, resultSet.getRow());
+                                group.setStudentList(new ArrayList<>());
+                            }
+                            StudentEntity student = studentMapper.mapRow(resultSet, resultSet.getRow());
+                            group.getStudentList().add(student);
                         }
-                        
-                        StudentEntity student = studentMapper.mapRow(resultSet, rowNum);
-                        group.getStudentList().add(student);
                         return group;
-                    }, 
-                    id);
+                    });
             return groupWithStudentList;
         } catch (DataAccessException e) {
             String errorMessage = "Getting the student list by its group id failed.";
