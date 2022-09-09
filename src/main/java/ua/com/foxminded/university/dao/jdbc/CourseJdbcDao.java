@@ -44,27 +44,24 @@ public class CourseJdbcDao implements CourseDao {
     @Override
     public CourseEntity getTimetableListByCourseId(int id) throws DaoException {
         try {
-            String sqlGetTimetableListByCourseId = queries.getProperty(GET_TIMETABLE_LIST_BY_COURSE_ID);
+            logger.debug("Get timetable list by course id, where course id={}", id);
+            String query = queries.getProperty(GET_TIMETABLE_LIST_BY_COURSE_ID);
             CourseEntity courseWhithTimetableList = jdbcTemplate.queryForObject(
-                    sqlGetTimetableListByCourseId,                                   
+                    query,                                   
                     (resultSet, rowNum) -> {
                         CourseEntity course = null;
                         if (course == null) {
                             course = courseMapper.mapRow(resultSet, rowNum);
                             course.setTimetableList(new ArrayList<>());
-                            logger.debug("The CourseEntity with id={} has been populated by the CourseMapper.", 
-                                         course.getId());
                         }
                         
                         TimetableEntity timetable = timetableMapper.mapRow(resultSet, id);
                         course.getTimetableList().add(timetable);
-                        logger.debug("To the CourseEntity with id={} has been added TimetableEntity with id={}",
-                                     course.getId(), timetable.getId());
                         return course;
                     },
                     id);
-            logger.info("The CourseEntity object with id={} having its TimetableEntity objects "
-                    + "has been received from the database", courseWhithTimetableList.getId());
+            logger.trace("Getting timetable list by the course id is completed, where course id={}.", 
+                         courseWhithTimetableList.getId());
             return courseWhithTimetableList;
         } catch (DataAccessException e) {
             String errorMessage = "Getting the timetable list by course id failed.";
@@ -76,9 +73,11 @@ public class CourseJdbcDao implements CourseDao {
     @Override
     public int deleteById(int id) throws DaoException {
         try {
-            String sqlDeleteCourseById = queries.getProperty(DELETE_BY_ID);
-            return jdbcTemplate.update(sqlDeleteCourseById,
-                                       preparedStatement -> preparedStatement.setInt(1,id));
+            logger.debug("Delete database course data by its id, where course id={}", id);
+            String query = queries.getProperty(DELETE_BY_ID);
+            int rowQuantity = jdbcTemplate.update(query, preparedStatement -> preparedStatement.setInt(1,id));
+            logger.trace("Deleting the course by its id is completed, where course id={}", id);
+            return rowQuantity;
         } catch (DataAccessException e) {
             String errorMessage = "Deleting the course by its id failed.";
             logger.error(errorMessage, e);
@@ -89,14 +88,19 @@ public class CourseJdbcDao implements CourseDao {
     @Override
     public int update(CourseEntity entity) throws DaoException {
         try {
-            String sqlUpdateCourse = queries.getProperty(UPDATE);
-            return jdbcTemplate.update(sqlUpdateCourse,
+            logger.debug("Update the database course data, where course id={}", entity.getId());
+            String query = queries.getProperty(UPDATE);
+            
+            int rowQuantity = jdbcTemplate.update(query,
                     preparedStatement -> {
                         preparedStatement.setObject(1, entity.getTeacher().getId()); 
                         preparedStatement.setString(2, entity.getName());
                         preparedStatement.setString(3, entity.getDescription());
                         preparedStatement.setInt(4, entity.getId());
                     });
+            logger.trace("Updating the database course data is completed, where course id ={}", 
+                         entity.getId());
+            return rowQuantity;
         } catch (DataAccessException e) {
             String errorMessage = "Updating the course data failed.";
             logger.error(errorMessage, e);
@@ -107,10 +111,13 @@ public class CourseJdbcDao implements CourseDao {
     @Override
     public CourseEntity getById(int id) throws DaoException {
         try {
-            String sqlGetCourseById = queries.getProperty(GET_BY_ID);
-            CourseEntity courseEntity = jdbcTemplate.queryForObject(sqlGetCourseById, 
+            logger.debug("Get database course data by its id, where course id={}", id);
+            String query = queries.getProperty(GET_BY_ID);
+            CourseEntity courseEntity = jdbcTemplate.queryForObject(query, 
                     (resultSet, rowNum) -> courseMapper.mapRow(resultSet, rowNum), 
                     id);
+            logger.trace("Getting database coruse data is completed, where course id={}", 
+                         courseEntity.getId());
             return courseEntity;
         } catch (DataAccessException e) {
             String errorMessage = "Getting the database course data by its id failed.";
@@ -122,13 +129,17 @@ public class CourseJdbcDao implements CourseDao {
     @Override
     public int insert(CourseEntity entity) throws DaoException {
         try {
-            String sqlInsertCourse = queries.getProperty(INSERT);
-            return jdbcTemplate.update(sqlInsertCourse,
-                                       preparedStatement -> {
-                                           preparedStatement.setObject(1, entity.getTeacher().getId()); 
-                                           preparedStatement.setString(2, entity.getName());
-                                           preparedStatement.setString(3, entity.getDescription());
-                                       });
+            logger.debug("Insert the course data to the database, where course id={}", entity.getId());
+            String query = queries.getProperty(INSERT);
+            int rowQuantity = jdbcTemplate.update(query,
+                    preparedStatement -> {
+                        preparedStatement.setObject(1, entity.getTeacher().getId()); 
+                        preparedStatement.setString(2, entity.getName());
+                        preparedStatement.setString(3, entity.getDescription());
+                    });
+            logger.trace("Inserting the course data to the database is completed, where course id={}", 
+                         entity.getId());
+            return rowQuantity;
         } catch (DataAccessException e) {
             String errorMessage = "Inserting the course to the database failed.";
             logger.error(errorMessage);

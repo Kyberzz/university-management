@@ -2,6 +2,8 @@ package ua.com.foxminded.university;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.core.util.StatusPrinter;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
@@ -31,6 +33,9 @@ public class Boot {
     private static final Logger logger = LoggerFactory.getLogger(Boot.class);
     
     public static void main(String[] arg) {
+        LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
+        StatusPrinter.print(loggerContext);
+        
 
         /*
          * ApplicationContext context = new ClassPathXmlApplicationContext("dao.xml");
@@ -41,6 +46,7 @@ public class Boot {
          * System.out.println(timetable.toString());
          * System.out.println(student.toString());
          */
+        
         
         try {
             ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
@@ -81,5 +87,7 @@ public class Boot {
         } catch (Exception e) {
             logger.error("Error");
         }
+        
+        
     }
 }
