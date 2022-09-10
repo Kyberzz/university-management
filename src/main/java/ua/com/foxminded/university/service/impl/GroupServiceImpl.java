@@ -55,7 +55,6 @@ public class GroupServiceImpl implements GroupService<GroupModel> {
                     return model;
                 })
                 .collect(Collectors.toList());
-        
         groupModelStudentList.setId(groupEntityStudentList.getId());
         groupModelStudentList.setName(groupEntityStudentList.getName());
         groupModelStudentList.setStudentList(studentList);
@@ -68,7 +67,6 @@ public class GroupServiceImpl implements GroupService<GroupModel> {
         
         try {
             groupEntityTimetableList = groupDao.getTimetableListByGroupId(id);
-            
         } catch (DaoException e) {
             String errorMessage = "Getting timebales list of the group failed.";
             logger.error(errorMessage);
@@ -90,7 +88,6 @@ public class GroupServiceImpl implements GroupService<GroupModel> {
                     return model;
                 })
                 .collect(Collectors.toList());
-        
         groupModelTimetableList.setId(groupEntityTimetableList.getId());
         groupModelTimetableList.setName(groupEntityTimetableList.getName());
         groupModelTimetableList.setTimetableList(timetableList);

@@ -15,6 +15,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import ua.com.foxminded.university.config.TestAppConfig;
+import ua.com.foxminded.university.dao.DaoException;
 import ua.com.foxminded.university.dao.TeacherDao;
 import ua.com.foxminded.university.dao.jdbc.mapper.CourseMapper;
 import ua.com.foxminded.university.dao.jdbc.mapper.TeacherMapper;
@@ -52,7 +53,7 @@ class TeacherJdbcDaoTest {
     private CourseMapper courseMapper;
     
     @Test
-    void insert_InsertingTeacherDatabaseData_DatabaseHasCorrectData() {
+    void insert_InsertingTeacherDatabaseData_DatabaseHasCorrectData() throws DaoException {
         TeacherEntity teacher = new TeacherEntity();
         teacher.setFirstName(TEACHER_FIRST_NAME);
         teacher.setLastName(TEACHER_LAST_NAME);
@@ -67,7 +68,7 @@ class TeacherJdbcDaoTest {
     }
     
     @Test
-    void getById_ReceivingTeacherDatabaseData_CorrectReceivedData() {
+    void getById_ReceivingTeacherDatabaseData_CorrectReceivedData() throws DaoException {
         TeacherDao teacherDao = new TeacherJdbcDao(jdbcTemplate, queries, teacherMapper, courseMapper);
         TeacherEntity teacher = teacherDao.getById(TEACHER_ID_NUMBER);
         
@@ -77,7 +78,7 @@ class TeacherJdbcDaoTest {
     }
     
     @Test
-    void update_UpdatingTeacherDatabaseData_DatabaseHasCorrectData() {
+    void update_UpdatingTeacherDatabaseData_DatabaseHasCorrectData() throws DaoException {
         TeacherDao teacherDao = new TeacherJdbcDao(jdbcTemplate, queries, teacherMapper, courseMapper);
         TeacherEntity teacherData = new TeacherEntity();
         teacherData.setFirstName(TEACHER_FIRST_NAME);
@@ -94,7 +95,7 @@ class TeacherJdbcDaoTest {
     }
     
     @Test
-    void deleteById_DeletingTeacherDatabaseData_DatabaseHasNoData() {
+    void deleteById_DeletingTeacherDatabaseData_DatabaseHasNoData() throws DaoException {
         TeacherDao teacherDao = new TeacherJdbcDao(jdbcTemplate, queries, teacherMapper, courseMapper);
         teacherDao.deleteById(TEACHER_ID_NUMBER);
         String sqlSelectTeacherById = queries.getProperty(SELECT_TEACHER_BY_ID);
@@ -106,7 +107,7 @@ class TeacherJdbcDaoTest {
     }
     
     @Test
-    void getCourseListByTeacherId_ReceivingTeacherDatabaseData_CorrectReceivedData() {
+    void getCourseListByTeacherId_ReceivingTeacherDatabaseData_CorrectReceivedData() throws DaoException {
         TeacherDao teacherDao = new TeacherJdbcDao(jdbcTemplate, queries, teacherMapper, courseMapper);
         TeacherEntity teacherData = teacherDao.getCourseListByTeacherId(TEACHER_ID_NUMBER);
         

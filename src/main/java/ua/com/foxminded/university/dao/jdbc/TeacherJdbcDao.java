@@ -42,22 +42,25 @@ public class TeacherJdbcDao implements TeacherDao {
     @Override
     public TeacherEntity getCourseListByTeacherId(int id) throws DaoException {
         try {
-            String sqlGetCourseListByTeacherId = queries.getProperty(GET_COURSE_LIST_BY_TEACHER_ID);
-            TeacherEntity teacherWithCourseList = jdbcTemplate.queryForObject(
-                    sqlGetCourseListByTeacherId, 
-                    (resultSet, rowNum) -> {
+            logger.debug("Get courses list by teacher id={}.", id);
+            String query = queries.getProperty(GET_COURSE_LIST_BY_TEACHER_ID);
+            TeacherEntity teacherWithCourseList = jdbcTemplate.query(query, 
+                    preparedStatement -> preparedStatement.setInt(1, id), 
+                    (resultSet) -> {
                         TeacherEntity teacher = null;
                         
-                        if (teacher == null) {
-                            teacher = teacherMapper.mapRow(resultSet, rowNum);
-                            teacher.setCourseList(new ArrayList<>());
-                        }
+                        while (resultSet.next()) {
+                            if (teacher == null) {
+                                teacher = teacherMapper.mapRow(resultSet, resultSet.getRow());
+                                teacher.setCourseList(new ArrayList<>());
+                            }
 
-                        CourseEntity course = courseMapper.mapRow(resultSet, rowNum);
-                        teacher.getCourseList().add(course);
+                            CourseEntity course = courseMapper.mapRow(resultSet, resultSet.getRow());
+                            teacher.getCourseList().add(course);
+                        }
                         return teacher;
-                    }, 
-                    id);
+                    });
+            logger.trace("Courses list of teacher id={} was received");
             return teacherWithCourseList;
         } catch (DataAccessException e) {
             String errorMessage = "Getting the course list data by the teacher id from the database failed.";
@@ -69,9 +72,12 @@ public class TeacherJdbcDao implements TeacherDao {
     @Override
     public int deleteById(int id) throws DaoException {
         try {
-            String sqlDeleteTeacherByid = queries.getProperty(DELETE_BY_ID);
-            return jdbcTemplate.update(sqlDeleteTeacherByid, 
-                                       preparedStatement -> preparedStatement.setInt(1, id));
+            logger.debug("Delete teacher with id={}.", id);
+            String query = queries.getProperty(DELETE_BY_ID);
+            int deletedTeacherQuantity = jdbcTemplate.update(query, 
+                    preparedStatement -> preparedStatement.setInt(1, id));
+            logger.trace("Teacher with id={} was deleted.", id);
+            return deletedTeacherQuantity;
         } catch (DataAccessException e) {
             String errorMessage = "Deleting the database teacher data failed.";
             logger.error(errorMessage, e);
@@ -82,13 +88,16 @@ public class TeacherJdbcDao implements TeacherDao {
     @Override
     public int update(TeacherEntity entity) throws DaoException {
         try {
-            String sqlUpdateTeacher = queries.getProperty(UPDATE);
-            return jdbcTemplate.update(sqlUpdateTeacher, 
-                                       preparedStatement -> {
-                                           preparedStatement.setString(1, entity.getFirstName());
-                                           preparedStatement.setString(2, entity.getLastName());
-                                           preparedStatement.setInt(3, entity.getId());
-                                       });
+            logger.debug("Udate teacher with id={}.", entity.getId());
+            String query = queries.getProperty(UPDATE);
+            int updatedTeacherQuantity = jdbcTemplate.update(query, 
+                    preparedStatement -> {
+                        preparedStatement.setString(1, entity.getFirstName());
+                        preparedStatement.setString(2, entity.getLastName());
+                        preparedStatement.setInt(3, entity.getId());
+                    });
+            logger.trace("Teacher with id={} was updated.", entity.getId());
+            return updatedTeacherQuantity;
         } catch (DataAccessException e){
             String errorMessage = "Updating the database teacher data failed.";
             logger.error(errorMessage, e);
@@ -99,10 +108,12 @@ public class TeacherJdbcDao implements TeacherDao {
     @Override
     public TeacherEntity getById(int id) throws DaoException {
         try {
-            String sqlGetTeacherById = queries.getProperty(GET_BY_ID);
-            TeacherEntity teacherEntity = jdbcTemplate.queryForObject(sqlGetTeacherById,
+            logger.debug("Get teacher with id={}.", id);
+            String query = queries.getProperty(GET_BY_ID);
+            TeacherEntity teacherEntity = jdbcTemplate.queryForObject(query,
                     (resultSet, rowNum) -> teacherMapper.mapRow(resultSet, rowNum),
                     id);
+            logger.trace("Teacher with id={} was received.", teacherEntity.getId());
             return teacherEntity;
         } catch (DataAccessException e) {
             String errorMessage = "Getting the database teacher data failed.";
@@ -114,12 +125,15 @@ public class TeacherJdbcDao implements TeacherDao {
     @Override
     public int insert(TeacherEntity entity) throws DaoException {
         try {
-            String sqlInsertTeacher = queries.getProperty(INSERT);
-            return jdbcTemplate.update(sqlInsertTeacher, 
-                                       preparedStatement -> {
-                                           preparedStatement.setString(1, entity.getFirstName());
-                                           preparedStatement.setString(2, entity.getLastName());
-                                       });
+            logger.debug("Insert teacher with id={} to the database.", entity.getId());
+            String query = queries.getProperty(INSERT);
+            int insertedTeacherQuantity = jdbcTemplate.update(query, 
+                    preparedStatement -> {
+                        preparedStatement.setString(1, entity.getFirstName());
+                        preparedStatement.setString(2, entity.getLastName());
+                    });
+            logger.trace("Teacher with id={} was added to the database.", entity.getId());
+            return insertedTeacherQuantity;
         } catch (DataAccessException e) {
             String errorMessage = "Inserting the database teacher data failed.";
             logger.error(errorMessage, e);
