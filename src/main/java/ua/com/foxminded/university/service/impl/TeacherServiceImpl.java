@@ -3,8 +3,6 @@ package ua.com.foxminded.university.service.impl;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.sql.rowset.serial.SerialException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,19 +30,19 @@ public class TeacherServiceImpl implements TeacherService<TeacherModel> {
     
     @Override
     public TeacherModel getCourseListByTeacherId(int id) throws ServiceException {
-        TeacherEntity teacherEntityCourseList = null;
+        TeacherEntity teacherEntityCoursesList = null;
         
         try {
-            teacherEntityCourseList = teacherDao.getCourseListByTeacherId(id);
+            teacherEntityCoursesList = teacherDao.getCourseListByTeacherId(id);
         } catch (DaoException e) {
-            String errorMessage = "Getting the course list by the teacher id failed.";
+            String errorMessage = "Getting the courses list by the teacher id failed.";
             logger.error(errorMessage, e);
             throw new ServiceException(errorMessage, e);
         }
         
         TeacherModel teacherModelCourseList = new TeacherModel();
         
-        List<CourseModel> courseEntityList = teacherEntityCourseList.getCourseList().stream()
+        List<CourseModel> courseEntityList = teacherEntityCoursesList.getCourseList().stream()
                 .map(entity -> {
                     CourseModel model = new CourseModel();
                     model.setDescription(entity.getDescription());
@@ -56,9 +54,9 @@ public class TeacherServiceImpl implements TeacherService<TeacherModel> {
                 .collect(Collectors.toList());
         
         teacherModelCourseList.setCourseList(courseEntityList);
-        teacherModelCourseList.setFirstName(teacherEntityCourseList.getFirstName());
-        teacherModelCourseList.setId(teacherEntityCourseList.getId());
-        teacherModelCourseList.setLastName(teacherEntityCourseList.getLastName());
+        teacherModelCourseList.setFirstName(teacherEntityCoursesList.getFirstName());
+        teacherModelCourseList.setId(teacherEntityCoursesList.getId());
+        teacherModelCourseList.setLastName(teacherEntityCoursesList.getLastName());
         return teacherModelCourseList;
     }
 }

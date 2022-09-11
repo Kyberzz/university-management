@@ -33,15 +33,15 @@ public class StudentServiceImpl implements StudentService<StudentModel> {
         studentEntity.setGroup(new GroupEntity(studentModel.getGroup().getId()));
         studentEntity.setId(studentModel.getId());
         studentEntity.setLastName(studentModel.getLastName());
-        int updatedStudentQuantity = 0;
+        int updatedStudentsQuantity = 0;
        
         try {
-            updatedStudentQuantity = studentDao.update(studentEntity);
+            updatedStudentsQuantity = studentDao.update(studentEntity);
         } catch (DaoException e) {
-            String errorMessage = "Udating the database student data failed.";
+            String errorMessage = "Udating the student data failed.";
             logger.error(errorMessage, e);
             throw new ServiceException(errorMessage, e);
         }
-        return updatedStudentQuantity;
+        return updatedStudentsQuantity;
     }
 }

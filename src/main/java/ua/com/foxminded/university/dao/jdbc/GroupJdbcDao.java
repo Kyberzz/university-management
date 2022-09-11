@@ -47,7 +47,7 @@ public class GroupJdbcDao implements GroupDao {
     @Override
     public GroupEntity getTimetableListByGroupId(int id) throws DaoException {
         try {
-            logger.debug("Get timetable list of the group with id={}", id);
+            logger.debug("Get timetable list by group id={}", id);
             String query =  queries.getProperty(GET_TIMETABLE_LIST_BY_GROUP_ID);
             GroupEntity groupWithTimetableList = jdbcTemplate.query(query,
                     preparedStatement -> preparedStatement.setInt(1, id),
@@ -65,11 +65,11 @@ public class GroupJdbcDao implements GroupDao {
                         }
                         return group;
                     });
-            logger.trace("Timetable list of the group with id={} was received.", 
+            logger.trace("Timetable list of group with id={} was received.", 
                          groupWithTimetableList.getId());
             return groupWithTimetableList;
         } catch (DataAccessException e) {
-            String errorMessage = "Getting the timetable list by its group id failed.";
+            String errorMessage = "Getting timetable list by the group id failed.";
             logger.error(errorMessage, e);
             throw new DaoException(errorMessage, e);
         }
@@ -78,7 +78,7 @@ public class GroupJdbcDao implements GroupDao {
     @Override
     public GroupEntity getStudentListByGroupId(int id) throws DaoException {
         try {
-            logger.debug("Get students list of the group with id={}", id);
+            logger.debug("Get students list by group id={}", id);
             String query = queries.getProperty(GET_STUDENT_LIST_BY_GROUP_ID);
             GroupEntity groupWithStudentList = jdbcTemplate.query(query,
                     preparedStatement -> preparedStatement.setInt(1, id), 
@@ -98,7 +98,7 @@ public class GroupJdbcDao implements GroupDao {
             logger.trace("Students list of the group with id={} was received", groupWithStudentList.getId());
             return groupWithStudentList;
         } catch (DataAccessException e) {
-            String errorMessage = "Getting the student list by its group id failed.";
+            String errorMessage = "Getting students list by the group id failed.";
             logger.error(errorMessage, e);
             throw new DaoException(errorMessage, e);
         }
@@ -107,14 +107,15 @@ public class GroupJdbcDao implements GroupDao {
     @Override
     public int insert(GroupEntity entity) throws DaoException {
         try {
-            logger.debug("Insert the group with id={}", entity.getId());
+            logger.debug("Insert group with id={}", entity.getId());
             String query = queries.getProperty(INSERT);
-            int rowQuantity = jdbcTemplate.update(query,
+            
+            int insertedGroupsQuantity = jdbcTemplate.update(query,
                     preparedStatement -> preparedStatement.setString(1, entity.getName()));
-            logger.trace("The group with id={} was inserted.", entity.getId());
-            return rowQuantity;
+            logger.trace("Group with id={} was inserted.", entity.getId());
+            return insertedGroupsQuantity;
         } catch (DataAccessException e) {
-            String errorMessage = "Inserting the group data to the database failed.";
+            String errorMessage = "Inserting the group to the database failed.";
             logger.error(errorMessage, e);
             throw new DaoException(errorMessage, e);
         }
@@ -123,15 +124,15 @@ public class GroupJdbcDao implements GroupDao {
     @Override
     public GroupEntity getById(int id) throws DaoException {
         try {
-            logger.debug("Get the group with id={}", id);
+            logger.debug("Get group by id={}", id);
             String query = queries.getProperty(GET_BY_ID);
             GroupEntity group = jdbcTemplate.queryForObject(query, 
                     (resultSet, rowNum) -> groupMapper.mapRow(resultSet, rowNum), 
                     id);
-            logger.trace("The group with id={} was received.", group.getId());
+            logger.trace("Group with id={} was received.", group.getId());
             return group;
         } catch (DataAccessException e) {
-            String errorMessage = "Getting the group data by its id from the database failed.";
+            String errorMessage = "Getting the group by its id failed.";
             logger.error(errorMessage, e);
             throw new DaoException(errorMessage, e);
         }
@@ -140,17 +141,18 @@ public class GroupJdbcDao implements GroupDao {
     @Override
     public int update(GroupEntity entity) throws DaoException {
         try {
-            logger.debug("Update the group with id={}.", entity.getId());
+            logger.debug("Update group with id={}.", entity.getId());
             String query = queries.getProperty(UPDATE);
-            int rowQuantity = jdbcTemplate.update(query, 
+            
+            int updatedGroupQuantity = jdbcTemplate.update(query, 
                     preparedStatement -> {
                         preparedStatement.setString(1, entity.getName());
                         preparedStatement.setInt(2, entity.getId());
                     });
-            logger.trace("The group with id={} was updated.", entity.getId());
-            return rowQuantity;
+            logger.trace("Group with id={} was updated.", entity.getId());
+            return updatedGroupQuantity;
         } catch (DataAccessException e) {
-            String errorMessage = "Updating the database group data failed.";
+            String errorMessage = "Updating the group failed.";
             logger.error(errorMessage, e);
             throw new DaoException(errorMessage, e);
         }
@@ -159,14 +161,15 @@ public class GroupJdbcDao implements GroupDao {
     @Override
     public int deleteById(int id) throws DaoException {
         try {
-            logger.debug("Delete the group with id={}.", id);
+            logger.debug("Delete group by id={}.", id);
             String query = queries.getProperty(DELETE_BY_ID);
-            int rowQuantity = jdbcTemplate.update(query, 
+            
+            int deletedGroupsQuantity = jdbcTemplate.update(query, 
                     preparedStatement -> preparedStatement.setInt(1, id));
-            logger.trace("The group with id={}.", id);
-            return rowQuantity;
+            logger.trace("Group with id={} was deleted.", id);
+            return deletedGroupsQuantity;
         } catch (DataAccessException e) {
-            String errorMessage = "Deleting the group data from the database failed.";
+            String errorMessage = "Deleting the group by its id failed.";
             logger.error(errorMessage, e);
             throw new DaoException(errorMessage, e);
         }

@@ -31,14 +31,15 @@ class TeacherJdbcDaoTest {
     private static final String TEACHER_ID_COLUMN = "id";
     private static final String SELECT_TEACHER_BY_ID = "test.selectTeacherById";
     private static final String COURSE_DESCRIPTION = "some description";
-    private static final String COURSE_NAME = "Physics";
-    private static final String TEACHER_LAST_NAME = "Einstein";
-    private static final String TEACHER_FIRST_NAME = "Albert";
+    private static final String COURSE_NAME = "Programming";
+    private static final String TEACHER_LAST_NAME = "Ritchie";
+    private static final String TEACHER_FIRST_NAME = "Dennis";
     private static final int NEW_TEACHER_ID = 3;
     private static final int TEACHER_ID = 2;
-    private static final int COURSE_ID_NUMBER = 1;
+    private static final int COURSE_ID_NUMBER = 2;
     private static final int FIST_ELEMENT = 0;
-    private static final int TEACHER_ID_NUMBER = 1;
+    private static final int COURSES_QUANTITY = 2;
+    private static final int TEACHER_ID_NUMBER = 2;
     
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -118,5 +119,7 @@ class TeacherJdbcDaoTest {
         assertEquals(COURSE_ID_NUMBER, teacherData.getCourseList().get(FIST_ELEMENT).getId());
         assertEquals(COURSE_NAME, teacherData.getCourseList().get(FIST_ELEMENT).getName());
         assertEquals(COURSE_DESCRIPTION, teacherData.getCourseList().get(FIST_ELEMENT).getDescription());
+        assertEquals(COURSES_QUANTITY, teacherData.getCourseList().size());
+        
     }
 }

@@ -40,7 +40,7 @@ public class StudentJdbcDao implements StudentDao {
     @Override
     public StudentEntity getGroupByStudentId(int id) throws DaoException {
         try {
-            logger.debug("Get group with student id={}.", id);
+            logger.debug("Get group by student id={}.", id);
             String query = queries.getProperty(GET_GROUP_BY_STUDENT_ID);
             StudentEntity studentWithGroupData = jdbcTemplate.queryForObject(query, 
                     (resultSet, rowNum) -> {
@@ -50,11 +50,11 @@ public class StudentJdbcDao implements StudentDao {
                         return student;
                     }, 
                     id);
-            logger.trace("Group with student id={} was received.", 
+            logger.trace("Group having student id={} was received.", 
                          studentWithGroupData.getId());
             return studentWithGroupData;
         } catch (DataAccessException e) {
-            String errorMessage = "Getting the student data by its id from the database failed.";
+            String errorMessage = "Getting group by the student id failed.";
             logger.error(errorMessage, e);
             throw new DaoException(errorMessage, e);
         }
@@ -63,18 +63,19 @@ public class StudentJdbcDao implements StudentDao {
     @Override
     public int insert(StudentEntity entity) throws DaoException {
         try {
-            logger.debug("Insert student with id={} to the database.", entity.getId());
+            logger.debug("Insert student with id={}.", entity.getId());
             String query = queries.getProperty(INSERT);
-            int rowQuantity = jdbcTemplate.update(query, 
+            
+            int insertedStudentsQuantity = jdbcTemplate.update(query, 
                     preparedStatement -> {
                         preparedStatement.setString(1, entity.getFirstName());
                         preparedStatement.setString(2, entity.getLastName());
                         preparedStatement.setInt(3, entity.getGroup().getId());
                     });
-            logger.trace("Student with id={} was added to the database.", entity.getId());
-            return rowQuantity;
+            logger.trace("Student with id={} was inserted.", entity.getId());
+            return insertedStudentsQuantity;
         } catch (DataAccessException e) {
-            String errorMessage = "Inserting the student data to the database failed.";
+            String errorMessage = "Inserting the student to the database failed.";
             logger.error(errorMessage, e);
             throw new DaoException(errorMessage, e);
         }
@@ -83,36 +84,36 @@ public class StudentJdbcDao implements StudentDao {
     @Override
     public StudentEntity getById(int id) throws DaoException {
         try {
-            logger.debug("Get student with id={}.", id);
+            logger.debug("Get student by id={}.", id);
             String query = queries.getProperty(GET_BY_ID);
-            StudentEntity student = jdbcTemplate.queryForObject(query, 
-            (resultSet, rowNum) -> studentMapper.mapRow(resultSet, rowNum), 
-            id);
+            StudentEntity student = jdbcTemplate.queryForObject(query,
+                    (resultSet, rowNum) -> studentMapper.mapRow(resultSet, rowNum), 
+                    id);
             logger.trace("Student with id={} was received.", student.getId());
             return student;
         } catch (DataAccessException e) {
-            String errorMessage = "Getting the database student data by its id failed.";
+            String errorMessage = "Getting the student by its id failed.";
             logger.error(errorMessage, e);
             throw new DaoException(errorMessage, e);
         }
     }
-    
+
     @Override
     public int update(StudentEntity entity) throws DaoException {
         try {
             logger.debug("Update student with id={}.", entity.getId());
             String query = queries.getProperty(UPDATE);
-            int rowQuantity = jdbcTemplate.update(query, 
-                                       preparedStatement -> {
-                                           preparedStatement.setString(1, entity.getFirstName());
-                                           preparedStatement.setString(2, entity.getLastName());
-                                           preparedStatement.setObject(3, entity.getGroup().getId());
-                                           preparedStatement.setInt(4, entity.getId());
-                                       });
+            int updatedStudentsQuantity = jdbcTemplate.update(query, 
+                    preparedStatement -> {
+                        preparedStatement.setString(1, entity.getFirstName());
+                        preparedStatement.setString(2, entity.getLastName());
+                        preparedStatement.setObject(3, entity.getGroup().getId());
+                        preparedStatement.setInt(4, entity.getId());
+                    });
             logger.debug("Student with id={} was updated.", entity.getId());
-            return rowQuantity;
+            return updatedStudentsQuantity;
         } catch (DataAccessException e) {
-            String errorMessage = "Updating the database studen data failed.";
+            String errorMessage = "Updating the student data failed.";
             logger.error(errorMessage, e);
             throw new DaoException(errorMessage, e);
         }
@@ -120,14 +121,14 @@ public class StudentJdbcDao implements StudentDao {
     
     public int deleteById(int id) throws DaoException {
         try {
-            logger.debug("Delete student with id={}.", id);
+            logger.debug("Delete student by id={}.", id);
             String query = queries.getProperty(DELETE_BY_ID);
-            int rowQuantity = jdbcTemplate.update(query, 
-                                                  preparedStatement -> preparedStatement.setInt(1, id));
+            int deletedStudentsQuantity = jdbcTemplate.update(query,
+                    preparedStatement -> preparedStatement.setInt(1, id));
             logger.trace("Student with id={} was deleted.", id);
-            return rowQuantity;
+            return deletedStudentsQuantity;
         } catch (DataAccessException e) {
-            String errorMessage = "Deleting the database student data failed.";
+            String errorMessage = "Deleting the student data failed.";
             logger.error(errorMessage, e);
             throw new DaoException(errorMessage, e);
         }

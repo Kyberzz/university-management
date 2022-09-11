@@ -23,5 +23,4 @@ public final class TeacherMapper implements RowMapper<TeacherEntity> {
         teacher.setLastName(resultSet.getString(TEACHER_LAST_NAME));
         return teacher;
     }
-
 }

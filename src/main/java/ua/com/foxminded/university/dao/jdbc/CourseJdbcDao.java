@@ -62,7 +62,7 @@ public class CourseJdbcDao implements CourseDao {
                         }
                         return course;
                     });
-            logger.trace("The timetable list of the course with id={} received from the database.", 
+            logger.trace("Timetable list of course with id={} was received.", 
                          courseWhithTimetableList.getId());
             return courseWhithTimetableList;
         } catch (DataAccessException e) {
@@ -75,11 +75,13 @@ public class CourseJdbcDao implements CourseDao {
     @Override
     public int deleteById(int id) throws DaoException {
         try {
-            logger.debug("Delete the course with id={}", id);
+            logger.debug("Delete course by id={}", id);
             String query = queries.getProperty(DELETE_BY_ID);
-            int rowQuantity = jdbcTemplate.update(query, preparedStatement -> preparedStatement.setInt(1,id));
-            logger.trace("The course with id={} was deleted.", id);
-            return rowQuantity;
+            
+            int deletedCoursesQuantity = jdbcTemplate.update(query, 
+                    preparedStatement -> preparedStatement.setInt(1,id));
+            logger.trace("Course with id={} was deleted.", id);
+            return deletedCoursesQuantity;
         } catch (DataAccessException e) {
             String errorMessage = "Deleting the course by its id failed.";
             logger.error(errorMessage, e);
@@ -90,18 +92,18 @@ public class CourseJdbcDao implements CourseDao {
     @Override
     public int update(CourseEntity entity) throws DaoException {
         try {
-            logger.debug("Update the course with id={}", entity.getId());
+            logger.debug("Update course with id={}", entity.getId());
             String query = queries.getProperty(UPDATE);
             
-            int rowQuantity = jdbcTemplate.update(query,
+            int updatedCoursesQuantity = jdbcTemplate.update(query,
                     preparedStatement -> {
                         preparedStatement.setObject(1, entity.getTeacher().getId()); 
                         preparedStatement.setString(2, entity.getName());
                         preparedStatement.setString(3, entity.getDescription());
                         preparedStatement.setInt(4, entity.getId());
                     });
-            logger.trace("The course with id ={} was updated.", entity.getId());
-            return rowQuantity;
+            logger.trace("Course with id ={} was updated.", entity.getId());
+            return updatedCoursesQuantity;
         } catch (DataAccessException e) {
             String errorMessage = "Updating the course data failed.";
             logger.error(errorMessage, e);
@@ -112,16 +114,15 @@ public class CourseJdbcDao implements CourseDao {
     @Override
     public CourseEntity getById(int id) throws DaoException {
         try {
-            logger.debug("Get the course with id={}", id);
+            logger.debug("Get course by id={}", id);
             String query = queries.getProperty(GET_BY_ID);
             CourseEntity courseEntity = jdbcTemplate.queryForObject(query, 
                     (resultSet, rowNum) -> courseMapper.mapRow(resultSet, rowNum), 
                     id);
-            logger.trace("The course with id={} was received.", 
-                         courseEntity.getId());
+            logger.trace("Course with id={} was received.", courseEntity.getId());
             return courseEntity;
         } catch (DataAccessException e) {
-            String errorMessage = "Getting the database course data by its id failed.";
+            String errorMessage = "Getting the course by its id failed.";
             logger.error(errorMessage, e);
             throw new DaoException(errorMessage, e);
         }
@@ -130,16 +131,17 @@ public class CourseJdbcDao implements CourseDao {
     @Override
     public int insert(CourseEntity entity) throws DaoException {
         try {
-            logger.debug("Insert the course with id={}", entity.getId());
+            logger.debug("Insert course with id={}", entity.getId());
             String query = queries.getProperty(INSERT);
-            int rowQuantity = jdbcTemplate.update(query,
+            
+            int insertedCoursesQuantity = jdbcTemplate.update(query,
                     preparedStatement -> {
                         preparedStatement.setObject(1, entity.getTeacher().getId()); 
                         preparedStatement.setString(2, entity.getName());
                         preparedStatement.setString(3, entity.getDescription());
                     });
-            logger.trace("The course with id={} was added to database.", entity.getId());
-            return rowQuantity;
+            logger.trace("Course with id={} was inserted.", entity.getId());
+            return insertedCoursesQuantity;
         } catch (DataAccessException e) {
             String errorMessage = "Inserting the course to the database failed.";
             logger.error(errorMessage);

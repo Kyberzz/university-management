@@ -20,7 +20,7 @@ import ua.com.foxminded.university.entity.TimetableEntity;
 @Repository
 public class TimetableJdbcDao implements TimetableDao {
     
-    private static final Logger LOGGER = LoggerFactory.getLogger(TimetableJdbcDao.class);
+    private static final Logger logger = LoggerFactory.getLogger(TimetableJdbcDao.class);
     private static final String GET_COURCE_BY_TIMETABLE_ID = "timetable.getCourseByTimetableId";
     private static final String GET_GROUP_BY_TIMETABLE_ID = "timetable.getGroupByTimetableId";
     private static final String UPDATE = "timetable.update";
@@ -47,9 +47,10 @@ public class TimetableJdbcDao implements TimetableDao {
     @Override
     public TimetableEntity getCourseByTimetableId(int id) throws DaoException {
         try {
-            String sqlGetCourseByTimetalbeId = queries.getProperty(GET_COURCE_BY_TIMETABLE_ID);
-            TimetableEntity timetableWithCourseList = jdbcTemplate.queryForObject(
-                    sqlGetCourseByTimetalbeId, 
+            logger.debug("Get course by timetable id={}.", id);
+            String query = queries.getProperty(GET_COURCE_BY_TIMETABLE_ID);
+            TimetableEntity timetableWithCourse = jdbcTemplate.queryForObject(
+                    query, 
                     (resultSet, rowNum) -> {
                         TimetableEntity timetable = timetableMapper.mapRow(resultSet, rowNum);
                         CourseEntity course = courseMapper.mapRow(resultSet, rowNum);
@@ -57,22 +58,21 @@ public class TimetableJdbcDao implements TimetableDao {
                         return timetable;
                     }, 
                     id);
-            return timetableWithCourseList;
+            logger.trace("Course by timetable id={} was received.", timetableWithCourse.getId());
+            return timetableWithCourse;
         } catch (DataAccessException e) {
-            String errorMessage = "Getting the database "
-                    + "timetable data failed.";
-            LOGGER.error(errorMessage, e);
+            String errorMessage = "Getting the database timetable data failed.";
+            logger.error(errorMessage, e);
             throw new DaoException(errorMessage, e);
         }
-        
     }
     
     @Override
     public TimetableEntity getGroupByTimetableId(int id) throws DaoException {
         try {
-            String sqlGetGroupByTimetableId = queries.getProperty(GET_GROUP_BY_TIMETABLE_ID);
-            TimetableEntity timetableWithGroupList = jdbcTemplate.queryForObject(
-                    sqlGetGroupByTimetableId, 
+            logger.debug("Get group by timetable id={}.", id);
+            String query = queries.getProperty(GET_GROUP_BY_TIMETABLE_ID);
+            TimetableEntity timetableWithGroup = jdbcTemplate.queryForObject(query, 
                     (resultSet, rowNum) -> {
                         TimetableEntity timetable = timetableMapper.mapRow(resultSet, rowNum);
                         GroupEntity group = groupMapper.mapRow(resultSet, rowNum);
@@ -80,26 +80,28 @@ public class TimetableJdbcDao implements TimetableDao {
                         return timetable;
                     }, 
                     id);
-            return timetableWithGroupList;
+            logger.trace("Group of timetable id={} was received.", timetableWithGroup.getId());
+            return timetableWithGroup;
         } catch (DataAccessException e) {
             String errorMessage = "Getting the database grou data by the timetable id failed.";
-            LOGGER.error(errorMessage, e);
+            logger.error(errorMessage, e);
             throw new DaoException(errorMessage, e);
         }
-        
     }
     
     @Override
     public TimetableEntity getById(int id) throws DaoException {
         try {
-            String slqGetTimetableById = queries.getProperty(GET_BY_ID);
-            TimetableEntity timetable = jdbcTemplate.queryForObject(slqGetTimetableById, 
+            logger.debug("Get timetable by id={}.", id);
+            String query = queries.getProperty(GET_BY_ID);
+            TimetableEntity timetable = jdbcTemplate.queryForObject(query, 
                     (resultSet, rowNum) -> timetableMapper.mapRow(resultSet, id), 
                     id);
+            logger.trace("Timetable with id={} was received.", timetable.getId());
             return timetable;
         } catch (DataAccessException e) {
             String errorMessage = "Getting the database timetable data by its id failed.";
-            LOGGER.error(errorMessage, e);
+            logger.error(errorMessage, e);
             throw new DaoException(errorMessage, e);
         }
     }
@@ -107,34 +109,41 @@ public class TimetableJdbcDao implements TimetableDao {
     @Override
     public int update(TimetableEntity entity) throws DaoException {
         try {
-            String sqlUpdateTimetable = queries.getProperty(UPDATE);
-            return jdbcTemplate.update(sqlUpdateTimetable,
-                                       preparedStatement -> {
-                                           preparedStatement.setObject(1, entity.getGroup().getId());
-                                           preparedStatement.setObject(2, entity.getCourse().getId());
-                                           preparedStatement.setLong(3, entity.getStartTime());
-                                           preparedStatement.setLong(4, entity.getEndTime());
-                                           preparedStatement.setString(5, entity.getDescription());
-                                           preparedStatement.setString(6, entity.getWeekDay().toString());
-                                           preparedStatement.setInt(7, entity.getId());
-                                       });
+            logger.debug("Update timetable with id={}.", entity.getId());
+            String query = queries.getProperty(UPDATE);
+            
+            int updatedTimetablesQuantity = jdbcTemplate.update(query, 
+                    preparedStatement -> {
+                        preparedStatement.setObject(1, entity.getGroup().getId());
+                        preparedStatement.setObject(2, entity.getCourse().getId());
+                        preparedStatement.setLong(3, entity.getStartTime());
+                        preparedStatement.setLong(4, entity.getEndTime());
+                        preparedStatement.setString(5, entity.getDescription());
+                        preparedStatement.setString(6, entity.getWeekDay().toString());
+                        preparedStatement.setInt(7, entity.getId());
+                    });
+            logger.trace("Timetable with id={} was updated.", entity.getId());
+            return updatedTimetablesQuantity;
         } catch (DataAccessException e) {
             String errorMessage = "Updating the database timetable data failed.";
-            LOGGER.error(errorMessage, e);
+            logger.error(errorMessage, e);
             throw new DaoException(errorMessage, e);
         }
-      
     }
     
     @Override
     public int deleteById(int id) throws DaoException {
         try {
-            String slqDeleteTimetableById = queries.getProperty(DELETE_BY_ID);
-            return jdbcTemplate.update(slqDeleteTimetableById,
-                                       preparedStatement -> preparedStatement.setInt(1, id));
+            logger.debug("Delete timetable with id={}.", id);
+            String query = queries.getProperty(DELETE_BY_ID);
+            
+            int deletedTimetablesQuantity = jdbcTemplate.update(query,
+                    preparedStatement -> preparedStatement.setInt(1, id));
+            logger.trace("Timetable with id={} was deleted.", id);
+            return deletedTimetablesQuantity;
         } catch (DataAccessException e) {
             String errorMessage = "Deleting the database timetable data by its id failed.";
-            LOGGER.error(errorMessage, e);
+            logger.error(errorMessage, e);
             throw new DaoException(errorMessage, e);
         }
     }
@@ -142,19 +151,23 @@ public class TimetableJdbcDao implements TimetableDao {
     @Override
     public int insert(TimetableEntity entity) throws DaoException {
         try {
-            String sqlInsertTimetable = queries.getProperty(INSERT);
-            return jdbcTemplate.update(sqlInsertTimetable,
-                                       preparedStatement -> {
-                                           preparedStatement.setInt(1, entity.getGroup().getId());
-                                           preparedStatement.setInt(2, entity.getCourse().getId());
-                                           preparedStatement.setLong(3, entity.getStartTime());
-                                           preparedStatement.setLong(4, entity.getEndTime());
-                                           preparedStatement.setString(5, entity.getDescription());
-                                           preparedStatement.setString(6, entity.getWeekDay().toString());
-                                       });
+            logger.debug("Insert timetable with id={}.", entity.getId());
+            String query = queries.getProperty(INSERT);
+            
+            int insertedTimetablesQuantity = jdbcTemplate.update(query, 
+                    preparedStatement -> {
+                        preparedStatement.setInt(1, entity.getGroup().getId());
+                        preparedStatement.setInt(2, entity.getCourse().getId());
+                        preparedStatement.setLong(3, entity.getStartTime());
+                        preparedStatement.setLong(4, entity.getEndTime());
+                        preparedStatement.setString(5, entity.getDescription());
+                        preparedStatement.setString(6, entity.getWeekDay().toString());
+                    });
+            logger.trace("Timetable with id={} was inserted to database.", entity.getId());
+            return insertedTimetablesQuantity;
         } catch (DataAccessException e) {
             String errorMessage = "Inserting the timetable data to the database failed.";
-            LOGGER.error(errorMessage, e);
+            logger.error(errorMessage, e);
             throw new DaoException(errorMessage, e);
         }
     }

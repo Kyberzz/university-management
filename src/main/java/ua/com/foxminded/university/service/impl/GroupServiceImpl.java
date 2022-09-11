@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.serializer.support.SerializationFailedException;
 import org.springframework.stereotype.Service;
 
 import ua.com.foxminded.university.dao.DaoException;
@@ -33,19 +32,18 @@ public class GroupServiceImpl implements GroupService<GroupModel> {
     }
     
     @Override
-    public GroupModel getStudentListByGroupId(int id) {
-        GroupEntity groupEntityStudentList = null;
+    public GroupModel getStudentListByGroupId(int id) throws ServiceException {
+        GroupEntity groupEntityStudentsList = null;
         try {
-            groupEntityStudentList = groupDao.getStudentListByGroupId(id);
-            
+            groupEntityStudentsList = groupDao.getStudentListByGroupId(id);
         } catch (DaoException e) {
             String errorMessage = "Getting students list of the group failed.";
             logger.error(errorMessage);
-            throw new SerializationFailedException(errorMessage, e);
+            throw new ServiceException(errorMessage, e);
         }
        
-        GroupModel groupModelStudentList = new GroupModel();
-        List<StudentModel> studentList = groupEntityStudentList.getStudentList().stream()
+        GroupModel groupModelStudentsList = new GroupModel();
+        List<StudentModel> studentList = groupEntityStudentsList.getStudentList().stream()
                 .map(entity -> {
                     StudentModel model = new StudentModel();
                     model.setFirstName(entity.getFirstName());
@@ -55,27 +53,27 @@ public class GroupServiceImpl implements GroupService<GroupModel> {
                     return model;
                 })
                 .collect(Collectors.toList());
-        groupModelStudentList.setId(groupEntityStudentList.getId());
-        groupModelStudentList.setName(groupEntityStudentList.getName());
-        groupModelStudentList.setStudentList(studentList);
-        return groupModelStudentList;
+        groupModelStudentsList.setId(groupEntityStudentsList.getId());
+        groupModelStudentsList.setName(groupEntityStudentsList.getName());
+        groupModelStudentsList.setStudentList(studentList);
+        return groupModelStudentsList;
     }
     
     @Override
     public GroupModel getTimetableListByGroupId(int id) throws ServiceException {
-        GroupEntity groupEntityTimetableList = null;
+        GroupEntity groupEntityTimetablesList = null;
         
         try {
-            groupEntityTimetableList = groupDao.getTimetableListByGroupId(id);
+            groupEntityTimetablesList = groupDao.getTimetableListByGroupId(id);
         } catch (DaoException e) {
             String errorMessage = "Getting timebales list of the group failed.";
             logger.error(errorMessage);
             throw new ServiceException(errorMessage, e);
         }
         
-        GroupModel groupModelTimetableList = new GroupModel();
+        GroupModel groupModelTimetablesList = new GroupModel();
         
-        List<TimetableModel> timetableList = groupEntityTimetableList.getTimetableList().stream()
+        List<TimetableModel> timetableList = groupEntityTimetablesList.getTimetableList().stream()
                 .map(entity -> {
                     TimetableModel model = new TimetableModel();
                     model.setCourse(new CourseModel(entity.getCourse().getId()));
@@ -88,9 +86,9 @@ public class GroupServiceImpl implements GroupService<GroupModel> {
                     return model;
                 })
                 .collect(Collectors.toList());
-        groupModelTimetableList.setId(groupEntityTimetableList.getId());
-        groupModelTimetableList.setName(groupEntityTimetableList.getName());
-        groupModelTimetableList.setTimetableList(timetableList);
-        return groupModelTimetableList;
+        groupModelTimetablesList.setId(groupEntityTimetablesList.getId());
+        groupModelTimetablesList.setName(groupEntityTimetablesList.getName());
+        groupModelTimetablesList.setTimetableList(timetableList);
+        return groupModelTimetablesList;
     }
 }

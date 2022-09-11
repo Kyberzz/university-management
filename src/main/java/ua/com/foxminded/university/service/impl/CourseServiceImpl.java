@@ -41,10 +41,10 @@ public class CourseServiceImpl implements CourseService<CourseModel> {
         courseEntity.setTeacher(new TeacherEntity(courseModel.getTeacher().getId()));
         
         try {
-            int udatedCourseQuantity = courseDao.update(courseEntity);
-            return udatedCourseQuantity;
+            int udatedCoursesQuantity = courseDao.update(courseEntity);
+            return udatedCoursesQuantity;
         } catch (DaoException e) {
-            String errorMessage = "Updating the course faled.";
+            String errorMessage = "Updating the course failed.";
             logger.error(errorMessage, e);
             throw new ServiceException(errorMessage, e);
         }
@@ -52,18 +52,18 @@ public class CourseServiceImpl implements CourseService<CourseModel> {
    
     @Override
     public CourseModel getTimetableListByCourseId(int id) throws ServiceException {
-        CourseEntity courseEntityTimetableList = null;
+        CourseEntity courseEntityTimetablesList = null;
         
         try {
-            courseEntityTimetableList = courseDao.getTimetableListByCourseId(id);
+            courseEntityTimetablesList = courseDao.getTimetableListByCourseId(id);
         } catch (DaoException e) {
-            String errorMessage = "Getting timetable list of course by its id faled.";
+            String errorMessage = "Getting timetable list of course id faled.";
             logger.error(errorMessage, e);
             throw new ServiceException(errorMessage, e);
         }
        
-        CourseModel courseModelTimetableList = new CourseModel();
-        List<TimetableModel> timetableList = courseEntityTimetableList.getTimetableList()
+        CourseModel courseModelTimetablesList = new CourseModel();
+        List<TimetableModel> timetableList = courseEntityTimetablesList.getTimetableList()
                 .stream()
                 .map(entity -> {
                     TimetableModel model = new TimetableModel();
@@ -77,12 +77,12 @@ public class CourseServiceImpl implements CourseService<CourseModel> {
                     return model;
                 }).collect(Collectors.toList());
         
-        courseModelTimetableList.setTimetableList(timetableList);
-        courseModelTimetableList.setDescription(courseEntityTimetableList.getDescription());
-        courseModelTimetableList.setId(courseEntityTimetableList.getId());
-        courseModelTimetableList.setName(courseEntityTimetableList.getName());
-        courseModelTimetableList.setTeacher(new TeacherModel(courseEntityTimetableList.getTeacher()
+        courseModelTimetablesList.setTimetableList(timetableList);
+        courseModelTimetablesList.setDescription(courseEntityTimetablesList.getDescription());
+        courseModelTimetablesList.setId(courseEntityTimetablesList.getId());
+        courseModelTimetablesList.setName(courseEntityTimetablesList.getName());
+        courseModelTimetablesList.setTeacher(new TeacherModel(courseEntityTimetablesList.getTeacher()
                                                                                       .getId()));
-        return courseModelTimetableList;
+        return courseModelTimetablesList;
     }
 }

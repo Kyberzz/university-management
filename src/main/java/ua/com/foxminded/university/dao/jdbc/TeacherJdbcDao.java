@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -30,7 +31,8 @@ public class TeacherJdbcDao implements TeacherDao {
     private Environment queries;
     private TeacherMapper teacherMapper;
     private CourseMapper courseMapper;
-
+    
+    @Autowired
     public TeacherJdbcDao(JdbcTemplate jdbcTemplate, Environment queries, TeacherMapper teacherMapper,
             CourseMapper courseMapper) {
         this.jdbcTemplate = jdbcTemplate;
@@ -74,10 +76,10 @@ public class TeacherJdbcDao implements TeacherDao {
         try {
             logger.debug("Delete teacher with id={}.", id);
             String query = queries.getProperty(DELETE_BY_ID);
-            int deletedTeacherQuantity = jdbcTemplate.update(query, 
+            int deletedTeachersQuantity = jdbcTemplate.update(query, 
                     preparedStatement -> preparedStatement.setInt(1, id));
             logger.trace("Teacher with id={} was deleted.", id);
-            return deletedTeacherQuantity;
+            return deletedTeachersQuantity;
         } catch (DataAccessException e) {
             String errorMessage = "Deleting the database teacher data failed.";
             logger.error(errorMessage, e);
@@ -90,14 +92,14 @@ public class TeacherJdbcDao implements TeacherDao {
         try {
             logger.debug("Udate teacher with id={}.", entity.getId());
             String query = queries.getProperty(UPDATE);
-            int updatedTeacherQuantity = jdbcTemplate.update(query, 
+            int updatedTeachersQuantity = jdbcTemplate.update(query, 
                     preparedStatement -> {
                         preparedStatement.setString(1, entity.getFirstName());
                         preparedStatement.setString(2, entity.getLastName());
                         preparedStatement.setInt(3, entity.getId());
                     });
             logger.trace("Teacher with id={} was updated.", entity.getId());
-            return updatedTeacherQuantity;
+            return updatedTeachersQuantity;
         } catch (DataAccessException e){
             String errorMessage = "Updating the database teacher data failed.";
             logger.error(errorMessage, e);
@@ -127,13 +129,13 @@ public class TeacherJdbcDao implements TeacherDao {
         try {
             logger.debug("Insert teacher with id={} to the database.", entity.getId());
             String query = queries.getProperty(INSERT);
-            int insertedTeacherQuantity = jdbcTemplate.update(query, 
+            int insertedTeachersQuantity = jdbcTemplate.update(query, 
                     preparedStatement -> {
                         preparedStatement.setString(1, entity.getFirstName());
                         preparedStatement.setString(2, entity.getLastName());
                     });
             logger.trace("Teacher with id={} was added to the database.", entity.getId());
-            return insertedTeacherQuantity;
+            return insertedTeachersQuantity;
         } catch (DataAccessException e) {
             String errorMessage = "Inserting the database teacher data failed.";
             logger.error(errorMessage, e);
