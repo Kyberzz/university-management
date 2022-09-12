@@ -53,16 +53,18 @@ public class Boot {
             
             CourseDao courseDao = context.getBean("courseJdbcDao", CourseJdbcDao.class);
             CourseEntity course = courseDao.getTimetableListByCourseId(1);
-            System.out.println(course.toString());
+          //  System.out.println(course.toString());
+            
+
+            StudentDao studentDao = context.getBean("studentJdbcDao", StudentJdbcDao.class);
+            StudentEntity student = studentDao.getGroupByStudentId(1);
+         //   System.out.println(student.toString());
             
             /*
             GroupDao groupDao = context.getBean("groupJdbcDao", GroupJdbcDao.class);
             GroupEntity group = groupDao.getById(1);
             System.out.println(group.toString());
 
-            StudentDao studentDao = context.getBean("studentJdbcDao", StudentJdbcDao.class);
-            StudentEntity student = studentDao.getGroupByStudentId(1);
-            System.out.println(student.toString());
 
             TeacherDao teacherDao = context.getBean("teacherJdbcDao", TeacherJdbcDao.class);
             TeacherEntity teacher = teacherDao.getById(1);

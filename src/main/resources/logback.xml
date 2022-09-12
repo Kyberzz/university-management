@@ -1,18 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE configuration>
-<configuration>
+<configuration scan="true" scanPeriod="30 seconds">
+
 	<!-- <import class="ch.qos.logback.core.status.OnConsoleStatusListener"/>
 	<statusListener class="OnConsoleStatusListener"/> -->
-
-	<import class="ch.qos.logback.classic.encoder.PatternLayoutEncoder"/>
-	<import class="ch.qos.logback.core.ConsoleAppender"/>
+	
+	<import	class="ch.qos.logback.classic.encoder.PatternLayoutEncoder" />
+	<import class="ch.qos.logback.core.ConsoleAppender" />
+	<import class="ch.qos.logback.core.FileAppender" />
+	<contextName>university-management</contextName>
+	<variable name="DOMAIN" value="ua.com.foxminded.university"/>
 	<appender name="STDOUT" class="ConsoleAppender">
+		<encoder class="PatternLayoutEncoder">
+			<pattern>%d{HH:mm:ss.SSS} %contextName [%thread] %-5level %logger{36} - %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="FILE" class="FileAppender">
+		<file>university-management.log</file>
 		<encoder class="PatternLayoutEncoder">
 			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
 		</encoder>
 	</appender>
+
+	<logger name="${DOMAIN}.dao.jdbc.StudentJdbcDao" level="trace" additivity="false">
+		<appender-ref ref="FILE"/>
+	</logger>
+	
+	<logger name="ua.com.foxminded.university.dao" level="debug"/>
+
 	<root level="warn">
-		<appender-ref ref="STDOUT"/>
+		<appender-ref ref="STDOUT" />
 	</root>
 </configuration>
 
