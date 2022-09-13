@@ -20,12 +20,12 @@ import ua.com.foxminded.university.entity.TeacherEntity;
 @Repository
 public class TeacherJdbcDao implements TeacherDao {
     
-    private static final Logger logger = LoggerFactory.getLogger(TeacherJdbcDao.class);
     private static final String GET_COURSE_LIST_BY_TEACHER_ID = "teacher.getCourseListByTeacherId";
     private static final String DELETE_BY_ID = "teacher.deleteById";
     private static final String UPDATE = "teacher.update";
     private static final String INSERT = "teacher.insert";
     private static final String GET_BY_ID = "teacher.getById";
+    private final Logger logger = LoggerFactory.getLogger(TeacherJdbcDao.class);
     
     private JdbcTemplate jdbcTemplate;
     private Environment queries;

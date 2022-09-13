@@ -20,12 +20,12 @@ import ua.com.foxminded.university.entity.TimetableEntity;
 @Repository
 public class CourseJdbcDao implements CourseDao {
     
-    private static final Logger logger = LoggerFactory.getLogger(CourseJdbcDao.class);
     private static final String GET_TIMETABLE_LIST_BY_COURSE_ID = "course.getTimetableListByCourseId";
     private static final String UPDATE = "course.update";
     private static final String GET_BY_ID = "course.getById";
     private static final String INSERT = "course.insert";
     private static final String DELETE_BY_ID = "course.deleteById";
+    private final Logger logger = LoggerFactory.getLogger(CourseJdbcDao.class);
     
     private JdbcTemplate jdbcTemplate;
     private Environment queries;

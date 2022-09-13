@@ -20,13 +20,13 @@ import ua.com.foxminded.university.entity.TimetableEntity;
 @Repository
 public class TimetableJdbcDao implements TimetableDao {
     
-    private static final Logger logger = LoggerFactory.getLogger(TimetableJdbcDao.class);
     private static final String GET_COURCE_BY_TIMETABLE_ID = "timetable.getCourseByTimetableId";
     private static final String GET_GROUP_BY_TIMETABLE_ID = "timetable.getGroupByTimetableId";
     private static final String UPDATE = "timetable.update";
     private static final String DELETE_BY_ID = "timetable.deleteById";
     private static final String GET_BY_ID = "timetable.getById";
     private static final String INSERT = "timetable.insert";
+    private final Logger logger = LoggerFactory.getLogger(TimetableJdbcDao.class);
     
     private JdbcTemplate jdbcTemplate;
     private Environment queries;

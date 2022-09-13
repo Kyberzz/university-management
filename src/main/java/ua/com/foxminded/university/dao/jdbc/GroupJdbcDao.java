@@ -21,13 +21,13 @@ import ua.com.foxminded.university.entity.TimetableEntity;
 @Repository
 public class GroupJdbcDao implements GroupDao {
     
-    private static final Logger logger = LoggerFactory.getLogger(GroupJdbcDao.class);
     private static final String GET_TIMETABLE_LIST_BY_GROUP_ID = "group.getTimetableListByGroupId";
     private static final String GET_STUDENT_LIST_BY_GROUP_ID = "group.getStudentListByGroupId";
     private static final String INSERT = "group.insert";
     private static final String GET_BY_ID = "group.getById";
     private static final String UPDATE = "group.update";
     private static final String DELETE_BY_ID = "group.deleteById";
+    private final Logger logger = LoggerFactory.getLogger(GroupJdbcDao.class);
     
     private Environment queries;
     private JdbcTemplate jdbcTemplate;

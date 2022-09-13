@@ -18,7 +18,7 @@ import ua.com.foxminded.university.service.TimetableService;
 @Service
 public class TimetableServiceImpl implements TimetableService<TimetableModel> {
     
-    private static final Logger logger = LoggerFactory.getLogger(TimetableServiceImpl.class);
+    private final Logger logger = LoggerFactory.getLogger(TimetableServiceImpl.class);
     
     private TimetableDao timetableDao;
     

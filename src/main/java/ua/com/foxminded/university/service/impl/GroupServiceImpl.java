@@ -22,7 +22,7 @@ import ua.com.foxminded.university.service.ServiceException;
 @Service
 public class GroupServiceImpl implements GroupService<GroupModel> {
     
-    private static final Logger logger = LoggerFactory.getLogger(GroupServiceImpl.class);
+    private final Logger logger = LoggerFactory.getLogger(GroupServiceImpl.class);
     
     private GroupDao groupDao;
     

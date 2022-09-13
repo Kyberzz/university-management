@@ -17,12 +17,12 @@ import ua.com.foxminded.university.entity.StudentEntity;
 @Repository
 public class StudentJdbcDao implements StudentDao {
     
-    private static final Logger logger = LoggerFactory.getLogger(StudentJdbcDao.class);
     private static final String DELETE_BY_ID = "student.deleteById";
     private static final String UPDATE = "student.update";
     private static final String GET_BY_ID = "student.getById";
     private static final String INSERT = "student.insert";
     private static final String GET_GROUP_BY_STUDENT_ID = "student.getGroupByStudentId";
+    private final Logger logger = LoggerFactory.getLogger(StudentJdbcDao.class);
     
     private JdbcTemplate jdbcTemplate;
     private Environment queries;

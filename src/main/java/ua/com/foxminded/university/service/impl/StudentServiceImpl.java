@@ -17,7 +17,7 @@ import ua.com.foxminded.university.service.StudentService;
 @Service
 public class StudentServiceImpl implements StudentService<StudentModel> {
     
-    private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.class);
+    private final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.class);
     
     private StudentDao studentDao;
     

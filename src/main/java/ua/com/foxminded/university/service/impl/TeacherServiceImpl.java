@@ -19,7 +19,7 @@ import ua.com.foxminded.university.service.TeacherService;
 @Service
 public class TeacherServiceImpl implements TeacherService<TeacherModel> {
     
-    private static final Logger logger = LoggerFactory.getLogger(TeacherServiceImpl.class);
+    private final Logger logger = LoggerFactory.getLogger(TeacherServiceImpl.class);
     
     private TeacherDao teacherDao; 
     

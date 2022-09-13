@@ -23,7 +23,7 @@ import ua.com.foxminded.university.service.ServiceException;
 @Service
 public class CourseServiceImpl implements CourseService<CourseModel> {
     
-    private static final Logger logger = LoggerFactory.getLogger(CourseServiceImpl.class);
+    private final Logger logger = LoggerFactory.getLogger(CourseServiceImpl.class);
     
     private CourseDao courseDao;
     
