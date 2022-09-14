@@ -26,10 +26,9 @@ public class StudentServiceImpl implements StudentService<StudentModel> {
     
     @Override
     public int updateStudent(StudentModel studentModel) throws ServiceException {
-        StudentEntity studentEntity = new StudentEntity();
+        StudentEntity studentEntity = new StudentEntity(studentModel.getId());
         studentEntity.setFirstName(studentModel.getFirstName());
         studentEntity.setGroup(new GroupEntity(studentModel.getGroup().getId()));
-        studentEntity.setId(studentModel.getId());
         studentEntity.setLastName(studentModel.getLastName());
         int updatedStudentsQuantity = 0;
        

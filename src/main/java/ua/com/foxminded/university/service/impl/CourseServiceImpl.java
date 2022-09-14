@@ -32,9 +32,8 @@ public class CourseServiceImpl implements CourseService<CourseModel> {
     
     @Override
     public int updateCourse(CourseModel courseModel) throws ServiceException {
-        CourseEntity courseEntity = new CourseEntity();
+        CourseEntity courseEntity = new CourseEntity(courseModel.getId());
         courseEntity.setDescription(courseModel.getDescription());
-        courseEntity.setId(courseModel.getId());
         courseEntity.setName(courseModel.getName());
         courseEntity.setTeacher(new TeacherEntity(courseModel.getTeacher().getId()));
         

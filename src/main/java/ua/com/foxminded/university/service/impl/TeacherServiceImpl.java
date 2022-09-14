@@ -3,8 +3,6 @@ package ua.com.foxminded.university.service.impl;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,8 +18,6 @@ import ua.com.foxminded.university.service.TeacherService;
 @Slf4j
 @Service
 public class TeacherServiceImpl implements TeacherService<TeacherModel> {
-    
-    private final Logger logger = LoggerFactory.getLogger(TeacherServiceImpl.class);
     
     private TeacherDao teacherDao; 
     

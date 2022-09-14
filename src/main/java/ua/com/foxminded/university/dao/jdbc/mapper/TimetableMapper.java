@@ -24,12 +24,11 @@ public final class TimetableMapper implements RowMapper<TimetableEntity> {
     
     @Override
     public TimetableEntity mapRow(ResultSet resultSet, int numRow) throws SQLException {
-        TimetableEntity timetable = new TimetableEntity();
+        TimetableEntity timetable = new TimetableEntity(resultSet.getInt(ID));
         timetable.setCourse(new CourseEntity(resultSet.getInt(COURSE_ID)));
         timetable.setDescription(resultSet.getString(DESCRIPTION));
         timetable.setEndTime(resultSet.getLong(END_TIME));
         timetable.setGroup(new GroupEntity(resultSet.getInt(GROUP_ID)));
-        timetable.setId(resultSet.getInt(ID));
         timetable.setStartTime(resultSet.getLong(START_TIME));
         timetable.setWeekDay(WeekDayEntity.valueOf(resultSet.getString(WEEK_DAY)));
         return timetable;

@@ -27,12 +27,11 @@ public class TimetableServiceImpl implements TimetableService<TimetableModel> {
     
     @Override
     public int updateTimetable(TimetableModel timetableModel) throws ServiceException {
-        TimetableEntity timetableEntity = new TimetableEntity();
+        TimetableEntity timetableEntity = new TimetableEntity(timetableModel.getId());
         timetableEntity.setCourse(new CourseEntity(timetableModel.getId()));
         timetableEntity.setDescription(timetableModel.getDescription());
         timetableEntity.setEndTime(timetableModel.getEndTime());
         timetableEntity.setGroup(new GroupEntity(timetableModel.getGroup().getId()));
-        timetableEntity.setId(timetableModel.getId());
         timetableEntity.setStartTime(timetableModel.getStartTime());
         timetableEntity.setWeekDay(WeekDayEntity.valueOf(timetableModel.getWeekDay().toString()));
         
