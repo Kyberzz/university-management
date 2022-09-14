@@ -38,18 +38,16 @@ public class GroupServiceImpl implements GroupService<GroupModel> {
             throw new ServiceException("Getting students list of the group failed.", e);
         }
        
-        GroupModel groupModelStudentsList = new GroupModel();
         List<StudentModel> studentList = groupEntityStudentsList.getStudentList().stream()
                 .map(entity -> {
-                    StudentModel model = new StudentModel();
+                    StudentModel model = new StudentModel(entity.getId());
                     model.setFirstName(entity.getFirstName());
                     model.setGroup(new GroupModel(entity.getGroup().getId()));
-                    model.setId(entity.getId());
                     model.setLastName(entity.getLastName());
                     return model;
                 })
                 .collect(Collectors.toList());
-        groupModelStudentsList.setId(groupEntityStudentsList.getId());
+        GroupModel groupModelStudentsList = new GroupModel(groupEntityStudentsList.getId());
         groupModelStudentsList.setName(groupEntityStudentsList.getName());
         groupModelStudentsList.setStudentList(studentList);
         return groupModelStudentsList;
@@ -65,22 +63,19 @@ public class GroupServiceImpl implements GroupService<GroupModel> {
             throw new ServiceException("Getting timebales list of the group failed.", e);
         }
         
-        GroupModel groupModelTimetablesList = new GroupModel();
-        
         List<TimetableModel> timetableList = groupEntityTimetablesList.getTimetableList().stream()
                 .map(entity -> {
-                    TimetableModel model = new TimetableModel();
+                    TimetableModel model = new TimetableModel(entity.getId());
                     model.setCourse(new CourseModel(entity.getCourse().getId()));
                     model.setDescription(entity.getDescription());
                     model.setEndTime(entity.getEndTime());
                     model.setGroup(new GroupModel(entity.getGroup().getId()));
-                    model.setId(entity.getId());
                     model.setStartTime(entity.getStartTime());
                     model.setWeekDay(WeekDayModel.valueOf(entity.getWeekDay().toString()));
                     return model;
                 })
                 .collect(Collectors.toList());
-        groupModelTimetablesList.setId(groupEntityTimetablesList.getId());
+        GroupModel groupModelTimetablesList = new GroupModel(groupEntityTimetablesList.getId());
         groupModelTimetablesList.setName(groupEntityTimetablesList.getName());
         groupModelTimetablesList.setTimetableList(timetableList);
         return groupModelTimetablesList;

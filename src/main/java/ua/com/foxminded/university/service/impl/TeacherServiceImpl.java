@@ -36,22 +36,18 @@ public class TeacherServiceImpl implements TeacherService<TeacherModel> {
             throw new ServiceException("Getting the courses list by the teacher id failed.", e);
         }
         
-        TeacherModel teacherModelCourseList = new TeacherModel();
-        
         List<CourseModel> courseEntityList = teacherEntityCoursesList.getCourseList().stream()
                 .map(entity -> {
-                    CourseModel model = new CourseModel();
+                    CourseModel model = new CourseModel(entity.getId());
                     model.setDescription(entity.getDescription());
-                    model.setId(entity.getId());
                     model.setName(entity.getName());
                     model.setTeacher(new TeacherModel(entity.getTeacher().getId()));
                     return model;
                 })
                 .collect(Collectors.toList());
-        
+        TeacherModel teacherModelCourseList = new TeacherModel(teacherEntityCoursesList.getId());
         teacherModelCourseList.setCourseList(courseEntityList);
         teacherModelCourseList.setFirstName(teacherEntityCoursesList.getFirstName());
-        teacherModelCourseList.setId(teacherEntityCoursesList.getId());
         teacherModelCourseList.setLastName(teacherEntityCoursesList.getLastName());
         return teacherModelCourseList;
     }

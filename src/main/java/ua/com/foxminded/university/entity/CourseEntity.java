@@ -6,6 +6,7 @@ import lombok.Data;
 
 @Data
 public class CourseEntity {
+    
     private final Integer id;
     private TeacherEntity teacher;
     private String name;
