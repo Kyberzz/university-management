@@ -50,6 +50,7 @@ class TimetableJdbcDaoTest {
     private static final int COURSE_ID_NUMBER = 1;
     private static final int TIMETABLE_ID = 2;
     private static final int TIMETABLE_ID_NUMBER = 1;
+    private static final Integer NO_ID = null;
     
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -69,12 +70,11 @@ class TimetableJdbcDaoTest {
 
     @Test
     void insert_InsertingTimetableDataToDatabase_DatabaseHasCorrectData() throws DaoException {
-        TimetableEntity timetable = new TimetableEntity();
+        TimetableEntity timetable = new TimetableEntity(TIMETABLE_ID_NUMBER);
         timetable.setCourse(new CourseEntity(COURSE_ID_NUMBER));
         timetable.setDescription(TIMETABLE_DESCRIPTION);
         timetable.setEndTime(END_TIME);
         timetable.setGroup(new GroupEntity(GROUP_ID_NUMBER));
-        timetable.setId(TIMETABLE_ID_NUMBER);
         timetable.setStartTime(START_TIME);
         timetable.setWeekDay(WeekDayEntity.valueOf(WEEK_DAY_VALUE));
        
@@ -110,15 +110,12 @@ class TimetableJdbcDaoTest {
     }
     
     @Test
-    void update_UdatingTimetableDatabaseDataWithNullValues_DatabaseHasNoData() throws DaoException {
-        
-        
-        TimetableEntity timetable = new TimetableEntity();
-        timetable.setCourse(new CourseEntity());
+    void update_DeletingForeingKeys_TimetableHasNoForeingKeys() throws DaoException {
+        TimetableEntity timetable = new TimetableEntity(TIMETABLE_ID_NUMBER);
+        timetable.setCourse(new CourseEntity(NO_ID));
         timetable.setDescription(null);
         timetable.setEndTime(END_TIME);
-        timetable.setGroup(new GroupEntity());
-        timetable.setId(TIMETABLE_ID_NUMBER);
+        timetable.setGroup(new GroupEntity(NO_ID));
         timetable.setStartTime(START_TIME);
         timetable.setWeekDay(WeekDayEntity.valueOf(WEEK_DAY_VALUE));
         TimetableDao timetableDao = new TimetableJdbcDao(jdbcTemplate, queries, timetableMapper, 
@@ -135,12 +132,11 @@ class TimetableJdbcDaoTest {
     
     @Test
     void update_UdatingTimetableDatabaseData_DatabaseHasUpdatedData() throws DaoException {
-        TimetableEntity timetable = new TimetableEntity();
+        TimetableEntity timetable = new TimetableEntity(TIMETABLE_ID);
         timetable.setCourse(new CourseEntity(COURSE_ID_NUMBER));
         timetable.setDescription(TIMETABLE_DESCRIPTION);
         timetable.setEndTime(END_TIME);
         timetable.setGroup(new GroupEntity(GROUP_ID_NUMBER));
-        timetable.setId(TIMETABLE_ID);
         timetable.setStartTime(START_TIME);
         timetable.setWeekDay(WeekDayEntity.valueOf(WEEK_DAY_VALUE));
         TimetableDao timetableDao = new TimetableJdbcDao(jdbcTemplate, queries, timetableMapper, 

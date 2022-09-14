@@ -6,14 +6,16 @@ import org.springframework.context.support.AbstractApplicationContext;
 import ua.com.foxminded.university.config.AppConfig;
 import ua.com.foxminded.university.dao.DaoException;
 import ua.com.foxminded.university.dao.jdbc.CourseJdbcDao;
+import ua.com.foxminded.university.service.ServiceException;
+import ua.com.foxminded.university.service.impl.CourseServiceImpl;
 
 public class Boot {
 
-    public static void main(String[] args) throws DaoException {
+    public static void main(String[] args) throws DaoException, ServiceException {
         
         AbstractApplicationContext contex = new AnnotationConfigApplicationContext(AppConfig.class);
-        CourseJdbcDao courseDao = contex.getBean("courseJdbcDao", CourseJdbcDao.class);
-        System.out.println(courseDao.getById(1));
+        CourseServiceImpl courseService = contex.getBean("courseServiceImpl", CourseServiceImpl.class);
+        System.out.println(courseService.getTimetableListByCourseId(1).toString());
 
     }
 }

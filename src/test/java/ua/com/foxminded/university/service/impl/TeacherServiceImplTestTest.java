@@ -21,6 +21,7 @@ import ua.com.foxminded.university.service.ServiceException;
 @ExtendWith(MockitoExtension.class)
 class TeacherServiceImplTestTest {
     
+    private static final Integer NO_ID = null;
     private static final int COURSE_ID = 1;
     
     @InjectMocks
@@ -33,7 +34,7 @@ class TeacherServiceImplTestTest {
     
     void getCourseListByTeacherId_GettingTeacherMocel_CorrectCallQuantity() throws DaoException, 
                                                                                    ServiceException {
-        TeacherEntity teacher = new TeacherEntity();
+        TeacherEntity teacher = new TeacherEntity(NO_ID);
         teacher.setCourseList(new ArrayList<>());
         when(teacherDaoMock.getCourseListByTeacherId(anyInt())).thenReturn(teacher);
         teacherService.getCourseListByTeacherId(COURSE_ID);

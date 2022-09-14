@@ -41,6 +41,8 @@ class StudentJdbcDaoTest {
     private static final String STUDENT_ID = "id";
     private static final int GROUP_ID_NUMBER = 1;
     private static final int STUDENT_ID_NUMBER = 1;
+    private static final int NO_STUDENT_ID = 0;
+    private static final Integer NO_GROUP_ID = null;
     
    
     @Autowired
@@ -56,12 +58,11 @@ class StudentJdbcDaoTest {
     private GroupMapper groupMapper;
     
     @Test
-    void update_UdatingDatabaseWithNull_DatabaseHasNoData() throws DaoException {
+    void update_DeletingGroupIdOfStudent_StudentHasNoGroup() throws DaoException {
         StudentJdbcDao studentDao = new StudentJdbcDao(jdbcTemplate, queries, studentMapper, groupMapper);
-        StudentEntity student = new StudentEntity();
+        StudentEntity student = new StudentEntity(STUDENT_ID_NUMBER);
         student.setFirstName(FIRST_NAME_STUDENT);
-        student.setGroup(new GroupEntity());
-        student.setId(STUDENT_ID_NUMBER);
+        student.setGroup(new GroupEntity(NO_GROUP_ID));
         student.setLastName(LAST_NAME_STUDENT);
         studentDao.update(student);
         String sqlSelectStudentById = queries.getProperty(SELECT_STUDENT_BY_ID);
@@ -73,10 +74,9 @@ class StudentJdbcDaoTest {
     @Test
     void update_UdatingDatabaseData_DatabaseHasCorrectData() throws DaoException {
         StudentJdbcDao studentDao = new StudentJdbcDao(jdbcTemplate, queries, studentMapper, groupMapper);
-        StudentEntity student = new StudentEntity();
+        StudentEntity student = new StudentEntity(STUDENT_ID_NUMBER);
         student.setFirstName(NEW_FIRST_NAME_STUDENT);
         student.setLastName(NEW_LAST_NAME_STUDENT);
-        student.setId(STUDENT_ID_NUMBER);
         student.setGroup(new GroupEntity(GROUP_ID_NUMBER));
         studentDao.update(student);
         String sqlSelectStudentById = queries.getProperty(SELECT_STUDENT_BY_ID);
@@ -115,7 +115,7 @@ class StudentJdbcDaoTest {
     @Test
     void insert_InsertingStudentToDatabase_CorrectInsertedData() throws DaoException {
         StudentJdbcDao studentDao = new StudentJdbcDao(jdbcTemplate, queries, studentMapper, groupMapper);
-        StudentEntity student = new StudentEntity();
+        StudentEntity student = new StudentEntity(NO_STUDENT_ID);
         student.setFirstName(NEW_FIRST_NAME_STUDENT);
         student.setLastName(NEW_LAST_NAME_STUDENT);
         student.setGroup(new GroupEntity(GROUP_ID_NUMBER));
@@ -132,8 +132,7 @@ class StudentJdbcDaoTest {
     void getById_GettingStudent_CorrectStudentData() throws DaoException {
         StudentJdbcDao studentDao = new StudentJdbcDao(jdbcTemplate, queries, studentMapper, groupMapper);
         StudentEntity student = studentDao.getById(STUDENT_ID_NUMBER);
-        StudentEntity expectedResult = new StudentEntity();
-        expectedResult.setId(STUDENT_ID_NUMBER);
+        StudentEntity expectedResult = new StudentEntity(STUDENT_ID_NUMBER);
         expectedResult.setFirstName(FIRST_NAME_STUDENT);
         expectedResult.setLastName(LAST_NAME_STUDENT);
         expectedResult.setGroup(new GroupEntity(GROUP_ID_NUMBER));

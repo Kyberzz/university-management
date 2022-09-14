@@ -46,6 +46,7 @@ class CourseJdbcDaoTest {
     private static final int EXPECTED_COURSE_ID = 4;
     private static final int EXPECTED_TEACHER_ID = 2;
     private static final int FIRST_ELEMENT = 0;
+    private static final int NO_ID = 0;
     
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -82,7 +83,7 @@ class CourseJdbcDaoTest {
     @Test
     void insert_InsertingCourseDataToDatabase_DatabaseHasCorrectData() throws DaoException {
         CourseJdbcDao courseDao = new CourseJdbcDao(jdbcTemplate, queries, courseMapper, timetableMapper);
-        CourseEntity course = new CourseEntity();
+        CourseEntity course = new CourseEntity(NO_ID);
         course.setName(NEW_COURSE_NAME);
         course.setTeacher(new TeacherEntity(EXPECTED_TEACHER_ID));
         course.setDescription(EXPECTED_COURSE_DESCRIPTION);
@@ -112,10 +113,9 @@ class CourseJdbcDaoTest {
     @Test
     void update_UdatingDatabaseWithNullValues_DatabaseHasNoData() throws DaoException {
         CourseJdbcDao courseDao = new CourseJdbcDao(jdbcTemplate, queries, courseMapper, timetableMapper);
-        CourseEntity course = new CourseEntity();
-        course.setId(COURSE_ID_NUMBER);
+        CourseEntity course = new CourseEntity(COURSE_ID_NUMBER);
         course.setName(EXPECTED_COURSE_NAME);
-        course.setTeacher(new TeacherEntity());
+        course.setTeacher(new TeacherEntity(NO_ID));
         courseDao.update(course);
         String sqlSelectCourseById = queries.getProperty(SELECT_COURSE_BY_ID);
         Map<String, Object> updatedCourse = jdbcTemplate.queryForMap(sqlSelectCourseById, 
@@ -127,8 +127,7 @@ class CourseJdbcDaoTest {
     @Test
     void update_UpdatingDatabaseCourseData_DatabaseHasCorrectData() throws DaoException {
         CourseJdbcDao courseDao = new CourseJdbcDao(jdbcTemplate, queries, courseMapper, timetableMapper);
-        CourseEntity course = new CourseEntity();
-        course.setId(COURSE_ID_NUMBER);
+        CourseEntity course = new CourseEntity(COURSE_ID_NUMBER);
         course.setName(NEW_COURSE_NAME);
         course.setDescription(EXPECTED_COURSE_DESCRIPTION);
         course.setTeacher(new TeacherEntity(EXPECTED_TEACHER_ID));

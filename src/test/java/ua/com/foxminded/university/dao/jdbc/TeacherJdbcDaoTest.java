@@ -40,6 +40,7 @@ class TeacherJdbcDaoTest {
     private static final int FIST_ELEMENT = 0;
     private static final int COURSES_QUANTITY = 2;
     private static final int TEACHER_ID_NUMBER = 2;
+    private static final Integer NO_ID = null;
     
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -55,7 +56,7 @@ class TeacherJdbcDaoTest {
     
     @Test
     void insert_InsertingTeacherDatabaseData_DatabaseHasCorrectData() throws DaoException {
-        TeacherEntity teacher = new TeacherEntity();
+        TeacherEntity teacher = new TeacherEntity(NO_ID);
         teacher.setFirstName(TEACHER_FIRST_NAME);
         teacher.setLastName(TEACHER_LAST_NAME);
         TeacherDao teacherDao = new TeacherJdbcDao(jdbcTemplate, queries, teacherMapper, courseMapper);
@@ -81,10 +82,9 @@ class TeacherJdbcDaoTest {
     @Test
     void update_UpdatingTeacherDatabaseData_DatabaseHasCorrectData() throws DaoException {
         TeacherDao teacherDao = new TeacherJdbcDao(jdbcTemplate, queries, teacherMapper, courseMapper);
-        TeacherEntity teacherData = new TeacherEntity();
+        TeacherEntity teacherData = new TeacherEntity(TEACHER_ID);
         teacherData.setFirstName(TEACHER_FIRST_NAME);
         teacherData.setLastName(TEACHER_LAST_NAME);
-        teacherData.setId(TEACHER_ID);
         teacherDao.update(teacherData);
         String sqlSelectTeacherById = queries.getProperty(SELECT_TEACHER_BY_ID);
         Map<String, Object> updatedTeacherData = jdbcTemplate.queryForMap(sqlSelectTeacherById, 

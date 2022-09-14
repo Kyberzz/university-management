@@ -45,6 +45,7 @@ class GroupJdbcDaoTest {
     private static final int EXPECTED_STUDENT_ID = 2;
     private static final int STUDENTS_QUANTITY = 2;
     private static final int GROUP_ID_NUMBER = 2;
+    private static final int NO_ID = 0;
     
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -65,7 +66,7 @@ class GroupJdbcDaoTest {
     void insert_InsertingDataOfGroupToDatabase_DatabaseHasCorrectData() throws DaoException {
         GroupDao groupDao = new GroupJdbcDao(groupQueries, jdbcTemplate, groupMapper, 
                                              studentMapper, timetableMapper);
-        GroupEntity group = new GroupEntity();
+        GroupEntity group = new GroupEntity(NO_ID);
         group.setName(NEW_GROUP_NAME);
         groupDao.insert(group);
         String sqlSelectGroupById = groupQueries.getProperty(SELECT_GROUP_BY_ID);
@@ -88,8 +89,7 @@ class GroupJdbcDaoTest {
     void update_UpdatingDatabaseDataOfGroup_DatabaseHasCorrectData() throws DaoException {
         GroupDao groupDao = new GroupJdbcDao(groupQueries, jdbcTemplate, groupMapper, 
                                              studentMapper, timetableMapper);
-        GroupEntity group = new GroupEntity();
-        group.setId(GROUP_ID_NUMBER);
+        GroupEntity group = new GroupEntity(GROUP_ID_NUMBER);
         group.setName(EXPECTED_GROUP_NAME);
         groupDao.update(group);
         String sqlSelectGroupById = groupQueries.getProperty(SELECT_GROUP_BY_ID);
