@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import lombok.extern.slf4j.Slf4j;
 import ua.com.foxminded.university.dao.DaoException;
 import ua.com.foxminded.university.dao.TeacherDao;
 import ua.com.foxminded.university.entity.TeacherEntity;
@@ -16,6 +17,7 @@ import ua.com.foxminded.university.model.TeacherModel;
 import ua.com.foxminded.university.service.ServiceException;
 import ua.com.foxminded.university.service.TeacherService;
 
+@Slf4j
 @Service
 public class TeacherServiceImpl implements TeacherService<TeacherModel> {
     
@@ -35,9 +37,7 @@ public class TeacherServiceImpl implements TeacherService<TeacherModel> {
         try {
             teacherEntityCoursesList = teacherDao.getCourseListByTeacherId(id);
         } catch (DaoException e) {
-            String errorMessage = "Getting the courses list by the teacher id failed.";
-            logger.error(errorMessage, e);
-            throw new ServiceException(errorMessage, e);
+            throw new ServiceException("Getting the courses list by the teacher id failed.", e);
         }
         
         TeacherModel teacherModelCourseList = new TeacherModel();

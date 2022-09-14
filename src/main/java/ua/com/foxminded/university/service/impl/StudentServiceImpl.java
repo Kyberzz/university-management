@@ -1,11 +1,10 @@
 package ua.com.foxminded.university.service.impl;
 
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import lombok.extern.slf4j.Slf4j;
 import ua.com.foxminded.university.dao.DaoException;
 import ua.com.foxminded.university.dao.StudentDao;
 import ua.com.foxminded.university.entity.GroupEntity;
@@ -14,10 +13,9 @@ import ua.com.foxminded.university.model.StudentModel;
 import ua.com.foxminded.university.service.ServiceException;
 import ua.com.foxminded.university.service.StudentService;
 
+@Slf4j
 @Service
 public class StudentServiceImpl implements StudentService<StudentModel> {
-    
-    private final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.class);
     
     private StudentDao studentDao;
     
@@ -38,9 +36,7 @@ public class StudentServiceImpl implements StudentService<StudentModel> {
         try {
             updatedStudentsQuantity = studentDao.update(studentEntity);
         } catch (DaoException e) {
-            String errorMessage = "Udating the student data failed.";
-            logger.error(errorMessage, e);
-            throw new ServiceException(errorMessage, e);
+            throw new ServiceException("Udating the student data failed.", e);
         }
         return updatedStudentsQuantity;
     }

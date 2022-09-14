@@ -3,11 +3,10 @@ package ua.com.foxminded.university.service.impl;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import lombok.extern.slf4j.Slf4j;
 import ua.com.foxminded.university.dao.CourseDao;
 import ua.com.foxminded.university.dao.DaoException;
 import ua.com.foxminded.university.entity.CourseEntity;
@@ -20,10 +19,9 @@ import ua.com.foxminded.university.model.WeekDayModel;
 import ua.com.foxminded.university.service.CourseService;
 import ua.com.foxminded.university.service.ServiceException;
 
+@Slf4j
 @Service
 public class CourseServiceImpl implements CourseService<CourseModel> {
-    
-    private final Logger logger = LoggerFactory.getLogger(CourseServiceImpl.class);
     
     private CourseDao courseDao;
     
@@ -44,9 +42,7 @@ public class CourseServiceImpl implements CourseService<CourseModel> {
             int udatedCoursesQuantity = courseDao.update(courseEntity);
             return udatedCoursesQuantity;
         } catch (DaoException e) {
-            String errorMessage = "Updating the course failed.";
-            logger.error(errorMessage, e);
-            throw new ServiceException(errorMessage, e);
+            throw new ServiceException("Updating the course failed.", e);
         }
     }
    
@@ -57,9 +53,7 @@ public class CourseServiceImpl implements CourseService<CourseModel> {
         try {
             courseEntityTimetablesList = courseDao.getTimetableListByCourseId(id);
         } catch (DaoException e) {
-            String errorMessage = "Getting timetable list of course id faled.";
-            logger.error(errorMessage, e);
-            throw new ServiceException(errorMessage, e);
+            throw new ServiceException("Getting timetable list of course id faled.", e);
         }
        
         CourseModel courseModelTimetablesList = new CourseModel();

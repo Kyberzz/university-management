@@ -1,10 +1,9 @@
 package ua.com.foxminded.university.service.impl;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import lombok.extern.slf4j.Slf4j;
 import ua.com.foxminded.university.dao.DaoException;
 import ua.com.foxminded.university.dao.TimetableDao;
 import ua.com.foxminded.university.entity.CourseEntity;
@@ -15,10 +14,9 @@ import ua.com.foxminded.university.model.TimetableModel;
 import ua.com.foxminded.university.service.ServiceException;
 import ua.com.foxminded.university.service.TimetableService;
 
+@Slf4j
 @Service
 public class TimetableServiceImpl implements TimetableService<TimetableModel> {
-    
-    private final Logger logger = LoggerFactory.getLogger(TimetableServiceImpl.class);
     
     private TimetableDao timetableDao;
     
@@ -43,9 +41,7 @@ public class TimetableServiceImpl implements TimetableService<TimetableModel> {
         try {
             updatedTimetablesQuantity = timetableDao.update(timetableEntity);
         } catch (DaoException e) {
-            String errorMessage = "Updating the timetable failed.";
-            logger.error(errorMessage, e);
-            throw new ServiceException(errorMessage, e);
+            throw new ServiceException("Updating the timetable failed.", e);
         }
         return updatedTimetablesQuantity;
     }
