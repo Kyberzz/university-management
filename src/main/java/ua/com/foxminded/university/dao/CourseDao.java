@@ -4,5 +4,5 @@ import ua.com.foxminded.university.entity.CourseEntity;
 
 public interface CourseDao extends GenericDao<CourseEntity> {
     
-    public CourseEntity getTimetableListByCourseId(int id);
+    public CourseEntity getTimetableListByCourseId(int id) throws DaoException;
 }

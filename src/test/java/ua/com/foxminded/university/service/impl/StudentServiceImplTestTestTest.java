@@ -10,10 +10,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import ua.com.foxminded.university.dao.DaoException;
 import ua.com.foxminded.university.dao.StudentDao;
 import ua.com.foxminded.university.entity.StudentEntity;
 import ua.com.foxminded.university.model.GroupModel;
 import ua.com.foxminded.university.model.StudentModel;
+import ua.com.foxminded.university.service.ServiceException;
 
 @ExtendWith(MockitoExtension.class)
 class StudentServiceImplTestTestTest {
@@ -26,7 +28,7 @@ class StudentServiceImplTestTestTest {
     
 
     @Test
-    void updateStudent_CallingInnerMethod_CorrectCallQuantity() {
+    void updateStudent_CallingInnerMethod_CorrectCallQuantity() throws ServiceException, DaoException {
         StudentModel studentModel = new StudentModel();
         studentModel.setGroup(new GroupModel());
         studentService.updateStudent(studentModel);

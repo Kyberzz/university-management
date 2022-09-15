@@ -6,7 +6,9 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import lombok.extern.slf4j.Slf4j;
 import ua.com.foxminded.university.dao.CourseDao;
+import ua.com.foxminded.university.dao.DaoException;
 import ua.com.foxminded.university.entity.CourseEntity;
 import ua.com.foxminded.university.entity.TeacherEntity;
 import ua.com.foxminded.university.model.CourseModel;
@@ -15,7 +17,9 @@ import ua.com.foxminded.university.model.TeacherModel;
 import ua.com.foxminded.university.model.TimetableModel;
 import ua.com.foxminded.university.model.WeekDayModel;
 import ua.com.foxminded.university.service.CourseService;
+import ua.com.foxminded.university.service.ServiceException;
 
+@Slf4j
 @Service
 public class CourseServiceImpl implements CourseService<CourseModel> {
     
@@ -27,40 +31,48 @@ public class CourseServiceImpl implements CourseService<CourseModel> {
     }
     
     @Override
-    public int updateCourse(CourseModel courseModel) {
-        CourseEntity courseEntity = new CourseEntity();
+    public int updateCourse(CourseModel courseModel) throws ServiceException {
+        CourseEntity courseEntity = new CourseEntity(courseModel.getId());
         courseEntity.setDescription(courseModel.getDescription());
-        courseEntity.setId(courseModel.getId());
         courseEntity.setName(courseModel.getName());
         courseEntity.setTeacher(new TeacherEntity(courseModel.getTeacher().getId()));
-        return courseDao.update(courseEntity);
+        
+        try {
+            int udatedCoursesQuantity = courseDao.update(courseEntity);
+            return udatedCoursesQuantity;
+        } catch (DaoException e) {
+            throw new ServiceException("Updating the course failed.", e);
+        }
     }
    
     @Override
-    public CourseModel getTimetableListByCourseId(int id) {
-        CourseEntity courseEntityTimetableList = courseDao.getTimetableListByCourseId(id);
-        CourseModel courseModelTimetableList = new CourseModel();
-
-        List<TimetableModel> timetableList = courseEntityTimetableList.getTimetableList()
+    public CourseModel getTimetableListByCourseId(int id) throws ServiceException {
+        CourseEntity courseEntityTimetablesList = null;
+        
+        try {
+            courseEntityTimetablesList = courseDao.getTimetableListByCourseId(id);
+        } catch (DaoException e) {
+            throw new ServiceException("Getting timetable list of course id faled.", e);
+        }
+        
+        List<TimetableModel> timetableList = courseEntityTimetablesList.getTimetableList()
                 .stream()
                 .map(entity -> {
-                    TimetableModel model = new TimetableModel();
+                    TimetableModel model = new TimetableModel(entity.getId());
                     model.setCourse(new CourseModel(entity.getCourse().getId()));
                     model.setDescription(entity.getDescription());
                     model.setEndTime(entity.getEndTime());
                     model.setGroup(new GroupModel(entity.getGroup().getId()));
-                    model.setId(entity.getId());
                     model.setStartTime(entity.getStartTime());
                     model.setWeekDay(WeekDayModel.valueOf(entity.getWeekDay().toString()));
                     return model;
                 }).collect(Collectors.toList());
-        
-        courseModelTimetableList.setTimetableList(timetableList);
-        courseModelTimetableList.setDescription(courseEntityTimetableList.getDescription());
-        courseModelTimetableList.setId(courseEntityTimetableList.getId());
-        courseModelTimetableList.setName(courseEntityTimetableList.getName());
-        courseModelTimetableList.setTeacher(new TeacherModel(courseEntityTimetableList.getTeacher()
+        CourseModel courseModelTimetablesList = new CourseModel(courseEntityTimetablesList.getId());
+        courseModelTimetablesList.setTimetableList(timetableList);
+        courseModelTimetablesList.setDescription(courseEntityTimetablesList.getDescription());
+        courseModelTimetablesList.setName(courseEntityTimetablesList.getName());
+        courseModelTimetablesList.setTeacher(new TeacherModel(courseEntityTimetablesList.getTeacher()
                                                                                       .getId()));
-        return courseModelTimetableList;
+        return courseModelTimetablesList;
     }
 }

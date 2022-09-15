@@ -15,6 +15,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import ua.com.foxminded.university.config.TestAppConfig;
+import ua.com.foxminded.university.dao.DaoException;
 import ua.com.foxminded.university.dao.TimetableDao;
 import ua.com.foxminded.university.dao.jdbc.mapper.CourseMapper;
 import ua.com.foxminded.university.dao.jdbc.mapper.GroupMapper;
@@ -49,6 +50,7 @@ class TimetableJdbcDaoTest {
     private static final int COURSE_ID_NUMBER = 1;
     private static final int TIMETABLE_ID = 2;
     private static final int TIMETABLE_ID_NUMBER = 1;
+    private static final Integer NO_ID = null;
     
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -67,13 +69,12 @@ class TimetableJdbcDaoTest {
     
 
     @Test
-    void insert_InsertingTimetableDataToDatabase_DatabaseHasCorrectData() {
-        TimetableEntity timetable = new TimetableEntity();
+    void insert_InsertingTimetableDataToDatabase_DatabaseHasCorrectData() throws DaoException {
+        TimetableEntity timetable = new TimetableEntity(TIMETABLE_ID_NUMBER);
         timetable.setCourse(new CourseEntity(COURSE_ID_NUMBER));
         timetable.setDescription(TIMETABLE_DESCRIPTION);
         timetable.setEndTime(END_TIME);
         timetable.setGroup(new GroupEntity(GROUP_ID_NUMBER));
-        timetable.setId(TIMETABLE_ID_NUMBER);
         timetable.setStartTime(START_TIME);
         timetable.setWeekDay(WeekDayEntity.valueOf(WEEK_DAY_VALUE));
        
@@ -94,7 +95,7 @@ class TimetableJdbcDaoTest {
     }
     
     @Test
-    void getById_ReceivingTimetableDatabaseData_CorrectReceivedData() {
+    void getById_ReceivingTimetableDatabaseData_CorrectReceivedData() throws DaoException {
         TimetableDao timetableDao = new TimetableJdbcDao(jdbcTemplate, queries, timetableMapper, 
                                                          courseMapper, groupMapper);
         TimetableEntity receivedTimetable = timetableDao.getById(TIMETABLE_ID_NUMBER);
@@ -109,15 +110,12 @@ class TimetableJdbcDaoTest {
     }
     
     @Test
-    void update_UdatingTimetableDatabaseDataWithNullValues_DatabaseHasNoData() {
-        
-        
-        TimetableEntity timetable = new TimetableEntity();
-        timetable.setCourse(new CourseEntity());
+    void update_DeletingForeingKeys_TimetableHasNoForeingKeys() throws DaoException {
+        TimetableEntity timetable = new TimetableEntity(TIMETABLE_ID_NUMBER);
+        timetable.setCourse(new CourseEntity(NO_ID));
         timetable.setDescription(null);
         timetable.setEndTime(END_TIME);
-        timetable.setGroup(new GroupEntity());
-        timetable.setId(TIMETABLE_ID_NUMBER);
+        timetable.setGroup(new GroupEntity(NO_ID));
         timetable.setStartTime(START_TIME);
         timetable.setWeekDay(WeekDayEntity.valueOf(WEEK_DAY_VALUE));
         TimetableDao timetableDao = new TimetableJdbcDao(jdbcTemplate, queries, timetableMapper, 
@@ -133,13 +131,12 @@ class TimetableJdbcDaoTest {
     }
     
     @Test
-    void update_UdatingTimetableDatabaseData_DatabaseHasUpdatedData() {
-        TimetableEntity timetable = new TimetableEntity();
+    void update_UdatingTimetableDatabaseData_DatabaseHasUpdatedData() throws DaoException {
+        TimetableEntity timetable = new TimetableEntity(TIMETABLE_ID);
         timetable.setCourse(new CourseEntity(COURSE_ID_NUMBER));
         timetable.setDescription(TIMETABLE_DESCRIPTION);
         timetable.setEndTime(END_TIME);
         timetable.setGroup(new GroupEntity(GROUP_ID_NUMBER));
-        timetable.setId(TIMETABLE_ID);
         timetable.setStartTime(START_TIME);
         timetable.setWeekDay(WeekDayEntity.valueOf(WEEK_DAY_VALUE));
         TimetableDao timetableDao = new TimetableJdbcDao(jdbcTemplate, queries, timetableMapper, 
@@ -159,7 +156,7 @@ class TimetableJdbcDaoTest {
     }
     
     @Test
-    void deleteById_DeletingTimetableDatabaseData_DatabaseHaNoData() {
+    void deleteById_DeletingTimetableDatabaseData_DatabaseHaNoData() throws DaoException {
         TimetableDao timetableDao = new TimetableJdbcDao(jdbcTemplate, queries, timetableMapper, 
                                                          courseMapper, groupMapper);
         timetableDao.deleteById(TIMETABLE_ID_NUMBER);
@@ -172,7 +169,7 @@ class TimetableJdbcDaoTest {
     }
     
     @Test
-    void getCourseByTimetableId_ReceivingTimetableDatabaseData_CorrectReceivedData() {
+    void getCourseByTimetableId_ReceivingTimetableDatabaseData_CorrectReceivedData() throws DaoException {
         TimetableDao timetableDao = new TimetableJdbcDao(jdbcTemplate, queries, timetableMapper, 
                                                          courseMapper, groupMapper);
         TimetableEntity receivedTimetableData = timetableDao.getCourseByTimetableId(TIMETABLE_ID_NUMBER);
@@ -190,7 +187,7 @@ class TimetableJdbcDaoTest {
     }
     
     @Test
-    void getGroupByTimetableId_ReceivingTimetableDatabaseData_CorrectReceivedData() {
+    void getGroupByTimetableId_ReceivingTimetableDatabaseData_CorrectReceivedData() throws DaoException {
         TimetableDao timetableDao = new TimetableJdbcDao(jdbcTemplate, queries, timetableMapper, 
                                                          courseMapper, groupMapper);
         TimetableEntity timetable = timetableDao.getGroupByTimetableId(TIMETABLE_ID_NUMBER);

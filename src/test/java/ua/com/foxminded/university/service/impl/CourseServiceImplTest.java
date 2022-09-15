@@ -14,14 +14,17 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import ua.com.foxminded.university.dao.CourseDao;
+import ua.com.foxminded.university.dao.DaoException;
 import ua.com.foxminded.university.entity.CourseEntity;
 import ua.com.foxminded.university.entity.TeacherEntity;
 import ua.com.foxminded.university.model.CourseModel;
 import ua.com.foxminded.university.model.TeacherModel;
+import ua.com.foxminded.university.service.ServiceException;
 
 @ExtendWith(MockitoExtension.class)
 class CourseServiceImplTest {
     
+    private static final Integer NO_ID = null;
     private static final int COURSE_ID = 1;
     
     @InjectMocks
@@ -31,7 +34,8 @@ class CourseServiceImplTest {
     private CourseDao courseDaoMock;
     
     @Test
-    void updateCourse_CollingDaoObject_CorrectCallQuantity() {
+    void updateCourse_CollingDaoObject_CorrectCallQuantity() throws ServiceException, 
+                                                                    DaoException {
         CourseModel courseModel = new CourseModel();
         courseModel.setTeacher(new TeacherModel());
         courseService.updateCourse(courseModel);
@@ -39,9 +43,10 @@ class CourseServiceImplTest {
     }
     
     @Test
-    void getTimetableListByCourseId_GettingTimetableModel_CorrectCalQuantity () {
-        CourseEntity courseEntity = new CourseEntity();
-        courseEntity.setTeacher(new TeacherEntity());
+    void getTimetableListByCourseId_GettingTimetableModel_CorrectCalQuantity() throws DaoException, 
+                                                                                       ServiceException {
+        CourseEntity courseEntity = new CourseEntity(NO_ID);
+        courseEntity.setTeacher(new TeacherEntity(NO_ID));
         courseEntity.setTimetableList(new ArrayList<>());
         when(courseDaoMock.getTimetableListByCourseId(ArgumentMatchers.anyInt())).thenReturn(courseEntity);
         courseService.getTimetableListByCourseId(COURSE_ID);

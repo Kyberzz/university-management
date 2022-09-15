@@ -17,11 +17,9 @@ public final class TeacherMapper implements RowMapper<TeacherEntity> {
     
     @Override
     public TeacherEntity mapRow(ResultSet resultSet, int rowNum) throws SQLException {
-        TeacherEntity teacher = new TeacherEntity();
+        TeacherEntity teacher = new TeacherEntity(resultSet.getInt(TEACHER_ID));
         teacher.setFirstName(resultSet.getString(TEACHER_FIRST_NAME));
-        teacher.setId(resultSet.getInt(TEACHER_ID));
         teacher.setLastName(resultSet.getString(TEACHER_LAST_NAME));
         return teacher;
     }
-
 }

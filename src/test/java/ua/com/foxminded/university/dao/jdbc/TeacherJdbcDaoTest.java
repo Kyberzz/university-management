@@ -15,6 +15,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import ua.com.foxminded.university.config.TestAppConfig;
+import ua.com.foxminded.university.dao.DaoException;
 import ua.com.foxminded.university.dao.TeacherDao;
 import ua.com.foxminded.university.dao.jdbc.mapper.CourseMapper;
 import ua.com.foxminded.university.dao.jdbc.mapper.TeacherMapper;
@@ -30,14 +31,16 @@ class TeacherJdbcDaoTest {
     private static final String TEACHER_ID_COLUMN = "id";
     private static final String SELECT_TEACHER_BY_ID = "test.selectTeacherById";
     private static final String COURSE_DESCRIPTION = "some description";
-    private static final String COURSE_NAME = "Physics";
-    private static final String TEACHER_LAST_NAME = "Einstein";
-    private static final String TEACHER_FIRST_NAME = "Albert";
+    private static final String COURSE_NAME = "Programming";
+    private static final String TEACHER_LAST_NAME = "Ritchie";
+    private static final String TEACHER_FIRST_NAME = "Dennis";
     private static final int NEW_TEACHER_ID = 3;
     private static final int TEACHER_ID = 2;
-    private static final int COURSE_ID_NUMBER = 1;
+    private static final int COURSE_ID_NUMBER = 2;
     private static final int FIST_ELEMENT = 0;
-    private static final int TEACHER_ID_NUMBER = 1;
+    private static final int COURSES_QUANTITY = 2;
+    private static final int TEACHER_ID_NUMBER = 2;
+    private static final Integer NO_ID = null;
     
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -52,8 +55,8 @@ class TeacherJdbcDaoTest {
     private CourseMapper courseMapper;
     
     @Test
-    void insert_InsertingTeacherDatabaseData_DatabaseHasCorrectData() {
-        TeacherEntity teacher = new TeacherEntity();
+    void insert_InsertingTeacherDatabaseData_DatabaseHasCorrectData() throws DaoException {
+        TeacherEntity teacher = new TeacherEntity(NO_ID);
         teacher.setFirstName(TEACHER_FIRST_NAME);
         teacher.setLastName(TEACHER_LAST_NAME);
         TeacherDao teacherDao = new TeacherJdbcDao(jdbcTemplate, queries, teacherMapper, courseMapper);
@@ -67,7 +70,7 @@ class TeacherJdbcDaoTest {
     }
     
     @Test
-    void getById_ReceivingTeacherDatabaseData_CorrectReceivedData() {
+    void getById_ReceivingTeacherDatabaseData_CorrectReceivedData() throws DaoException {
         TeacherDao teacherDao = new TeacherJdbcDao(jdbcTemplate, queries, teacherMapper, courseMapper);
         TeacherEntity teacher = teacherDao.getById(TEACHER_ID_NUMBER);
         
@@ -77,12 +80,11 @@ class TeacherJdbcDaoTest {
     }
     
     @Test
-    void update_UpdatingTeacherDatabaseData_DatabaseHasCorrectData() {
+    void update_UpdatingTeacherDatabaseData_DatabaseHasCorrectData() throws DaoException {
         TeacherDao teacherDao = new TeacherJdbcDao(jdbcTemplate, queries, teacherMapper, courseMapper);
-        TeacherEntity teacherData = new TeacherEntity();
+        TeacherEntity teacherData = new TeacherEntity(TEACHER_ID);
         teacherData.setFirstName(TEACHER_FIRST_NAME);
         teacherData.setLastName(TEACHER_LAST_NAME);
-        teacherData.setId(TEACHER_ID);
         teacherDao.update(teacherData);
         String sqlSelectTeacherById = queries.getProperty(SELECT_TEACHER_BY_ID);
         Map<String, Object> updatedTeacherData = jdbcTemplate.queryForMap(sqlSelectTeacherById, 
@@ -94,7 +96,7 @@ class TeacherJdbcDaoTest {
     }
     
     @Test
-    void deleteById_DeletingTeacherDatabaseData_DatabaseHasNoData() {
+    void deleteById_DeletingTeacherDatabaseData_DatabaseHasNoData() throws DaoException {
         TeacherDao teacherDao = new TeacherJdbcDao(jdbcTemplate, queries, teacherMapper, courseMapper);
         teacherDao.deleteById(TEACHER_ID_NUMBER);
         String sqlSelectTeacherById = queries.getProperty(SELECT_TEACHER_BY_ID);
@@ -106,7 +108,7 @@ class TeacherJdbcDaoTest {
     }
     
     @Test
-    void getCourseListByTeacherId_ReceivingTeacherDatabaseData_CorrectReceivedData() {
+    void getCourseListByTeacherId_ReceivingTeacherDatabaseData_CorrectReceivedData() throws DaoException {
         TeacherDao teacherDao = new TeacherJdbcDao(jdbcTemplate, queries, teacherMapper, courseMapper);
         TeacherEntity teacherData = teacherDao.getCourseListByTeacherId(TEACHER_ID_NUMBER);
         
@@ -117,5 +119,7 @@ class TeacherJdbcDaoTest {
         assertEquals(COURSE_ID_NUMBER, teacherData.getCourseList().get(FIST_ELEMENT).getId());
         assertEquals(COURSE_NAME, teacherData.getCourseList().get(FIST_ELEMENT).getName());
         assertEquals(COURSE_DESCRIPTION, teacherData.getCourseList().get(FIST_ELEMENT).getDescription());
+        assertEquals(COURSES_QUANTITY, teacherData.getCourseList().size());
+        
     }
 }

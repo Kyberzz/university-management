@@ -13,12 +13,15 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import ua.com.foxminded.university.dao.DaoException;
 import ua.com.foxminded.university.dao.GroupDao;
 import ua.com.foxminded.university.entity.GroupEntity;
+import ua.com.foxminded.university.service.ServiceException;
 
 @ExtendWith(MockitoExtension.class)
 class GroupServiceImplTestTestTest {
     
+    private static final Integer NO_ID = null;
     private static final int GROUP_ID = 1;
     
     @InjectMocks
@@ -28,16 +31,17 @@ class GroupServiceImplTestTestTest {
     private GroupDao groupDaoMock;
     
     @Test
-    void getStudentListByGroupId() {
-        GroupEntity groupEntity = new GroupEntity();
+    void getStudentListByGroupId() throws DaoException, ServiceException {
+        GroupEntity groupEntity = new GroupEntity(NO_ID);
         groupEntity.setStudentList(new ArrayList<>());
         when(groupDaoMock.getStudentListByGroupId(ArgumentMatchers.anyInt())).thenReturn(groupEntity);
         groupService.getStudentListByGroupId(GROUP_ID);
         verify(groupDaoMock, times(1)).getStudentListByGroupId(ArgumentMatchers.anyInt());
     }
     @Test
-    void getTimetableListByGroupId_CallingInnerMethods_CorrectCallQuantity() {
-        GroupEntity groupEntity = new GroupEntity();
+    void getTimetableListByGroupId_CallingInnerMethods_CorrectCallQuantity() throws DaoException, 
+                                                                                    ServiceException {
+        GroupEntity groupEntity = new GroupEntity(NO_ID);
         groupEntity.setTimetableList(new ArrayList<>());;
         when(groupDaoMock.getTimetableListByGroupId(ArgumentMatchers.anyInt())).thenReturn(groupEntity);
         groupService.getTimetableListByGroupId(GROUP_ID);
