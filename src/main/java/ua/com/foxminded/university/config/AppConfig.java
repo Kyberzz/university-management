@@ -10,6 +10,10 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
 
 @PropertySource({"/jdbc.properties", "/queries.properties"})
 @ComponentScan(basePackages = "ua.com.foxminded.university")
@@ -26,6 +30,14 @@ public class AppConfig {
     @Autowired
     public AppConfig(Environment environment) {
         this.environment = environment;
+    }
+    
+    @Bean
+    public LocalContainerEntityManagerFactoryBean entityFactoryManager() {
+        LocalContainerEntityManagerFactoryBean entityManagerFactory = 
+                new LocalContainerEntityManagerFactoryBean();
+        entityManagerFactory.setDataSource(dataSource());
+        return entityManagerFactory;
     }
 
     @Bean
