@@ -9,12 +9,16 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 
+@EnableTransactionManagement
 @PropertySource({"/jdbc.properties", "/queries.properties"})
 @ComponentScan(basePackages = "ua.com.foxminded.university")
 @Configuration
@@ -33,17 +37,23 @@ public class AppConfig {
     }
     
     @Bean
+    public PlatformTransactionManager transactionManager() {
+        return new DataSourceTransactionManager(dataSource());
+    }
+    
+    @Bean
     public LocalContainerEntityManagerFactoryBean entityFactoryManager() {
         LocalContainerEntityManagerFactoryBean entityManagerFactory = 
                 new LocalContainerEntityManagerFactoryBean();
         entityManagerFactory.setDataSource(dataSource());
         return entityManagerFactory;
     }
-
+    /*
     @Bean
     public JdbcTemplate jdbcTemplate() {
         return new JdbcTemplate(dataSource());
     }
+    */
     
     @Bean
     public DataSource dataSource() {
