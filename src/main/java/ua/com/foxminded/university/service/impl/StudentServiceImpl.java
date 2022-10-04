@@ -26,14 +26,17 @@ public class StudentServiceImpl implements StudentService<StudentModel> {
     
     @Override
     public int updateStudent(StudentModel studentModel) throws ServiceException {
-        StudentEntity studentEntity = new StudentEntity(studentModel.getId());
+        StudentEntity studentEntity = new StudentEntity();
+        studentEntity.setId(studentModel.getId());
         studentEntity.setFirstName(studentModel.getFirstName());
-        studentEntity.setGroup(new GroupEntity(studentModel.getGroup().getId()));
+        GroupEntity groupEntity = new GroupEntity();
+        groupEntity.setId(studentModel.getGroup().getId());
+        studentEntity.setGroup(groupEntity);
         studentEntity.setLastName(studentModel.getLastName());
         int updatedStudentsQuantity = 0;
        
         try {
-            updatedStudentsQuantity = studentDao.update(studentEntity);
+            studentDao.update(studentEntity);
         } catch (DaoException e) {
             throw new ServiceException("Udating the student data failed.", e);
         }

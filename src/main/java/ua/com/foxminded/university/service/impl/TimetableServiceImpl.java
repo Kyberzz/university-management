@@ -26,22 +26,24 @@ public class TimetableServiceImpl implements TimetableService<TimetableModel> {
     }
     
     @Override
-    public int updateTimetable(TimetableModel timetableModel) throws ServiceException {
-        TimetableEntity timetableEntity = new TimetableEntity(timetableModel.getId());
-        timetableEntity.setCourse(new CourseEntity(timetableModel.getId()));
+    public void updateTimetable(TimetableModel timetableModel) throws ServiceException {
+        TimetableEntity timetableEntity = new TimetableEntity();
+        timetableEntity.setId(timetableModel.getId());
+        CourseEntity courseEnity = new CourseEntity();
+        courseEnity.setId(timetableModel.getCourse().getId());
+        timetableEntity.setCourse(courseEnity);
         timetableEntity.setDescription(timetableModel.getDescription());
         timetableEntity.setEndTime(timetableModel.getEndTime());
-        timetableEntity.setGroup(new GroupEntity(timetableModel.getGroup().getId()));
+        GroupEntity groupEntity = new GroupEntity();
+        groupEntity.setId(timetableModel.getGroup().getId());
+        timetableEntity.setGroup(groupEntity);
         timetableEntity.setStartTime(timetableModel.getStartTime());
         timetableEntity.setWeekDay(WeekDayEntity.valueOf(timetableModel.getWeekDay().toString()));
-        
-        int updatedTimetablesQuantity = 0;
-        
+
         try {
-            updatedTimetablesQuantity = timetableDao.update(timetableEntity);
+            timetableDao.update(timetableEntity);
         } catch (DaoException e) {
             throw new ServiceException("Updating the timetable failed.", e);
         }
-        return updatedTimetablesQuantity;
     }
 }

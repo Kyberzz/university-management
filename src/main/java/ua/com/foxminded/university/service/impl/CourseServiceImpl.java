@@ -31,15 +31,17 @@ public class CourseServiceImpl implements CourseService<CourseModel> {
     }
     
     @Override
-    public int updateCourse(CourseModel courseModel) throws ServiceException {
-        CourseEntity courseEntity = new CourseEntity(courseModel.getId());
+    public void updateCourse(CourseModel courseModel) throws ServiceException {
+        CourseEntity courseEntity = new CourseEntity();
+        courseEntity.setId(courseModel.getId());
         courseEntity.setDescription(courseModel.getDescription());
         courseEntity.setName(courseModel.getName());
-        courseEntity.setTeacher(new TeacherEntity(courseModel.getTeacher().getId()));
+        TeacherEntity teacher = new TeacherEntity();
+        teacher.setId(courseModel.getTeacher().getId());
+        courseEntity.setTeacher(teacher);
         
         try {
-            int udatedCoursesQuantity = courseDao.update(courseEntity);
-            return udatedCoursesQuantity;
+            courseDao.update(courseEntity);
         } catch (DaoException e) {
             throw new ServiceException("Updating the course failed.", e);
         }
