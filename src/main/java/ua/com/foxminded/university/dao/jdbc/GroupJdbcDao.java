@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.RollbackException;
 import jakarta.persistence.TransactionRequiredException;
 import jakarta.transaction.Transactional;
@@ -15,16 +16,16 @@ import ua.com.foxminded.university.entity.GroupEntity;
 
 @Slf4j
 @Repository
-public class GroupJdbcDao implements GroupDao {
+public class GroupJdbcDao {
+    
     
     private EntityManagerFactory entityManagerFactory;
-    
+        
     @Autowired
     public GroupJdbcDao(EntityManagerFactory entityManagerFactory) {
         this.entityManagerFactory = entityManagerFactory;
     }
-    
-    @Override
+
     public GroupEntity getTimetableListByGroupId(int id) throws DaoException {
         log.debug("Get timetable list by group id={}", id);
         
@@ -38,7 +39,6 @@ public class GroupJdbcDao implements GroupDao {
         }
     }
     
-    @Override
     public GroupEntity getStudentListByGroupId(int id) throws DaoException {
         log.debug("Get students list by group id={}", id);
         
@@ -52,7 +52,6 @@ public class GroupJdbcDao implements GroupDao {
         }
     }
     
-    @Override
     public void insert(GroupEntity entity) throws DaoException {
         log.debug("Insert group with id={}", entity.getId());
         
@@ -67,7 +66,6 @@ public class GroupJdbcDao implements GroupDao {
         }
     }
     
-    @Override
     public GroupEntity getById(int id) throws DaoException {
         log.debug("Get group by id={}", id);
         
@@ -81,7 +79,6 @@ public class GroupJdbcDao implements GroupDao {
     }
     
     @Transactional
-    @Override
     public void update(GroupEntity entity) throws DaoException {
         log.debug("Update group with id={}.", entity.getId());
         
@@ -96,7 +93,6 @@ public class GroupJdbcDao implements GroupDao {
         }
     }
     
-    @Override
     public void deleteById(int id) throws DaoException {
         log.debug("Delete group by id={}.", id);
         
