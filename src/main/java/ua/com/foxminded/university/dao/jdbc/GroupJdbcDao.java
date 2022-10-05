@@ -4,8 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import jakarta.persistence.EntityExistsException;
+import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.PersistenceUnit;
 import jakarta.persistence.RollbackException;
 import jakarta.persistence.TransactionRequiredException;
 import jakarta.transaction.Transactional;
@@ -18,14 +20,36 @@ import ua.com.foxminded.university.entity.GroupEntity;
 @Repository
 public class GroupJdbcDao {
     
-    
     private EntityManagerFactory entityManagerFactory;
-        
+    
+    
+    
     @Autowired
     public GroupJdbcDao(EntityManagerFactory entityManagerFactory) {
         this.entityManagerFactory = entityManagerFactory;
     }
+    
+    
+    /*
+    public GroupJdbcDao(EntityManagerFactory entityManagerFactory) {
+        this.entityManagerFactory = entityManagerFactory;
+    }
+    */
 
+    
+    public GroupEntity getById(int id) throws DaoException {
+        log.debug("Get group by id={}", id);
+        
+        try (var entityManager = entityManagerFactory.createEntityManager()) {
+            GroupEntity group = entityManager.find(GroupEntity.class, id);
+            log.trace("Group with id={} was received.", group.getId());
+            return group;
+        } catch (IllegalStateException | IllegalArgumentException e) {
+            throw new DaoException("Getting the group by its id failed.", e);
+        }
+    }
+    
+    /*  
     public GroupEntity getTimetableListByGroupId(int id) throws DaoException {
         log.debug("Get timetable list by group id={}", id);
         
@@ -66,18 +90,10 @@ public class GroupJdbcDao {
         }
     }
     
-    public GroupEntity getById(int id) throws DaoException {
-        log.debug("Get group by id={}", id);
-        
-        try (var entityManager = entityManagerFactory.createEntityManager();) {
-            GroupEntity group = entityManager.find(GroupEntity.class, id);
-            log.trace("Group with id={} was received.", group.getId());
-            return group;
-        } catch (IllegalStateException | IllegalArgumentException e) {
-            throw new DaoException("Getting the group by its id failed.", e);
-        }
-    }
+    */
+   
     
+    /*
     @Transactional
     public void update(GroupEntity entity) throws DaoException {
         log.debug("Update group with id={}.", entity.getId());
@@ -105,4 +121,5 @@ public class GroupJdbcDao {
             throw new DaoException("Deleting the group by its id failed.", e);
         }
     }
+    */
 }

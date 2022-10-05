@@ -29,7 +29,7 @@
 	
 	<logger name="ua.com.foxminded.university.dao" level="debug"/>
 
-	<root level="warn">
+	<root level="error">
 		<appender-ref ref="STDOUT" />
 	</root>
 </configuration>
