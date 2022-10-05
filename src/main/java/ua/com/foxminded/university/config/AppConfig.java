@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
+import org.springframework.instrument.classloading.InstrumentationLoadTimeWeaver;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -23,6 +24,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.Persistence;
+import jakarta.persistence.spi.PersistenceProvider;
 
 //@EnableTransactionManagement
 // @PropertySource("/jdbc.properties")
@@ -44,16 +47,38 @@ public class AppConfig {
     
     
     @Bean
-    public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
-        LocalContainerEntityManagerFactoryBean entityManagerFactory = 
-                new LocalContainerEntityManagerFactoryBean();
-     //   entityManagerFactory.setDataSource(dataSource());
+    public LocalContainerEntityManagerFactoryBean container() {
+      
+     //   EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("UniversityManager");
+        LocalContainerEntityManagerFactoryBean container = new LocalContainerEntityManagerFactoryBean();
+        HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
+        container.setJpaVendorAdapter(vendorAdapter);
+        container.setPackagesToScan("ua.com.foxminded.entity");
+        container.setJtaDataSource(dataSource());
+        container.setLoadTimeWeaver(new InstrumentationLoadTimeWeaver());
+        return container;
+        
+        
+        
+   //     PersistenceProvider provider = new HibernatePersistenceProvider();
+   //     factory.setPersistenceProvider(provider);
+        
+        //   entityManagerFactory.setDataSource(dataSource());
      //   entityManagerFactory.setPackagesToScan("ua.com.foxminded.university.entity");
    //     entityManagerFactory.setPersistenceProvider(new HibernatePersistenceProvider());
         
-        JpaVendorAdapter vendorAdaptor = new HibernateJpaVendorAdapter();
-        entityManagerFactory.setJpaVendorAdapter(vendorAdaptor);
-        return entityManagerFactory;
+   //     JpaVendorAdapter vendorAdaptor = new HibernateJpaVendorAdapter();
+   //     entityManagerFactory.setJpaVendorAdapter(vendorAdaptor);
+    }
+    
+    @Bean
+    public DataSource dataSource() {
+        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        dataSource.setDriverClassName(environment.getProperty(DRIVER_CLASS_NAME));
+        dataSource.setUrl( environment.getProperty(URL));
+        dataSource.setUsername(environment.getProperty(USERNAME));
+        dataSource.setPassword(environment.getProperty(PASSWORD));
+        return dataSource;
     }
     
     /*
@@ -74,17 +99,9 @@ public class AppConfig {
     
     
     
-    /*
-    @Bean
-    public DataSource dataSource() {
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName(environment.getProperty(DRIVER_CLASS_NAME));
-        dataSource.setUrl( environment.getProperty(URL));
-        dataSource.setUsername(environment.getProperty(USERNAME));
-        dataSource.setPassword(environment.getProperty(PASSWORD));
-        return dataSource;
-    }
-    */
+    
+    
+    
 
     /*
     @Bean

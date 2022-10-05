@@ -16,20 +16,20 @@ public class Main {
     public static void main(String[] args) {
         try {
             
-            /*
+            
             ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
             GroupJdbcDao groupDao = context.getBean("groupJdbcDao", GroupJdbcDao.class);
             GroupEntity group = groupDao.getById(1);
             System.out.println(group.getName());
-            */
             
             
+            /*
             EntityManagerFactory entityManagerFactory = Persistence
                     .createEntityManagerFactory("UniversityManager");
             GroupJdbcDao groupDao = new GroupJdbcDao(entityManagerFactory);
             GroupEntity group = groupDao.getById(1);
             System.out.println(group.getName());
-            
+            */
             
             
         } catch (Exception e) {

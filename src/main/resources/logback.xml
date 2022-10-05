@@ -23,7 +23,7 @@
 		</encoder>
 	</appender>
 
-	<logger name="${DOMAIN}.dao.jdbc.StudentJdbcDao" level="trace" additivity="false">
+	<logger name="${DOMAIN}.dao.jdbc" level="trace" additivity="false">
 		<appender-ref ref="FILE"/>
 	</logger>
 	
