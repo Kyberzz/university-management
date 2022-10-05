@@ -4,6 +4,7 @@ import javax.sql.DataSource;
 
 import org.hibernate.jpa.HibernatePersistenceProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -22,13 +23,13 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 import jakarta.persistence.spi.PersistenceProvider;
+import ua.com.foxminded.university.entity.TimetableEntity;
 
 //@EnableTransactionManagement
-// @PropertySource("/jdbc.properties")
+@PropertySource("/jdbc.properties")
 @ComponentScan(basePackages = "ua.com.foxminded.university")
 @Configuration
 public class AppConfig {
@@ -47,28 +48,18 @@ public class AppConfig {
     
     
     @Bean
+    public PlatformTransactionManager transactionManager() {
+        JpaTransactionManager transactionManager = new JpaTransactionManager();
+     //   transactionManager.setEntityManagerFactory(container().getObject());
+        return new DataSourceTransactionManager(dataSource());
+    }
+    
+    
+    @Bean
     public LocalContainerEntityManagerFactoryBean container() {
-      
-     //   EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("UniversityManager");
-        LocalContainerEntityManagerFactoryBean container = new LocalContainerEntityManagerFactoryBean();
-        HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
-        container.setJpaVendorAdapter(vendorAdapter);
-        container.setPackagesToScan("ua.com.foxminded.entity");
-        container.setJtaDataSource(dataSource());
-        container.setLoadTimeWeaver(new InstrumentationLoadTimeWeaver());
-        return container;
-        
-        
-        
-   //     PersistenceProvider provider = new HibernatePersistenceProvider();
-   //     factory.setPersistenceProvider(provider);
-        
-        //   entityManagerFactory.setDataSource(dataSource());
-     //   entityManagerFactory.setPackagesToScan("ua.com.foxminded.university.entity");
-   //     entityManagerFactory.setPersistenceProvider(new HibernatePersistenceProvider());
-        
-   //     JpaVendorAdapter vendorAdaptor = new HibernateJpaVendorAdapter();
-   //     entityManagerFactory.setJpaVendorAdapter(vendorAdaptor);
+        JpaVendorAdapter jpaVendorAdapter = new HibernateJpaVendorAdapter();
+        EntityManagerFactoryBuilder builder = new EntityManagerFactoryBuilder(jpaVendorAdapter, null, null);
+        return builder.dataSource(dataSource()).packages(TimetableEntity.class).build();
     }
     
     @Bean
@@ -88,14 +79,7 @@ public class AppConfig {
     }
     */
     
-    /*
-    @Bean
-    public PlatformTransactionManager transactionManager() {
-     //   JpaTransactionManager transactionManager = new JpaTransactionManager();
-     //   transactionManager.setEntityManagerFactory(entityManagerFactory().getObject());
-        return new DataSourceTransactionManager(dataSource());
-    }
-    */
+    
     
     
     

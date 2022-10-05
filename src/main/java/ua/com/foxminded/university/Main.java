@@ -2,6 +2,7 @@ package ua.com.foxminded.university;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
