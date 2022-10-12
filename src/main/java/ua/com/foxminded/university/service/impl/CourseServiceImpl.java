@@ -49,32 +49,40 @@ public class CourseServiceImpl implements CourseService<CourseModel> {
    
     @Override
     public CourseModel getTimetableListByCourseId(int id) throws ServiceException {
-        CourseEntity courseEntityTimetablesList = null;
+        CourseEntity courseEntity = null;
         
         try {
-            courseEntityTimetablesList = courseDao.getTimetableListByCourseId(id);
+            courseEntity = courseDao.getTimetableListByCourseId(id);
         } catch (DaoException e) {
             throw new ServiceException("Getting timetable list of course id faled.", e);
         }
         
-        List<TimetableModel> timetableList = courseEntityTimetablesList.getTimetableList()
+        List<TimetableModel> timetableList = courseEntity.getTimetableList()
                 .stream()
                 .map(entity -> {
-                    TimetableModel model = new TimetableModel(entity.getId());
-                    model.setCourse(new CourseModel(entity.getCourse().getId()));
+                    TimetableModel model = new TimetableModel();
+                    model.setId(entity.getId());
+                    CourseModel course = new CourseModel();
+                    course.setId(entity.getCourse().getId());
+                    model.setCourse(course);
                     model.setDescription(entity.getDescription());
                     model.setEndTime(entity.getEndTime());
-                    model.setGroup(new GroupModel(entity.getGroup().getId()));
+                    GroupModel group = new GroupModel();
+                    group.setId(entity.getGroup().getId());
+                    model.setGroup(group);
                     model.setStartTime(entity.getStartTime());
                     model.setWeekDay(WeekDayModel.valueOf(entity.getWeekDay().toString()));
                     return model;
                 }).collect(Collectors.toList());
-        CourseModel courseModelTimetablesList = new CourseModel(courseEntityTimetablesList.getId());
-        courseModelTimetablesList.setTimetableList(timetableList);
-        courseModelTimetablesList.setDescription(courseEntityTimetablesList.getDescription());
-        courseModelTimetablesList.setName(courseEntityTimetablesList.getName());
-        courseModelTimetablesList.setTeacher(new TeacherModel(courseEntityTimetablesList.getTeacher()
-                                                                                      .getId()));
-        return courseModelTimetablesList;
+        
+        CourseModel courseModel = new CourseModel();
+        courseModel.setId(courseEntity.getId());
+        courseModel.setTimetableList(timetableList);
+        courseModel.setDescription(courseEntity.getDescription());
+        courseModel.setName(courseEntity.getName());
+        TeacherModel teacherModel = new TeacherModel();
+        teacherModel.setId(courseEntity.getTeacher().getId());
+        courseModel.setTeacher(teacherModel);
+        return courseModel;
     }
 }

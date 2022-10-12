@@ -21,7 +21,6 @@ import ua.com.foxminded.university.service.ServiceException;
 @ExtendWith(MockitoExtension.class)
 class GroupServiceImplTestTestTest {
     
-    private static final Integer NO_ID = null;
     private static final int GROUP_ID = 1;
     
     @InjectMocks
@@ -32,7 +31,7 @@ class GroupServiceImplTestTestTest {
     
     @Test
     void getStudentListByGroupId() throws DaoException, ServiceException {
-        GroupEntity groupEntity = new GroupEntity(NO_ID);
+        GroupEntity groupEntity = new GroupEntity();
         groupEntity.setStudentList(new ArrayList<>());
         when(groupDaoMock.getStudentListByGroupId(ArgumentMatchers.anyInt())).thenReturn(groupEntity);
         groupService.getStudentListByGroupId(GROUP_ID);
@@ -41,7 +40,7 @@ class GroupServiceImplTestTestTest {
     @Test
     void getTimetableListByGroupId_CallingInnerMethods_CorrectCallQuantity() throws DaoException, 
                                                                                     ServiceException {
-        GroupEntity groupEntity = new GroupEntity(NO_ID);
+        GroupEntity groupEntity = new GroupEntity();
         groupEntity.setTimetableList(new ArrayList<>());;
         when(groupDaoMock.getTimetableListByGroupId(ArgumentMatchers.anyInt())).thenReturn(groupEntity);
         groupService.getTimetableListByGroupId(GROUP_ID);

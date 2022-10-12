@@ -28,27 +28,32 @@ public class TeacherServiceImpl implements TeacherService<TeacherModel> {
     
     @Override
     public TeacherModel getCourseListByTeacherId(int id) throws ServiceException {
-        TeacherEntity teacherEntityCoursesList = null;
+        TeacherEntity teacherEntity = null;
         
         try {
-            teacherEntityCoursesList = teacherDao.getCourseListByTeacherId(id);
+            teacherEntity = teacherDao.getCourseListByTeacherId(id);
         } catch (DaoException e) {
             throw new ServiceException("Getting the courses list by the teacher id failed.", e);
         }
         
-        List<CourseModel> courseEntityList = teacherEntityCoursesList.getCourseList().stream()
+        List<CourseModel> courseModelList = teacherEntity.getCourseList().stream()
                 .map(entity -> {
-                    CourseModel model = new CourseModel(entity.getId());
+                    CourseModel model = new CourseModel();
+                    model.setId(entity.getId());
                     model.setDescription(entity.getDescription());
                     model.setName(entity.getName());
-                    model.setTeacher(new TeacherModel(entity.getTeacher().getId()));
+                    TeacherModel teacherModel = new TeacherModel();
+                    teacherModel.setId(entity.getTeacher().getId());
+                    model.setTeacher(teacherModel);
                     return model;
                 })
                 .collect(Collectors.toList());
-        TeacherModel teacherModelCourseList = new TeacherModel(teacherEntityCoursesList.getId());
-        teacherModelCourseList.setCourseList(courseEntityList);
-        teacherModelCourseList.setFirstName(teacherEntityCoursesList.getFirstName());
-        teacherModelCourseList.setLastName(teacherEntityCoursesList.getLastName());
-        return teacherModelCourseList;
+        
+        TeacherModel teacherModel = new TeacherModel();
+        teacherModel.setId(teacherEntity.getId());
+        teacherModel.setCourseList(courseModelList);
+        teacherModel.setFirstName(teacherEntity.getFirstName());
+        teacherModel.setLastName(teacherEntity.getLastName());
+        return teacherModel;
     }
 }
