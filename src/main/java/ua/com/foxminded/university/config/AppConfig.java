@@ -2,20 +2,14 @@ package ua.com.foxminded.university.config;
 
 import javax.sql.DataSource;
 
-import org.hibernate.jpa.HibernatePersistenceProvider;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
-import org.springframework.instrument.classloading.InstrumentationLoadTimeWeaver;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
-import org.springframework.orm.jpa.AbstractEntityManagerFactoryBean;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -23,19 +17,17 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Persistence;
-import jakarta.persistence.spi.PersistenceProvider;
-import ua.com.foxminded.university.entity.TimetableEntity;
 
-//@EnableTransactionManagement
+@EnableTransactionManagement
 @PropertySource("/jdbc.properties")
 @ComponentScan(basePackages = "ua.com.foxminded.university")
 @Configuration
 public class AppConfig {
     
+    
+    private static final String ENTITY_PACKAGE = "ua.com.foxminded.entity";
     private static final String PASSWORD = "jdbc.password";
-    private static final String USERNAME = "jdbc.username";
+    private static final String USERNAME = "jdbc.user";
     private static final String URL = "jdbc.url";
     private static final String DRIVER_CLASS_NAME = "jdbc.driverClassName";
     
@@ -46,51 +38,60 @@ public class AppConfig {
         this.environment = environment;
     }
     
-    
     @Bean
-    public PlatformTransactionManager transactionManager() {
-        JpaTransactionManager transactionManager = new JpaTransactionManager();
-     //   transactionManager.setEntityManagerFactory(container().getObject());
-        return new DataSourceTransactionManager(dataSource());
-    }
-    
-    
-    @Bean
-    public LocalContainerEntityManagerFactoryBean container() {
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
+        LocalContainerEntityManagerFactoryBean entityManagerFactory = 
+                new LocalContainerEntityManagerFactoryBean();
+        entityManagerFactory.setDataSource(dataSource());
+        entityManagerFactory.setPackagesToScan(ENTITY_PACKAGE);
+        
         JpaVendorAdapter jpaVendorAdapter = new HibernateJpaVendorAdapter();
-        EntityManagerFactoryBuilder builder = new EntityManagerFactoryBuilder(jpaVendorAdapter, null, null);
-        return builder.dataSource(dataSource()).packages(TimetableEntity.class).build();
+        entityManagerFactory.setJpaVendorAdapter(jpaVendorAdapter);
+        return entityManagerFactory;
     }
     
     @Bean
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName(environment.getProperty(DRIVER_CLASS_NAME));
-        dataSource.setUrl( environment.getProperty(URL));
+        dataSource.setUrl(environment.getProperty(URL));
         dataSource.setUsername(environment.getProperty(USERNAME));
         dataSource.setPassword(environment.getProperty(PASSWORD));
         return dataSource;
     }
     
-    /*
     @Bean
     public PersistenceExceptionTranslationPostProcessor exceptionTranslation() {
         return new PersistenceExceptionTranslationPostProcessor();
     }
-    */
     
     
+    @Bean
+    public PlatformTransactionManager transactionManager() {
+        JpaTransactionManager jpaTransactionManager = new JpaTransactionManager();
+        jpaTransactionManager.setEntityManagerFactory(entityManagerFactory().getObject());
+        return jpaTransactionManager;
+    }
     
     
-    
-    
-    
-    
-
     /*
     @Bean
-    public JdbcTemplate jdbcTemplate() {
-        return new JdbcTemplate(dataSource());
+    public EntityManagerFactory entityManagerFactory() {
+        PersistenceUnitInfo persistenceUnitInfo = new PersistenceUnitInfoImpl(
+                environment.getProperty(JPA_UNIT_NAME),
+                dataSource());
+        PersistenceProvider provider = new HibernatePersistenceProvider();
+        
+        Map<String, Object> properties = new HashMap<>();
+        properties.put(JPA_PROVIDER, environment.getProperty(JPA_PROVIDER));
+        properties.put(JPA_TRANSACTION_TYPE, PersistenceUnitTransactionType.RESOURCE_LOCAL);
+        properties.put(JPA_SCHEMA_VERSION, environment.getProperty(JPA_SCHEMA_VERSION));
+        
+        EntityManagerFactory entityManagerFactory = provider.createContainerEntityManagerFactory(
+                persistenceUnitInfo, 
+                properties);
+        return entityManagerFactory;
     }
     */
+    
 }

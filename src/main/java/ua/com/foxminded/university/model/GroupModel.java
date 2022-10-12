@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 public class GroupModel {
 
-    private final Integer id;
+    private Integer id;
     private String name;
     private List<TimetableModel> timetableList;
     private List<StudentModel> studentList;

@@ -1,16 +1,13 @@
 package ua.com.foxminded.university.dao.jdbc;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-import java.util.Map;
+import javax.persistence.EntityManagerFactory;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ContextConfiguration;
@@ -18,8 +15,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import ua.com.foxminded.university.config.TestAppConfig;
 import ua.com.foxminded.university.dao.DaoException;
-import ua.com.foxminded.university.dao.jdbc.mapper.CourseMapper;
-import ua.com.foxminded.university.dao.jdbc.mapper.TimetableMapper;
 import ua.com.foxminded.university.entity.CourseEntity;
 import ua.com.foxminded.university.entity.TeacherEntity;
 
@@ -30,12 +25,7 @@ class CourseJdbcDaoTest {
     
     private static final String EXPECTED_COURSE_NAME = "Programming";
     private static final String EXPECTED_COURSE_DESCRIPTION = "some description";
-    private static final String TEACHER_ID_COLUMN = "teacher_id";
-    private static final String COURSE_DESCRIPTION_COLUMN = "description";
-    private static final String COURSE_NAME_COLUMN = "name";
-    private static final String COURSE_ID_COLUMN = "id";
     private static final String NEW_COURSE_NAME = "Chemistry";
-    private static final String SELECT_COURSE_BY_ID = "test.selectCourseById";
     private static final String MONDAY = "MONDAY";
     private static final long EXPECTED_END_TIME = 39360000;
     private static final long EXPECTED_START_TIME = 36360000;
@@ -46,24 +36,13 @@ class CourseJdbcDaoTest {
     private static final int EXPECTED_COURSE_ID = 4;
     private static final int EXPECTED_TEACHER_ID = 2;
     private static final int FIRST_ELEMENT = 0;
-    private static final int NO_ID = 0;
     
     @Autowired
-    private JdbcTemplate jdbcTemplate;
-    
-    @Autowired
-    private  Environment queries;
-    
-    @Autowired
-    private CourseMapper courseMapper;
-    
-    @Autowired
-    private TimetableMapper timetableMapper;
-    
+    private EntityManagerFactory entityManagerFactory;
     
     @Test
     void getTimetableListByCourseId_GettingDatabaseTimetableData_CorrectData() throws DaoException {
-        CourseJdbcDao courseDao = new CourseJdbcDao(jdbcTemplate, queries, courseMapper, timetableMapper);
+        CourseJdbcDao courseDao = new CourseJdbcDao(entityManagerFactory);
         CourseEntity receivedCourse = courseDao.getTimetableListByCourseId(COURSE_ID_NUMBER);
         
         assertEquals(COURSE_ID_NUMBER, receivedCourse.getId());
@@ -82,26 +61,26 @@ class CourseJdbcDaoTest {
     
     @Test
     void insert_InsertingCourseDataToDatabase_DatabaseHasCorrectData() throws DaoException {
-        CourseJdbcDao courseDao = new CourseJdbcDao(jdbcTemplate, queries, courseMapper, timetableMapper);
-        CourseEntity course = new CourseEntity(NO_ID);
+        CourseJdbcDao courseDao = new CourseJdbcDao(entityManagerFactory);
+        CourseEntity course = new CourseEntity();
         course.setName(NEW_COURSE_NAME);
-        course.setTeacher(new TeacherEntity(EXPECTED_TEACHER_ID));
+        TeacherEntity teacher = new TeacherEntity();
+        teacher.setId(EXPECTED_TEACHER_ID);
+        course.setTeacher(teacher);
         course.setDescription(EXPECTED_COURSE_DESCRIPTION);
         courseDao.insert(course);
-        String sqlSelectCourseById = queries.getProperty(SELECT_COURSE_BY_ID);
         
-        Map<String, Object> insertedCourse = jdbcTemplate.queryForMap(sqlSelectCourseById, 
-                                                                      EXPECTED_COURSE_ID);
-       
-        assertEquals(EXPECTED_COURSE_ID, insertedCourse.get(COURSE_ID_COLUMN));
-        assertEquals(NEW_COURSE_NAME, insertedCourse.get(COURSE_NAME_COLUMN));
-        assertEquals(EXPECTED_COURSE_DESCRIPTION, insertedCourse.get(COURSE_DESCRIPTION_COLUMN));
-        assertEquals(EXPECTED_TEACHER_ID, insertedCourse.get(TEACHER_ID_COLUMN));
+        CourseEntity insertedCourse = entityManagerFactory.createEntityManager()
+                                                          .find(CourseEntity.class, EXPECTED_COURSE_ID);
+        assertEquals(EXPECTED_COURSE_ID, insertedCourse.getId());
+        assertEquals(NEW_COURSE_NAME, insertedCourse.getName());
+        assertEquals(EXPECTED_COURSE_DESCRIPTION, insertedCourse.getDescription());
+        assertEquals(EXPECTED_TEACHER_ID, insertedCourse.getTeacher().getId());
     }
     
     @Test
     void getById_GettingDatabaseCourseData_CorrectData() throws DaoException {
-        CourseJdbcDao courseDao = new CourseJdbcDao(jdbcTemplate, queries, courseMapper, timetableMapper);
+        CourseJdbcDao courseDao = new CourseJdbcDao(entityManagerFactory);
         CourseEntity receivedCourse = courseDao.getById(COURSE_ID_NUMBER);
         
         assertEquals(COURSE_ID_NUMBER, receivedCourse.getId());
@@ -112,44 +91,43 @@ class CourseJdbcDaoTest {
     
     @Test
     void update_UdatingDatabaseWithNullValues_DatabaseHasNoData() throws DaoException {
-        CourseJdbcDao courseDao = new CourseJdbcDao(jdbcTemplate, queries, courseMapper, timetableMapper);
-        CourseEntity course = new CourseEntity(COURSE_ID_NUMBER);
+        CourseJdbcDao courseDao = new CourseJdbcDao(entityManagerFactory);
+        CourseEntity course = new CourseEntity();
+        course.setId(COURSE_ID_NUMBER);
         course.setName(EXPECTED_COURSE_NAME);
-        course.setTeacher(new TeacherEntity(NO_ID));
+        course.setTeacher(new TeacherEntity());
         courseDao.update(course);
-        String sqlSelectCourseById = queries.getProperty(SELECT_COURSE_BY_ID);
-        Map<String, Object> updatedCourse = jdbcTemplate.queryForMap(sqlSelectCourseById, 
-                                                                     COURSE_ID_NUMBER);
-        assertNull(updatedCourse.get(COURSE_DESCRIPTION_COLUMN));
-        assertNull(updatedCourse.get(TEACHER_ID_COLUMN));
+        CourseEntity updatedCourse = entityManagerFactory.createEntityManager()
+                                                         .find(CourseEntity.class, COURSE_ID_NUMBER);
+        
+        assertNull(updatedCourse.getDescription());
+        assertNull(updatedCourse.getId());
     }
     
     @Test
     void update_UpdatingDatabaseCourseData_DatabaseHasCorrectData() throws DaoException {
-        CourseJdbcDao courseDao = new CourseJdbcDao(jdbcTemplate, queries, courseMapper, timetableMapper);
-        CourseEntity course = new CourseEntity(COURSE_ID_NUMBER);
+        CourseJdbcDao courseDao = new CourseJdbcDao(entityManagerFactory);
+        CourseEntity course = new CourseEntity();
+        course.setId(COURSE_ID_NUMBER);
         course.setName(NEW_COURSE_NAME);
         course.setDescription(EXPECTED_COURSE_DESCRIPTION);
-        course.setTeacher(new TeacherEntity(EXPECTED_TEACHER_ID));
+        TeacherEntity teacher = new TeacherEntity();
+        teacher.setId(EXPECTED_TEACHER_ID);
         courseDao.update(course);
-        String sqlSelectCourseById = queries.getProperty(SELECT_COURSE_BY_ID);
-        Map<String, Object> databaseCourse = jdbcTemplate.queryForMap(sqlSelectCourseById, 
-                                                                      COURSE_ID_NUMBER);
-        assertEquals(COURSE_ID_NUMBER, databaseCourse.get(COURSE_ID_COLUMN));
-        assertEquals(NEW_COURSE_NAME, databaseCourse.get(COURSE_NAME_COLUMN));
-        assertEquals(EXPECTED_COURSE_DESCRIPTION, databaseCourse.get(COURSE_DESCRIPTION_COLUMN));
-        assertEquals(EXPECTED_TEACHER_ID, databaseCourse.get(TEACHER_ID_COLUMN));
+        CourseEntity databaseCourse = entityManagerFactory.createEntityManager()
+                                                          .find(CourseEntity.class, COURSE_ID_NUMBER);
+        assertEquals(COURSE_ID_NUMBER, databaseCourse.getId());
+        assertEquals(NEW_COURSE_NAME, databaseCourse.getName());
+        assertEquals(EXPECTED_COURSE_DESCRIPTION, databaseCourse.getDescription());
+        assertEquals(EXPECTED_TEACHER_ID, databaseCourse.getTeacher().getId());
     }
     
     @Test
     void deleteById_DeletingDatabaseCourseData_DatabaseHasNoCourseData() throws DaoException {
-        CourseJdbcDao courseDao = new CourseJdbcDao(jdbcTemplate, queries, courseMapper, timetableMapper);
+        CourseJdbcDao courseDao = new CourseJdbcDao(entityManagerFactory);
         courseDao.deleteById(COURSE_ID_NUMBER);
-        String sqlSelectCourseById = queries.getProperty(SELECT_COURSE_BY_ID);
-        jdbcTemplate.query(sqlSelectCourseById,
-                           preparedStatement -> preparedStatement.setInt(1, COURSE_ID_NUMBER), 
-                           resultSet -> {
-                               assertTrue(!resultSet.next());
-                           });
+        CourseEntity course = entityManagerFactory.createEntityManager()
+                                                  .find(CourseEntity.class, COURSE_ID_NUMBER);
+        assertNull(course.getId());
     }
 }

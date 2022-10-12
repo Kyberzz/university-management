@@ -1,13 +1,15 @@
 package ua.com.foxminded.university.dao.jdbc;
 
+import javax.persistence.EntityExistsException;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.RollbackException;
+import javax.persistence.TransactionRequiredException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
-import jakarta.persistence.EntityExistsException;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.RollbackException;
-import jakarta.persistence.TransactionRequiredException;
-import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import ua.com.foxminded.university.dao.DaoException;
 import ua.com.foxminded.university.dao.TimetableDao;
@@ -28,9 +30,11 @@ public class TimetableJdbcDao implements TimetableDao {
     public TimetableEntity getCourseByTimetableId(int id) throws DaoException {
         log.debug("Get course by timetable id={}.", id);
         
-        try (var entityManager = entityManagerFactory.createEntityManager();) {
+        try {
+            EntityManager entityManager = entityManagerFactory.createEntityManager();
             TimetableEntity timetable = entityManager.find(TimetableEntity.class, id);
             timetable.getCourse().getId();
+            entityManager.close();
             log.trace("Course by timetable id={} was received.", timetable.getId());
             return timetable;
         } catch (IllegalStateException | IllegalArgumentException e) {
@@ -42,8 +46,10 @@ public class TimetableJdbcDao implements TimetableDao {
     public TimetableEntity getGroupByTimetableId(int id) throws DaoException {
         log.debug("Get group by timetable id={}.", id);
         
-        try (var entityManager = entityManagerFactory.createEntityManager();) {
+        try {
+            EntityManager entityManager = entityManagerFactory.createEntityManager();
             TimetableEntity timetable = entityManager.find(TimetableEntity.class, id);
+            entityManager.close();
             log.trace("Group of timetable id={} was received.", timetable.getId());
             return timetable;
         } catch (IllegalStateException | IllegalArgumentException e) {
@@ -55,8 +61,10 @@ public class TimetableJdbcDao implements TimetableDao {
     public TimetableEntity getById(int id) throws DaoException {
         log.debug("Get timetable by id={}.", id);
         
-        try (var entityManager = entityManagerFactory.createEntityManager();) {
+        try {
+            EntityManager entityManager = entityManagerFactory.createEntityManager();
             TimetableEntity timetable = entityManager.find(TimetableEntity.class, id);
+            entityManager.close();
             log.trace("Timetable with id={} was received.", timetable.getId());
             return timetable;
         } catch (IllegalStateException | IllegalArgumentException e) {
@@ -69,10 +77,12 @@ public class TimetableJdbcDao implements TimetableDao {
     public void update(TimetableEntity entity) throws DaoException {
         log.debug("Update timetable with id={}.", entity.getId());
         
-        try (var entityManager = entityManagerFactory.createEntityManager();) {
+        try {
+            EntityManager entityManager = entityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             entityManager.merge(entity);
             entityManager.getTransaction().commit();
+            entityManager.close();
             log.trace("Timetable with id={} was updated.", entity.getId());
         } catch (IllegalStateException | IllegalArgumentException | TransactionRequiredException | 
                  RollbackException e) {
@@ -84,10 +94,12 @@ public class TimetableJdbcDao implements TimetableDao {
     public void deleteById(int id) throws DaoException {
         log.debug("Delete timetable with id={}.", id);
         
-        try (var entityManager = entityManagerFactory.createEntityManager();) {
+        try {
+            EntityManager entityManager = entityManagerFactory.createEntityManager();
             TimetableEntity timetable = new TimetableEntity();
             timetable.setId(id);
             entityManager.remove(timetable);
+            entityManager.close();
             log.trace("Timetable with id={} was deleted.", id);
         } catch (IllegalStateException | IllegalArgumentException | TransactionRequiredException e) {
             throw new DaoException("Deleting the database timetable data by its id failed.", e);
@@ -96,14 +108,17 @@ public class TimetableJdbcDao implements TimetableDao {
     
     @Transactional
     @Override
-    public void insert(TimetableEntity entity) throws DaoException {
+    public TimetableEntity insert(TimetableEntity entity) throws DaoException {
         log.debug("Insert timetable with id={}.", entity.getId());
         
-        try (var entityManager = entityManagerFactory.createEntityManager();) {
+        try {
+            EntityManager entityManager = entityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             entityManager.persist(entity);
             entityManager.getTransaction().commit();
+            entityManager.close();
             log.trace("Timetable with id={} was inserted to database.", entity.getId());
+            return entity;
         } catch (IllegalStateException | EntityExistsException | IllegalArgumentException | 
                  TransactionRequiredException | RollbackException e) {
             throw new DaoException("Inserting the timetable data to the database failed.", e);

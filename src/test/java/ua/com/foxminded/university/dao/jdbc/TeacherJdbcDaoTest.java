@@ -2,13 +2,11 @@ package ua.com.foxminded.university.dao.jdbc;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.Map;
+import javax.persistence.EntityManagerFactory;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ContextConfiguration;
@@ -17,8 +15,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ua.com.foxminded.university.config.TestAppConfig;
 import ua.com.foxminded.university.dao.DaoException;
 import ua.com.foxminded.university.dao.TeacherDao;
-import ua.com.foxminded.university.dao.jdbc.mapper.CourseMapper;
-import ua.com.foxminded.university.dao.jdbc.mapper.TeacherMapper;
 import ua.com.foxminded.university.entity.TeacherEntity;
 
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
@@ -26,10 +22,6 @@ import ua.com.foxminded.university.entity.TeacherEntity;
 @ExtendWith(SpringExtension.class)
 class TeacherJdbcDaoTest {
     
-    private static final String TEACHER_LAST_NAME_COLUMN = "last_name";
-    private static final String TEACHER_FIRST_NAME_COLUMN = "first_name";
-    private static final String TEACHER_ID_COLUMN = "id";
-    private static final String SELECT_TEACHER_BY_ID = "test.selectTeacherById";
     private static final String COURSE_DESCRIPTION = "some description";
     private static final String COURSE_NAME = "Programming";
     private static final String TEACHER_LAST_NAME = "Ritchie";
@@ -40,38 +32,29 @@ class TeacherJdbcDaoTest {
     private static final int FIST_ELEMENT = 0;
     private static final int COURSES_QUANTITY = 2;
     private static final int TEACHER_ID_NUMBER = 2;
-    private static final Integer NO_ID = null;
     
     @Autowired
-    private JdbcTemplate jdbcTemplate;
-    
-    @Autowired
-    private Environment queries;
-    
-    @Autowired
-    private TeacherMapper teacherMapper;
-    
-    @Autowired
-    private CourseMapper courseMapper;
+    private EntityManagerFactory entityManagerFactory;
     
     @Test
     void insert_InsertingTeacherDatabaseData_DatabaseHasCorrectData() throws DaoException {
-        TeacherEntity teacher = new TeacherEntity(NO_ID);
+        TeacherEntity teacher = new TeacherEntity();
         teacher.setFirstName(TEACHER_FIRST_NAME);
         teacher.setLastName(TEACHER_LAST_NAME);
-        TeacherDao teacherDao = new TeacherJdbcDao(jdbcTemplate, queries, teacherMapper, courseMapper);
-        teacherDao.insert(teacher);
-        String sqlSelectTeacherById = queries.getProperty(SELECT_TEACHER_BY_ID);
-        Map<String, Object> insertedTeacher = jdbcTemplate.queryForMap(sqlSelectTeacherById, 
-                                                                       NEW_TEACHER_ID);
+        TeacherDao teacherDao = new TeacherJdbcDao(entityManagerFactory);
+        TeacherEntity teacherWithId = teacherDao.insert(teacher);
+
+        TeacherEntity insertedTeacher = entityManagerFactory.createEntityManager()
+                                                            .find(TeacherEntity.class, NEW_TEACHER_ID);
         
-        assertEquals(TEACHER_FIRST_NAME, insertedTeacher.get(TEACHER_FIRST_NAME_COLUMN));
-        assertEquals(TEACHER_LAST_NAME, insertedTeacher.get(TEACHER_LAST_NAME_COLUMN));
+        assertEquals(NEW_TEACHER_ID, teacherWithId.getId());
+        assertEquals(TEACHER_FIRST_NAME, insertedTeacher.getFirstName());
+        assertEquals(TEACHER_LAST_NAME, insertedTeacher.getLastName());
     }
     
     @Test
     void getById_ReceivingTeacherDatabaseData_CorrectReceivedData() throws DaoException {
-        TeacherDao teacherDao = new TeacherJdbcDao(jdbcTemplate, queries, teacherMapper, courseMapper);
+        TeacherDao teacherDao = new TeacherJdbcDao(entityManagerFactory);
         TeacherEntity teacher = teacherDao.getById(TEACHER_ID_NUMBER);
         
         assertEquals(TEACHER_FIRST_NAME, teacher.getFirstName());
@@ -81,35 +64,36 @@ class TeacherJdbcDaoTest {
     
     @Test
     void update_UpdatingTeacherDatabaseData_DatabaseHasCorrectData() throws DaoException {
-        TeacherDao teacherDao = new TeacherJdbcDao(jdbcTemplate, queries, teacherMapper, courseMapper);
-        TeacherEntity teacherData = new TeacherEntity(TEACHER_ID);
+        TeacherDao teacherDao = new TeacherJdbcDao(entityManagerFactory);
+        TeacherEntity teacherData = new TeacherEntity();
+        teacherData.setId(TEACHER_ID);
         teacherData.setFirstName(TEACHER_FIRST_NAME);
         teacherData.setLastName(TEACHER_LAST_NAME);
         teacherDao.update(teacherData);
-        String sqlSelectTeacherById = queries.getProperty(SELECT_TEACHER_BY_ID);
-        Map<String, Object> updatedTeacherData = jdbcTemplate.queryForMap(sqlSelectTeacherById, 
-                                                                          TEACHER_ID);
         
-        assertEquals(TEACHER_ID, updatedTeacherData.get(TEACHER_ID_COLUMN));
-        assertEquals(TEACHER_FIRST_NAME, updatedTeacherData.get(TEACHER_FIRST_NAME_COLUMN));
-        assertEquals(TEACHER_LAST_NAME, updatedTeacherData.get(TEACHER_LAST_NAME_COLUMN));
+        TeacherEntity updatedTeacherData = entityManagerFactory.createEntityManager()
+                                                               .find(TeacherEntity.class, TEACHER_ID);
+        
+        assertEquals(TEACHER_ID, updatedTeacherData.getId());
+        assertEquals(TEACHER_FIRST_NAME, updatedTeacherData.getFirstName());
+        assertEquals(TEACHER_LAST_NAME, updatedTeacherData.getLastName());
     }
     
     @Test
     void deleteById_DeletingTeacherDatabaseData_DatabaseHasNoData() throws DaoException {
-        TeacherDao teacherDao = new TeacherJdbcDao(jdbcTemplate, queries, teacherMapper, courseMapper);
+        TeacherDao teacherDao = new TeacherJdbcDao(entityManagerFactory);
         teacherDao.deleteById(TEACHER_ID_NUMBER);
-        String sqlSelectTeacherById = queries.getProperty(SELECT_TEACHER_BY_ID);
-        jdbcTemplate.query(sqlSelectTeacherById, 
-                           preparedStatement -> preparedStatement.setInt(1, TEACHER_ID_NUMBER), 
-                           resultSet -> {
-                               assertTrue(!resultSet.next());
-                           });  
+        TeacherEntity teacher = new TeacherEntity();
+        teacher.setId(TEACHER_ID_NUMBER);
+        
+        boolean persisentTeacher = entityManagerFactory.createEntityManager()
+                                                       .contains(teacher);
+        assertFalse(persisentTeacher);
     }
     
     @Test
     void getCourseListByTeacherId_ReceivingTeacherDatabaseData_CorrectReceivedData() throws DaoException {
-        TeacherDao teacherDao = new TeacherJdbcDao(jdbcTemplate, queries, teacherMapper, courseMapper);
+        TeacherDao teacherDao = new TeacherJdbcDao(entityManagerFactory);
         TeacherEntity teacherData = teacherDao.getCourseListByTeacherId(TEACHER_ID_NUMBER);
         
         assertEquals(TEACHER_ID_NUMBER, teacherData.getId());

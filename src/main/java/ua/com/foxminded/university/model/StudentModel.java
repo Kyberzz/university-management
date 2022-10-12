@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class StudentModel {
 
-    private final int id;
+    private int id;
     private GroupModel group;
     private String firstName;
     private String lastName;

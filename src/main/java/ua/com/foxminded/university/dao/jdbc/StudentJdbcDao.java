@@ -1,12 +1,15 @@
 package ua.com.foxminded.university.dao.jdbc;
 
-import org.springframework.stereotype.Repository;
+import javax.persistence.EntityExistsException;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.RollbackException;
+import javax.persistence.TransactionRequiredException;
 
-import jakarta.persistence.EntityExistsException;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.RollbackException;
-import jakarta.persistence.TransactionRequiredException;
-import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
 import lombok.extern.slf4j.Slf4j;
 import ua.com.foxminded.university.dao.DaoException;
 import ua.com.foxminded.university.dao.StudentDao;
@@ -18,6 +21,7 @@ public class StudentJdbcDao implements StudentDao {
     
     private EntityManagerFactory entityManagerFactory;
     
+    @Autowired
     public StudentJdbcDao(EntityManagerFactory entityManagerFactory) {
         this.entityManagerFactory = entityManagerFactory;
     }
@@ -26,9 +30,11 @@ public class StudentJdbcDao implements StudentDao {
     public StudentEntity getGroupByStudentId(int id) throws DaoException {
         log.debug("Get group by student id={}.", id);
         
-        try (var entityManager = entityManagerFactory.createEntityManager();) {
+        try {
+            EntityManager entityManager = entityManagerFactory.createEntityManager();
             StudentEntity student = entityManager.find(StudentEntity.class, id);
             student.getGroup().getId();
+            entityManager.close();
             log.trace("Group having student id={} was received.", student.getId());
             return student;
         } catch (IllegalStateException | IllegalArgumentException e) {
@@ -38,16 +44,20 @@ public class StudentJdbcDao implements StudentDao {
     
     @Transactional
     @Override
-    public void insert(StudentEntity entity) throws DaoException {
+    public StudentEntity insert(StudentEntity entity) throws DaoException {
         log.debug("Insert student with id={}.", entity.getId());
         
-        try (var entityManager = entityManagerFactory.createEntityManager();) {
+        try {
+            EntityManager entityManager = entityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             entityManager.persist(entity);
+            entityManager.refresh(entity);
             entityManager.getTransaction().commit();
+            entityManager.close();
             log.trace("Student with id={} was inserted.", entity.getId());
+            return entity;
         } catch (IllegalStateException | EntityExistsException | IllegalArgumentException | 
-                 TransactionRequiredException | RollbackException e) {
+                TransactionRequiredException | RollbackException e) {
             throw new DaoException("Inserting the student to the database failed.", e);
         }
     }
@@ -56,8 +66,10 @@ public class StudentJdbcDao implements StudentDao {
     public StudentEntity getById(int id) throws DaoException {
         log.debug("Get student by id={}.", id);
         
-        try (var entityManager = entityManagerFactory.createEntityManager();) {
+        try {
+            EntityManager entityManager = entityManagerFactory.createEntityManager();
             StudentEntity student = entityManager.find(StudentEntity.class, id);
+            entityManager.close();
             log.trace("Student with id={} was received.", student.getId());
             return student;
         } catch (IllegalStateException | IllegalArgumentException e) {
@@ -70,10 +82,12 @@ public class StudentJdbcDao implements StudentDao {
     public void update(StudentEntity entity) throws DaoException {
         log.debug("Update student with id={}.", entity.getId());
         
-        try (var entityManager = entityManagerFactory.createEntityManager();) {
+        try {
+            EntityManager entityManager = entityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             entityManager.merge(entity);
             entityManager.getTransaction().commit();
+            entityManager.close();
             log.debug("Student with id={} was updated.", entity.getId());
         } catch (IllegalStateException | IllegalArgumentException | TransactionRequiredException | 
                  RollbackException e) {
@@ -85,10 +99,12 @@ public class StudentJdbcDao implements StudentDao {
     public void deleteById(int id) throws DaoException {
         log.debug("Delete student by id={}.", id);
         
-        try (var entityManager = entityManagerFactory.createEntityManager();){
+        try {
+            EntityManager entityManager = entityManagerFactory.createEntityManager();
             StudentEntity student = new StudentEntity();
             student.setId(id);
             entityManager.remove(student);
+            entityManager.close();
             log.trace("Student with id={} was deleted.", id);
         } catch (IllegalStateException | IllegalArgumentException | TransactionRequiredException e) {
             throw new DaoException("Deleting the student data failed.", e);
