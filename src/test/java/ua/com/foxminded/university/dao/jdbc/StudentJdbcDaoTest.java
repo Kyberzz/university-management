@@ -36,6 +36,7 @@ class StudentJdbcDaoTest {
     @Autowired
     private EntityManagerFactory entityManagerFactory;
     
+    /*
     @Test
     void update_DeletingGroupIdOfStudent_StudentHasNoGroup() throws DaoException {
         StudentJdbcDao studentDao = new StudentJdbcDao(entityManagerFactory);
@@ -116,7 +117,7 @@ class StudentJdbcDaoTest {
         assertEquals(NEW_LAST_NAME_STUDENT, databaseStudent.getLastName());
         assertEquals(GROUP_ID_NUMBER, databaseStudent.getGroup().getId());
     }
-    
+    */
     @Test
     void getById_GettingStudent_CorrectStudentData() throws DaoException {
         StudentJdbcDao studentDao = new StudentJdbcDao(entityManagerFactory);
