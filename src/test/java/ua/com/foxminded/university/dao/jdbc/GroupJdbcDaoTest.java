@@ -12,13 +12,13 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import ua.com.foxminded.university.config.TestAppConfig;
+import ua.com.foxminded.university.config.AppConfigTest;
 import ua.com.foxminded.university.dao.DaoException;
 import ua.com.foxminded.university.dao.GroupDao;
 import ua.com.foxminded.university.entity.GroupEntity;
 
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
-@ContextConfiguration(classes = TestAppConfig.class)
+@ContextConfiguration(classes = AppConfigTest.class)
 @ExtendWith(SpringExtension.class)
 class GroupJdbcDaoTest {
     

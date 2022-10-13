@@ -1,4 +1,4 @@
-drop schema if exists university cascade;
+--drop schema if exists university cascade;
 create schema university;
 
 create sequence university.teachers_id_seq as integer;
