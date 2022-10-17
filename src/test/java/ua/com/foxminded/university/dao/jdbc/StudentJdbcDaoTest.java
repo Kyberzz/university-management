@@ -12,12 +12,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import ua.com.foxminded.university.config.AppConfigTest;
 import ua.com.foxminded.university.dao.DaoException;
 import ua.com.foxminded.university.entity.GroupEntity;
 import ua.com.foxminded.university.entity.StudentEntity;
+
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = AppConfigTest.class)
@@ -118,7 +120,9 @@ class StudentJdbcDaoTest {
         assertEquals(GROUP_ID_NUMBER, databaseStudent.getGroup().getId());
     }
     */
+    
     @Test
+  //  @Sql("/test-db-data.sql")
     void getById_GettingStudent_CorrectStudentData() throws DaoException {
         StudentJdbcDao studentDao = new StudentJdbcDao(entityManagerFactory);
         StudentEntity student = studentDao.getById(STUDENT_ID_NUMBER);
