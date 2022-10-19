@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.extern.slf4j.Slf4j;
 import ua.com.foxminded.university.dao.CourseDao;
@@ -31,6 +32,7 @@ public class CourseServiceImpl implements CourseService<CourseModel> {
     }
     
     @Override
+    @Transactional
     public void updateCourse(CourseModel courseModel) throws ServiceException {
         CourseEntity courseEntity = new CourseEntity();
         courseEntity.setId(courseModel.getId());

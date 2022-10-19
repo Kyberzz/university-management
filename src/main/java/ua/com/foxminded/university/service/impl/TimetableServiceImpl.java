@@ -2,6 +2,7 @@ package ua.com.foxminded.university.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.extern.slf4j.Slf4j;
 import ua.com.foxminded.university.dao.DaoException;
@@ -26,6 +27,7 @@ public class TimetableServiceImpl implements TimetableService<TimetableModel> {
     }
     
     @Override
+    @Transactional
     public void updateTimetable(TimetableModel timetableModel) throws ServiceException {
         TimetableEntity timetableEntity = new TimetableEntity();
         timetableEntity.setId(timetableModel.getId());
