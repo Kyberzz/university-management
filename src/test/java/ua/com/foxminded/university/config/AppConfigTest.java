@@ -73,14 +73,14 @@ public class AppConfigTest {
         initializer.setDatabasePopulator(databasePopulator());
         return initializer;
     }
-
+/*
     @Bean
     public PlatformTransactionManager transactionManager() {
         JpaTransactionManager jpaTransactionManager = new JpaTransactionManager();
         jpaTransactionManager.setEntityManagerFactory(entityManagerFactory().getObject());
         return jpaTransactionManager;
     }
-    
+*/    
     @Bean
     @DependsOn("dataSource")
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {

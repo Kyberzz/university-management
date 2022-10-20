@@ -5,13 +5,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.extern.slf4j.Slf4j;
-import ua.com.foxminded.university.dao.DaoException;
-import ua.com.foxminded.university.dao.TimetableDao;
 import ua.com.foxminded.university.entity.CourseEntity;
 import ua.com.foxminded.university.entity.GroupEntity;
 import ua.com.foxminded.university.entity.TimetableEntity;
 import ua.com.foxminded.university.entity.WeekDayEntity;
 import ua.com.foxminded.university.model.TimetableModel;
+import ua.com.foxminded.university.repository.DaoException;
+import ua.com.foxminded.university.repository.TimetableDao;
 import ua.com.foxminded.university.service.ServiceException;
 import ua.com.foxminded.university.service.TimetableService;
 

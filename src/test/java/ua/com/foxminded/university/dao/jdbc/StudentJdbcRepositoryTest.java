@@ -12,19 +12,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import ua.com.foxminded.university.config.AppConfigTest;
-import ua.com.foxminded.university.dao.DaoException;
 import ua.com.foxminded.university.entity.GroupEntity;
 import ua.com.foxminded.university.entity.StudentEntity;
+import ua.com.foxminded.university.repository.DaoException;
+import ua.com.foxminded.university.repository.jdbc.StudentJdbcRepository;
 
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = AppConfigTest.class)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
-class StudentRepositoryTest {
+class StudentJdbcRepositoryTest {
     
     private static final String GROUP_NAME = "rs-01";
     private static final String LAST_NAME_STUDENT = "Smith";
@@ -38,14 +38,13 @@ class StudentRepositoryTest {
     @Autowired
     private EntityManagerFactory entityManagerFactory;
     
-    /*
     @Test
     void update_DeletingGroupIdOfStudent_StudentHasNoGroup() throws DaoException {
-        StudentJdbcDao studentDao = new StudentJdbcDao(entityManagerFactory);
+        StudentJdbcRepository studentDao = new StudentJdbcRepository(entityManagerFactory);
         StudentEntity student = new StudentEntity();
         student.setId(STUDENT_ID_NUMBER);
         student.setFirstName(FIRST_NAME_STUDENT);
-        student.setGroup(new GroupEntity());
+        student.setGroup(null);
         student.setLastName(LAST_NAME_STUDENT);
         
         studentDao.update(student);
@@ -57,7 +56,7 @@ class StudentRepositoryTest {
     
     @Test
     void update_UdatingDatabaseData_DatabaseHasCorrectData() throws DaoException {
-        StudentJdbcDao studentDao = new StudentJdbcDao(entityManagerFactory);
+        StudentJdbcRepository studentDao = new StudentJdbcRepository(entityManagerFactory);
         StudentEntity student = new StudentEntity();
         student.setId(STUDENT_ID_NUMBER);
         student.setFirstName(NEW_FIRST_NAME_STUDENT);
@@ -77,7 +76,7 @@ class StudentRepositoryTest {
     
     @Test
     void deleteById_DeletingStudentDatabaseData_NoStudentDatabaseData() throws DaoException {
-        StudentJdbcDao studentDao = new StudentJdbcDao(entityManagerFactory);
+        StudentJdbcRepository studentDao = new StudentJdbcRepository(entityManagerFactory);
         studentDao.deleteById(STUDENT_ID_NUMBER);
         StudentEntity student = new StudentEntity();
         student.setId(STUDENT_ID_NUMBER);
@@ -87,9 +86,10 @@ class StudentRepositoryTest {
         assertFalse(containStatus);
     }
     
+    
     @Test
     void getGroupByStudentId_GettingDatabaseData_CorrectReceivedData() throws DaoException {
-        StudentJdbcDao studentDao = new StudentJdbcDao(entityManagerFactory);
+        StudentJdbcRepository studentDao = new StudentJdbcRepository(entityManagerFactory);
         StudentEntity studentData = studentDao.getGroupByStudentId(GROUP_ID_NUMBER);
         
         assertEquals(STUDENT_ID_NUMBER, studentData.getId());
@@ -99,9 +99,10 @@ class StudentRepositoryTest {
         assertEquals(GROUP_NAME, studentData.getGroup().getName());
     }
     
+    
     @Test
     void insert_InsertingStudentToDatabase_CorrectInsertedData() throws DaoException {
-        StudentJdbcDao studentDao = new StudentJdbcDao(entityManagerFactory);
+        StudentJdbcRepository studentDao = new StudentJdbcRepository(entityManagerFactory);
         StudentEntity student = new StudentEntity();
         student.setFirstName(NEW_FIRST_NAME_STUDENT);
         student.setLastName(NEW_LAST_NAME_STUDENT);
@@ -119,11 +120,11 @@ class StudentRepositoryTest {
         assertEquals(NEW_LAST_NAME_STUDENT, databaseStudent.getLastName());
         assertEquals(GROUP_ID_NUMBER, databaseStudent.getGroup().getId());
     }
-    */
+    
     
     @Test
     void getById_GettingStudent_CorrectStudentData() throws DaoException {
-        StudentRepository studentDao = new StudentRepository(entityManagerFactory);
+        StudentJdbcRepository studentDao = new StudentJdbcRepository(entityManagerFactory);
         StudentEntity student = studentDao.getById(STUDENT_ID_NUMBER);
         
         assertEquals(STUDENT_ID_NUMBER, student.getId());

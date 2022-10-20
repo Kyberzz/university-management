@@ -1,6 +1,10 @@
-package ua.com.foxminded.university.dao.jdbc;
+package ua.com.foxminded.university.repository.jdbc;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.persistence.EntityExistsException;
+import javax.persistence.EntityGraph;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.RollbackException;
@@ -10,18 +14,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import lombok.extern.slf4j.Slf4j;
-import ua.com.foxminded.university.dao.CourseDao;
-import ua.com.foxminded.university.dao.DaoException;
 import ua.com.foxminded.university.entity.CourseEntity;
+import ua.com.foxminded.university.repository.CourseDao;
+import ua.com.foxminded.university.repository.DaoException;
 
 @Slf4j
 @Repository
-public class CourseRepository implements CourseDao {
+public class CourseJdbcRepository implements CourseDao {
     
     private EntityManagerFactory entityManagerFactory;
     
     @Autowired
-    public CourseRepository(EntityManagerFactory entityManagerFactory) {
+    public CourseJdbcRepository(EntityManagerFactory entityManagerFactory) {
         this.entityManagerFactory = entityManagerFactory;
     }
     
@@ -31,9 +35,11 @@ public class CourseRepository implements CourseDao {
         
         try {
             EntityManager entityManager = entityManagerFactory.createEntityManager();
+            EntityGraph<?> entityGraph = entityManager.createEntityGraph("tipetableListOfCourse");
+            Map<String, Object> properties = new HashMap<>();
+            properties.put("javax.persistence.fetchgraph", entityGraph);
             entityManager.getTransaction().begin();
-            CourseEntity course = entityManager.find(CourseEntity.class, id);
-            course.getTimetableList().iterator();
+            CourseEntity course = entityManager.find(CourseEntity.class, id, properties);
             entityManager.getTransaction().commit();
             entityManager.close();
             log.trace("Timetable list of course with id={} was received.", course.getId());
@@ -101,7 +107,6 @@ public class CourseRepository implements CourseDao {
             EntityManager entityManager = entityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             entityManager.persist(entity);
-            entityManager.refresh(entity);
             entityManager.getTransaction().commit();
             entityManager.close();
             log.trace("Course with id={} was inserted.", entity.getId());

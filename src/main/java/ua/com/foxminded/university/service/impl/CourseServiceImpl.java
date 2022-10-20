@@ -8,8 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.extern.slf4j.Slf4j;
-import ua.com.foxminded.university.dao.CourseDao;
-import ua.com.foxminded.university.dao.DaoException;
 import ua.com.foxminded.university.entity.CourseEntity;
 import ua.com.foxminded.university.entity.TeacherEntity;
 import ua.com.foxminded.university.model.CourseModel;
@@ -17,6 +15,8 @@ import ua.com.foxminded.university.model.GroupModel;
 import ua.com.foxminded.university.model.TeacherModel;
 import ua.com.foxminded.university.model.TimetableModel;
 import ua.com.foxminded.university.model.WeekDayModel;
+import ua.com.foxminded.university.repository.CourseDao;
+import ua.com.foxminded.university.repository.DaoException;
 import ua.com.foxminded.university.service.CourseService;
 import ua.com.foxminded.university.service.ServiceException;
 

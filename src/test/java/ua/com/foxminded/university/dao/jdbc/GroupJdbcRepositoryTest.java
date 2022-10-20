@@ -13,14 +13,15 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import ua.com.foxminded.university.config.AppConfigTest;
-import ua.com.foxminded.university.dao.DaoException;
-import ua.com.foxminded.university.dao.GroupDao;
 import ua.com.foxminded.university.entity.GroupEntity;
+import ua.com.foxminded.university.repository.DaoException;
+import ua.com.foxminded.university.repository.GroupDao;
+import ua.com.foxminded.university.repository.jdbc.GroupJdbcRepository;
 
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 @ContextConfiguration(classes = AppConfigTest.class)
 @ExtendWith(SpringExtension.class)
-class GroupRepositoryTest {
+class GroupJdbcRepositoryTest {
     
     private static final String EXPECTED_WEEK_DAY = "MONDAY";
     private static final String EXPECTED_STUDENT_LAST_NAME = "Smith";
@@ -43,7 +44,7 @@ class GroupRepositoryTest {
     
     @Test
     void insert_InsertingDataOfGroupToDatabase_DatabaseHasCorrectData() throws DaoException {
-        GroupDao groupDao = new GroupRepository(entityManagerFactory);
+        GroupDao groupDao = new GroupJdbcRepository(entityManagerFactory);
         GroupEntity group = new GroupEntity();
         group.setName(NEW_GROUP_NAME);
         GroupEntity groupWithId = groupDao.insert(group);
@@ -56,7 +57,7 @@ class GroupRepositoryTest {
     
     @Test
     void getById_ReceivingDatabaseDataOfGroup_CorrectReceivedData() throws DaoException {
-        GroupDao groupDao = new GroupRepository(entityManagerFactory);
+        GroupDao groupDao = new GroupJdbcRepository(entityManagerFactory);
         GroupEntity group = groupDao.getById(GROUP_ID_NUMBER);
         
         assertEquals(GROUP_ID_NUMBER, group.getId());
@@ -65,7 +66,7 @@ class GroupRepositoryTest {
     
     @Test
     void update_UpdatingDatabaseDataOfGroup_DatabaseHasCorrectData() throws DaoException {
-        GroupDao groupDao = new GroupRepository(entityManagerFactory);
+        GroupDao groupDao = new GroupJdbcRepository(entityManagerFactory);
         GroupEntity group = new GroupEntity();
         group.setId(GROUP_ID_NUMBER);
         group.setName(EXPECTED_GROUP_NAME);
@@ -79,7 +80,7 @@ class GroupRepositoryTest {
     
     @Test
     void deleteById_DeletingDatabaseDataOfGroup_DatabaseHasNoData() throws DaoException {
-        GroupDao groupDao = new GroupRepository(entityManagerFactory);
+        GroupDao groupDao = new GroupJdbcRepository(entityManagerFactory);
         groupDao.deleteById(GROUP_ID_NUMBER);
         GroupEntity group = new GroupEntity();
         group.setId(GROUP_ID_NUMBER);
@@ -89,7 +90,7 @@ class GroupRepositoryTest {
     
     @Test
     void getTimetableListByGroupId_GettingDataFromDatabase_CorrectRecevedData() throws DaoException {
-        GroupDao groupDao = new GroupRepository(entityManagerFactory);
+        GroupDao groupDao = new GroupJdbcRepository(entityManagerFactory);
         GroupEntity receivedGroupData = groupDao.getTimetableListByGroupId(GROUP_ID_NUMBER);
         
         assertEquals(GROUP_ID_NUMBER, receivedGroupData.getId());
@@ -107,7 +108,7 @@ class GroupRepositoryTest {
     
     @Test
     void getStudentListByGroupId_GettingDataFromDatabase_CorrectReceivedData() throws DaoException {
-        GroupDao groupDao = new GroupRepository(entityManagerFactory);
+        GroupDao groupDao = new GroupJdbcRepository(entityManagerFactory);
         GroupEntity receivedGroupData = groupDao.getStudentListByGroupId(GROUP_ID_NUMBER);
         
         assertEquals(GROUP_ID_NUMBER, receivedGroupData.getId());

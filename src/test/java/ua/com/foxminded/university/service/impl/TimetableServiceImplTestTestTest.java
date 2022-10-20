@@ -10,13 +10,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import ua.com.foxminded.university.dao.DaoException;
-import ua.com.foxminded.university.dao.TimetableDao;
 import ua.com.foxminded.university.entity.TimetableEntity;
 import ua.com.foxminded.university.model.CourseModel;
 import ua.com.foxminded.university.model.GroupModel;
 import ua.com.foxminded.university.model.TimetableModel;
 import ua.com.foxminded.university.model.WeekDayModel;
+import ua.com.foxminded.university.repository.DaoException;
+import ua.com.foxminded.university.repository.TimetableDao;
 import ua.com.foxminded.university.service.ServiceException;
 
 @ExtendWith(MockitoExtension.class)

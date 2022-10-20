@@ -1,6 +1,10 @@
-package ua.com.foxminded.university.dao.jdbc;
+package ua.com.foxminded.university.repository.jdbc;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.persistence.EntityExistsException;
+import javax.persistence.EntityGraph;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.RollbackException;
@@ -10,18 +14,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import lombok.extern.slf4j.Slf4j;
-import ua.com.foxminded.university.dao.DaoException;
-import ua.com.foxminded.university.dao.StudentDao;
 import ua.com.foxminded.university.entity.StudentEntity;
+import ua.com.foxminded.university.repository.DaoException;
+import ua.com.foxminded.university.repository.StudentDao;
 
 @Slf4j
 @Repository
-public class StudentRepository implements StudentDao {
+public class StudentJdbcRepository implements StudentDao {
     
     private EntityManagerFactory entityManagerFactory;
     
     @Autowired
-    public StudentRepository(EntityManagerFactory entityManagerFactory) {
+    public StudentJdbcRepository(EntityManagerFactory entityManagerFactory) {
         this.entityManagerFactory = entityManagerFactory;
     }
     
@@ -31,8 +35,10 @@ public class StudentRepository implements StudentDao {
         
         try {
             EntityManager entityManager = entityManagerFactory.createEntityManager();
-            StudentEntity student = entityManager.find(StudentEntity.class, id);
-            student.getGroup().getId();
+            EntityGraph<?> entityGraph = entityManager.getEntityGraph("groupOfStudent");
+            Map<String, Object> properties = new HashMap<>();
+            properties.put("javax.persistence.fetchgraph", entityGraph);
+            StudentEntity student = entityManager.find(StudentEntity.class, id, properties);
             entityManager.close();
             log.trace("Group having student id={} was received.", student.getId());
             return student;
@@ -49,7 +55,6 @@ public class StudentRepository implements StudentDao {
             EntityManager entityManager = entityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             entityManager.persist(entity);
-            entityManager.refresh(entity);
             entityManager.getTransaction().commit();
             entityManager.close();
             log.trace("Student with id={} was inserted.", entity.getId());

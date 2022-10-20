@@ -1,4 +1,4 @@
-package ua.com.foxminded.university.dao.jdbc;
+package ua.com.foxminded.university.repository.jdbc;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
@@ -10,18 +10,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import lombok.extern.slf4j.Slf4j;
-import ua.com.foxminded.university.dao.DaoException;
-import ua.com.foxminded.university.dao.TimetableDao;
 import ua.com.foxminded.university.entity.TimetableEntity;
+import ua.com.foxminded.university.repository.DaoException;
+import ua.com.foxminded.university.repository.TimetableDao;
 
 @Slf4j
 @Repository
-public class TimetableRepository implements TimetableDao {
+public class TimetableJdbcRepository implements TimetableDao {
     
     private EntityManagerFactory entityManagerFactory;
 
     @Autowired
-    public TimetableRepository(EntityManagerFactory entityManagerFactory) {
+    public TimetableJdbcRepository(EntityManagerFactory entityManagerFactory) {
         this.entityManagerFactory = entityManagerFactory;
     }
     

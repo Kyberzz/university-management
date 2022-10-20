@@ -6,11 +6,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.extern.slf4j.Slf4j;
-import ua.com.foxminded.university.dao.DaoException;
-import ua.com.foxminded.university.dao.StudentDao;
 import ua.com.foxminded.university.entity.GroupEntity;
 import ua.com.foxminded.university.entity.StudentEntity;
 import ua.com.foxminded.university.model.StudentModel;
+import ua.com.foxminded.university.repository.DaoException;
+import ua.com.foxminded.university.repository.StudentDao;
 import ua.com.foxminded.university.service.ServiceException;
 import ua.com.foxminded.university.service.StudentService;
 

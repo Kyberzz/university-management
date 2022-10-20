@@ -1,4 +1,4 @@
-package ua.com.foxminded.university.dao.jdbc;
+package ua.com.foxminded.university.repository.jdbc;
 
 
 import javax.persistence.EntityExistsException;
@@ -11,18 +11,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import lombok.extern.slf4j.Slf4j;
-import ua.com.foxminded.university.dao.DaoException;
-import ua.com.foxminded.university.dao.GroupDao;
 import ua.com.foxminded.university.entity.GroupEntity;
+import ua.com.foxminded.university.repository.DaoException;
+import ua.com.foxminded.university.repository.GroupDao;
 
 @Slf4j
 @Repository
-public class GroupRepository implements GroupDao {
+public class GroupJdbcRepository implements GroupDao {
     
     private EntityManagerFactory entityManagerFactory;
     
     @Autowired
-    public GroupRepository(EntityManagerFactory entityManagerFactory) {
+    public GroupJdbcRepository(EntityManagerFactory entityManagerFactory) {
         this.entityManagerFactory = entityManagerFactory;
     }
     

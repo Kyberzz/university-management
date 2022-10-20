@@ -7,14 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
-import ua.com.foxminded.university.dao.DaoException;
-import ua.com.foxminded.university.dao.GroupDao;
 import ua.com.foxminded.university.entity.GroupEntity;
 import ua.com.foxminded.university.model.CourseModel;
 import ua.com.foxminded.university.model.GroupModel;
 import ua.com.foxminded.university.model.StudentModel;
 import ua.com.foxminded.university.model.TimetableModel;
 import ua.com.foxminded.university.model.WeekDayModel;
+import ua.com.foxminded.university.repository.DaoException;
+import ua.com.foxminded.university.repository.GroupDao;
 import ua.com.foxminded.university.service.GroupService;
 import ua.com.foxminded.university.service.ServiceException;
 

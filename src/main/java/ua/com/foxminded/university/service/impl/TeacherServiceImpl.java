@@ -7,11 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
-import ua.com.foxminded.university.dao.DaoException;
-import ua.com.foxminded.university.dao.TeacherDao;
 import ua.com.foxminded.university.entity.TeacherEntity;
 import ua.com.foxminded.university.model.CourseModel;
 import ua.com.foxminded.university.model.TeacherModel;
+import ua.com.foxminded.university.repository.DaoException;
+import ua.com.foxminded.university.repository.TeacherDao;
 import ua.com.foxminded.university.service.ServiceException;
 import ua.com.foxminded.university.service.TeacherService;
 

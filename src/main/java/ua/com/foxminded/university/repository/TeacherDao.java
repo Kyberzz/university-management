@@ -1,4 +1,4 @@
-package ua.com.foxminded.university.dao;
+package ua.com.foxminded.university.repository;
 
 import ua.com.foxminded.university.entity.TeacherEntity;
 

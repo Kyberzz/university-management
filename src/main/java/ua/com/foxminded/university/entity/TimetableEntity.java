@@ -1,6 +1,5 @@
 package ua.com.foxminded.university.entity;
 
-
 import java.io.Serializable;
 
 import javax.persistence.Column;
@@ -35,14 +34,15 @@ public class TimetableEntity implements Serializable {
     private long endTime;
     private String description;
     
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "group_id")
     private GroupEntity group;
     
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "course_id")
     private CourseEntity course;
     
     @Enumerated(EnumType.STRING)
+    @Column(name = "week_day")
     private WeekDayEntity weekDay;
 }
