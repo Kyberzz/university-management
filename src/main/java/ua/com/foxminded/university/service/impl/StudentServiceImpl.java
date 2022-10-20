@@ -9,8 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import ua.com.foxminded.university.entity.GroupEntity;
 import ua.com.foxminded.university.entity.StudentEntity;
 import ua.com.foxminded.university.model.StudentModel;
-import ua.com.foxminded.university.repository.DaoException;
-import ua.com.foxminded.university.repository.StudentDao;
+import ua.com.foxminded.university.repository.RepositoryException;
+import ua.com.foxminded.university.repository.StudentRepository;
 import ua.com.foxminded.university.service.ServiceException;
 import ua.com.foxminded.university.service.StudentService;
 
@@ -18,10 +18,10 @@ import ua.com.foxminded.university.service.StudentService;
 @Service
 public class StudentServiceImpl implements StudentService<StudentModel> {
     
-    private StudentDao studentDao;
+    private StudentRepository studentDao;
     
     @Autowired
-    public StudentServiceImpl(StudentDao studentDao) {
+    public StudentServiceImpl(StudentRepository studentDao) {
         this.studentDao = studentDao;
     }
     
@@ -39,7 +39,7 @@ public class StudentServiceImpl implements StudentService<StudentModel> {
        
         try {
             studentDao.update(studentEntity);
-        } catch (DaoException e) {
+        } catch (RepositoryException e) {
             throw new ServiceException("Udating the student data failed.", e);
         }
         return updatedStudentsQuantity;

@@ -14,8 +14,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import ua.com.foxminded.university.config.AppConfigTest;
 import ua.com.foxminded.university.entity.TeacherEntity;
-import ua.com.foxminded.university.repository.DaoException;
-import ua.com.foxminded.university.repository.TeacherDao;
+import ua.com.foxminded.university.repository.RepositoryException;
+import ua.com.foxminded.university.repository.TeacherRepository;
 import ua.com.foxminded.university.repository.jdbc.TeacherJdbcRepository;
 
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
@@ -38,11 +38,11 @@ class TeacherJdbcRepositoryTest {
     private EntityManagerFactory entityManagerFactory;
     
     @Test
-    void insert_InsertingTeacherDatabaseData_DatabaseHasCorrectData() throws DaoException {
+    void insert_InsertingTeacherDatabaseData_DatabaseHasCorrectData() throws RepositoryException {
         TeacherEntity teacher = new TeacherEntity();
         teacher.setFirstName(TEACHER_FIRST_NAME);
         teacher.setLastName(TEACHER_LAST_NAME);
-        TeacherDao teacherDao = new TeacherJdbcRepository(entityManagerFactory);
+        TeacherRepository teacherDao = new TeacherJdbcRepository(entityManagerFactory);
         TeacherEntity teacherWithId = teacherDao.insert(teacher);
 
         TeacherEntity insertedTeacher = entityManagerFactory.createEntityManager()
@@ -54,8 +54,8 @@ class TeacherJdbcRepositoryTest {
     }
     
     @Test
-    void getById_ReceivingTeacherDatabaseData_CorrectReceivedData() throws DaoException {
-        TeacherDao teacherDao = new TeacherJdbcRepository(entityManagerFactory);
+    void getById_ReceivingTeacherDatabaseData_CorrectReceivedData() throws RepositoryException {
+        TeacherRepository teacherDao = new TeacherJdbcRepository(entityManagerFactory);
         TeacherEntity teacher = teacherDao.getById(TEACHER_ID_NUMBER);
         
         assertEquals(TEACHER_FIRST_NAME, teacher.getFirstName());
@@ -64,8 +64,8 @@ class TeacherJdbcRepositoryTest {
     }
     
     @Test
-    void update_UpdatingTeacherDatabaseData_DatabaseHasCorrectData() throws DaoException {
-        TeacherDao teacherDao = new TeacherJdbcRepository(entityManagerFactory);
+    void update_UpdatingTeacherDatabaseData_DatabaseHasCorrectData() throws RepositoryException {
+        TeacherRepository teacherDao = new TeacherJdbcRepository(entityManagerFactory);
         TeacherEntity teacherData = new TeacherEntity();
         teacherData.setId(TEACHER_ID);
         teacherData.setFirstName(TEACHER_FIRST_NAME);
@@ -81,8 +81,8 @@ class TeacherJdbcRepositoryTest {
     }
     
     @Test
-    void deleteById_DeletingTeacherDatabaseData_DatabaseHasNoData() throws DaoException {
-        TeacherDao teacherDao = new TeacherJdbcRepository(entityManagerFactory);
+    void deleteById_DeletingTeacherDatabaseData_DatabaseHasNoData() throws RepositoryException {
+        TeacherRepository teacherDao = new TeacherJdbcRepository(entityManagerFactory);
         teacherDao.deleteById(TEACHER_ID_NUMBER);
         TeacherEntity teacher = new TeacherEntity();
         teacher.setId(TEACHER_ID_NUMBER);
@@ -93,8 +93,8 @@ class TeacherJdbcRepositoryTest {
     }
     
     @Test
-    void getCourseListByTeacherId_ReceivingTeacherDatabaseData_CorrectReceivedData() throws DaoException {
-        TeacherDao teacherDao = new TeacherJdbcRepository(entityManagerFactory);
+    void getCourseListByTeacherId_ReceivingTeacherDatabaseData_CorrectReceivedData() throws RepositoryException {
+        TeacherRepository teacherDao = new TeacherJdbcRepository(entityManagerFactory);
         TeacherEntity teacherData = teacherDao.getCourseListByTeacherId(TEACHER_ID_NUMBER);
         
         assertEquals(TEACHER_ID_NUMBER, teacherData.getId());
@@ -105,6 +105,5 @@ class TeacherJdbcRepositoryTest {
         assertEquals(COURSE_NAME, teacherData.getCourseList().get(FIST_ELEMENT).getName());
         assertEquals(COURSE_DESCRIPTION, teacherData.getCourseList().get(FIST_ELEMENT).getDescription());
         assertEquals(COURSES_QUANTITY, teacherData.getCourseList().size());
-        
     }
 }

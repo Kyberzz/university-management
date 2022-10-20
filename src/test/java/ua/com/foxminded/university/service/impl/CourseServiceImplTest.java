@@ -17,8 +17,8 @@ import ua.com.foxminded.university.entity.CourseEntity;
 import ua.com.foxminded.university.entity.TeacherEntity;
 import ua.com.foxminded.university.model.CourseModel;
 import ua.com.foxminded.university.model.TeacherModel;
-import ua.com.foxminded.university.repository.CourseDao;
-import ua.com.foxminded.university.repository.DaoException;
+import ua.com.foxminded.university.repository.CourseRepository;
+import ua.com.foxminded.university.repository.RepositoryException;
 import ua.com.foxminded.university.service.ServiceException;
 
 @ExtendWith(MockitoExtension.class)
@@ -30,11 +30,11 @@ class CourseServiceImplTest {
     private CourseServiceImpl courseService;
     
     @Mock
-    private CourseDao courseDaoMock;
+    private CourseRepository courseDaoMock;
     
     @Test
     void updateCourse_CollingDaoObject_CorrectCallQuantity() throws ServiceException, 
-                                                                    DaoException {
+                                                                    RepositoryException {
         CourseModel courseModel = new CourseModel();
         courseModel.setTeacher(new TeacherModel());
         courseService.updateCourse(courseModel);
@@ -42,7 +42,7 @@ class CourseServiceImplTest {
     }
     
     @Test
-    void getTimetableListByCourseId_GettingTimetableModel_CorrectCalQuantity() throws DaoException, 
+    void getTimetableListByCourseId_GettingTimetableModel_CorrectCalQuantity() throws RepositoryException, 
                                                                                        ServiceException {
         CourseEntity courseEntity = new CourseEntity();
         courseEntity.setTeacher(new TeacherEntity());

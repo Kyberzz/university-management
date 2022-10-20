@@ -15,8 +15,8 @@ import ua.com.foxminded.university.model.GroupModel;
 import ua.com.foxminded.university.model.TeacherModel;
 import ua.com.foxminded.university.model.TimetableModel;
 import ua.com.foxminded.university.model.WeekDayModel;
-import ua.com.foxminded.university.repository.CourseDao;
-import ua.com.foxminded.university.repository.DaoException;
+import ua.com.foxminded.university.repository.CourseRepository;
+import ua.com.foxminded.university.repository.RepositoryException;
 import ua.com.foxminded.university.service.CourseService;
 import ua.com.foxminded.university.service.ServiceException;
 
@@ -24,10 +24,10 @@ import ua.com.foxminded.university.service.ServiceException;
 @Service
 public class CourseServiceImpl implements CourseService<CourseModel> {
     
-    private CourseDao courseDao;
+    private CourseRepository courseDao;
     
     @Autowired
-    public CourseServiceImpl(CourseDao courseDao) {
+    public CourseServiceImpl(CourseRepository courseDao) {
         this.courseDao = courseDao;
     }
     
@@ -44,7 +44,7 @@ public class CourseServiceImpl implements CourseService<CourseModel> {
         
         try {
             courseDao.update(courseEntity);
-        } catch (DaoException e) {
+        } catch (RepositoryException e) {
             throw new ServiceException("Updating the course failed.", e);
         }
     }
@@ -55,7 +55,7 @@ public class CourseServiceImpl implements CourseService<CourseModel> {
         
         try {
             courseEntity = courseDao.getTimetableListByCourseId(id);
-        } catch (DaoException e) {
+        } catch (RepositoryException e) {
             throw new ServiceException("Getting timetable list of course id faled.", e);
         }
         

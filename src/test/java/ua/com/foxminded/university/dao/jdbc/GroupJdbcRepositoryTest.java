@@ -14,8 +14,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import ua.com.foxminded.university.config.AppConfigTest;
 import ua.com.foxminded.university.entity.GroupEntity;
-import ua.com.foxminded.university.repository.DaoException;
-import ua.com.foxminded.university.repository.GroupDao;
+import ua.com.foxminded.university.repository.RepositoryException;
+import ua.com.foxminded.university.repository.GroupRepository;
 import ua.com.foxminded.university.repository.jdbc.GroupJdbcRepository;
 
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
@@ -42,9 +42,10 @@ class GroupJdbcRepositoryTest {
     @Autowired
     private EntityManagerFactory entityManagerFactory;
     
+    
     @Test
-    void insert_InsertingDataOfGroupToDatabase_DatabaseHasCorrectData() throws DaoException {
-        GroupDao groupDao = new GroupJdbcRepository(entityManagerFactory);
+    void insert_InsertingDataOfGroupToDatabase_DatabaseHasCorrectData() throws RepositoryException {
+        GroupRepository groupDao = new GroupJdbcRepository(entityManagerFactory);
         GroupEntity group = new GroupEntity();
         group.setName(NEW_GROUP_NAME);
         GroupEntity groupWithId = groupDao.insert(group);
@@ -56,8 +57,8 @@ class GroupJdbcRepositoryTest {
     }
     
     @Test
-    void getById_ReceivingDatabaseDataOfGroup_CorrectReceivedData() throws DaoException {
-        GroupDao groupDao = new GroupJdbcRepository(entityManagerFactory);
+    void getById_ReceivingDatabaseDataOfGroup_CorrectReceivedData() throws RepositoryException {
+        GroupRepository groupDao = new GroupJdbcRepository(entityManagerFactory);
         GroupEntity group = groupDao.getById(GROUP_ID_NUMBER);
         
         assertEquals(GROUP_ID_NUMBER, group.getId());
@@ -65,8 +66,8 @@ class GroupJdbcRepositoryTest {
     }
     
     @Test
-    void update_UpdatingDatabaseDataOfGroup_DatabaseHasCorrectData() throws DaoException {
-        GroupDao groupDao = new GroupJdbcRepository(entityManagerFactory);
+    void update_UpdatingDatabaseDataOfGroup_DatabaseHasCorrectData() throws RepositoryException {
+        GroupRepository groupDao = new GroupJdbcRepository(entityManagerFactory);
         GroupEntity group = new GroupEntity();
         group.setId(GROUP_ID_NUMBER);
         group.setName(EXPECTED_GROUP_NAME);
@@ -78,9 +79,10 @@ class GroupJdbcRepositoryTest {
         assertEquals(group.getName(), updatedGroup.getName());
     }
     
+    
     @Test
-    void deleteById_DeletingDatabaseDataOfGroup_DatabaseHasNoData() throws DaoException {
-        GroupDao groupDao = new GroupJdbcRepository(entityManagerFactory);
+    void deleteById_DeletingDatabaseDataOfGroup_DatabaseHasNoData() throws RepositoryException {
+        GroupRepository groupDao = new GroupJdbcRepository(entityManagerFactory);
         groupDao.deleteById(GROUP_ID_NUMBER);
         GroupEntity group = new GroupEntity();
         group.setId(GROUP_ID_NUMBER);
@@ -88,9 +90,10 @@ class GroupJdbcRepositoryTest {
         assertFalse(containStatus);
     }
     
+    
     @Test
-    void getTimetableListByGroupId_GettingDataFromDatabase_CorrectRecevedData() throws DaoException {
-        GroupDao groupDao = new GroupJdbcRepository(entityManagerFactory);
+    void getTimetableListByGroupId_GettingDataFromDatabase_CorrectRecevedData() throws RepositoryException {
+        GroupRepository groupDao = new GroupJdbcRepository(entityManagerFactory);
         GroupEntity receivedGroupData = groupDao.getTimetableListByGroupId(GROUP_ID_NUMBER);
         
         assertEquals(GROUP_ID_NUMBER, receivedGroupData.getId());
@@ -107,8 +110,8 @@ class GroupJdbcRepositoryTest {
     }
     
     @Test
-    void getStudentListByGroupId_GettingDataFromDatabase_CorrectReceivedData() throws DaoException {
-        GroupDao groupDao = new GroupJdbcRepository(entityManagerFactory);
+    void getStudentListByGroupId_GettingDataFromDatabase_CorrectReceivedData() throws RepositoryException {
+        GroupRepository groupDao = new GroupJdbcRepository(entityManagerFactory);
         GroupEntity receivedGroupData = groupDao.getStudentListByGroupId(GROUP_ID_NUMBER);
         
         assertEquals(GROUP_ID_NUMBER, receivedGroupData.getId());

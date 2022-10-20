@@ -17,8 +17,8 @@ import ua.com.foxminded.university.entity.CourseEntity;
 import ua.com.foxminded.university.entity.GroupEntity;
 import ua.com.foxminded.university.entity.TimetableEntity;
 import ua.com.foxminded.university.entity.WeekDayEntity;
-import ua.com.foxminded.university.repository.DaoException;
-import ua.com.foxminded.university.repository.TimetableDao;
+import ua.com.foxminded.university.repository.RepositoryException;
+import ua.com.foxminded.university.repository.TimetableRepository;
 import ua.com.foxminded.university.repository.jdbc.TimetableJdbcRepository;
 
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
@@ -27,7 +27,7 @@ import ua.com.foxminded.university.repository.jdbc.TimetableJdbcRepository;
 class TimetableJdbcRepositoryTest {
     
     private static final String COURSE_NAME = "Physics";
-    private static final String WEEK_DAY_VALUE = "MONDAY";
+    private static final String EXPECTED_WEEK_DAY = "MONDAY";
     private static final String COURSE_DESCRIPTION = "some description";
     private static final String TIMETABLE_DESCRIPTION = "some description";
     private static final long START_TIME = 36360000;
@@ -36,16 +36,16 @@ class TimetableJdbcRepositoryTest {
     private static final int GROUP_ID_NUMBER = 2;
     private static final int COURSE_ID_NUMBER = 1;
     private static final int TIMETABLE_ID = 2;
+    private static final int EXPECTED_TIMETABLE_ID_NUMBER = 6;
     private static final int TIMETABLE_ID_NUMBER = 1;
     
     @Autowired
     private EntityManagerFactory entityManagerFactory;
     
-    /*
+    
     @Test
-    void insert_InsertingTimetableDataToDatabase_DatabaseHasCorrectData() throws DaoException {
+    void insert_InsertingTimetableDataToDatabase_DatabaseHasCorrectData() throws RepositoryException {
         TimetableEntity timetable = new TimetableEntity();
-        timetable.setId(TIMETABLE_ID_NUMBER);
         CourseEntity course = new CourseEntity();
         course.setId(COURSE_ID_NUMBER);
         timetable.setCourse(course);
@@ -55,10 +55,10 @@ class TimetableJdbcRepositoryTest {
         group.setId(GROUP_ID_NUMBER);
         timetable.setGroup(group);
         timetable.setStartTime(START_TIME);
-        timetable.setWeekDay(WeekDayEntity.valueOf(WEEK_DAY_VALUE));
+        timetable.setWeekDay(WeekDayEntity.MONDAY);
        
-        TimetableDao timetableDao = new TimetableJdbcRepository(entityManagerFactory);
-        timetableDao.insert(timetable);
+        TimetableRepository timetableDao = new TimetableJdbcRepository(entityManagerFactory);
+        TimetableEntity timetableWithId = timetableDao.insert(timetable);
         
         TimetableEntity insertedTimetable = entityManagerFactory.createEntityManager()
                 .find(TimetableEntity.class, TIMETABLE_ID_NUMBER);
@@ -67,15 +67,14 @@ class TimetableJdbcRepositoryTest {
         assertEquals(TIMETABLE_DESCRIPTION, insertedTimetable.getDescription());
         assertEquals(END_TIME, insertedTimetable.getEndTime());
         assertEquals(GROUP_ID_NUMBER, insertedTimetable.getGroup().getId());
-        assertEquals(TIMETABLE_ID_NUMBER, insertedTimetable.getId());
+        assertEquals(EXPECTED_TIMETABLE_ID_NUMBER, timetableWithId.getId());
         assertEquals(START_TIME, insertedTimetable.getStartTime());
-        assertEquals(WEEK_DAY_VALUE, insertedTimetable.getWeekDay().toString());
+        assertEquals(EXPECTED_WEEK_DAY, insertedTimetable.getWeekDay().toString());
     }
-    */
     
     @Test
-    void getById_ReceivingTimetableDatabaseData_CorrectReceivedData() throws DaoException {
-        TimetableDao timetableDao = new TimetableJdbcRepository(entityManagerFactory);
+    void getById_ReceivingTimetableDatabaseData_CorrectReceivedData() throws RepositoryException {
+        TimetableRepository timetableDao = new TimetableJdbcRepository(entityManagerFactory);
         TimetableEntity receivedTimetable = timetableDao.getById(TIMETABLE_ID_NUMBER);
         
         assertEquals(COURSE_ID_NUMBER, receivedTimetable.getCourse().getId());
@@ -84,7 +83,7 @@ class TimetableJdbcRepositoryTest {
         assertEquals(GROUP_ID_NUMBER, receivedTimetable.getGroup().getId());
         assertEquals(TIMETABLE_ID_NUMBER, receivedTimetable.getId());
         assertEquals(START_TIME, receivedTimetable.getStartTime());
-        assertEquals(WEEK_DAY_VALUE, receivedTimetable.getWeekDay().toString());
+        assertEquals(EXPECTED_WEEK_DAY, receivedTimetable.getWeekDay().toString());
     }
     
     /*

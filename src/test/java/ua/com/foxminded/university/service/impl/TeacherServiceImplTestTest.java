@@ -14,8 +14,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import ua.com.foxminded.university.entity.TeacherEntity;
-import ua.com.foxminded.university.repository.DaoException;
-import ua.com.foxminded.university.repository.TeacherDao;
+import ua.com.foxminded.university.repository.RepositoryException;
+import ua.com.foxminded.university.repository.TeacherRepository;
 import ua.com.foxminded.university.service.ServiceException;
 
 @ExtendWith(MockitoExtension.class)
@@ -27,11 +27,11 @@ class TeacherServiceImplTestTest {
     private TeacherServiceImpl teacherService;
     
     @Mock
-    private TeacherDao teacherDaoMock;
+    private TeacherRepository teacherDaoMock;
 
     @Test
     
-    void getCourseListByTeacherId_GettingTeacherMocel_CorrectCallQuantity() throws DaoException, 
+    void getCourseListByTeacherId_GettingTeacherMocel_CorrectCallQuantity() throws RepositoryException, 
                                                                                    ServiceException {
         TeacherEntity teacher = new TeacherEntity();
         teacher.setCourseList(new ArrayList<>());

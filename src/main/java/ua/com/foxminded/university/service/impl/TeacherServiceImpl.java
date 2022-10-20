@@ -10,8 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import ua.com.foxminded.university.entity.TeacherEntity;
 import ua.com.foxminded.university.model.CourseModel;
 import ua.com.foxminded.university.model.TeacherModel;
-import ua.com.foxminded.university.repository.DaoException;
-import ua.com.foxminded.university.repository.TeacherDao;
+import ua.com.foxminded.university.repository.RepositoryException;
+import ua.com.foxminded.university.repository.TeacherRepository;
 import ua.com.foxminded.university.service.ServiceException;
 import ua.com.foxminded.university.service.TeacherService;
 
@@ -19,10 +19,10 @@ import ua.com.foxminded.university.service.TeacherService;
 @Service
 public class TeacherServiceImpl implements TeacherService<TeacherModel> {
     
-    private TeacherDao teacherDao; 
+    private TeacherRepository teacherDao; 
     
     @Autowired
-    public TeacherServiceImpl(TeacherDao teacherDao) {
+    public TeacherServiceImpl(TeacherRepository teacherDao) {
         this.teacherDao = teacherDao;
     }
     
@@ -32,7 +32,7 @@ public class TeacherServiceImpl implements TeacherService<TeacherModel> {
         
         try {
             teacherEntity = teacherDao.getCourseListByTeacherId(id);
-        } catch (DaoException e) {
+        } catch (RepositoryException e) {
             throw new ServiceException("Getting the courses list by the teacher id failed.", e);
         }
         

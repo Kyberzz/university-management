@@ -17,7 +17,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ua.com.foxminded.university.config.AppConfigTest;
 import ua.com.foxminded.university.entity.GroupEntity;
 import ua.com.foxminded.university.entity.StudentEntity;
-import ua.com.foxminded.university.repository.DaoException;
+import ua.com.foxminded.university.repository.RepositoryException;
 import ua.com.foxminded.university.repository.jdbc.StudentJdbcRepository;
 
 
@@ -39,7 +39,7 @@ class StudentJdbcRepositoryTest {
     private EntityManagerFactory entityManagerFactory;
     
     @Test
-    void update_DeletingGroupIdOfStudent_StudentHasNoGroup() throws DaoException {
+    void update_DeletingGroupIdOfStudent_StudentHasNoGroup() throws RepositoryException {
         StudentJdbcRepository studentDao = new StudentJdbcRepository(entityManagerFactory);
         StudentEntity student = new StudentEntity();
         student.setId(STUDENT_ID_NUMBER);
@@ -55,7 +55,7 @@ class StudentJdbcRepositoryTest {
     }
     
     @Test
-    void update_UdatingDatabaseData_DatabaseHasCorrectData() throws DaoException {
+    void update_UdatingDatabaseData_DatabaseHasCorrectData() throws RepositoryException {
         StudentJdbcRepository studentDao = new StudentJdbcRepository(entityManagerFactory);
         StudentEntity student = new StudentEntity();
         student.setId(STUDENT_ID_NUMBER);
@@ -75,7 +75,7 @@ class StudentJdbcRepositoryTest {
     }
     
     @Test
-    void deleteById_DeletingStudentDatabaseData_NoStudentDatabaseData() throws DaoException {
+    void deleteById_DeletingStudentDatabaseData_NoStudentDatabaseData() throws RepositoryException {
         StudentJdbcRepository studentDao = new StudentJdbcRepository(entityManagerFactory);
         studentDao.deleteById(STUDENT_ID_NUMBER);
         StudentEntity student = new StudentEntity();
@@ -88,7 +88,7 @@ class StudentJdbcRepositoryTest {
     
     
     @Test
-    void getGroupByStudentId_GettingDatabaseData_CorrectReceivedData() throws DaoException {
+    void getGroupByStudentId_GettingDatabaseData_CorrectReceivedData() throws RepositoryException {
         StudentJdbcRepository studentDao = new StudentJdbcRepository(entityManagerFactory);
         StudentEntity studentData = studentDao.getGroupByStudentId(GROUP_ID_NUMBER);
         
@@ -101,7 +101,7 @@ class StudentJdbcRepositoryTest {
     
     
     @Test
-    void insert_InsertingStudentToDatabase_CorrectInsertedData() throws DaoException {
+    void insert_InsertingStudentToDatabase_CorrectInsertedData() throws RepositoryException {
         StudentJdbcRepository studentDao = new StudentJdbcRepository(entityManagerFactory);
         StudentEntity student = new StudentEntity();
         student.setFirstName(NEW_FIRST_NAME_STUDENT);
@@ -123,7 +123,7 @@ class StudentJdbcRepositoryTest {
     
     
     @Test
-    void getById_GettingStudent_CorrectStudentData() throws DaoException {
+    void getById_GettingStudent_CorrectStudentData() throws RepositoryException {
         StudentJdbcRepository studentDao = new StudentJdbcRepository(entityManagerFactory);
         StudentEntity student = studentDao.getById(STUDENT_ID_NUMBER);
         

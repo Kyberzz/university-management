@@ -4,10 +4,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.persistence.EntityGraph;
 import javax.persistence.EntityManagerFactory;
 
 import org.junit.jupiter.api.Test;
@@ -21,7 +17,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ua.com.foxminded.university.config.AppConfigTest;
 import ua.com.foxminded.university.entity.CourseEntity;
 import ua.com.foxminded.university.entity.TeacherEntity;
-import ua.com.foxminded.university.repository.DaoException;
+import ua.com.foxminded.university.repository.RepositoryException;
 import ua.com.foxminded.university.repository.jdbc.CourseJdbcRepository;
 
 @ContextConfiguration(classes = AppConfigTest.class)
@@ -48,7 +44,7 @@ class CourseJdbcRepositoryTest {
     private EntityManagerFactory entityManagerFactory;
     
     @Test
-    void getTimetableListByCourseId_GettingDatabaseTimetableData_CorrectData() throws DaoException {
+    void getTimetableListByCourseId_GettingDatabaseTimetableData_CorrectData() throws RepositoryException {
         CourseJdbcRepository courseDao = new CourseJdbcRepository(entityManagerFactory);
         CourseEntity receivedCourse = courseDao.getTimetableListByCourseId(COURSE_ID_NUMBER);
         
@@ -67,7 +63,7 @@ class CourseJdbcRepositoryTest {
     }
     
     @Test
-    void insert_InsertingCourseDataToDatabase_DatabaseHasCorrectData() throws DaoException {
+    void insert_InsertingCourseDataToDatabase_DatabaseHasCorrectData() throws RepositoryException {
         CourseJdbcRepository courseDao = new CourseJdbcRepository(entityManagerFactory);
         CourseEntity course = new CourseEntity();
         course.setName(NEW_COURSE_NAME);
@@ -86,7 +82,7 @@ class CourseJdbcRepositoryTest {
     }
     
     @Test
-    void getById_GettingDatabaseCourseData_CorrectData() throws DaoException {
+    void getById_GettingDatabaseCourseData_CorrectData() throws RepositoryException {
         CourseJdbcRepository courseDao = new CourseJdbcRepository(entityManagerFactory);
         CourseEntity receivedCourse = courseDao.getById(COURSE_ID_NUMBER);
         
@@ -97,7 +93,7 @@ class CourseJdbcRepositoryTest {
     }
     
     @Test
-    void update_UdatingDatabaseWithNullValues_DatabaseHasNoData() throws DaoException {
+    void update_UdatingDatabaseWithNullValues_DatabaseHasNoData() throws RepositoryException {
         CourseJdbcRepository courseDao = new CourseJdbcRepository(entityManagerFactory);
         CourseEntity course = new CourseEntity();
         course.setId(COURSE_ID_NUMBER);
@@ -113,7 +109,7 @@ class CourseJdbcRepositoryTest {
     }
     
     @Test
-    void update_UpdatingDatabaseCourseData_DatabaseHasCorrectData() throws DaoException {
+    void update_UpdatingDatabaseCourseData_DatabaseHasCorrectData() throws RepositoryException {
         CourseJdbcRepository courseDao = new CourseJdbcRepository(entityManagerFactory);
         CourseEntity course = new CourseEntity();
         course.setId(COURSE_ID_NUMBER);
@@ -135,7 +131,7 @@ class CourseJdbcRepositoryTest {
     }
     
     @Test
-    void deleteById_DeletingDatabaseCourseData_DatabaseHasNoCourseData() throws DaoException {
+    void deleteById_DeletingDatabaseCourseData_DatabaseHasNoCourseData() throws RepositoryException {
         CourseJdbcRepository courseDao = new CourseJdbcRepository(entityManagerFactory);
         courseDao.deleteById(COURSE_ID_NUMBER);
         CourseEntity course = new CourseEntity();

@@ -14,8 +14,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import ua.com.foxminded.university.entity.GroupEntity;
-import ua.com.foxminded.university.repository.DaoException;
-import ua.com.foxminded.university.repository.GroupDao;
+import ua.com.foxminded.university.repository.RepositoryException;
+import ua.com.foxminded.university.repository.GroupRepository;
 import ua.com.foxminded.university.service.ServiceException;
 
 @ExtendWith(MockitoExtension.class)
@@ -27,10 +27,10 @@ class GroupServiceImplTestTestTest {
     private GroupServiceImpl groupService;
     
     @Mock
-    private GroupDao groupDaoMock;
+    private GroupRepository groupDaoMock;
     
     @Test
-    void getStudentListByGroupId() throws DaoException, ServiceException {
+    void getStudentListByGroupId() throws RepositoryException, ServiceException {
         GroupEntity groupEntity = new GroupEntity();
         groupEntity.setStudentList(new ArrayList<>());
         when(groupDaoMock.getStudentListByGroupId(ArgumentMatchers.anyInt())).thenReturn(groupEntity);
@@ -38,7 +38,7 @@ class GroupServiceImplTestTestTest {
         verify(groupDaoMock, times(1)).getStudentListByGroupId(ArgumentMatchers.anyInt());
     }
     @Test
-    void getTimetableListByGroupId_CallingInnerMethods_CorrectCallQuantity() throws DaoException, 
+    void getTimetableListByGroupId_CallingInnerMethods_CorrectCallQuantity() throws RepositoryException, 
                                                                                     ServiceException {
         GroupEntity groupEntity = new GroupEntity();
         groupEntity.setTimetableList(new ArrayList<>());;

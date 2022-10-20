@@ -15,12 +15,12 @@ import org.springframework.stereotype.Repository;
 
 import lombok.extern.slf4j.Slf4j;
 import ua.com.foxminded.university.entity.CourseEntity;
-import ua.com.foxminded.university.repository.CourseDao;
-import ua.com.foxminded.university.repository.DaoException;
+import ua.com.foxminded.university.repository.CourseRepository;
+import ua.com.foxminded.university.repository.RepositoryException;
 
 @Slf4j
 @Repository
-public class CourseJdbcRepository implements CourseDao {
+public class CourseJdbcRepository implements CourseRepository {
     
     private EntityManagerFactory entityManagerFactory;
     
@@ -30,7 +30,7 @@ public class CourseJdbcRepository implements CourseDao {
     }
     
     @Override
-    public CourseEntity getTimetableListByCourseId(int id) throws DaoException {
+    public CourseEntity getTimetableListByCourseId(int id) throws RepositoryException {
         log.debug("Get timetable list by course id={}", id);
         
         try {
@@ -45,12 +45,12 @@ public class CourseJdbcRepository implements CourseDao {
             log.trace("Timetable list of course with id={} was received.", course.getId());
             return course;
         } catch (IllegalStateException| RollbackException e) {
-            throw new DaoException("Getting the timetable list by course id failed.", e);
+            throw new RepositoryException("Getting the timetable list by course id failed.", e);
         }
     }
     
     @Override
-    public void deleteById(int id) throws DaoException {
+    public void deleteById(int id) throws RepositoryException {
         log.debug("Delete course by id={}", id);
         
         try {
@@ -60,12 +60,12 @@ public class CourseJdbcRepository implements CourseDao {
             entityManager.close();
             log.trace("Course with id={} was deleted.", id);
         } catch (IllegalStateException | IllegalArgumentException e) {
-            throw new DaoException("Deleting the course by its id failed.", e);
+            throw new RepositoryException("Deleting the course by its id failed.", e);
         }
     }
     
     @Override
-    public void update(CourseEntity entity) throws DaoException {
+    public void update(CourseEntity entity) throws RepositoryException {
         log.debug("Update course with id={}", entity.getId());
         
         try {
@@ -77,12 +77,12 @@ public class CourseJdbcRepository implements CourseDao {
             log.trace("Course with id ={} was updated.", entity.getId());
         } catch (IllegalStateException | IllegalArgumentException | TransactionRequiredException | 
                  RollbackException e) {
-            throw new DaoException("Updating the course data failed.", e);
+            throw new RepositoryException("Updating the course data failed.", e);
         }
     }
     
     @Override
-    public CourseEntity getById(int id) throws DaoException {
+    public CourseEntity getById(int id) throws RepositoryException {
         log.debug("Get course by id={}", id);
         
         EntityManager entityManager = null;
@@ -95,12 +95,12 @@ public class CourseJdbcRepository implements CourseDao {
             entityManager.close();
             return courseEntity;
         } catch (IllegalStateException | IllegalArgumentException e) {
-            throw new DaoException("Getting the course by its id failed.", e);
+            throw new RepositoryException("Getting the course by its id failed.", e);
         }
     }
     
     @Override
-    public CourseEntity insert(CourseEntity entity) throws DaoException {
+    public CourseEntity insert(CourseEntity entity) throws RepositoryException {
         log.debug("Insert course with id={}", entity.getId());
        
         try {
@@ -113,7 +113,7 @@ public class CourseJdbcRepository implements CourseDao {
             return entity;
         } catch (IllegalStateException | IllegalArgumentException | EntityExistsException | 
                  TransactionRequiredException | RollbackException  e) {
-            throw new DaoException("Inserting the course to the database failed.", e);
+            throw new RepositoryException("Inserting the course to the database failed.", e);
         }
     }
 }

@@ -13,8 +13,8 @@ import ua.com.foxminded.university.model.GroupModel;
 import ua.com.foxminded.university.model.StudentModel;
 import ua.com.foxminded.university.model.TimetableModel;
 import ua.com.foxminded.university.model.WeekDayModel;
-import ua.com.foxminded.university.repository.DaoException;
-import ua.com.foxminded.university.repository.GroupDao;
+import ua.com.foxminded.university.repository.RepositoryException;
+import ua.com.foxminded.university.repository.GroupRepository;
 import ua.com.foxminded.university.service.GroupService;
 import ua.com.foxminded.university.service.ServiceException;
 
@@ -22,10 +22,10 @@ import ua.com.foxminded.university.service.ServiceException;
 @Service
 public class GroupServiceImpl implements GroupService<GroupModel> {
     
-    private GroupDao groupDao;
+    private GroupRepository groupDao;
     
     @Autowired
-    public GroupServiceImpl(GroupDao groupDao) {
+    public GroupServiceImpl(GroupRepository groupDao) {
         this.groupDao = groupDao;
     }
     
@@ -34,7 +34,7 @@ public class GroupServiceImpl implements GroupService<GroupModel> {
         GroupEntity groupEntity = null;
         try {
             groupEntity = groupDao.getStudentListByGroupId(id);
-        } catch (DaoException e) {
+        } catch (RepositoryException e) {
             throw new ServiceException("Getting students list of the group failed.", e);
         }
        
@@ -64,7 +64,7 @@ public class GroupServiceImpl implements GroupService<GroupModel> {
         
         try {
             groupEntity = groupDao.getTimetableListByGroupId(id);
-        } catch (DaoException e) {
+        } catch (RepositoryException e) {
             throw new ServiceException("Getting timebales list of the group failed.", e);
         }
         

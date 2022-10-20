@@ -35,7 +35,7 @@ public class CourseEntity implements Serializable {
     private String name;
     private String description;
     
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "teacher_id")
     private TeacherEntity teacher;
     

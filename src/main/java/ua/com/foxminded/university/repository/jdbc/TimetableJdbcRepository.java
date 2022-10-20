@@ -11,12 +11,12 @@ import org.springframework.stereotype.Repository;
 
 import lombok.extern.slf4j.Slf4j;
 import ua.com.foxminded.university.entity.TimetableEntity;
-import ua.com.foxminded.university.repository.DaoException;
-import ua.com.foxminded.university.repository.TimetableDao;
+import ua.com.foxminded.university.repository.RepositoryException;
+import ua.com.foxminded.university.repository.TimetableRepository;
 
 @Slf4j
 @Repository
-public class TimetableJdbcRepository implements TimetableDao {
+public class TimetableJdbcRepository implements TimetableRepository {
     
     private EntityManagerFactory entityManagerFactory;
 
@@ -26,7 +26,7 @@ public class TimetableJdbcRepository implements TimetableDao {
     }
     
     @Override
-    public TimetableEntity getCourseByTimetableId(int id) throws DaoException {
+    public TimetableEntity getCourseByTimetableId(int id) throws RepositoryException {
         log.debug("Get course by timetable id={}.", id);
         
         try {
@@ -37,12 +37,12 @@ public class TimetableJdbcRepository implements TimetableDao {
             log.trace("Course by timetable id={} was received.", timetable.getId());
             return timetable;
         } catch (IllegalStateException | IllegalArgumentException e) {
-            throw new DaoException("Getting the database timetable data failed.", e);
+            throw new RepositoryException("Getting the database timetable data failed.", e);
         }
     }
     
     @Override
-    public TimetableEntity getGroupByTimetableId(int id) throws DaoException {
+    public TimetableEntity getGroupByTimetableId(int id) throws RepositoryException {
         log.debug("Get group by timetable id={}.", id);
         
         try {
@@ -52,12 +52,12 @@ public class TimetableJdbcRepository implements TimetableDao {
             log.trace("Group of timetable id={} was received.", timetable.getId());
             return timetable;
         } catch (IllegalStateException | IllegalArgumentException e) {
-            throw new DaoException("Getting the database grou data by the timetable id failed.", e);
+            throw new RepositoryException("Getting the database grou data by the timetable id failed.", e);
         }
     }
     
     @Override
-    public TimetableEntity getById(int id) throws DaoException {
+    public TimetableEntity getById(int id) throws RepositoryException {
         log.debug("Get timetable by id={}.", id);
         
         try {
@@ -67,12 +67,12 @@ public class TimetableJdbcRepository implements TimetableDao {
             log.trace("Timetable with id={} was received.", timetable.getId());
             return timetable;
         } catch (IllegalStateException | IllegalArgumentException e) {
-            throw new DaoException("Getting the database timetable data by its id failed.", e);
+            throw new RepositoryException("Getting the database timetable data by its id failed.", e);
         }
     }
     
     @Override
-    public void update(TimetableEntity entity) throws DaoException {
+    public void update(TimetableEntity entity) throws RepositoryException {
         log.debug("Update timetable with id={}.", entity.getId());
         
         try {
@@ -84,12 +84,12 @@ public class TimetableJdbcRepository implements TimetableDao {
             log.trace("Timetable with id={} was updated.", entity.getId());
         } catch (IllegalStateException | IllegalArgumentException | TransactionRequiredException | 
                  RollbackException e) {
-            throw new DaoException("Updating the database timetable data failed.", e);
+            throw new RepositoryException("Updating the database timetable data failed.", e);
         }
     }
     
     @Override
-    public void deleteById(int id) throws DaoException {
+    public void deleteById(int id) throws RepositoryException {
         log.debug("Delete timetable with id={}.", id);
         
         try {
@@ -99,12 +99,12 @@ public class TimetableJdbcRepository implements TimetableDao {
             entityManager.close();
             log.trace("Timetable with id={} was deleted.", id);
         } catch (IllegalStateException | IllegalArgumentException | TransactionRequiredException e) {
-            throw new DaoException("Deleting the database timetable data by its id failed.", e);
+            throw new RepositoryException("Deleting the database timetable data by its id failed.", e);
         }
     }
     
     @Override
-    public TimetableEntity insert(TimetableEntity entity) throws DaoException {
+    public TimetableEntity insert(TimetableEntity entity) throws RepositoryException {
         log.debug("Insert timetable with id={}.", entity.getId());
         
         try {
@@ -117,7 +117,7 @@ public class TimetableJdbcRepository implements TimetableDao {
             return entity;
         } catch (IllegalStateException | EntityExistsException | IllegalArgumentException | 
                  TransactionRequiredException | RollbackException e) {
-            throw new DaoException("Inserting the timetable data to the database failed.", e);
+            throw new RepositoryException("Inserting the timetable data to the database failed.", e);
         }
     }
 }

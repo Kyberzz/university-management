@@ -10,8 +10,8 @@ import ua.com.foxminded.university.entity.GroupEntity;
 import ua.com.foxminded.university.entity.TimetableEntity;
 import ua.com.foxminded.university.entity.WeekDayEntity;
 import ua.com.foxminded.university.model.TimetableModel;
-import ua.com.foxminded.university.repository.DaoException;
-import ua.com.foxminded.university.repository.TimetableDao;
+import ua.com.foxminded.university.repository.RepositoryException;
+import ua.com.foxminded.university.repository.TimetableRepository;
 import ua.com.foxminded.university.service.ServiceException;
 import ua.com.foxminded.university.service.TimetableService;
 
@@ -19,10 +19,10 @@ import ua.com.foxminded.university.service.TimetableService;
 @Service
 public class TimetableServiceImpl implements TimetableService<TimetableModel> {
     
-    private TimetableDao timetableDao;
+    private TimetableRepository timetableDao;
     
     @Autowired
-    public TimetableServiceImpl(TimetableDao timetableDao) {
+    public TimetableServiceImpl(TimetableRepository timetableDao) {
         this.timetableDao = timetableDao;
     }
     
@@ -44,7 +44,7 @@ public class TimetableServiceImpl implements TimetableService<TimetableModel> {
 
         try {
             timetableDao.update(timetableEntity);
-        } catch (DaoException e) {
+        } catch (RepositoryException e) {
             throw new ServiceException("Updating the timetable failed.", e);
         }
     }
