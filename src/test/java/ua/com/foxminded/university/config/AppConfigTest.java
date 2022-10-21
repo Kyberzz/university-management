@@ -29,7 +29,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @EnableTransactionManagement
 @ComponentScan(basePackages = "ua.com.foxminded.university")
-@PropertySource("/jdbc.properties")
+@PropertySource({"/jdbc.properties", "/sql-queries.properties"})
 @Configuration
 public class AppConfigTest {
     
@@ -106,7 +106,7 @@ public class AppConfigTest {
       //  jpaProperties.setProperty("hibernate.hbm2ddl.auto", "none");
         jpaProperties.setProperty("hibernate.dialect", "org.hibernate.dialect.PostgreSQL10Dialect");
   //      jpaProperties.setProperty("hibernate.dialect", "org.hibernate.dialect.H2Dialect");
-     //   jpaProperties.setProperty("hibernate.show_sql", "true");
+        jpaProperties.setProperty("hibernate.show_sql", "true");
         
         entityManagerFactory.setJpaProperties(jpaProperties);
         return entityManagerFactory;

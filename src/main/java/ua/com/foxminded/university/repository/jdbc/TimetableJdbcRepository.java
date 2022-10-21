@@ -1,15 +1,21 @@
 package ua.com.foxminded.university.repository.jdbc;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.persistence.EntityExistsException;
+import javax.persistence.EntityGraph;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.RollbackException;
 import javax.persistence.TransactionRequiredException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Repository;
 
 import lombok.extern.slf4j.Slf4j;
+import ua.com.foxminded.university.entity.GroupEntity;
 import ua.com.foxminded.university.entity.TimetableEntity;
 import ua.com.foxminded.university.repository.RepositoryException;
 import ua.com.foxminded.university.repository.TimetableRepository;
@@ -18,11 +24,16 @@ import ua.com.foxminded.university.repository.TimetableRepository;
 @Repository
 public class TimetableJdbcRepository implements TimetableRepository {
     
+    private static final String SELECT_MAX_ID = "timetable.insert.select";
+    private static final String INSERT = "timetable.insert.insert";
+    
     private EntityManagerFactory entityManagerFactory;
+    private Environment environment;
 
     @Autowired
-    public TimetableJdbcRepository(EntityManagerFactory entityManagerFactory) {
+    public TimetableJdbcRepository(EntityManagerFactory entityManagerFactory, Environment environment) {
         this.entityManagerFactory = entityManagerFactory;
+        this.environment = environment;
     }
     
     @Override
@@ -31,7 +42,11 @@ public class TimetableJdbcRepository implements TimetableRepository {
         
         try {
             EntityManager entityManager = entityManagerFactory.createEntityManager();
-            TimetableEntity timetable = entityManager.find(TimetableEntity.class, id);
+            EntityGraph<TimetableEntity> entityGraph = entityManager.createEntityGraph(TimetableEntity.class);
+            entityGraph.addAttributeNodes("id", "startTime", "description", "course", "weekDay");
+            Map<String, Object> properties = new HashMap<>();
+            properties.put("javax.persistence.fetchgraph", entityGraph);
+            TimetableEntity timetable = entityManager.find(TimetableEntity.class, id, properties);
             timetable.getCourse().getId();
             entityManager.close();
             log.trace("Course by timetable id={} was received.", timetable.getId());
@@ -47,7 +62,11 @@ public class TimetableJdbcRepository implements TimetableRepository {
         
         try {
             EntityManager entityManager = entityManagerFactory.createEntityManager();
-            TimetableEntity timetable = entityManager.find(TimetableEntity.class, id);
+            EntityGraph<TimetableEntity> entityGraph = entityManager.createEntityGraph(TimetableEntity.class);
+            entityGraph.addAttributeNodes("id", "startTime", "endTime", "description", "group", "weekDay");
+            Map<String, Object> properties = new HashMap<>();
+            properties.put("javax.persistence.fetchgraph", entityGraph);
+            TimetableEntity timetable = entityManager.find(TimetableEntity.class, id, properties);
             entityManager.close();
             log.trace("Group of timetable id={} was received.", timetable.getId());
             return timetable;
@@ -110,7 +129,18 @@ public class TimetableJdbcRepository implements TimetableRepository {
         try {
             EntityManager entityManager = entityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
-            entityManager.persist(entity);
+            entityManager.createNativeQuery(environment.getProperty(INSERT))
+                    .setParameter(1, entity.getGroup().getId())
+                    .setParameter(2, entity.getCourse().getId())
+                    .setParameter(3, entity.getStartTime())
+                    .setParameter(4, entity.getEndTime())
+                    .setParameter(5, entity.getDescription())
+                    .setParameter(6, entity.getWeekDay().toString())
+                    .executeUpdate();
+            entityManager.flush();
+            int receivedId = (int)entityManager.createNativeQuery(environment.getProperty(SELECT_MAX_ID))
+                                               .getSingleResult();
+            entity.setId(receivedId);
             entityManager.getTransaction().commit();
             entityManager.close();
             log.trace("Timetable with id={} was inserted to database.", entity.getId());
