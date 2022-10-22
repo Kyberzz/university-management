@@ -8,7 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import ua.com.foxminded.university.entity.CourseEntity;
 import ua.com.foxminded.university.entity.GroupEntity;
 import ua.com.foxminded.university.entity.TimetableEntity;
-import ua.com.foxminded.university.entity.WeekDayEntity;
+import ua.com.foxminded.university.entity.DayOfWeek;
 import ua.com.foxminded.university.model.TimetableModel;
 import ua.com.foxminded.university.repository.RepositoryException;
 import ua.com.foxminded.university.repository.TimetableRepository;
@@ -40,7 +40,7 @@ public class TimetableServiceImpl implements TimetableService<TimetableModel> {
         groupEntity.setId(timetableModel.getGroup().getId());
         timetableEntity.setGroup(groupEntity);
         timetableEntity.setStartTime(timetableModel.getStartTime());
-        timetableEntity.setWeekDay(WeekDayEntity.valueOf(timetableModel.getWeekDay().toString()));
+        timetableEntity.setWeekDay(DayOfWeek.valueOf(timetableModel.getWeekDay().toString()));
 
         try {
             timetableDao.update(timetableEntity);

@@ -8,23 +8,11 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.NamedAttributeNode;
-import javax.persistence.NamedEntityGraph;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import lombok.Data;
 
-@NamedEntityGraph(name = "group.timetalbeList", attributeNodes = {
-        @NamedAttributeNode("id"),
-        @NamedAttributeNode("name"),
-        @NamedAttributeNode("timetableList")
-})
-@NamedEntityGraph(name = "group.studentList", attributeNodes = {
-        @NamedAttributeNode("id"),
-        @NamedAttributeNode("name"),
-        @NamedAttributeNode("studentList")
-})
 @Entity
 @Table(name = "groups")
 @Data

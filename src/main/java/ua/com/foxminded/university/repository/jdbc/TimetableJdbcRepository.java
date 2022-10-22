@@ -1,10 +1,6 @@
 package ua.com.foxminded.university.repository.jdbc;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.persistence.EntityExistsException;
-import javax.persistence.EntityGraph;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.RollbackException;
@@ -15,7 +11,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Repository;
 
 import lombok.extern.slf4j.Slf4j;
-import ua.com.foxminded.university.entity.GroupEntity;
 import ua.com.foxminded.university.entity.TimetableEntity;
 import ua.com.foxminded.university.repository.RepositoryException;
 import ua.com.foxminded.university.repository.TimetableRepository;
@@ -43,12 +38,8 @@ public class TimetableJdbcRepository implements TimetableRepository {
         
         try {
             EntityManager entityManager = entityManagerFactory.createEntityManager();
-            EntityGraph<TimetableEntity> entityGraph = entityManager.createEntityGraph(TimetableEntity.class);
-            entityGraph.addAttributeNodes("id", "startTime", "description", "course", "weekDay");
-            Map<String, Object> properties = new HashMap<>();
-            properties.put("javax.persistence.fetchgraph", entityGraph);
-            TimetableEntity timetable = entityManager.find(TimetableEntity.class, id, properties);
-            timetable.getCourse().getId();
+            TimetableEntity timetable = entityManager.find(TimetableEntity.class, id);
+            timetable.getCourse().getName();
             entityManager.close();
             log.trace("Course by timetable id={} was received.", timetable.getId());
             return timetable;
@@ -63,11 +54,8 @@ public class TimetableJdbcRepository implements TimetableRepository {
         
         try {
             EntityManager entityManager = entityManagerFactory.createEntityManager();
-            EntityGraph<TimetableEntity> entityGraph = entityManager.createEntityGraph(TimetableEntity.class);
-            entityGraph.addAttributeNodes("id", "startTime", "endTime", "description", "group", "weekDay");
-            Map<String, Object> properties = new HashMap<>();
-            properties.put("javax.persistence.fetchgraph", entityGraph);
-            TimetableEntity timetable = entityManager.find(TimetableEntity.class, id, properties);
+            TimetableEntity timetable = entityManager.find(TimetableEntity.class, id);
+            timetable.getGroup().getName();
             entityManager.close();
             log.trace("Group of timetable id={} was received.", timetable.getId());
             return timetable;
@@ -97,10 +85,6 @@ public class TimetableJdbcRepository implements TimetableRepository {
         
         try {
             EntityManager entityManager = entityManagerFactory.createEntityManager();
-            EntityGraph<TimetableEntity> entityGraph = entityManager.createEntityGraph(TimetableEntity.class);
-            entityGraph.addAttributeNodes( "group", "course", "startTime", "endTime", 
-                                          "description", "weekDay", "id");
-            entityManager.getTransaction().begin();
             entityManager.createNativeQuery(environment.getProperty(UPDATE))
                          .setParameter(1, null)
                          .setParameter(2, null)
@@ -141,7 +125,6 @@ public class TimetableJdbcRepository implements TimetableRepository {
         
         try {
             EntityManager entityManager = entityManagerFactory.createEntityManager();
-            entityManager.getTransaction().begin();
             entityManager.createNativeQuery(environment.getProperty(INSERT))
                     .setParameter(1, entity.getGroup().getId())
                     .setParameter(2, entity.getCourse().getId())
@@ -154,7 +137,6 @@ public class TimetableJdbcRepository implements TimetableRepository {
             int receivedId = (int)entityManager.createNativeQuery(environment.getProperty(SELECT_MAX_ID))
                                                .getSingleResult();
             entity.setId(receivedId);
-            entityManager.getTransaction().commit();
             entityManager.close();
             log.trace("Timetable with id={} was inserted to database.", entity.getId());
             return entity;

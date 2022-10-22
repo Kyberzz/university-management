@@ -15,9 +15,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import ua.com.foxminded.university.config.AppConfigTest;
 import ua.com.foxminded.university.entity.CourseEntity;
+import ua.com.foxminded.university.entity.DayOfWeek;
 import ua.com.foxminded.university.entity.GroupEntity;
 import ua.com.foxminded.university.entity.TimetableEntity;
-import ua.com.foxminded.university.entity.WeekDayEntity;
 import ua.com.foxminded.university.repository.RepositoryException;
 import ua.com.foxminded.university.repository.TimetableRepository;
 import ua.com.foxminded.university.repository.jdbc.TimetableJdbcRepository;
@@ -58,7 +58,7 @@ class TimetableJdbcRepositoryTest {
         group.setId(GROUP_ID_NUMBER);
         timetable.setGroup(group);
         timetable.setStartTime(START_TIME);
-        timetable.setWeekDay(WeekDayEntity.MONDAY);
+        timetable.setWeekDay(DayOfWeek.MONDAY);
        
         TimetableRepository timetableDao = new TimetableJdbcRepository(entityManagerFactory, environment);
         TimetableEntity timetableWithId = timetableDao.insert(timetable);

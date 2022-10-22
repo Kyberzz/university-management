@@ -1,11 +1,6 @@
 package ua.com.foxminded.university.repository.jdbc;
 
-
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.persistence.EntityExistsException;
-import javax.persistence.EntityGraph;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.RollbackException;
@@ -49,12 +44,10 @@ public class GroupJdbcRepository implements GroupRepository {
     public GroupEntity getTimetableListByGroupId(int id) throws RepositoryException {
         log.debug("Get timetable list by group id={}", id);
         
-        try  {
+        try {
             EntityManager entityManager = entityManagerFactory.createEntityManager();
-            EntityGraph<?> entityGraph = entityManager.getEntityGraph("group.timetalbeList");
-            Map<String, Object> properties = new HashMap<>();
-            properties.put("javax.persistence.fetchgraph", entityGraph);
-            GroupEntity group = entityManager.find(GroupEntity.class, id, properties);
+            GroupEntity group = entityManager.find(GroupEntity.class, id);
+            group.getTimetableList().size();
             entityManager.close();
             log.trace("Timetable list of group with id={} was received.", group.getId());
             return group;
@@ -69,10 +62,8 @@ public class GroupJdbcRepository implements GroupRepository {
         
         try {
             EntityManager entityManager = entityManagerFactory.createEntityManager();
-            EntityGraph<?> entityGraph = entityManager.getEntityGraph("group.studentList");
-            Map<String, Object> properties = new HashMap<>(); 
-            properties.put("javax.persistence.fetchgraph", entityGraph);
-            GroupEntity group = entityManager.find(GroupEntity.class, id, properties);
+            GroupEntity group = entityManager.find(GroupEntity.class, id);
+            group.getStudentList().size();
             entityManager.close();
             log.trace("Students list of the group with id={} was received", group.getId());
             return group;
@@ -88,9 +79,7 @@ public class GroupJdbcRepository implements GroupRepository {
         
         try {
             EntityManager entityManager = entityManagerFactory.createEntityManager();
-            entityManager.getTransaction().begin();
             entityManager.persist(entity);
-            entityManager.getTransaction().commit();
             entityManager.close();
             log.trace("Group with id={} was inserted.", entity.getId());
             return entity;
@@ -106,9 +95,7 @@ public class GroupJdbcRepository implements GroupRepository {
         
         try {
             EntityManager entityManager = entityManagerFactory.createEntityManager();
-            entityManager.getTransaction().begin();
             entityManager.merge(entity);
-            entityManager.getTransaction().commit();
             entityManager.close();
             log.trace("Group with id={} was updated.", entity.getId());
         } catch (IllegalStateException | IllegalArgumentException | TransactionRequiredException | 

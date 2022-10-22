@@ -10,17 +10,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedAttributeNode;
-import javax.persistence.NamedEntityGraph;
 import javax.persistence.Table;
 
 import lombok.Data;
 
-@NamedEntityGraph(name = "groupOfStudent", attributeNodes = {
-        @NamedAttributeNode("id"),
-        @NamedAttributeNode("firstName"),
-        @NamedAttributeNode("lastName"),
-        @NamedAttributeNode("group")})
 @Entity
 @Table(name = "students")
 @Data

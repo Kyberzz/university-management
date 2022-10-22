@@ -1,10 +1,6 @@
 package ua.com.foxminded.university.repository.jdbc;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.persistence.EntityExistsException;
-import javax.persistence.EntityGraph;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.RollbackException;
@@ -35,10 +31,8 @@ public class StudentJdbcRepository implements StudentRepository {
         
         try {
             EntityManager entityManager = entityManagerFactory.createEntityManager();
-            EntityGraph<?> entityGraph = entityManager.getEntityGraph("groupOfStudent");
-            Map<String, Object> properties = new HashMap<>();
-            properties.put("javax.persistence.fetchgraph", entityGraph);
-            StudentEntity student = entityManager.find(StudentEntity.class, id, properties);
+            StudentEntity student = entityManager.find(StudentEntity.class, id);
+            student.getGroup().getName();
             entityManager.close();
             log.trace("Group having student id={} was received.", student.getId());
             return student;
@@ -53,9 +47,7 @@ public class StudentJdbcRepository implements StudentRepository {
         
         try {
             EntityManager entityManager = entityManagerFactory.createEntityManager();
-            entityManager.getTransaction().begin();
             entityManager.persist(entity);
-            entityManager.getTransaction().commit();
             entityManager.close();
             log.trace("Student with id={} was inserted.", entity.getId());
             return entity;
@@ -86,9 +78,7 @@ public class StudentJdbcRepository implements StudentRepository {
         
         try {
             EntityManager entityManager = entityManagerFactory.createEntityManager();
-            entityManager.getTransaction().begin();
             entityManager.merge(entity);
-            entityManager.getTransaction().commit();
             entityManager.close();
             log.debug("Student with id={} was updated.", entity.getId());
         } catch (IllegalStateException | IllegalArgumentException | TransactionRequiredException | 

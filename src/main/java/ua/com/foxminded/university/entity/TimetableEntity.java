@@ -47,5 +47,5 @@ public class TimetableEntity implements Serializable {
     
     @Enumerated(EnumType.STRING)
     @Column(name = "week_day")
-    private WeekDayEntity weekDay;
+    private DayOfWeek weekDay;
 }

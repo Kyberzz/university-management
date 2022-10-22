@@ -1,10 +1,6 @@
 package ua.com.foxminded.university.repository.jdbc;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.persistence.EntityExistsException;
-import javax.persistence.EntityGraph;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.RollbackException;
@@ -35,12 +31,8 @@ public class TeacherJdbcRepository implements TeacherRepository {
         
         try {
             EntityManager entityManager = entityManagerFactory.createEntityManager();
-            EntityGraph<TeacherEntity> entityGraph = entityManager.createEntityGraph(TeacherEntity.class);
-            entityGraph.addAttributeNodes("id", "firstName", "lastName", "courseList");
-            Map<String, Object> properties = new HashMap<>();
-            properties.put("javax.persistence.fetchgraph", entityGraph);
-            TeacherEntity teacher = entityManager.find(TeacherEntity.class, id, properties);
-            teacher.getCourseList();
+            TeacherEntity teacher = entityManager.find(TeacherEntity.class, id);
+            teacher.getCourseList().size();
             entityManager.close();
             log.trace("Courses list of teacher id={} was received");
             return teacher;
@@ -72,9 +64,7 @@ public class TeacherJdbcRepository implements TeacherRepository {
         
         try {
             EntityManager entityManager = entityManagerFactory.createEntityManager();
-            entityManager.getTransaction().begin();
             entityManager.merge(entity);
-            entityManager.getTransaction().commit();
             entityManager.close();
             log.trace("Teacher with id={} was updated.", entity.getId());
         } catch (IllegalStateException | IllegalArgumentException | TransactionRequiredException | 
@@ -104,9 +94,7 @@ public class TeacherJdbcRepository implements TeacherRepository {
         
         try {
             EntityManager entityManager = entityManagerFactory.createEntityManager();
-            entityManager.getTransaction().begin();
             entityManager.persist(entity);
-            entityManager.getTransaction().commit();
             entityManager.close();
             log.trace("Teacher with id={} was added to the database.", entity.getId());
             return entity;

@@ -1,10 +1,6 @@
 package ua.com.foxminded.university.repository.jdbc;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.persistence.EntityExistsException;
-import javax.persistence.EntityGraph;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.RollbackException;
@@ -35,12 +31,8 @@ public class CourseJdbcRepository implements CourseRepository {
         
         try {
             EntityManager entityManager = entityManagerFactory.createEntityManager();
-            EntityGraph<?> entityGraph = entityManager.createEntityGraph("tipetableListOfCourse");
-            Map<String, Object> properties = new HashMap<>();
-            properties.put("javax.persistence.fetchgraph", entityGraph);
-            entityManager.getTransaction().begin();
-            CourseEntity course = entityManager.find(CourseEntity.class, id, properties);
-            entityManager.getTransaction().commit();
+            CourseEntity course = entityManager.find(CourseEntity.class, id);
+            course.getTimetableList().size();
             entityManager.close();
             log.trace("Timetable list of course with id={} was received.", course.getId());
             return course;
@@ -70,9 +62,7 @@ public class CourseJdbcRepository implements CourseRepository {
         
         try {
             EntityManager entityManager = entityManagerFactory.createEntityManager();
-            entityManager.getTransaction().begin();
             entityManager.merge(entity);
-            entityManager.getTransaction().commit();
             entityManager.close();
             log.trace("Course with id ={} was updated.", entity.getId());
         } catch (IllegalStateException | IllegalArgumentException | TransactionRequiredException | 
@@ -85,10 +75,8 @@ public class CourseJdbcRepository implements CourseRepository {
     public CourseEntity getById(int id) throws RepositoryException {
         log.debug("Get course by id={}", id);
         
-        EntityManager entityManager = null;
-        
         try {
-            entityManager = entityManagerFactory.createEntityManager();
+            EntityManager entityManager = entityManagerFactory.createEntityManager();
             CourseEntity courseEntity = entityManager.find(CourseEntity.class, id);
             entityManager.close();
             log.trace("Course with id={} was received.", courseEntity.getId());
@@ -105,9 +93,7 @@ public class CourseJdbcRepository implements CourseRepository {
        
         try {
             EntityManager entityManager = entityManagerFactory.createEntityManager();
-            entityManager.getTransaction().begin();
             entityManager.persist(entity);
-            entityManager.getTransaction().commit();
             entityManager.close();
             log.trace("Course with id={} was inserted.", entity.getId());
             return entity;
