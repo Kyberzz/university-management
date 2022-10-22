@@ -24,6 +24,7 @@ import ua.com.foxminded.university.repository.TimetableRepository;
 @Repository
 public class TimetableJdbcRepository implements TimetableRepository {
     
+    private static final String UPDATE = "timetalbe.udate";
     private static final String SELECT_MAX_ID = "timetable.insert.select";
     private static final String INSERT = "timetable.insert.insert";
     
@@ -96,8 +97,20 @@ public class TimetableJdbcRepository implements TimetableRepository {
         
         try {
             EntityManager entityManager = entityManagerFactory.createEntityManager();
+            EntityGraph<TimetableEntity> entityGraph = entityManager.createEntityGraph(TimetableEntity.class);
+            entityGraph.addAttributeNodes( "group", "course", "startTime", "endTime", 
+                                          "description", "weekDay", "id");
             entityManager.getTransaction().begin();
-            entityManager.merge(entity);
+            entityManager.createNativeQuery(environment.getProperty(UPDATE))
+                         .setParameter(1, null)
+                         .setParameter(2, null)
+                         .setParameter(3, entity.getStartTime())
+                         .setParameter(4, entity.getEndTime())
+                         .setParameter(5, entity.getDescription())
+                         .setParameter(6, entity.getWeekDay().toString())
+                         .setParameter(7, entity.getId())
+                         .setHint("javax.persistence.loadgraph", entityManager)
+                         .executeUpdate();
             entityManager.getTransaction().commit();
             entityManager.close();
             log.trace("Timetable with id={} was updated.", entity.getId());
