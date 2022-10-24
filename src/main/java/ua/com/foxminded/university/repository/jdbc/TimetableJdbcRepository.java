@@ -93,7 +93,7 @@ public class TimetableJdbcRepository implements TimetableRepository {
                          .setParameter(5, entity.getDescription())
                          .setParameter(6, entity.getWeekDay().toString())
                          .setParameter(7, entity.getId())
-                         .setHint("javax.persistence.loadgraph", entityManager)
+                     //    .setHint("javax.persistence.loadgraph", entityManager)
                          .executeUpdate();
             entityManager.getTransaction().commit();
             entityManager.close();
@@ -125,20 +125,30 @@ public class TimetableJdbcRepository implements TimetableRepository {
         
         try {
             EntityManager entityManager = entityManagerFactory.createEntityManager();
-            entityManager.createNativeQuery(environment.getProperty(INSERT))
-                    .setParameter(1, entity.getGroup().getId())
-                    .setParameter(2, entity.getCourse().getId())
-                    .setParameter(3, entity.getStartTime())
-                    .setParameter(4, entity.getEndTime())
-                    .setParameter(5, entity.getDescription())
-                    .setParameter(6, entity.getWeekDay().toString())
+           // entityManager.persist(entity);
+        //   entity.getGroup().getName();
+        //    entity.getCourse().getName();
+          //  entityManager.flush();
+            
+           
+            entityManager.createNativeQuery("insert into university.timetable(start_time, end_time) values(?, ?)")
+                    .setParameter(1, entity.getStartTime())
+                    .setParameter(2, entity.getEndTime())
                     .executeUpdate();
-            entityManager.flush();
-            int receivedId = (int)entityManager.createNativeQuery(environment.getProperty(SELECT_MAX_ID))
-                                               .getSingleResult();
-            entity.setId(receivedId);
+                //    .setParameter(1, entity.getGroup().getId())
+                //    .setParameter(2, entity.getCourse().getId())
+                //    .setParameter(5, entity.getDescription())
+                //    .setParameter(6, entity.getWeekDay().toString())
+                    
+        //    entityManager.flush();
+            
+       //     int receivedId = (int)entityManager.createNativeQuery(environment.getProperty(SELECT_MAX_ID))
+       //                                        .getSingleResult();
+       //     entity.setId(receivedId);
+            
             entityManager.close();
             log.trace("Timetable with id={} was inserted to database.", entity.getId());
+            entity.setId(77);
             return entity;
         } catch (IllegalStateException | EntityExistsException | IllegalArgumentException | 
                  TransactionRequiredException | RollbackException e) {

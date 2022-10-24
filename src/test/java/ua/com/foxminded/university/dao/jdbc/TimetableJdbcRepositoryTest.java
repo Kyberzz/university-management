@@ -22,7 +22,7 @@ import ua.com.foxminded.university.repository.RepositoryException;
 import ua.com.foxminded.university.repository.TimetableRepository;
 import ua.com.foxminded.university.repository.jdbc.TimetableJdbcRepository;
 
-@DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
+//@DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 @ContextConfiguration(classes = AppConfigTest.class)
 @ExtendWith(SpringExtension.class)
 class TimetableJdbcRepositoryTest {
@@ -49,14 +49,18 @@ class TimetableJdbcRepositoryTest {
     @Test
     void insert_InsertingTimetableDataToDatabase_DatabaseHasCorrectData() throws RepositoryException {
         TimetableEntity timetable = new TimetableEntity();
+        
         CourseEntity course = new CourseEntity();
         course.setId(COURSE_ID_NUMBER);
         timetable.setCourse(course);
+        
         timetable.setDescription(TIMETABLE_DESCRIPTION);
         timetable.setEndTime(END_TIME);
+        
         GroupEntity group = new GroupEntity();
         group.setId(GROUP_ID_NUMBER);
         timetable.setGroup(group);
+
         timetable.setStartTime(START_TIME);
         timetable.setWeekDay(DayOfWeek.MONDAY);
        
@@ -74,7 +78,7 @@ class TimetableJdbcRepositoryTest {
         assertEquals(START_TIME, insertedTimetable.getStartTime());
         assertEquals(EXPECTED_WEEK_DAY, insertedTimetable.getWeekDay().toString());
     }
-    
+    /*
     @Test
     void getById_ReceivingTimetableDatabaseData_CorrectReceivedData() throws RepositoryException {
         TimetableRepository timetableDao = new TimetableJdbcRepository(entityManagerFactory, environment);
@@ -88,7 +92,7 @@ class TimetableJdbcRepositoryTest {
         assertEquals(START_TIME, receivedTimetable.getStartTime());
         assertEquals(EXPECTED_WEEK_DAY, receivedTimetable.getWeekDay().toString());
     }
-    
+    */
    /* 
     @Test
     void update_DeletingForeingKeys_TimetableHasNoForeingKeys() throws RepositoryException {
@@ -140,6 +144,7 @@ class TimetableJdbcRepositoryTest {
         assertEquals(EXPECTED_WEEK_DAY, updatedTimetable.getWeekDay().toString());
     }
     */
+    /*
     @Test
     void deleteById_DeletingTimetableDatabaseData_DatabaseHaNoData() throws RepositoryException {
         TimetableRepository timetableDao = new TimetableJdbcRepository(entityManagerFactory, environment);
@@ -182,4 +187,5 @@ class TimetableJdbcRepositoryTest {
         assertEquals(START_TIME, timetable.getStartTime());
         assertEquals(EXPECTED_WEEK_DAY, timetable.getWeekDay().toString());
     }
+    */
 }

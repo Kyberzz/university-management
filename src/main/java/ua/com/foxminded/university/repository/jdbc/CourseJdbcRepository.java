@@ -8,6 +8,7 @@ import javax.persistence.TransactionRequiredException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.extern.slf4j.Slf4j;
 import ua.com.foxminded.university.entity.CourseEntity;
@@ -62,7 +63,14 @@ public class CourseJdbcRepository implements CourseRepository {
         
         try {
             EntityManager entityManager = entityManagerFactory.createEntityManager();
+         //   entityManager.find(CourseEntity.class, entity.getId());
+         //   entityManager.getTransaction().begin();
             entityManager.merge(entity);
+         //   entityManager.getTransaction().commit();
+         //   entityManager.persist(entity);
+            
+            // 
+            // entityManager.merge(entity);
             entityManager.close();
             log.trace("Course with id ={} was updated.", entity.getId());
         } catch (IllegalStateException | IllegalArgumentException | TransactionRequiredException | 
