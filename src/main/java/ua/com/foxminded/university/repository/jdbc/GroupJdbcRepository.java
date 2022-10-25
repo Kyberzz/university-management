@@ -2,11 +2,9 @@ package ua.com.foxminded.university.repository.jdbc;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.RollbackException;
+import javax.persistence.PersistenceContext;
 import javax.persistence.TransactionRequiredException;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import lombok.extern.slf4j.Slf4j;
@@ -18,24 +16,22 @@ import ua.com.foxminded.university.repository.GroupRepository;
 @Repository
 public class GroupJdbcRepository implements GroupRepository {
     
-    private EntityManagerFactory entityManagerFactory;
+    @PersistenceContext
+    private EntityManager entityManager;
     
-    @Autowired
-    public GroupJdbcRepository(EntityManagerFactory entityManagerFactory) {
-        this.entityManagerFactory = entityManagerFactory;
+    public GroupJdbcRepository(EntityManager entityManager) {
+        this.entityManager = entityManager;
     }
-    
+
     @Override
     public GroupEntity getById(int id) throws RepositoryException {
         log.debug("Get group by id={}", id);
         
         try {
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
             GroupEntity group = entityManager.find(GroupEntity.class, id);
-            entityManager.close();
             log.trace("Group with id={} was received.", group.getId());
             return group;
-        } catch (IllegalStateException | IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             throw new RepositoryException("Getting the group by its id failed.", e);
         }
     }
@@ -45,13 +41,11 @@ public class GroupJdbcRepository implements GroupRepository {
         log.debug("Get timetable list by group id={}", id);
         
         try {
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
             GroupEntity group = entityManager.find(GroupEntity.class, id);
             group.getTimetableList().size();
-            entityManager.close();
             log.trace("Timetable list of group with id={} was received.", group.getId());
             return group;
-        } catch (IllegalStateException | IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             throw new RepositoryException("Getting timetable list by the group id failed.", e);
         }
     }
@@ -61,13 +55,11 @@ public class GroupJdbcRepository implements GroupRepository {
         log.debug("Get students list by group id={}", id);
         
         try {
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
             GroupEntity group = entityManager.find(GroupEntity.class, id);
             group.getStudentList().size();
-            entityManager.close();
             log.trace("Students list of the group with id={} was received", group.getId());
             return group;
-        } catch (IllegalStateException | IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             throw new RepositoryException("Getting students list by the group id failed.", e);
         }
     }
@@ -78,28 +70,23 @@ public class GroupJdbcRepository implements GroupRepository {
         log.debug("Insert group with id={}", entity.getId());
         
         try {
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
             entityManager.persist(entity);
-            entityManager.close();
             log.trace("Group with id={} was inserted.", entity.getId());
             return entity;
-        } catch (IllegalStateException | EntityExistsException | IllegalArgumentException | 
-                TransactionRequiredException | RollbackException e) {
+        } catch (EntityExistsException | IllegalArgumentException | TransactionRequiredException e) {
             throw new RepositoryException("Inserting the group to the database failed.", e);
         }
     }
     
     @Override
-    public void update(GroupEntity entity) throws RepositoryException {
+    public GroupEntity update(GroupEntity entity) throws RepositoryException {
         log.debug("Update group with id={}.", entity.getId());
         
         try {
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
-            entityManager.merge(entity);
-            entityManager.close();
+            GroupEntity mergedEntity = entityManager.merge(entity);
             log.trace("Group with id={} was updated.", entity.getId());
-        } catch (IllegalStateException | IllegalArgumentException | TransactionRequiredException | 
-                 RollbackException e) {
+            return mergedEntity;
+        } catch (IllegalArgumentException | TransactionRequiredException e) {
             throw new RepositoryException("Updating the group failed.", e);
         }
     }
@@ -109,12 +96,10 @@ public class GroupJdbcRepository implements GroupRepository {
         log.debug("Delete group by id={}.", id);
         
         try {
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
             GroupEntity group = entityManager.find(GroupEntity.class, id);
             entityManager.remove(group);
-            entityManager.close();
             log.trace("Group with id={} was deleted.", id);
-        } catch (IllegalStateException | IllegalArgumentException | TransactionRequiredException e) {
+        } catch (IllegalArgumentException | TransactionRequiredException e) {
             throw new RepositoryException("Deleting the group by its id failed.", e);
         }
     }

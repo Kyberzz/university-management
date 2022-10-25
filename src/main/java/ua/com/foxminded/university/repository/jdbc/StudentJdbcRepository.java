@@ -2,11 +2,9 @@ package ua.com.foxminded.university.repository.jdbc;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.RollbackException;
+import javax.persistence.PersistenceContext;
 import javax.persistence.TransactionRequiredException;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import lombok.extern.slf4j.Slf4j;
@@ -18,25 +16,23 @@ import ua.com.foxminded.university.repository.StudentRepository;
 @Repository
 public class StudentJdbcRepository implements StudentRepository {
     
-    private EntityManagerFactory entityManagerFactory;
+    @PersistenceContext
+    private EntityManager entityManager;
     
-    @Autowired
-    public StudentJdbcRepository(EntityManagerFactory entityManagerFactory) {
-        this.entityManagerFactory = entityManagerFactory;
+    public StudentJdbcRepository(EntityManager entityManager) {
+        this.entityManager = entityManager;
     }
-    
+
     @Override
     public StudentEntity getGroupByStudentId(int id) throws RepositoryException {
         log.debug("Get group by student id={}.", id);
         
         try {
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
             StudentEntity student = entityManager.find(StudentEntity.class, id);
             student.getGroup().getName();
-            entityManager.close();
             log.trace("Group having student id={} was received.", student.getId());
             return student;
-        } catch (IllegalStateException | IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             throw new RepositoryException("Getting group by the student id failed.", e);
         }
     }
@@ -46,13 +42,10 @@ public class StudentJdbcRepository implements StudentRepository {
         log.debug("Insert student with id={}.", entity.getId());
         
         try {
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
             entityManager.persist(entity);
-            entityManager.close();
             log.trace("Student with id={} was inserted.", entity.getId());
             return entity;
-        } catch (IllegalStateException | EntityExistsException | IllegalArgumentException | 
-                TransactionRequiredException | RollbackException e) {
+        } catch (EntityExistsException | IllegalArgumentException | TransactionRequiredException e) {
             throw new RepositoryException("Inserting the student to the database failed.", e);
         }
     }
@@ -62,27 +55,23 @@ public class StudentJdbcRepository implements StudentRepository {
         log.debug("Get student by id={}.", id);
         
         try {
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
             StudentEntity student = entityManager.find(StudentEntity.class, id);
-            entityManager.close();
             log.trace("Student with id={} was received.", student.getId());
             return student;
-        } catch (IllegalStateException | IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             throw new RepositoryException("Getting the student by its id failed.", e);
         }
     }
     
     @Override
-    public void update(StudentEntity entity) throws RepositoryException {
+    public StudentEntity update(StudentEntity entity) throws RepositoryException {
         log.debug("Update student with id={}.", entity.getId());
         
         try {
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
-            entityManager.merge(entity);
-            entityManager.close();
+            StudentEntity mergedEntity = entityManager.merge(entity);
             log.debug("Student with id={} was updated.", entity.getId());
-        } catch (IllegalStateException | IllegalArgumentException | TransactionRequiredException | 
-                 RollbackException e) {
+            return mergedEntity;
+        } catch (IllegalArgumentException | TransactionRequiredException e) {
             throw new RepositoryException("Updating the student data failed.", e);
         }
     }
@@ -92,12 +81,10 @@ public class StudentJdbcRepository implements StudentRepository {
         log.debug("Delete student by id={}.", id);
         
         try {
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
             StudentEntity student = entityManager.find(StudentEntity.class, id) ;
             entityManager.remove(student);
-            entityManager.close();
             log.trace("Student with id={} was deleted.", id);
-        } catch (IllegalStateException | IllegalArgumentException | TransactionRequiredException e) {
+        } catch (IllegalArgumentException | TransactionRequiredException e) {
             throw new RepositoryException("Deleting the student data failed.", e);
         }
     }

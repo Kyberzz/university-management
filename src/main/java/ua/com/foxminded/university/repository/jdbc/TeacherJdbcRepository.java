@@ -2,11 +2,9 @@ package ua.com.foxminded.university.repository.jdbc;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.RollbackException;
+import javax.persistence.PersistenceContext;
 import javax.persistence.TransactionRequiredException;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import lombok.extern.slf4j.Slf4j;
@@ -18,27 +16,25 @@ import ua.com.foxminded.university.repository.TeacherRepository;
 @Repository
 public class TeacherJdbcRepository implements TeacherRepository {
     
-    private EntityManagerFactory entityManagerFactory;
+    @PersistenceContext
+    private EntityManager entityManager;
     
-    @Autowired
-    public TeacherJdbcRepository(EntityManagerFactory entityManagerFactory) {
-        this.entityManagerFactory = entityManagerFactory;
+    public TeacherJdbcRepository(EntityManager entityManager) {
+        this.entityManager = entityManager;
     }
-    
+
     @Override
     public TeacherEntity getCourseListByTeacherId(int id) throws RepositoryException {
         log.debug("Get courses list by teacher id={}.", id);
         
         try {
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
             TeacherEntity teacher = entityManager.find(TeacherEntity.class, id);
             teacher.getCourseList().size();
-            entityManager.close();
             log.trace("Courses list of teacher id={} was received");
             return teacher;
-        } catch (IllegalStateException | IllegalArgumentException e) {
-            throw new RepositoryException("Getting the course list data by the teacher id from the database failed.",
-                                   e);
+        } catch (IllegalArgumentException e) {
+            throw new RepositoryException("Getting the course list data by the teacher "
+                                        + "id from the database failed.", e);
         }
     }
     
@@ -47,28 +43,23 @@ public class TeacherJdbcRepository implements TeacherRepository {
         log.debug("Delete teacher with id={}.", id);
         
         try {
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
             TeacherEntity teacher = entityManager.find(TeacherEntity.class, id);
             entityManager.remove(teacher);
-            entityManager.close();
             log.trace("Teacher with id={} was deleted.", id);
-        } catch (IllegalStateException | IllegalArgumentException | TransactionRequiredException 
-                e) {
+        } catch (IllegalArgumentException | TransactionRequiredException e) {
             throw new RepositoryException("Deleting the database teacher data failed.", e);
         }
     }
     
     @Override
-    public void update(TeacherEntity entity) throws RepositoryException {
+    public TeacherEntity update(TeacherEntity entity) throws RepositoryException {
         log.debug("Udate teacher with id={}.", entity.getId());
         
         try {
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
-            entityManager.merge(entity);
-            entityManager.close();
+            TeacherEntity mergedEntity = entityManager.merge(entity);
             log.trace("Teacher with id={} was updated.", entity.getId());
-        } catch (IllegalStateException | IllegalArgumentException | TransactionRequiredException | 
-                 RollbackException e){
+            return mergedEntity;
+        } catch (IllegalArgumentException | TransactionRequiredException e){
             throw new RepositoryException("Updating the database teacher data failed.", e);
         }
     }
@@ -78,12 +69,10 @@ public class TeacherJdbcRepository implements TeacherRepository {
         log.debug("Get teacher with id={}.", id);
         
         try {
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
             TeacherEntity teacher = entityManager.find(TeacherEntity.class, id);
-            entityManager.close();
             log.trace("Teacher with id={} was received.", teacher.getId());
             return teacher;
-        } catch (IllegalStateException | IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             throw new RepositoryException("Getting the database teacher data failed.", e);
         }
     }
@@ -93,13 +82,10 @@ public class TeacherJdbcRepository implements TeacherRepository {
         log.debug("Insert teacher with id={} to the database.", entity.getId());
         
         try {
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
             entityManager.persist(entity);
-            entityManager.close();
             log.trace("Teacher with id={} was added to the database.", entity.getId());
             return entity;
-        } catch (IllegalStateException | EntityExistsException | IllegalArgumentException | 
-                 TransactionRequiredException | RollbackException e) {
+        } catch (EntityExistsException | IllegalArgumentException | TransactionRequiredException e) {
             throw new RepositoryException("Inserting the database teacher data failed.", e);
         }
     }

@@ -2,15 +2,16 @@ package ua.com.foxminded.university.dao.jdbc;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.transaction.annotation.Transactional;
 
 import ua.com.foxminded.university.config.AppConfigTest;
 import ua.com.foxminded.university.entity.TeacherEntity;
@@ -18,6 +19,7 @@ import ua.com.foxminded.university.repository.RepositoryException;
 import ua.com.foxminded.university.repository.TeacherRepository;
 import ua.com.foxminded.university.repository.jdbc.TeacherJdbcRepository;
 
+@Transactional
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 @ContextConfiguration(classes = AppConfigTest.class)
 @ExtendWith(SpringExtension.class)
@@ -34,19 +36,18 @@ class TeacherJdbcRepositoryTest {
     private static final int COURSES_QUANTITY = 2;
     private static final int TEACHER_ID_NUMBER = 2;
     
-    @Autowired
-    private EntityManagerFactory entityManagerFactory;
+    @PersistenceContext
+    private EntityManager entityManager;
     
     @Test
     void insert_InsertingTeacherDatabaseData_DatabaseHasCorrectData() throws RepositoryException {
         TeacherEntity teacher = new TeacherEntity();
         teacher.setFirstName(TEACHER_FIRST_NAME);
         teacher.setLastName(TEACHER_LAST_NAME);
-        TeacherRepository teacherDao = new TeacherJdbcRepository(entityManagerFactory);
+        TeacherRepository teacherDao = new TeacherJdbcRepository(entityManager);
         TeacherEntity teacherWithId = teacherDao.insert(teacher);
 
-        TeacherEntity insertedTeacher = entityManagerFactory.createEntityManager()
-                                                            .find(TeacherEntity.class, NEW_TEACHER_ID);
+        TeacherEntity insertedTeacher = entityManager.find(TeacherEntity.class, NEW_TEACHER_ID);
         
         assertEquals(NEW_TEACHER_ID, teacherWithId.getId());
         assertEquals(TEACHER_FIRST_NAME, insertedTeacher.getFirstName());
@@ -55,7 +56,7 @@ class TeacherJdbcRepositoryTest {
     
     @Test
     void getById_ReceivingTeacherDatabaseData_CorrectReceivedData() throws RepositoryException {
-        TeacherRepository teacherDao = new TeacherJdbcRepository(entityManagerFactory);
+        TeacherRepository teacherDao = new TeacherJdbcRepository(entityManager);
         TeacherEntity teacher = teacherDao.getById(TEACHER_ID_NUMBER);
         
         assertEquals(TEACHER_FIRST_NAME, teacher.getFirstName());
@@ -65,15 +66,14 @@ class TeacherJdbcRepositoryTest {
     
     @Test
     void update_UpdatingTeacherDatabaseData_DatabaseHasCorrectData() throws RepositoryException {
-        TeacherRepository teacherDao = new TeacherJdbcRepository(entityManagerFactory);
+        TeacherRepository teacherDao = new TeacherJdbcRepository(entityManager);
         TeacherEntity teacherData = new TeacherEntity();
         teacherData.setId(TEACHER_ID);
         teacherData.setFirstName(TEACHER_FIRST_NAME);
         teacherData.setLastName(TEACHER_LAST_NAME);
         teacherDao.update(teacherData);
         
-        TeacherEntity updatedTeacherData = entityManagerFactory.createEntityManager()
-                                                               .find(TeacherEntity.class, TEACHER_ID);
+        TeacherEntity updatedTeacherData = entityManager.find(TeacherEntity.class, TEACHER_ID);
         
         assertEquals(TEACHER_ID, updatedTeacherData.getId());
         assertEquals(TEACHER_FIRST_NAME, updatedTeacherData.getFirstName());
@@ -82,19 +82,18 @@ class TeacherJdbcRepositoryTest {
     
     @Test
     void deleteById_DeletingTeacherDatabaseData_DatabaseHasNoData() throws RepositoryException {
-        TeacherRepository teacherDao = new TeacherJdbcRepository(entityManagerFactory);
+        TeacherRepository teacherDao = new TeacherJdbcRepository(entityManager);
         teacherDao.deleteById(TEACHER_ID_NUMBER);
         TeacherEntity teacher = new TeacherEntity();
         teacher.setId(TEACHER_ID_NUMBER);
         
-        boolean persisentTeacher = entityManagerFactory.createEntityManager()
-                                                       .contains(teacher);
+        boolean persisentTeacher = entityManager.contains(teacher);
         assertFalse(persisentTeacher);
     }
     
     @Test
     void getCourseListByTeacherId_ReceivingTeacherDatabaseData_CorrectReceivedData() throws RepositoryException {
-        TeacherRepository teacherDao = new TeacherJdbcRepository(entityManagerFactory);
+        TeacherRepository teacherDao = new TeacherJdbcRepository(entityManager);
         TeacherEntity teacherData = teacherDao.getCourseListByTeacherId(TEACHER_ID_NUMBER);
         
         assertEquals(TEACHER_ID_NUMBER, teacherData.getId());
