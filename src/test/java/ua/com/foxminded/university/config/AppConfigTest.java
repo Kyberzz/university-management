@@ -73,8 +73,8 @@ public class AppConfigTest {
     private DatabasePopulator databasePopulator() {
         ResourceDatabasePopulator databasePopulator = new ResourceDatabasePopulator();
         databasePopulator.setContinueOnError(true);
-    //    databasePopulator.addScript(schema);
-    //    databasePopulator.addScript(data);
+        databasePopulator.addScript(schema);
+        databasePopulator.addScript(data);
         return databasePopulator;
     }
     
@@ -85,14 +85,7 @@ public class AppConfigTest {
         initializer.setDatabasePopulator(databasePopulator());
         return initializer;
     }
-/*
-    @Bean
-    public PlatformTransactionManager transactionManager() {
-        JpaTransactionManager jpaTransactionManager = new JpaTransactionManager();
-        jpaTransactionManager.setEntityManagerFactory(entityManagerFactory().getObject());
-        return jpaTransactionManager;
-    }
-*/    
+
     @Bean
     @DependsOn("dataSource")
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {

@@ -27,7 +27,6 @@ public class TimetableServiceImpl implements TimetableService<TimetableModel> {
     }
     
     @Override
-    @Transactional
     public void updateTimetable(TimetableModel timetableModel) throws ServiceException {
         TimetableEntity timetableEntity = new TimetableEntity();
         timetableEntity.setId(timetableModel.getId());

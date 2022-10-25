@@ -28,10 +28,10 @@ public class CourseEntity implements Serializable {
     private String name;
     private String description;
     
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "teacher_id")
     private TeacherEntity teacher;
     
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "course")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "course")
     private List<TimetableEntity> timetableList;
 }

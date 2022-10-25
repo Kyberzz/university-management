@@ -26,7 +26,6 @@ public class StudentServiceImpl implements StudentService<StudentModel> {
     }
     
     @Override
-    @Transactional
     public int updateStudent(StudentModel studentModel) throws ServiceException {
         StudentEntity studentEntity = new StudentEntity();
         studentEntity.setId(studentModel.getId());

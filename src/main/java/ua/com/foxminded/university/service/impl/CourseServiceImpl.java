@@ -32,7 +32,6 @@ public class CourseServiceImpl implements CourseService<CourseModel> {
     }
     
     @Override
-    @Transactional
     public void updateCourse(CourseModel courseModel) throws ServiceException {
         CourseEntity courseEntity = new CourseEntity();
         courseEntity.setId(courseModel.getId());
