@@ -1,6 +1,5 @@
 package ua.com.foxminded.university.service.impl;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,8 +13,9 @@ import ua.com.foxminded.university.repository.StudentRepository;
 import ua.com.foxminded.university.service.ServiceException;
 import ua.com.foxminded.university.service.StudentService;
 
-@Slf4j
 @Service
+@Slf4j
+@Transactional
 public class StudentServiceImpl implements StudentService<StudentModel> {
     
     private StudentRepository studentDao;

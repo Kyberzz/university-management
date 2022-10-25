@@ -20,8 +20,9 @@ import ua.com.foxminded.university.repository.RepositoryException;
 import ua.com.foxminded.university.service.CourseService;
 import ua.com.foxminded.university.service.ServiceException;
 
-@Slf4j
 @Service
+@Slf4j
+@Transactional
 public class CourseServiceImpl implements CourseService<CourseModel> {
     
     private CourseRepository courseDao;

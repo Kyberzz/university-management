@@ -1,6 +1,5 @@
 package ua.com.foxminded.university.repository;
 
-
 import ua.com.foxminded.university.entity.GroupEntity;
 
 public interface GroupRepository extends GenericRepository<GroupEntity> {

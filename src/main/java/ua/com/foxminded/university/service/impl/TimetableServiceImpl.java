@@ -15,8 +15,9 @@ import ua.com.foxminded.university.repository.TimetableRepository;
 import ua.com.foxminded.university.service.ServiceException;
 import ua.com.foxminded.university.service.TimetableService;
 
-@Slf4j
 @Service
+@Slf4j
+@Transactional
 public class TimetableServiceImpl implements TimetableService<TimetableModel> {
     
     private TimetableRepository timetableDao;

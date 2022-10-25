@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.extern.slf4j.Slf4j;
 import ua.com.foxminded.university.entity.TeacherEntity;
@@ -15,8 +16,9 @@ import ua.com.foxminded.university.repository.TeacherRepository;
 import ua.com.foxminded.university.service.ServiceException;
 import ua.com.foxminded.university.service.TeacherService;
 
-@Slf4j
 @Service
+@Slf4j
+@Transactional
 public class TeacherServiceImpl implements TeacherService<TeacherModel> {
     
     private TeacherRepository teacherDao; 

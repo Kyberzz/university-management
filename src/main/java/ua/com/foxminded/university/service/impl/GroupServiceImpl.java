@@ -3,6 +3,8 @@ package ua.com.foxminded.university.service.impl;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,8 +20,9 @@ import ua.com.foxminded.university.repository.GroupRepository;
 import ua.com.foxminded.university.service.GroupService;
 import ua.com.foxminded.university.service.ServiceException;
 
-@Slf4j
 @Service
+@Slf4j
+@Transactional
 public class GroupServiceImpl implements GroupService<GroupModel> {
     
     private GroupRepository groupDao;
