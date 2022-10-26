@@ -95,16 +95,6 @@ public class TimetableJdbcRepository implements TimetableRepository {
         log.debug("Insert timetable with id={}.", entity.getId());
         
         try {
-            entityManager.createQuery("insert into university.timetable(start_time, end_time, description,"
-                                                                     + "week_day, group_id, course_id) "
-                                    + "values(:startTime, :endTime, :decritpion, cast (:weekDay as week_day), "
-                                           + ":groupId, :courseId)")
-                         .setParameter("startTime", entity.getStartTime())
-                         .setParameter("endTime", entity.getEndTime())
-                         .setParameter("description", entity.getDescription())
-                         .setParameter("weekDay", entity.getWeekDay().toString())
-                         .setParameter("groupId", entity.getGroup().getId())
-                         .setParameter("courseId", entity.getCourse().getId());
             entityManager.persist(entity);
             log.trace("Timetable with id={} was inserted to database.", entity.getId());
             return entity;
