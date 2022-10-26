@@ -52,7 +52,7 @@ create table university.timetable (
 	start_time bigint,
 	end_time bigint,
 	description varchar collate pg_catalog."default",
-    week_day university.week_day
+    week_day university.week_day not null
 )
 tablespace pg_default;
 alter sequence university.timetable_seq owned by university.timetable.id;
