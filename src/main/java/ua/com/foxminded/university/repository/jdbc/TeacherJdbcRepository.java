@@ -4,6 +4,10 @@ import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TransactionRequiredException;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.JoinType;
+import javax.persistence.criteria.Root;
 
 import org.springframework.stereotype.Repository;
 
@@ -28,8 +32,13 @@ public class TeacherJdbcRepository implements TeacherRepository {
         log.debug("Get courses list by teacher id={}.", id);
         
         try {
-            TeacherEntity teacher = entityManager.find(TeacherEntity.class, id);
-            teacher.getCourseList().size();
+            CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+            CriteriaQuery<TeacherEntity> criteriaQuery = criteriaBuilder.createQuery(TeacherEntity.class);
+            Root<TeacherEntity> rootTeacher = criteriaQuery.from(TeacherEntity.class);
+            rootTeacher.fetch("courseList", JoinType.INNER);
+            criteriaQuery.select(rootTeacher);
+            criteriaQuery.where(criteriaBuilder.equal(rootTeacher.get("id"), id));
+            TeacherEntity teacher = entityManager.createQuery(criteriaQuery).getSingleResult();
             log.trace("Courses list of teacher id={} was received");
             return teacher;
         } catch (IllegalArgumentException e) {
