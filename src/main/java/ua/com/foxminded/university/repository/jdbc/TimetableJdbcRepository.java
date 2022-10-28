@@ -12,7 +12,6 @@ import javax.persistence.criteria.Root;
 import org.springframework.stereotype.Repository;
 
 import lombok.extern.slf4j.Slf4j;
-import ua.com.foxminded.university.entity.TeacherEntity;
 import ua.com.foxminded.university.entity.TimetableEntity;
 import ua.com.foxminded.university.repository.RepositoryException;
 import ua.com.foxminded.university.repository.TimetableRepository;
