@@ -4,10 +4,15 @@ import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TransactionRequiredException;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.JoinType;
+import javax.persistence.criteria.Root;
 
 import org.springframework.stereotype.Repository;
 
 import lombok.extern.slf4j.Slf4j;
+import ua.com.foxminded.university.entity.TeacherEntity;
 import ua.com.foxminded.university.entity.TimetableEntity;
 import ua.com.foxminded.university.repository.RepositoryException;
 import ua.com.foxminded.university.repository.TimetableRepository;
@@ -28,8 +33,13 @@ public class TimetableJdbcRepository implements TimetableRepository {
         log.debug("Get course by timetable id={}.", id);
         
         try {
-            TimetableEntity timetable = entityManager.find(TimetableEntity.class, id);
-            timetable.getCourse().getName();
+            CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+            CriteriaQuery<TimetableEntity> criteriaQuery = criteriaBuilder.createQuery(TimetableEntity.class);
+            Root<TimetableEntity> rootTimetable = criteriaQuery.from(TimetableEntity.class);
+            rootTimetable.fetch("course", JoinType.INNER);
+            criteriaQuery.select(rootTimetable);
+            criteriaQuery.where(criteriaBuilder.equal(rootTimetable.get("id"), id));
+            TimetableEntity timetable = entityManager.createQuery(criteriaQuery).getSingleResult();
             log.trace("Course by timetable id={} was received.", timetable.getId());
             return timetable;
         } catch (IllegalArgumentException e) {
@@ -42,8 +52,13 @@ public class TimetableJdbcRepository implements TimetableRepository {
         log.debug("Get group by timetable id={}.", id);
         
         try {
-            TimetableEntity timetable = entityManager.find(TimetableEntity.class, id);
-            timetable.getGroup().getName();
+            CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+            CriteriaQuery<TimetableEntity> criteriaQuery = criteriaBuilder.createQuery(TimetableEntity.class);
+            Root<TimetableEntity> rootTimetable = criteriaQuery.from(TimetableEntity.class);
+            rootTimetable.fetch("group", JoinType.INNER);
+            criteriaQuery.select(rootTimetable);
+            criteriaQuery.where(criteriaBuilder.equal(rootTimetable.get("id"), id));
+            TimetableEntity timetable = entityManager.createQuery(criteriaQuery).getSingleResult();
             log.trace("Group of timetable id={} was received.", timetable.getId());
             return timetable;
         } catch (IllegalArgumentException e) {
