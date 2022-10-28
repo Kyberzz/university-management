@@ -1,14 +1,19 @@
 package ua.com.foxminded.university.repository.jdbc;
 
+import java.util.List;
+
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TransactionRequiredException;
 
 import org.springframework.stereotype.Repository;
 
 import lombok.extern.slf4j.Slf4j;
 import ua.com.foxminded.university.entity.CourseEntity;
+import ua.com.foxminded.university.entity.GroupEntity;
+import ua.com.foxminded.university.entity.TimetableEntity;
 import ua.com.foxminded.university.repository.CourseRepository;
 import ua.com.foxminded.university.repository.RepositoryException;
 
@@ -28,8 +33,13 @@ public class CourseJdbcRepository implements CourseRepository {
         log.debug("Get timetable list by course id={}", id);
         
         try {
+            Query query = entityManager.createQuery("select t from TimetableEntity t "
+                    + "join t.course tc where tc.id = :id", TimetableEntity.class);
+            query.setParameter("id", id);
+            List<TimetableEntity> timetableList = query.getResultList();
             CourseEntity course = entityManager.find(CourseEntity.class, id);
-            course.getTimetableList().size();
+            course.setTimetableList(timetableList);
+            
             log.trace("Timetable list of course with id={} was received.", course.getId());
             return course;
         } catch (IllegalStateException e) {

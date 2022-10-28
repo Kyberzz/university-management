@@ -25,7 +25,7 @@ public class GroupEntity implements Serializable {
     private Integer id;
     private String name;
     
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "group")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "group")
     private List<TimetableEntity> timetableList;
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "group")

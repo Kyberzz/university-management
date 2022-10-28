@@ -3,6 +3,7 @@ package ua.com.foxminded.university.repository.jdbc;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TransactionRequiredException;
 
 import org.springframework.stereotype.Repository;
@@ -28,8 +29,10 @@ public class StudentJdbcRepository implements StudentRepository {
         log.debug("Get group by student id={}.", id);
         
         try {
-            StudentEntity student = entityManager.find(StudentEntity.class, id);
-            student.getGroup().getName();
+            Query query = entityManager.createQuery("select s from StudentEntity s "
+                    + "join fetch s.group where s.id = :id");
+            query.setParameter("id", id);
+            StudentEntity student = (StudentEntity) query.getSingleResult();
             log.trace("Group having student id={} was received.", student.getId());
             return student;
         } catch (IllegalArgumentException e) {

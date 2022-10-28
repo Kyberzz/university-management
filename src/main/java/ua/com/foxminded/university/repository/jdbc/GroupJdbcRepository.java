@@ -3,7 +3,11 @@ package ua.com.foxminded.university.repository.jdbc;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TransactionRequiredException;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 
 import org.springframework.stereotype.Repository;
 
@@ -41,8 +45,15 @@ public class GroupJdbcRepository implements GroupRepository {
         log.debug("Get timetable list by group id={}", id);
         
         try {
-            GroupEntity group = entityManager.find(GroupEntity.class, id);
-            group.getTimetableList().size();
+            
+            CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+            CriteriaQuery<GroupEntity> query = criteriaBuilder.createQuery(GroupEntity.class);
+            Root<GroupEntity> rootGroup = query.from(GroupEntity.class);
+            rootGroup.fetch("timetableList");
+            query.select(rootGroup);
+            query.where(criteriaBuilder.equal(rootGroup.get("id"), id));
+            GroupEntity group = (GroupEntity) entityManager.createQuery(query).getSingleResult();
+            
             log.trace("Timetable list of group with id={} was received.", group.getId());
             return group;
         } catch (IllegalArgumentException e) {
@@ -55,8 +66,10 @@ public class GroupJdbcRepository implements GroupRepository {
         log.debug("Get students list by group id={}", id);
         
         try {
-            GroupEntity group = entityManager.find(GroupEntity.class, id);
-            group.getStudentList().size();
+            Query query = entityManager.createQuery("select g from GroupEntity g "
+                    + "join fetch g.studentList where g.id = :id");
+            query.setParameter("id", id);
+            GroupEntity group = (GroupEntity) query.getSingleResult();
             log.trace("Students list of the group with id={} was received", group.getId());
             return group;
         } catch (IllegalArgumentException e) {

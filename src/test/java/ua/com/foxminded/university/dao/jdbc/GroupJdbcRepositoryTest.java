@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.annotation.DirtiesContext;
@@ -14,7 +15,10 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
 import ua.com.foxminded.university.config.AppConfigTest;
+import ua.com.foxminded.university.entity.DayOfWeek;
 import ua.com.foxminded.university.entity.GroupEntity;
+import ua.com.foxminded.university.entity.StudentEntity;
+import ua.com.foxminded.university.entity.TimetableEntity;
 import ua.com.foxminded.university.repository.RepositoryException;
 import ua.com.foxminded.university.repository.GroupRepository;
 import ua.com.foxminded.university.repository.jdbc.GroupJdbcRepository;
@@ -25,104 +29,117 @@ import ua.com.foxminded.university.repository.jdbc.GroupJdbcRepository;
 @ExtendWith(SpringExtension.class)
 class GroupJdbcRepositoryTest {
     
-    private static final String EXPECTED_WEEK_DAY = "MONDAY";
-    private static final String EXPECTED_STUDENT_LAST_NAME = "Smith";
-    private static final String EXPECTED_STUDENT_FIST_NAME = "Julitta";
-    private static final String NEW_GROUP_NAME = "kt-53";
-    private static final String EXPECTED_GROUP_NAME = "kt-52";
-    private static final long EXPECTED_ENDTIME = 39360000;
-    private static final long EXPECTED_START_TIME = 36360000;
-    private static final int TIMETABLES_QUANTITY = 2;
-    private static final int INSERTED_GROUP_ID = 3;
-    private static final int EXPECTED_COURSE_ID = 1;
-    private static final int EXPECTED_TIMETABLE_ID = 1;
-    private static final int FIST_ELEMENT = 0;
-    private static final int EXPECTED_STUDENT_ID = 2;
-    private static final int STUDENTS_QUANTITY = 2;
-    private static final int GROUP_ID_NUMBER = 2;
+    private static final String TIMETABLE_DESCRIPTION = "some timetable description";
+    private static final String WEEK_DAY = "MONDAY";
+    private static final String LAST_NAME = "Smith";
+    private static final String FIST_NAME = "Julitta";
+    private static final String NEW_GROUP_NAME = "lt";
+    private static final String GROUP_NAME = "kt-52";
+    private static final int NEW_GROUP_ID = 2;
+    private static final int STUDENT_ID = 1;
+    private static final int FIRST_ELEMENT = 0;
+    private static final int TIMETABLE_ID = 1;
+    private static final int GROUP_ID = 1;
+    private static final long END_TIME = 39360000;
+    private static final long START_TIME = 36360000;
     
     @PersistenceContext
     private EntityManager entityManager;
     
     
+    @BeforeEach
+    void inint() {
+        GroupEntity group = new GroupEntity();
+        group.setName(GROUP_NAME);
+        entityManager.persist(group);
+       
+        TimetableEntity timetable = new TimetableEntity();
+        timetable.setStartTime(START_TIME);
+        timetable.setEndTime(END_TIME);
+        timetable.setDescription(TIMETABLE_DESCRIPTION);
+        timetable.setWeekDay(DayOfWeek.valueOf(WEEK_DAY));
+        timetable.setGroup(group);
+        entityManager.persist(timetable);
+
+        StudentEntity student = new StudentEntity();
+        student.setFirstName(FIST_NAME);
+        student.setLastName(LAST_NAME);
+        student.setGroup(group);
+        entityManager.persist(student);
+    }
+    
+    
     @Test
     void insert_InsertingDataOfGroupToDatabase_DatabaseHasCorrectData() throws RepositoryException {
-        GroupRepository groupDao = new GroupJdbcRepository(entityManager);
         GroupEntity group = new GroupEntity();
-        group.setName(NEW_GROUP_NAME);
-        GroupEntity groupWithId = groupDao.insert(group);
-        GroupEntity insertedGroup = entityManager.find(GroupEntity.class, INSERTED_GROUP_ID);
+        group.setName(GROUP_NAME);
         
-        assertEquals(INSERTED_GROUP_ID, groupWithId.getId());
-        assertEquals(NEW_GROUP_NAME, insertedGroup.getName());
+        GroupRepository groupDao = new GroupJdbcRepository(entityManager);
+        GroupEntity groupWithId = groupDao.insert(group);
+        GroupEntity insertedGroup = entityManager.find(GroupEntity.class, GROUP_ID);
+        
+        assertEquals(NEW_GROUP_ID, groupWithId.getId());
+        assertEquals(GROUP_NAME, insertedGroup.getName());
     }
     
     @Test
     void getById_ReceivingDatabaseDataOfGroup_CorrectReceivedData() throws RepositoryException {
         GroupRepository groupDao = new GroupJdbcRepository(entityManager);
-        GroupEntity group = groupDao.getById(GROUP_ID_NUMBER);
+        GroupEntity group = groupDao.getById(GROUP_ID);
         
-        assertEquals(GROUP_ID_NUMBER, group.getId());
-        assertEquals(EXPECTED_GROUP_NAME, group.getName());
+        assertEquals(GROUP_ID, group.getId());
+        assertEquals(GROUP_NAME, group.getName());
     }
     
     @Test
     void update_UpdatingDatabaseDataOfGroup_DatabaseHasCorrectData() throws RepositoryException {
-        GroupRepository groupDao = new GroupJdbcRepository(entityManager);
         GroupEntity group = new GroupEntity();
-        group.setId(GROUP_ID_NUMBER);
-        group.setName(EXPECTED_GROUP_NAME);
+        group.setId(GROUP_ID);
+        group.setName(NEW_GROUP_NAME);
+        
+        GroupRepository groupDao = new GroupJdbcRepository(entityManager);
         groupDao.update(group);
         
-        GroupEntity updatedGroup = entityManager.find(GroupEntity.class, GROUP_ID_NUMBER);
-        assertEquals(group.getId(), updatedGroup.getId());
-        assertEquals(group.getName(), updatedGroup.getName());
+        GroupEntity updatedGroup = entityManager.find(GroupEntity.class, GROUP_ID);
+        assertEquals(GROUP_ID, updatedGroup.getId());
+        assertEquals(NEW_GROUP_NAME, updatedGroup.getName());
     }
-    
     
     @Test
     void deleteById_DeletingDatabaseDataOfGroup_DatabaseHasNoData() throws RepositoryException {
         GroupRepository groupDao = new GroupJdbcRepository(entityManager);
-        groupDao.deleteById(GROUP_ID_NUMBER);
+        groupDao.deleteById(GROUP_ID);
+        
         GroupEntity group = new GroupEntity();
-        group.setId(GROUP_ID_NUMBER);
+        group.setId(GROUP_ID);
+        
         boolean containStatus = entityManager.contains(group);
         assertFalse(containStatus);
     }
     
-    
     @Test
     void getTimetableListByGroupId_GettingDataFromDatabase_CorrectRecevedData() throws RepositoryException {
         GroupRepository groupDao = new GroupJdbcRepository(entityManager);
-        GroupEntity receivedGroupData = groupDao.getTimetableListByGroupId(GROUP_ID_NUMBER);
+        GroupEntity receivedGroup = groupDao.getTimetableListByGroupId(GROUP_ID);
         
-        assertEquals(GROUP_ID_NUMBER, receivedGroupData.getId());
-        assertEquals(EXPECTED_GROUP_NAME, receivedGroupData.getName());
-        assertEquals(EXPECTED_TIMETABLE_ID, receivedGroupData.getTimetableList().get(FIST_ELEMENT).getId());
-        assertEquals(EXPECTED_START_TIME, receivedGroupData.getTimetableList().get(FIST_ELEMENT)
-                                                                              .getStartTime());
-        assertEquals(EXPECTED_ENDTIME, receivedGroupData.getTimetableList().get(FIST_ELEMENT).getEndTime());
-        assertEquals(EXPECTED_WEEK_DAY, receivedGroupData.getTimetableList().get(FIST_ELEMENT).getWeekDay()
-                                                                                              .toString());
-        assertEquals(EXPECTED_COURSE_ID, receivedGroupData.getTimetableList().get(FIST_ELEMENT).getCourse()
-                                                                                               .getId());
-        assertEquals(TIMETABLES_QUANTITY, receivedGroupData.getTimetableList().size());
+        assertEquals(GROUP_ID, receivedGroup.getId());
+        assertEquals(GROUP_NAME, receivedGroup.getName());
+        assertEquals(TIMETABLE_ID, receivedGroup.getTimetableList().get(FIRST_ELEMENT).getId());
+        assertEquals(START_TIME, receivedGroup.getTimetableList().get(FIRST_ELEMENT).getStartTime());
+        assertEquals(END_TIME, receivedGroup.getTimetableList().get(FIRST_ELEMENT).getEndTime());
+        assertEquals(WEEK_DAY, receivedGroup.getTimetableList().get(FIRST_ELEMENT).getWeekDay());
     }
-    
+
     @Test
     void getStudentListByGroupId_GettingDataFromDatabase_CorrectReceivedData() throws RepositoryException {
         GroupRepository groupDao = new GroupJdbcRepository(entityManager);
-        GroupEntity receivedGroupData = groupDao.getStudentListByGroupId(GROUP_ID_NUMBER);
+        GroupEntity receivedGroup = groupDao.getStudentListByGroupId(GROUP_ID);
         
-        assertEquals(GROUP_ID_NUMBER, receivedGroupData.getId());
-        assertEquals(EXPECTED_GROUP_NAME, receivedGroupData.getName());
-        assertEquals(EXPECTED_STUDENT_ID, receivedGroupData.getStudentList().get(FIST_ELEMENT).getId());
-        assertEquals(EXPECTED_STUDENT_FIST_NAME, receivedGroupData.getStudentList().get(FIST_ELEMENT)
-                                                                                   .getFirstName());
-        assertEquals(EXPECTED_STUDENT_LAST_NAME, receivedGroupData.getStudentList().get(FIST_ELEMENT)
-                                                                                   .getLastName());
-        assertEquals(GROUP_ID_NUMBER, receivedGroupData.getStudentList().get(FIST_ELEMENT).getGroup()
-                                                                                          .getId());
-        assertEquals(STUDENTS_QUANTITY, receivedGroupData.getStudentList().size());
+        assertEquals(GROUP_ID, receivedGroup.getId());
+        assertEquals(GROUP_NAME, receivedGroup.getName());
+        assertEquals(STUDENT_ID, receivedGroup.getStudentList().get(FIRST_ELEMENT).getId());
+        assertEquals(FIST_NAME, receivedGroup.getStudentList().get(FIRST_ELEMENT).getFirstName());
+        assertEquals(LAST_NAME, receivedGroup.getStudentList().get(FIRST_ELEMENT).getLastName());
+        assertEquals(GROUP_ID, receivedGroup.getStudentList().get(FIRST_ELEMENT).getGroup().getId());
     }
 }

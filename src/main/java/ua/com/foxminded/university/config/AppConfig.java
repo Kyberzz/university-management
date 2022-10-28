@@ -80,26 +80,4 @@ public class AppConfig {
         jpaTransactionManager.setEntityManagerFactory(entityManagerFactory().getObject());
         return jpaTransactionManager;
     }
-    
-    
-    /*
-    @Bean
-    public EntityManagerFactory entityManagerFactory() {
-        PersistenceUnitInfo persistenceUnitInfo = new PersistenceUnitInfoImpl(
-                environment.getProperty(JPA_UNIT_NAME),
-                dataSource());
-        PersistenceProvider provider = new HibernatePersistenceProvider();
-        
-        Map<String, Object> properties = new HashMap<>();
-        properties.put(JPA_PROVIDER, environment.getProperty(JPA_PROVIDER));
-        properties.put(JPA_TRANSACTION_TYPE, PersistenceUnitTransactionType.RESOURCE_LOCAL);
-        properties.put(JPA_SCHEMA_VERSION, environment.getProperty(JPA_SCHEMA_VERSION));
-        
-        EntityManagerFactory entityManagerFactory = provider.createContainerEntityManagerFactory(
-                persistenceUnitInfo, 
-                properties);
-        return entityManagerFactory;
-    }
-    */
-    
 }
