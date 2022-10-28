@@ -3,7 +3,6 @@ package ua.com.foxminded.university.repository.jdbc;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 import javax.persistence.TransactionRequiredException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -45,14 +44,13 @@ public class GroupJdbcRepository implements GroupRepository {
         log.debug("Get timetable list by group id={}", id);
         
         try {
-            
             CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
             CriteriaQuery<GroupEntity> query = criteriaBuilder.createQuery(GroupEntity.class);
             Root<GroupEntity> rootGroup = query.from(GroupEntity.class);
             rootGroup.fetch("timetableList");
             query.select(rootGroup);
             query.where(criteriaBuilder.equal(rootGroup.get("id"), id));
-            GroupEntity group = (GroupEntity) entityManager.createQuery(query).getSingleResult();
+            GroupEntity group = entityManager.createQuery(query).getSingleResult();
             
             log.trace("Timetable list of group with id={} was received.", group.getId());
             return group;
@@ -66,10 +64,10 @@ public class GroupJdbcRepository implements GroupRepository {
         log.debug("Get students list by group id={}", id);
         
         try {
-            Query query = entityManager.createQuery("select g from GroupEntity g "
-                    + "join fetch g.studentList where g.id = :id");
-            query.setParameter("id", id);
-            GroupEntity group = (GroupEntity) query.getSingleResult();
+            GroupEntity group = entityManager.createQuery("select g from GroupEntity g "
+                    + "left join fetch g.studentList where g.id = :id", GroupEntity.class)
+                        .setParameter("id", id)
+                        .getSingleResult();
             log.trace("Students list of the group with id={} was received", group.getId());
             return group;
         } catch (IllegalArgumentException e) {
