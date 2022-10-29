@@ -10,6 +10,7 @@ import javax.persistence.PersistenceContext;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ContextConfiguration;
@@ -24,7 +25,6 @@ import ua.com.foxminded.university.entity.TeacherEntity;
 import ua.com.foxminded.university.entity.TimetableEntity;
 import ua.com.foxminded.university.repository.CourseRepository;
 import ua.com.foxminded.university.repository.RepositoryException;
-import ua.com.foxminded.university.repository.jdbc.CourseJdbcRepository;
 
 @Transactional
 @ContextConfiguration(classes = AppConfigTest.class)
@@ -58,6 +58,9 @@ class CourseJdbcRepositoryTest {
     @PersistenceContext
     private EntityManager entityManager;
     
+    @Autowired
+    private CourseRepository courseRepository;
+    
     @BeforeEach
     void init() {
         GroupEntity group = new GroupEntity();
@@ -90,8 +93,7 @@ class CourseJdbcRepositoryTest {
     
     @Test
     void getById_GettingDatabaseCourseData_CorrectData() throws RepositoryException {
-        CourseRepository courseDao = new CourseJdbcRepository(entityManager);
-        CourseEntity receivedCourse = courseDao.getById(COURSE_ID);
+        CourseEntity receivedCourse = courseRepository.getById(COURSE_ID);
         
         assertEquals(COURSE_ID, receivedCourse.getId());
         assertEquals(COURSE_NAME, receivedCourse.getName());
@@ -109,8 +111,7 @@ class CourseJdbcRepositoryTest {
         teacher.setId(NEW_TEACHER_ID);
         course.setTeacher(teacher);
         
-        CourseRepository courseDao = new CourseJdbcRepository(entityManager);
-        courseDao.update(course);
+        courseRepository.update(course);
         
         CourseEntity databaseCourse = entityManager.find(CourseEntity.class, COURSE_ID);
         assertEquals(COURSE_ID, databaseCourse.getId());
@@ -127,8 +128,7 @@ class CourseJdbcRepositoryTest {
         course.setTeacher(null);
         course.setDescription(null);
         
-        CourseRepository courseDao = new CourseJdbcRepository(entityManager);
-        courseDao.update(course);
+        courseRepository.update(course);
         
         CourseEntity updatedCourse = entityManager.find(CourseEntity.class, COURSE_ID);
         
@@ -138,8 +138,7 @@ class CourseJdbcRepositoryTest {
     
     @Test
     void deleteById_DeletingDatabaseCourseData_DatabaseHasNoCourseData() throws RepositoryException {
-        CourseJdbcRepository courseDao = new CourseJdbcRepository(entityManager);
-        courseDao.deleteById(COURSE_ID);
+        courseRepository.deleteById(COURSE_ID);
         CourseEntity course = new CourseEntity();
         course.setId(COURSE_ID);
         boolean existenceStatus = entityManager.contains(course);
@@ -156,8 +155,7 @@ class CourseJdbcRepositoryTest {
         course.setName(NEW_COURSE_NAME);
         course.setDescription(NEW_COURSE_DESCRIPTION);
 
-        CourseRepository courseDao = new CourseJdbcRepository(entityManager);
-        courseDao.insert(course);
+        courseRepository.insert(course);
         
         CourseEntity insertedCourse = entityManager.find(CourseEntity.class, NEW_COURSE_ID);
         assertEquals(NEW_COURSE_ID, insertedCourse.getId());
@@ -168,8 +166,7 @@ class CourseJdbcRepositoryTest {
     
     @Test
     void getTimetableListByCourseId_GettingDatabaseTimetableData_CorrectData() throws RepositoryException {
-        CourseRepository courseDao = new CourseJdbcRepository(entityManager);
-        CourseEntity receivedCourse = courseDao.getTimetableListByCourseId(COURSE_ID);
+        CourseEntity receivedCourse = courseRepository.getTimetableListByCourseId(COURSE_ID);
         
         assertEquals(COURSE_ID, receivedCourse.getId());
         assertEquals(COURSE_NAME, receivedCourse.getName());

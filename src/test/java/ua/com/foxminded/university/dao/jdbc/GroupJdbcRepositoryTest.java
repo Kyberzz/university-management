@@ -8,6 +8,7 @@ import javax.persistence.PersistenceContext;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ContextConfiguration;
@@ -21,7 +22,6 @@ import ua.com.foxminded.university.entity.StudentEntity;
 import ua.com.foxminded.university.entity.TimetableEntity;
 import ua.com.foxminded.university.repository.RepositoryException;
 import ua.com.foxminded.university.repository.GroupRepository;
-import ua.com.foxminded.university.repository.jdbc.GroupJdbcRepository;
 
 @Transactional
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
@@ -46,6 +46,8 @@ class GroupJdbcRepositoryTest {
     @PersistenceContext
     private EntityManager entityManager;
     
+    @Autowired
+    private GroupRepository groupRepository;
     
     @BeforeEach
     void inint() {
@@ -70,8 +72,7 @@ class GroupJdbcRepositoryTest {
 
     @Test
     void getTimetableListByGroupId_GettingDataFromDatabase_CorrectRecevedData() throws RepositoryException {
-        GroupRepository groupDao = new GroupJdbcRepository(entityManager);
-        GroupEntity receivedGroup = groupDao.getTimetableListByGroupId(GROUP_ID);
+        GroupEntity receivedGroup = groupRepository.getTimetableListByGroupId(GROUP_ID);
         
         assertEquals(GROUP_ID, receivedGroup.getId());
         assertEquals(GROUP_NAME, receivedGroup.getName());
@@ -83,8 +84,7 @@ class GroupJdbcRepositoryTest {
 
     @Test
     void getStudentListByGroupId_GettingDataFromDatabase_CorrectReceivedData() throws RepositoryException {
-        GroupRepository groupDao = new GroupJdbcRepository(entityManager);
-        GroupEntity receivedGroup = groupDao.getStudentListByGroupId(GROUP_ID);
+        GroupEntity receivedGroup = groupRepository.getStudentListByGroupId(GROUP_ID);
         
         assertEquals(GROUP_ID, receivedGroup.getId());
         assertEquals(GROUP_NAME, receivedGroup.getName());
@@ -99,8 +99,7 @@ class GroupJdbcRepositoryTest {
         GroupEntity group = new GroupEntity();
         group.setName(GROUP_NAME);
         
-        GroupRepository groupDao = new GroupJdbcRepository(entityManager);
-        GroupEntity groupWithId = groupDao.insert(group);
+        GroupEntity groupWithId = groupRepository.insert(group);
         GroupEntity insertedGroup = entityManager.find(GroupEntity.class, GROUP_ID);
         
         assertEquals(NEW_GROUP_ID, groupWithId.getId());
@@ -109,8 +108,7 @@ class GroupJdbcRepositoryTest {
     
     @Test
     void getById_ReceivingDatabaseDataOfGroup_CorrectReceivedData() throws RepositoryException {
-        GroupRepository groupDao = new GroupJdbcRepository(entityManager);
-        GroupEntity group = groupDao.getById(GROUP_ID);
+        GroupEntity group = groupRepository.getById(GROUP_ID);
         
         assertEquals(GROUP_ID, group.getId());
         assertEquals(GROUP_NAME, group.getName());
@@ -122,8 +120,7 @@ class GroupJdbcRepositoryTest {
         group.setId(GROUP_ID);
         group.setName(NEW_GROUP_NAME);
         
-        GroupRepository groupDao = new GroupJdbcRepository(entityManager);
-        groupDao.update(group);
+        groupRepository.update(group);
         
         GroupEntity updatedGroup = entityManager.find(GroupEntity.class, GROUP_ID);
         assertEquals(GROUP_ID, updatedGroup.getId());
@@ -132,8 +129,7 @@ class GroupJdbcRepositoryTest {
     
     @Test
     void deleteById_DeletingDatabaseDataOfGroup_DatabaseHasNoData() throws RepositoryException {
-        GroupRepository groupDao = new GroupJdbcRepository(entityManager);
-        groupDao.deleteById(GROUP_ID);
+        groupRepository.deleteById(GROUP_ID);
         
         GroupEntity group = new GroupEntity();
         group.setId(GROUP_ID);
@@ -141,6 +137,4 @@ class GroupJdbcRepositoryTest {
         boolean containStatus = entityManager.contains(group);
         assertFalse(containStatus);
     }
-    
-
 }

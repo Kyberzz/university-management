@@ -23,7 +23,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 //@PropertySource("/jdbc.properties")
-@EnableJpaRepositories
+@EnableJpaRepositories(basePackages = "ua.com.foxminded.repository")
 @EnableTransactionManagement
 @ComponentScan(basePackages = "ua.com.foxminded.university")
 @Configuration(proxyBeanMethods = false)

@@ -11,6 +11,7 @@ import javax.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ContextConfiguration;
@@ -20,7 +21,7 @@ import ua.com.foxminded.university.config.AppConfigTest;
 import ua.com.foxminded.university.entity.GroupEntity;
 import ua.com.foxminded.university.entity.StudentEntity;
 import ua.com.foxminded.university.repository.RepositoryException;
-import ua.com.foxminded.university.repository.jdbc.StudentJdbcRepository;
+import ua.com.foxminded.university.repository.StudentRepository;
 
 @Transactional
 @ExtendWith(SpringExtension.class)
@@ -41,6 +42,9 @@ class StudentJdbcRepositoryTest {
    
     @PersistenceContext
     private EntityManager entityManager;
+    
+    @Autowired
+    private StudentRepository studentRepository;
     
     @BeforeEach 
     void init() {
@@ -66,8 +70,7 @@ class StudentJdbcRepositoryTest {
         student.setId(STUDENT_ID_NUMBER);
         student.setGroup(null);
         
-        StudentJdbcRepository studentDao = new StudentJdbcRepository(entityManager);
-        studentDao.update(student);
+        studentRepository.update(student);
         
         StudentEntity updatedStudent = entityManager.find(StudentEntity.class, STUDENT_ID_NUMBER);
         assertNull(updatedStudent.getGroup());
@@ -83,8 +86,7 @@ class StudentJdbcRepositoryTest {
         group.setId(NEW_GROUP_ID_NUMBER);
         student.setGroup(group);
 
-        StudentJdbcRepository studentDao = new StudentJdbcRepository(entityManager);
-        studentDao.update(student);
+        studentRepository.update(student);
         
         StudentEntity databaseStudent = entityManager.find(StudentEntity.class, STUDENT_ID_NUMBER);
         assertEquals(NEW_FIRST_NAME_STUDENT, databaseStudent.getFirstName());
@@ -95,8 +97,7 @@ class StudentJdbcRepositoryTest {
     
     @Test
     void deleteById_DeletingStudentDatabaseData_NoStudentDatabaseData() throws RepositoryException {
-        StudentJdbcRepository studentDao = new StudentJdbcRepository(entityManager);
-        studentDao.deleteById(STUDENT_ID_NUMBER);
+        studentRepository.deleteById(STUDENT_ID_NUMBER);
         
         StudentEntity student = new StudentEntity();
         student.setId(STUDENT_ID_NUMBER);
@@ -114,8 +115,7 @@ class StudentJdbcRepositoryTest {
         student.setLastName(NEW_LAST_NAME_STUDENT);
         student.setGroup(group);
         
-        StudentJdbcRepository studentDao = new StudentJdbcRepository(entityManager);
-        StudentEntity studentWithId = studentDao.insert(student);
+        StudentEntity studentWithId = studentRepository.insert(student);
         
         StudentEntity databaseStudent = entityManager.find(StudentEntity.class, NEW_STUDENT_ID_NUMBER);
         
@@ -127,8 +127,7 @@ class StudentJdbcRepositoryTest {
     
     @Test
     void getById_GettingStudent_CorrectStudentData() throws RepositoryException {
-        StudentJdbcRepository studentDao = new StudentJdbcRepository(entityManager);
-        StudentEntity student = studentDao.getById(STUDENT_ID_NUMBER);
+        StudentEntity student = studentRepository.getById(STUDENT_ID_NUMBER);
         
         assertEquals(STUDENT_ID_NUMBER, student.getId());
         assertEquals(FIRST_NAME_STUDENT, student.getFirstName());
@@ -138,8 +137,7 @@ class StudentJdbcRepositoryTest {
     
     @Test
     void getGroupByStudentId_GettingDatabaseData_CorrectReceivedData() throws RepositoryException {
-        StudentJdbcRepository studentDao = new StudentJdbcRepository(entityManager);
-        StudentEntity studentData = studentDao.getGroupByStudentId(GROUP_ID_NUMBER);
+        StudentEntity studentData = studentRepository.getGroupByStudentId(GROUP_ID_NUMBER);
         
         assertEquals(STUDENT_ID_NUMBER, studentData.getId());
         assertEquals(FIRST_NAME_STUDENT, studentData.getFirstName());

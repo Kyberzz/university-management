@@ -9,6 +9,7 @@ import javax.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ContextConfiguration;
@@ -21,7 +22,6 @@ import ua.com.foxminded.university.entity.GroupEntity;
 import ua.com.foxminded.university.entity.TimetableEntity;
 import ua.com.foxminded.university.repository.RepositoryException;
 import ua.com.foxminded.university.repository.TimetableRepository;
-import ua.com.foxminded.university.repository.jdbc.TimetableJdbcRepository;
 
 @Transactional
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
@@ -47,6 +47,9 @@ class TimetableJdbcRepositoryTest {
     
     @PersistenceContext
     private EntityManager entityManager;
+    
+    @Autowired
+    private TimetableRepository timetableRepository;
     
     @BeforeEach
     void init() {
@@ -91,8 +94,7 @@ class TimetableJdbcRepositoryTest {
         timetable.setGroup(group);
         timetable.setCourse(course);
        
-        TimetableRepository timetableDao = new TimetableJdbcRepository(entityManager);
-        TimetableEntity timetableWithId = timetableDao.insert(timetable);
+        TimetableEntity timetableWithId = timetableRepository.insert(timetable);
         
         TimetableEntity insertedTimetable = entityManager.find(TimetableEntity.class, 
                                                                NEW_TIMETABLE_ID);
@@ -108,8 +110,7 @@ class TimetableJdbcRepositoryTest {
     
     @Test
     void getById_ReceivingTimetableDatabaseData_CorrectReceivedData() throws RepositoryException {
-        TimetableRepository timetableDao = new TimetableJdbcRepository(entityManager);
-        TimetableEntity receivedTimetable = timetableDao.getById(TIMETABLE_ID);
+        TimetableEntity receivedTimetable = timetableRepository.getById(TIMETABLE_ID);
         
         assertEquals(COURSE_ID, receivedTimetable.getCourse().getId());
         assertEquals(TIMETABLE_DESCRIPTION, receivedTimetable.getDescription());
@@ -130,8 +131,7 @@ class TimetableJdbcRepositoryTest {
         timetable.setStartTime(START_TIME);
         timetable.setWeekDay(DayOfWeek.MONDAY);
         
-        TimetableJdbcRepository timetableDao = new TimetableJdbcRepository(entityManager);
-        timetableDao.update(timetable);
+        timetableRepository.update(timetable);
         
         TimetableEntity updatedTimetable = entityManager.find(TimetableEntity.class, TIMETABLE_ID);
         
@@ -157,8 +157,7 @@ class TimetableJdbcRepositoryTest {
         timetable.setGroup(group);
         timetable.setWeekDay(DayOfWeek.valueOf(UDATED_WEEK_DAY));
         
-        TimetableRepository timetableDao = new TimetableJdbcRepository(entityManager);
-        timetableDao.update(timetable);
+        timetableRepository.update(timetable);
 
         TimetableEntity updatedTimetable = entityManager.find(TimetableEntity.class, TIMETABLE_ID);
        
@@ -173,8 +172,7 @@ class TimetableJdbcRepositoryTest {
     
     @Test
     void deleteById_DeletingTimetableDatabaseData_DatabaseHaNoData() throws RepositoryException {
-        TimetableRepository timetableDao = new TimetableJdbcRepository(entityManager);
-        timetableDao.deleteById(TIMETABLE_ID);
+        timetableRepository.deleteById(TIMETABLE_ID);
         
         TimetableEntity timetable = new TimetableEntity();
         timetable.setId(TIMETABLE_ID);
@@ -185,8 +183,7 @@ class TimetableJdbcRepositoryTest {
     @Test
     void getCourseByTimetableId_ReceivingTimetableDatabaseData_CorrectReceivedData() 
             throws RepositoryException {
-        TimetableRepository timetableDao = new TimetableJdbcRepository(entityManager);
-        TimetableEntity receivedTimetableData = timetableDao.getCourseByTimetableId(TIMETABLE_ID);
+        TimetableEntity receivedTimetableData = timetableRepository.getCourseByTimetableId(TIMETABLE_ID);
         
         assertEquals(COURSE_DESCRIPTION, receivedTimetableData.getCourse().getDescription());
         assertEquals(COURSE_ID, receivedTimetableData.getCourse().getId());
@@ -201,8 +198,7 @@ class TimetableJdbcRepositoryTest {
         
     @Test
     void getGroupByTimetableId_ReceivingTimetableDatabaseData_CorrectReceivedData() throws RepositoryException {
-        TimetableRepository timetableDao = new TimetableJdbcRepository(entityManager);
-        TimetableEntity timetable = timetableDao.getGroupByTimetableId(TIMETABLE_ID);
+        TimetableEntity timetable = timetableRepository.getGroupByTimetableId(TIMETABLE_ID);
         
         assertEquals(GROUP_NAME, timetable.getGroup().getName());
         assertEquals(COURSE_ID, timetable.getCourse().getId());
