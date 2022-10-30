@@ -25,7 +25,6 @@ class StudentServiceImplTestTestTest {
     
     @Mock
     StudentRepository studentDaoMock;
-    
 
     @Test
     void updateStudent_CallingInnerMethod_CorrectCallQuantity() throws ServiceException, RepositoryException {

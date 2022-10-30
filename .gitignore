@@ -3,5 +3,6 @@
 .settings
 .classpath
 .project
-university-management.log
+/university-management.log
+/.factorypath
 

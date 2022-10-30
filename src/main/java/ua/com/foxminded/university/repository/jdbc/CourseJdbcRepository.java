@@ -28,14 +28,12 @@ public class CourseJdbcRepository implements CourseRepository {
         log.debug("Get timetable list by course id={}", id);
         
         try {
-            CourseEntity course = entityManager.createQuery(
-                        "select c "
-                      + "from CourseEntity c "
-                      + "left join fetch c.timetableList tc "
-                      + "where c.id = :id", CourseEntity.class)
-                    .setParameter("id", id)
-                    .getSingleResult();
-            
+            CourseEntity course = entityManager.createQuery("select c "
+                                                          + "from CourseEntity c "
+                                                          + "left join fetch c.timetableList "
+                                                          + "where c.id = :id", CourseEntity.class)
+                                               .setParameter("id", id)
+                                               .getSingleResult();
             log.trace("Timetable list of course with id={} was received.", course.getId());
             return course;
         } catch (IllegalStateException e) {

@@ -1,15 +1,14 @@
 package ua.com.foxminded.university.service.impl;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
+import org.modelmapper.ConfigurationException;
+import org.modelmapper.MappingException;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.extern.slf4j.Slf4j;
 import ua.com.foxminded.university.entity.TeacherEntity;
-import ua.com.foxminded.university.model.CourseModel;
 import ua.com.foxminded.university.model.TeacherModel;
 import ua.com.foxminded.university.repository.RepositoryException;
 import ua.com.foxminded.university.repository.TeacherRepository;
@@ -30,32 +29,12 @@ public class TeacherServiceImpl implements TeacherService<TeacherModel> {
     
     @Override
     public TeacherModel getCourseListByTeacherId(int id) throws ServiceException {
-        TeacherEntity teacherEntity = null;
-        
         try {
-            teacherEntity = teacherDao.getCourseListByTeacherId(id);
-        } catch (RepositoryException e) {
+            TeacherEntity teacherEntity = teacherDao.getCourseListByTeacherId(id);
+            ModelMapper modelMapper = new ModelMapper();
+            return modelMapper.map(teacherEntity, TeacherModel.class);
+        } catch (RepositoryException | IllegalArgumentException | ConfigurationException | MappingException e) {
             throw new ServiceException("Getting the courses list by the teacher id failed.", e);
         }
-        
-        List<CourseModel> courseModelList = teacherEntity.getCourseList().stream()
-                .map(entity -> {
-                    CourseModel model = new CourseModel();
-                    model.setId(entity.getId());
-                    model.setDescription(entity.getDescription());
-                    model.setName(entity.getName());
-                    TeacherModel teacherModel = new TeacherModel();
-                    teacherModel.setId(entity.getTeacher().getId());
-                    model.setTeacher(teacherModel);
-                    return model;
-                })
-                .collect(Collectors.toList());
-        
-        TeacherModel teacherModel = new TeacherModel();
-        teacherModel.setId(teacherEntity.getId());
-        teacherModel.setCourseList(courseModelList);
-        teacherModel.setFirstName(teacherEntity.getFirstName());
-        teacherModel.setLastName(teacherEntity.getLastName());
-        return teacherModel;
     }
 }

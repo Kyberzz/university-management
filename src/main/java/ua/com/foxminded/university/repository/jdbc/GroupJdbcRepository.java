@@ -64,10 +64,12 @@ public class GroupJdbcRepository implements GroupRepository {
         log.debug("Get students list by group id={}", id);
         
         try {
-            GroupEntity group = entityManager.createQuery("select g from GroupEntity g "
-                    + "left join fetch g.studentList where g.id = :id", GroupEntity.class)
-                        .setParameter("id", id)
-                        .getSingleResult();
+            GroupEntity group = entityManager.createQuery("select g "
+                                                        + "from GroupEntity g "
+                                                        + "left join fetch g.studentList "
+                                                        + "where g.id = :id", GroupEntity.class)
+                                             .setParameter("id", id)
+                                             .getSingleResult();
             log.trace("Students list of the group with id={} was received", group.getId());
             return group;
         } catch (IllegalArgumentException e) {

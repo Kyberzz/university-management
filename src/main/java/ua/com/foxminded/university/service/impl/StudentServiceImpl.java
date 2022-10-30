@@ -1,11 +1,13 @@
 package ua.com.foxminded.university.service.impl;
 
+import org.modelmapper.ConfigurationException;
+import org.modelmapper.MappingException;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.extern.slf4j.Slf4j;
-import ua.com.foxminded.university.entity.GroupEntity;
 import ua.com.foxminded.university.entity.StudentEntity;
 import ua.com.foxminded.university.model.StudentModel;
 import ua.com.foxminded.university.repository.RepositoryException;
@@ -26,21 +28,14 @@ public class StudentServiceImpl implements StudentService<StudentModel> {
     }
     
     @Override
-    public int updateStudent(StudentModel studentModel) throws ServiceException {
-        StudentEntity studentEntity = new StudentEntity();
-        studentEntity.setId(studentModel.getId());
-        studentEntity.setFirstName(studentModel.getFirstName());
-        GroupEntity groupEntity = new GroupEntity();
-        groupEntity.setId(studentModel.getGroup().getId());
-        studentEntity.setGroup(groupEntity);
-        studentEntity.setLastName(studentModel.getLastName());
-        int updatedStudentsQuantity = 0;
+    public void updateStudent(StudentModel studentModel) throws ServiceException {
+        ModelMapper modelMapper = new ModelMapper();
        
         try {
+            StudentEntity studentEntity = modelMapper.map(studentModel, StudentEntity.class);
             studentDao.update(studentEntity);
-        } catch (RepositoryException e) {
+        } catch (RepositoryException | IllegalArgumentException | ConfigurationException | MappingException e) {
             throw new ServiceException("Udating the student data failed.", e);
         }
-        return updatedStudentsQuantity;
     }
 }

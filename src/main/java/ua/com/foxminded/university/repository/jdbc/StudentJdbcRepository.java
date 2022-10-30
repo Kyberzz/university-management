@@ -28,13 +28,12 @@ public class StudentJdbcRepository implements StudentRepository {
         log.debug("Get group by student id={}.", id);
         
         try {
-            StudentEntity student = entityManager.createQuery(
-                    "select s "
-                  + "from StudentEntity s "
-                  + "left join fetch s.group "
-                  + "where s.id = :id", StudentEntity.class)
-            .setParameter("id", id)
-            .getSingleResult();
+            StudentEntity student = entityManager.createQuery("select s "
+                                                            + "from StudentEntity s "
+                                                            + "left join fetch s.group "
+                                                            + "where s.id = :id", StudentEntity.class)
+                                                 .setParameter("id", id)
+                                                 .getSingleResult();
             log.trace("Group having student id={} was received.", student.getId());
             return student;
         } catch (IllegalArgumentException e) {
