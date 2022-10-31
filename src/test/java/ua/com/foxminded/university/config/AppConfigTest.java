@@ -82,7 +82,8 @@ public class AppConfigTest {
         
         Properties jpaProperties = new Properties();
         jpaProperties.setProperty("hibernate.hbm2ddl.auto", "create");
-        jpaProperties.setProperty("hibernate.dialect", "org.hibernate.dialect.PostgreSQL10Dialect");
+        jpaProperties.setProperty("hibernate.dialect", "org.hibernate.dialect.H2Dialect");
+      //  jpaProperties.setProperty("hibernate.dialect", "org.hibernate.dialect.PostgreSQL10Dialect");
       //  jpaProperties.setProperty("hibernate.default_schema", "university");
         
         factory.setJpaProperties(jpaProperties);
