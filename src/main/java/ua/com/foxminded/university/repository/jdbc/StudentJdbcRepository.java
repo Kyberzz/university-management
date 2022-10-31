@@ -30,7 +30,7 @@ public class StudentJdbcRepository implements StudentRepository {
         try {
             StudentEntity student = entityManager.createQuery("select s "
                                                             + "from StudentEntity s "
-                                                            + "left join fetch s.group "
+                                                            + "join fetch s.group "
                                                             + "where s.id = :id", StudentEntity.class)
                                                  .setParameter("id", id)
                                                  .getSingleResult();

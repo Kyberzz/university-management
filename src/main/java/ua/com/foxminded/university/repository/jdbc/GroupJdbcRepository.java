@@ -66,7 +66,7 @@ public class GroupJdbcRepository implements GroupRepository {
         try {
             GroupEntity group = entityManager.createQuery("select g "
                                                         + "from GroupEntity g "
-                                                        + "left join fetch g.studentList "
+                                                        + "join fetch g.studentList "
                                                         + "where g.id = :id", GroupEntity.class)
                                              .setParameter("id", id)
                                              .getSingleResult();

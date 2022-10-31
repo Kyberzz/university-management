@@ -30,7 +30,7 @@ public class CourseJdbcRepository implements CourseRepository {
         try {
             CourseEntity course = entityManager.createQuery("select c "
                                                           + "from CourseEntity c "
-                                                          + "left join fetch c.timetableList "
+                                                          + "join fetch c.timetableList "
                                                           + "where c.id = :id", CourseEntity.class)
                                                .setParameter("id", id)
                                                .getSingleResult();
