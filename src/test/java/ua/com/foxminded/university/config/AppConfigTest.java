@@ -33,14 +33,15 @@ public class AppConfigTest {
     private static final String USERNAME = "jdbc.user";
     private static final String URL = "jdbc.url";
     private static final String DRIVER_CLASS_NAME = "jdbc.driverClassName";
-/*    
-    private Environment environment;
     
+    /*
+    private Environment environment;
     
     public AppConfigTest(Environment environment) {
         this.environment = environment;
     }
 
+    
     @Bean
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
@@ -50,7 +51,7 @@ public class AppConfigTest {
         dataSource.setPassword(environment.getProperty(PASSWORD));
         return dataSource;
     }
-  */  
+    */
     @Bean
     public PersistenceExceptionTranslationPostProcessor exceptionTranslation() {
         return new PersistenceExceptionTranslationPostProcessor();
