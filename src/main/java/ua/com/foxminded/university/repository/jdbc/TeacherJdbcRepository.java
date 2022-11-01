@@ -20,6 +20,9 @@ import ua.com.foxminded.university.repository.TeacherRepository;
 @Repository
 public class TeacherJdbcRepository implements TeacherRepository {
     
+    private static final String TEACHER_ID_COLUMN_NAME = "id";
+    private static final String COURSE_ENTITY = "courseList";
+    
     @PersistenceContext
     private EntityManager entityManager;
     
@@ -35,9 +38,9 @@ public class TeacherJdbcRepository implements TeacherRepository {
             CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
             CriteriaQuery<TeacherEntity> criteriaQuery = criteriaBuilder.createQuery(TeacherEntity.class);
             Root<TeacherEntity> rootTeacher = criteriaQuery.from(TeacherEntity.class);
-            rootTeacher.fetch("courseList", JoinType.INNER);
+            rootTeacher.fetch(COURSE_ENTITY, JoinType.INNER);
             criteriaQuery.select(rootTeacher);
-            criteriaQuery.where(criteriaBuilder.equal(rootTeacher.get("id"), id));
+            criteriaQuery.where(criteriaBuilder.equal(rootTeacher.get(TEACHER_ID_COLUMN_NAME), id));
             TeacherEntity teacher = entityManager.createQuery(criteriaQuery).getSingleResult();
             log.trace("Courses list of teacher id={} was received");
             return teacher;

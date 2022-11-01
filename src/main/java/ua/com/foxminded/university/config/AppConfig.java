@@ -53,7 +53,7 @@ public class AppConfig {
         
         Properties jpaProperties = new Properties();
         jpaProperties.setProperty("hibernate.hbm2ddl.auto", "none");
-        jpaProperties.setProperty("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
+        jpaProperties.setProperty("hibernate.dialect", "org.hibernate.dialect.PostgreSQL10Dialect");
         entityManagerFactory.setJpaProperties(jpaProperties);
         return entityManagerFactory;
     }
@@ -72,7 +72,6 @@ public class AppConfig {
     public PersistenceExceptionTranslationPostProcessor exceptionTranslation() {
         return new PersistenceExceptionTranslationPostProcessor();
     }
-    
     
     @Bean
     public PlatformTransactionManager transactionManager() {

@@ -20,6 +20,10 @@ import ua.com.foxminded.university.repository.TimetableRepository;
 @Repository
 public class TimetableJdbcRepository implements TimetableRepository {
     
+    private static final String GROUP_ENTITY = "group";
+    private static final String TIMETABLE_ID_COLUMN_NAME = "id";
+    private static final String TIMETABLE_ENTITY = "course";
+    
     @PersistenceContext
     private EntityManager entityManager;
     
@@ -35,9 +39,9 @@ public class TimetableJdbcRepository implements TimetableRepository {
             CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
             CriteriaQuery<TimetableEntity> criteriaQuery = criteriaBuilder.createQuery(TimetableEntity.class);
             Root<TimetableEntity> rootTimetable = criteriaQuery.from(TimetableEntity.class);
-            rootTimetable.fetch("course", JoinType.INNER);
+            rootTimetable.fetch(TIMETABLE_ENTITY, JoinType.INNER);
             criteriaQuery.select(rootTimetable);
-            criteriaQuery.where(criteriaBuilder.equal(rootTimetable.get("id"), id));
+            criteriaQuery.where(criteriaBuilder.equal(rootTimetable.get(TIMETABLE_ID_COLUMN_NAME), id));
             TimetableEntity timetable = entityManager.createQuery(criteriaQuery).getSingleResult();
             log.trace("Course by timetable id={} was received.", timetable.getId());
             return timetable;
@@ -54,9 +58,9 @@ public class TimetableJdbcRepository implements TimetableRepository {
             CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
             CriteriaQuery<TimetableEntity> criteriaQuery = criteriaBuilder.createQuery(TimetableEntity.class);
             Root<TimetableEntity> rootTimetable = criteriaQuery.from(TimetableEntity.class);
-            rootTimetable.fetch("group", JoinType.INNER);
+            rootTimetable.fetch(GROUP_ENTITY, JoinType.INNER);
             criteriaQuery.select(rootTimetable);
-            criteriaQuery.where(criteriaBuilder.equal(rootTimetable.get("id"), id));
+            criteriaQuery.where(criteriaBuilder.equal(rootTimetable.get(TIMETABLE_ID_COLUMN_NAME), id));
             TimetableEntity timetable = entityManager.createQuery(criteriaQuery).getSingleResult();
             log.trace("Group of timetable id={} was received.", timetable.getId());
             return timetable;

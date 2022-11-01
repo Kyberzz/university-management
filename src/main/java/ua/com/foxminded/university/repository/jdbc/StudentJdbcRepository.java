@@ -16,6 +16,10 @@ import ua.com.foxminded.university.repository.StudentRepository;
 @Repository
 public class StudentJdbcRepository implements StudentRepository {
     
+    private static final String STUNDENT_ID_COLUMN_NAME = "id";
+    private static final String SELECT_GROUP = "select s from StudentEntity s "
+            + "join fetch s.group where s.id = :id"; 
+    
     @PersistenceContext
     private EntityManager entityManager;
     
@@ -28,11 +32,8 @@ public class StudentJdbcRepository implements StudentRepository {
         log.debug("Get group by student id={}.", id);
         
         try {
-            StudentEntity student = entityManager.createQuery("select s "
-                                                            + "from StudentEntity s "
-                                                            + "join fetch s.group "
-                                                            + "where s.id = :id", StudentEntity.class)
-                                                 .setParameter("id", id)
+            StudentEntity student = entityManager.createQuery(SELECT_GROUP, StudentEntity.class)
+                                                 .setParameter(STUNDENT_ID_COLUMN_NAME, id)
                                                  .getSingleResult();
             log.trace("Group having student id={} was received.", student.getId());
             return student;

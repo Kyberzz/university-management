@@ -15,6 +15,9 @@ import ua.com.foxminded.university.repository.RepositoryException;
 @Slf4j
 @Repository
 public class CourseJdbcRepository implements CourseRepository {
+    private static final String SELECT_TIMETABLE_LIST = "select c from CourseEntity c "
+            + "join fetch c.timetableList where c.id = :id";
+    private static final String COURSE_ID = "id";
     
     @PersistenceContext
     private EntityManager entityManager;
@@ -28,11 +31,8 @@ public class CourseJdbcRepository implements CourseRepository {
         log.debug("Get timetable list by course id={}", id);
         
         try {
-            CourseEntity course = entityManager.createQuery("select c "
-                                                          + "from CourseEntity c "
-                                                          + "join fetch c.timetableList "
-                                                          + "where c.id = :id", CourseEntity.class)
-                                               .setParameter("id", id)
+            CourseEntity course = entityManager.createQuery(SELECT_TIMETABLE_LIST, CourseEntity.class)
+                                               .setParameter(COURSE_ID, id)
                                                .getSingleResult();
             log.trace("Timetable list of course with id={} was received.", course.getId());
             return course;

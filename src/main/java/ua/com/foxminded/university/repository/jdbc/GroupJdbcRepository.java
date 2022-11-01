@@ -18,6 +18,11 @@ import ua.com.foxminded.university.repository.GroupRepository;
 @Slf4j
 @Repository
 public class GroupJdbcRepository implements GroupRepository {
+   
+    private static final String SELECT_STUDENT_LIST = "select g from GroupEntity g "
+            + "join fetch g.studentList where g.id = :id";
+    private static final String TIMETABLE_ENTITY = "timetableList";
+    private static final String GROUP_ID_COLUMN_NAME = "id";
     
     @PersistenceContext
     private EntityManager entityManager;
@@ -47,9 +52,9 @@ public class GroupJdbcRepository implements GroupRepository {
             CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
             CriteriaQuery<GroupEntity> query = criteriaBuilder.createQuery(GroupEntity.class);
             Root<GroupEntity> rootGroup = query.from(GroupEntity.class);
-            rootGroup.fetch("timetableList");
+            rootGroup.fetch(TIMETABLE_ENTITY);
             query.select(rootGroup);
-            query.where(criteriaBuilder.equal(rootGroup.get("id"), id));
+            query.where(criteriaBuilder.equal(rootGroup.get(GROUP_ID_COLUMN_NAME), id));
             GroupEntity group = entityManager.createQuery(query).getSingleResult();
             
             log.trace("Timetable list of group with id={} was received.", group.getId());
@@ -64,11 +69,8 @@ public class GroupJdbcRepository implements GroupRepository {
         log.debug("Get students list by group id={}", id);
         
         try {
-            GroupEntity group = entityManager.createQuery("select g "
-                                                        + "from GroupEntity g "
-                                                        + "join fetch g.studentList "
-                                                        + "where g.id = :id", GroupEntity.class)
-                                             .setParameter("id", id)
+            GroupEntity group = entityManager.createQuery(SELECT_STUDENT_LIST, GroupEntity.class)
+                                             .setParameter(GROUP_ID_COLUMN_NAME, id)
                                              .getSingleResult();
                                             
             log.trace("Students list of the group with id={} was received", group.getId());
