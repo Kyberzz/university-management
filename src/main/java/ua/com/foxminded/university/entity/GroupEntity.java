@@ -14,7 +14,7 @@ import javax.persistence.Table;
 import lombok.Data;
 
 @Entity
-@Table(name = "groups")
+@Table(name = "groups", schema = "university")
 @Data
 public class GroupEntity implements Serializable {
     

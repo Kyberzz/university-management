@@ -16,7 +16,7 @@ import javax.persistence.Table;
 import lombok.Data;
 
 @Entity
-@Table(name = "courses")
+@Table(name = "courses", schema = "university")
 @Data
 public class CourseEntity implements Serializable {
     
