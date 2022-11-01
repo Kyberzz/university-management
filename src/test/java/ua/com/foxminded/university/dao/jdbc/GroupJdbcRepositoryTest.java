@@ -3,7 +3,9 @@ package ua.com.foxminded.university.dao.jdbc;
 import static org.junit.jupiter.api.Assertions.*;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceUnit;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,9 +34,9 @@ class GroupJdbcRepositoryTest {
     private static final String TIMETABLE_DESCRIPTION = "some timetable description";
     private static final String WEEK_DAY = "MONDAY";
     private static final String LAST_NAME = "Smith";
-    private static final String FIST_NAME = "Julitta";
+    private static final String FIST_NAME = "Alex";
     private static final String NEW_GROUP_NAME = "lt";
-    private static final String GROUP_NAME = "kt-52";
+    private static final String GROUP_NAME = "rs-01";
     private static final int NEW_GROUP_ID = 2;
     private static final int STUDENT_ID = 1;
     private static final int FIRST_ELEMENT = 0;
@@ -43,14 +45,19 @@ class GroupJdbcRepositoryTest {
     private static final long END_TIME = 39360000;
     private static final long START_TIME = 36360000;
     
+    @PersistenceUnit
+    private EntityManagerFactory entityManagerFactory;
+    
     @PersistenceContext
     private EntityManager entityManager;
     
     @Autowired
     private GroupRepository groupRepository;
-    
+
     @BeforeEach
     void inint() {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        entityManager.getTransaction().begin();
         GroupEntity group = new GroupEntity();
         group.setName(GROUP_NAME);
         entityManager.persist(group);
@@ -68,6 +75,7 @@ class GroupJdbcRepositoryTest {
         student.setLastName(LAST_NAME);
         student.setGroup(group);
         entityManager.persist(student);
+        entityManager.getTransaction().commit();
     }
 
     @Test
@@ -100,12 +108,13 @@ class GroupJdbcRepositoryTest {
         group.setName(GROUP_NAME);
         
         GroupEntity groupWithId = groupRepository.insert(group);
-        GroupEntity insertedGroup = entityManager.find(GroupEntity.class, GROUP_ID);
+        entityManagerFactory.createEntityManager();
+        GroupEntity insertedGroup = entityManager.find(GroupEntity.class, NEW_GROUP_ID);
         
         assertEquals(NEW_GROUP_ID, groupWithId.getId());
         assertEquals(GROUP_NAME, insertedGroup.getName());
     }
-    
+ 
     @Test
     void getById_ReceivingDatabaseDataOfGroup_CorrectReceivedData() throws RepositoryException {
         GroupEntity group = groupRepository.getById(GROUP_ID);
@@ -134,6 +143,7 @@ class GroupJdbcRepositoryTest {
         GroupEntity group = new GroupEntity();
         group.setId(GROUP_ID);
         
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
         boolean containStatus = entityManager.contains(group);
         assertFalse(containStatus);
     }

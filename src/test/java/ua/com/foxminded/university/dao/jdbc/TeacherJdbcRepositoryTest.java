@@ -3,7 +3,9 @@ package ua.com.foxminded.university.dao.jdbc;
 import static org.junit.jupiter.api.Assertions.*;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceUnit;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,18 +37,22 @@ class TeacherJdbcRepositoryTest {
     private static final String TEACHER_FIRST_NAME = "Dennis";
     private static final int NEW_TEACHER_ID = 2;
     private static final int TEACHER_ID = 1;
-    private static final int COURSE_ID_NUMBER = 2;
+    private static final int COURSE_ID = 1;
     private static final int FIST_ELEMENT = 0;
-    private static final int COURSES_QUANTITY = 2;
     
     @PersistenceContext
     private EntityManager entityManager;
+    
+    @PersistenceUnit
+    private EntityManagerFactory entityManagerFactory;
     
     @Autowired
     private TeacherRepository teacherRepository;
     
     @BeforeEach
     void init() {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        entityManager.getTransaction().begin();
         TeacherEntity teacher = new TeacherEntity();
         teacher.setFirstName(TEACHER_FIRST_NAME);
         teacher.setLastName(TEACHER_LAST_NAME);
@@ -57,6 +63,7 @@ class TeacherJdbcRepositoryTest {
         course.setName(COURSE_NAME);
         course.setTeacher(teacher);
         entityManager.persist(course);
+        entityManager.getTransaction().commit();
     }
     
     @Test
@@ -68,10 +75,9 @@ class TeacherJdbcRepositoryTest {
         assertEquals(TEACHER_FIRST_NAME, teacherData.getFirstName());
         assertEquals(TEACHER_LAST_NAME, teacherData.getLastName());
         assertEquals(TEACHER_ID, teacherData.getCourseList().get(FIST_ELEMENT).getTeacher().getId());
-        assertEquals(COURSE_ID_NUMBER, teacherData.getCourseList().get(FIST_ELEMENT).getId());
+        assertEquals(COURSE_ID, teacherData.getCourseList().get(FIST_ELEMENT).getId());
         assertEquals(COURSE_NAME, teacherData.getCourseList().get(FIST_ELEMENT).getName());
         assertEquals(COURSE_DESCRIPTION, teacherData.getCourseList().get(FIST_ELEMENT).getDescription());
-        assertEquals(COURSES_QUANTITY, teacherData.getCourseList().size());
     }
     
     @Test
@@ -122,5 +128,4 @@ class TeacherJdbcRepositoryTest {
         assertEquals(NEW_TEACHER_FIRST_NAME, updatedTeacherData.getFirstName());
         assertEquals(NEW_TEACHER_LAST_NAME, updatedTeacherData.getLastName());
     }
-    
 }

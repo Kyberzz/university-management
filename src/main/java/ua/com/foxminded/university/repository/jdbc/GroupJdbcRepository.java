@@ -70,6 +70,7 @@ public class GroupJdbcRepository implements GroupRepository {
                                                         + "where g.id = :id", GroupEntity.class)
                                              .setParameter("id", id)
                                              .getSingleResult();
+                                            
             log.trace("Students list of the group with id={} was received", group.getId());
             return group;
         } catch (IllegalArgumentException e) {

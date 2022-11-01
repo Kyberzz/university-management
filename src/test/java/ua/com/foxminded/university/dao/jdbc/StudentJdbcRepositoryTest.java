@@ -5,7 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceUnit;
 import javax.transaction.Transactional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -43,11 +45,16 @@ class StudentJdbcRepositoryTest {
     @PersistenceContext
     private EntityManager entityManager;
     
+    @PersistenceUnit
+    private EntityManagerFactory entityManagerFactory;
+    
     @Autowired
     private StudentRepository studentRepository;
     
     @BeforeEach 
     void init() {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        entityManager.getTransaction().begin();
         GroupEntity group = new GroupEntity();
         group.setName(GROUP_NAME);
         entityManager.persist(group);
@@ -62,6 +69,7 @@ class StudentJdbcRepositoryTest {
         student.setLastName(LAST_NAME_STUDENT);
         student.setGroup(group);
         entityManager.persist(student);
+        entityManager.getTransaction().commit();
     }
     
     @Test

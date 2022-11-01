@@ -5,7 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceUnit;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -43,13 +45,11 @@ class CourseJdbcRepositoryTest {
     private static final String COURSE_DESCRIPTION = "some description";
     private static final String NEW_COURSE_DESCRIPTION = "new description";
     private static final String NEW_COURSE_NAME = "Chemistry";
-    private static final String MONDAY = "MONDAY";
     private static final long END_TIME = 39360000;
     private static final long START_TIME = 36360000;
-    private static final int TIMETABLES_QUANTITY = 2;
     private static final int COURSE_ID = 1;
     private static final int GROUP_ID = 1;
-    private static final int EXPECTED_TIMETABLE_ID = 2;
+    private static final int TIMETABLE_ID = 1;
     private static final int NEW_COURSE_ID = 2;
     private static final int NEW_TEACHER_ID = 2;
     private static final int TEACHER_ID = 1;
@@ -58,11 +58,17 @@ class CourseJdbcRepositoryTest {
     @PersistenceContext
     private EntityManager entityManager;
     
+    @PersistenceUnit
+    private EntityManagerFactory entityManagerFactory;
+    
     @Autowired
     private CourseRepository courseRepository;
     
     @BeforeEach
     void init() {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+       
+        entityManager.getTransaction().begin();
         GroupEntity group = new GroupEntity();
         group.setName(GROUP_NAME);
         entityManager.persist(group);
@@ -83,12 +89,29 @@ class CourseJdbcRepositoryTest {
         entityManager.persist(course);
         
         TimetableEntity timetable = new TimetableEntity();
+        timetable.setGroup(group);
         timetable.setCourse(course);
         timetable.setDescription(TIMETABLE_DESCRIPTION);
         timetable.setEndTime(END_TIME);
         timetable.setStartTime(START_TIME);
         timetable.setWeekDay(DayOfWeek.valueOf(WEEK_DAY));
         entityManager.persist(timetable);
+        entityManager.getTransaction().commit();
+    }
+
+    @Test
+    void getTimetableListByCourseId_GettingDatabaseTimetableData_CorrectData() throws RepositoryException {
+        CourseEntity receivedCourse = courseRepository.getTimetableListByCourseId(COURSE_ID);
+        
+        assertEquals(COURSE_ID, receivedCourse.getId());
+        assertEquals(COURSE_NAME, receivedCourse.getName());
+        assertEquals(TEACHER_ID, receivedCourse.getTeacher().getId());
+        assertEquals(COURSE_ID, receivedCourse.getTimetableList().get(FIRST_ELEMENT).getCourse().getId());
+        assertEquals(START_TIME, receivedCourse.getTimetableList().get(FIRST_ELEMENT).getStartTime());
+        assertEquals(END_TIME, receivedCourse.getTimetableList().get(FIRST_ELEMENT).getEndTime());
+        assertEquals(GROUP_ID, receivedCourse.getTimetableList().get(FIRST_ELEMENT).getGroup().getId());
+        assertEquals(TIMETABLE_ID, receivedCourse.getTimetableList().get(FIRST_ELEMENT).getId());
+        assertEquals(WEEK_DAY, receivedCourse.getTimetableList().get(FIRST_ELEMENT).getWeekDay().toString());
     }
     
     @Test
@@ -162,23 +185,5 @@ class CourseJdbcRepositoryTest {
         assertEquals(NEW_COURSE_NAME, insertedCourse.getName());
         assertEquals(NEW_COURSE_DESCRIPTION, insertedCourse.getDescription());
         assertEquals(TEACHER_ID, insertedCourse.getTeacher().getId());
-    }
-    
-    @Test
-    void getTimetableListByCourseId_GettingDatabaseTimetableData_CorrectData() throws RepositoryException {
-        CourseEntity receivedCourse = courseRepository.getTimetableListByCourseId(COURSE_ID);
-        
-        assertEquals(COURSE_ID, receivedCourse.getId());
-        assertEquals(COURSE_NAME, receivedCourse.getName());
-        assertEquals(TEACHER_ID, receivedCourse.getTeacher().getId());
-        assertEquals(COURSE_ID, receivedCourse.getTimetableList().get(FIRST_ELEMENT).getCourse()
-                                                                                           .getId());
-        assertEquals(START_TIME, receivedCourse.getTimetableList().get(FIRST_ELEMENT).getStartTime());
-        assertEquals(END_TIME, receivedCourse.getTimetableList().get(FIRST_ELEMENT).getEndTime());
-        assertEquals(GROUP_ID, receivedCourse.getTimetableList().get(FIRST_ELEMENT).getGroup()
-                                                                                            .getId());
-        assertEquals(EXPECTED_TIMETABLE_ID, receivedCourse.getTimetableList().get(FIRST_ELEMENT).getId());
-        assertEquals(MONDAY, receivedCourse.getTimetableList().get(FIRST_ELEMENT).getWeekDay().toString());
-        assertEquals(TIMETABLES_QUANTITY, receivedCourse.getTimetableList().size());
     }
 }
