@@ -27,7 +27,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Configuration
 public class AppConfig {
     
-    private static final String ENTITY_PACKAGE = "ua.com.foxminded.entity";
+    private static final String ENTITY_PACKAGE = "ua.com.foxminded.university.entity";
     private static final String PASSWORD = "jdbc.password";
     private static final String USERNAME = "jdbc.user";
     private static final String URL = "jdbc.url";

@@ -1,1 +1,1 @@
-create schema university;
+create schema if not exists university;
