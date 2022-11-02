@@ -53,7 +53,6 @@ public class AppConfigTest {
         factory.setJpaVendorAdapter(jpaVendorAdapter);
         factory.setPackagesToScan("ua.com.foxminded.university.entity");
         factory.setDataSource(dataSource());
-        factory.setPackagesToScan("ua.com.foxminded.university.entity");
         
         Properties jpaProperties = new Properties();
         jpaProperties.setProperty("javax.persistence.schema-generation.database.action", "drop-and-create");
