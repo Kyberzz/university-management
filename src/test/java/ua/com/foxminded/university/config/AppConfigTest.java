@@ -19,7 +19,7 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-@EnableJpaRepositories(basePackages = "ua.com.foxminded.repository")
+@EnableJpaRepositories
 @EnableTransactionManagement
 @ComponentScan(basePackages = "ua.com.foxminded.university")
 @Configuration(proxyBeanMethods = false)
