@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 public class TeacherModel {
 
-    private final Integer id;
+    private Integer id;
     private String firstName;
     private String lastName;
     private List<CourseModel> courseList;

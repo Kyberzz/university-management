@@ -1,42 +1,41 @@
 package ua.com.foxminded.university.service.impl;
 
-
+import org.modelmapper.ConfigurationException;
+import org.modelmapper.MappingException;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.extern.slf4j.Slf4j;
-import ua.com.foxminded.university.dao.DaoException;
-import ua.com.foxminded.university.dao.StudentDao;
-import ua.com.foxminded.university.entity.GroupEntity;
 import ua.com.foxminded.university.entity.StudentEntity;
 import ua.com.foxminded.university.model.StudentModel;
+import ua.com.foxminded.university.repository.RepositoryException;
+import ua.com.foxminded.university.repository.StudentRepository;
 import ua.com.foxminded.university.service.ServiceException;
 import ua.com.foxminded.university.service.StudentService;
 
-@Slf4j
 @Service
+@Slf4j
+@Transactional
 public class StudentServiceImpl implements StudentService<StudentModel> {
     
-    private StudentDao studentDao;
+    private StudentRepository studentDao;
     
     @Autowired
-    public StudentServiceImpl(StudentDao studentDao) {
+    public StudentServiceImpl(StudentRepository studentDao) {
         this.studentDao = studentDao;
     }
     
     @Override
-    public int updateStudent(StudentModel studentModel) throws ServiceException {
-        StudentEntity studentEntity = new StudentEntity(studentModel.getId());
-        studentEntity.setFirstName(studentModel.getFirstName());
-        studentEntity.setGroup(new GroupEntity(studentModel.getGroup().getId()));
-        studentEntity.setLastName(studentModel.getLastName());
-        int updatedStudentsQuantity = 0;
+    public void updateStudent(StudentModel studentModel) throws ServiceException {
+        ModelMapper modelMapper = new ModelMapper();
        
         try {
-            updatedStudentsQuantity = studentDao.update(studentEntity);
-        } catch (DaoException e) {
+            StudentEntity studentEntity = modelMapper.map(studentModel, StudentEntity.class);
+            studentDao.update(studentEntity);
+        } catch (RepositoryException | IllegalArgumentException | ConfigurationException | MappingException e) {
             throw new ServiceException("Udating the student data failed.", e);
         }
-        return updatedStudentsQuantity;
     }
 }

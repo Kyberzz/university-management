@@ -1,54 +1,40 @@
 package ua.com.foxminded.university.service.impl;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
+import org.modelmapper.ConfigurationException;
+import org.modelmapper.MappingException;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.extern.slf4j.Slf4j;
-import ua.com.foxminded.university.dao.DaoException;
-import ua.com.foxminded.university.dao.TeacherDao;
 import ua.com.foxminded.university.entity.TeacherEntity;
-import ua.com.foxminded.university.model.CourseModel;
 import ua.com.foxminded.university.model.TeacherModel;
+import ua.com.foxminded.university.repository.RepositoryException;
+import ua.com.foxminded.university.repository.TeacherRepository;
 import ua.com.foxminded.university.service.ServiceException;
 import ua.com.foxminded.university.service.TeacherService;
 
-@Slf4j
 @Service
+@Slf4j
+@Transactional
 public class TeacherServiceImpl implements TeacherService<TeacherModel> {
     
-    private TeacherDao teacherDao; 
+    private TeacherRepository teacherDao; 
     
     @Autowired
-    public TeacherServiceImpl(TeacherDao teacherDao) {
+    public TeacherServiceImpl(TeacherRepository teacherDao) {
         this.teacherDao = teacherDao;
     }
     
     @Override
     public TeacherModel getCourseListByTeacherId(int id) throws ServiceException {
-        TeacherEntity teacherEntityCoursesList = null;
-        
         try {
-            teacherEntityCoursesList = teacherDao.getCourseListByTeacherId(id);
-        } catch (DaoException e) {
+            TeacherEntity teacherEntity = teacherDao.getCourseListByTeacherId(id);
+            ModelMapper modelMapper = new ModelMapper();
+            return modelMapper.map(teacherEntity, TeacherModel.class);
+        } catch (RepositoryException | IllegalArgumentException | ConfigurationException | MappingException e) {
             throw new ServiceException("Getting the courses list by the teacher id failed.", e);
         }
-        
-        List<CourseModel> courseEntityList = teacherEntityCoursesList.getCourseList().stream()
-                .map(entity -> {
-                    CourseModel model = new CourseModel(entity.getId());
-                    model.setDescription(entity.getDescription());
-                    model.setName(entity.getName());
-                    model.setTeacher(new TeacherModel(entity.getTeacher().getId()));
-                    return model;
-                })
-                .collect(Collectors.toList());
-        TeacherModel teacherModelCourseList = new TeacherModel(teacherEntityCoursesList.getId());
-        teacherModelCourseList.setCourseList(courseEntityList);
-        teacherModelCourseList.setFirstName(teacherEntityCoursesList.getFirstName());
-        teacherModelCourseList.setLastName(teacherEntityCoursesList.getLastName());
-        return teacherModelCourseList;
     }
 }
