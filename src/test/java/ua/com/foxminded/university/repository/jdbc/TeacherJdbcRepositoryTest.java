@@ -1,4 +1,4 @@
-package ua.com.foxminded.university.dao.jdbc;
+package ua.com.foxminded.university.repository.jdbc;
 
 import static org.junit.jupiter.api.Assertions.*;
 

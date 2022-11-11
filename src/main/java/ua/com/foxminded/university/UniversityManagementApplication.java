@@ -12,11 +12,10 @@ import ua.com.foxminded.university.config.RepositoryConfig;
 //@EnableAutoConfiguration
 //@SpringBootConfiguration
 //@Import({RepositoryConfig.class})
-//@SpringBootApplication
+@SpringBootApplication
 public class UniversityManagementApplication {
-  /*  
+    
     public static void main(String[] args) {
         SpringApplication.run(UniversityManagementApplication.class, args);
     }
-    */
 }

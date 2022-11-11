@@ -5,21 +5,14 @@ import java.util.Properties;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
-import org.flywaydb.core.Flyway;
-import org.flywaydb.core.api.configuration.FluentConfiguration;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.flyway.FlywayMigrationStrategy;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.env.Environment;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.repository.config.BootstrapMode;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.orm.jpa.JpaTransactionManager;
@@ -28,7 +21,6 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-@EnableAutoConfiguration
 @PropertySource("/application.properties")
 @EnableJpaRepositories(basePackages = "ua.com.foxminded.university.repository", 
                        bootstrapMode = BootstrapMode.LAZY)
@@ -36,14 +28,22 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @ComponentScan(basePackages = "ua.com.foxminded.university")
 @Configuration(proxyBeanMethods = false)
 public class RepositoryConfigTest {
-    private static final String ENTITY_PACKAGE = "ua.com.foxminded.university.entity";
-    private static final String PASSWORD = "spring.datasource.password";
-    private static final String USERNAME = "spring.datasource.username";
-    private static final String URL = "spring.datasource.url";
-    private static final String DRIVER_CLASS_NAME = "spring.datasource.driver-class-name";
     
-    @Autowired
-    private Environment environment;
+    private static final String DIALECT_TYPE = "org.hibernate.dialect.H2Dialect";
+    private static final String PERSISTENCE_DIALECT = "hibernate.dialect";
+    private static final String PERMISSION = "true";
+    private static final String SCHEMA_CREATION_ACCESS = "javax.persistence.schema-generation"
+            + ".create-database-schemase";
+    private static final String CREATION_SCHEMA_PATH = "test-schema.sql";
+    private static final String CREATION_SCHEMA_SCRIPT_SOURCE = "javax.persistence"
+            + ".schema-generation.create-script-source";
+    private static final String SOURCE_TYPE = "script-then-metadata";
+    private static final String CREATION_SCHEMA_SOURCE = "javax.persistence.schema-generation"
+            + ".create-source";
+    private static final String SCHEMA_GENERATION_ACTION = "javax.persistence.schema-generation"
+            + ".database.action";
+    private static final String ACTION_TYPE = "drop-and-create";
+    private static final String ENTITY_PACKAGE = "ua.com.foxminded.university.entity";
     
     @Bean
     public PersistenceExceptionTranslationPostProcessor exceptionTranslation() {
@@ -56,67 +56,8 @@ public class RepositoryConfigTest {
         transactionManager.setEntityManagerFactory(entityManagerFactory);
         return transactionManager;
     }
-    
- //  @Bean(initMethod = "migrate")
-    /*
     @Bean
-    public Flyway flyway() {
-        Flyway flyway = Flyway.configure().dataSource(dataSource())
-                                          .cleanDisabled(false)
-                                          .baselineOnMigrate(true)
-                                          .load();
-        //flyway.clean();
-        flyway.migrate();
-      
-    //    FluentConfiguration config = Flyway.configure();
-    //    config.cleanDisabled(false);
-    //    config.baselineOnMigrate(true);
-    //    config.dataSource(dataSource());
-    //    Flyway flyway = new Flyway(config);
-    //    flyway.clean();
-   //     flyway.migrate();
-        
-        return flyway;
-        
-    }
-    */
-    @Bean
-    public FlywayMigrationStrategy flywayStrategy() {
-        FlywayMigrationStrategy strategy = new FlywayMigrationStrategy() {
-            
-            @Override
-            public void migrate(Flyway flyway) {
-                flyway.clean();
-                flyway.migrate();
-            }
-        };
-        return strategy;
-    }
-    
-    /*
-    @Bean
-    public FlywayMigrationStrategy flywayMigrationStrategy() {
-        FlywayMigrationStrategy strategy = new FlywayMigrationStrategy() {
-            
-            @Override
-            public void migrate(Flyway flyway) {
-                Flyway.configure().dataSource(dataSource());
-                flyway.clean();
-                flyway.migrate();
-            }
-        };
-        return strategy;
-    }
-    */
-    
-    /*
-    @Bean
-    public DataSource dataSource() {
-        return new EmbeddedDatabaseBuilder().setType(EmbeddedDatabaseType.H2).build();
-    }
-    */
-    @Bean
-    @DependsOn("flywayStrategy")
+    @DependsOn("dataSource")
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         
         HibernateJpaVendorAdapter jpaVendorAdapter = new HibernateJpaVendorAdapter();
@@ -124,17 +65,15 @@ public class RepositoryConfigTest {
         
         LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
         factory.setJpaVendorAdapter(jpaVendorAdapter);
-        factory.setPackagesToScan("ua.com.foxminded.university.entity");
+        factory.setPackagesToScan(ENTITY_PACKAGE);
         factory.setDataSource(dataSource());
         
         Properties jpaProperties = new Properties();
-//        jpaProperties.setProperty("javax.persistence.schema-generation.database.action", "drop-and-create");
-        jpaProperties.setProperty("javax.persistence.schema-generation.database.action", "none");
-     //   jpaProperties.setProperty("javax.persistence.schema-generation.create-source", "script-then-metadata");
-     //   jpaProperties.setProperty("javax.persistence.schema-generation.create-script-source", "test-schema.sql");
-     //   jpaProperties.setProperty("javax.persistence.schema-generation.create-database-schemase", "true");
-    //    jpaProperties.setProperty("hibernate.dialect", "org.hibernate.dialect.H2Dialect");
-          jpaProperties.setProperty("hibernate.dialect", "org.hibernate.dialect.PostgreSQL10Dialect");
+        jpaProperties.setProperty(SCHEMA_GENERATION_ACTION, ACTION_TYPE);
+        jpaProperties.setProperty(CREATION_SCHEMA_SOURCE, SOURCE_TYPE);
+        jpaProperties.setProperty(CREATION_SCHEMA_SCRIPT_SOURCE, CREATION_SCHEMA_PATH);
+        jpaProperties.setProperty(SCHEMA_CREATION_ACCESS, PERMISSION);
+        jpaProperties.setProperty(PERSISTENCE_DIALECT, DIALECT_TYPE);
         
         factory.setJpaProperties(jpaProperties);
         return factory;
@@ -142,11 +81,6 @@ public class RepositoryConfigTest {
     
     @Bean
     public DataSource dataSource() {
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName(environment.getProperty(DRIVER_CLASS_NAME));
-        dataSource.setUrl(environment.getProperty(URL));
-        dataSource.setUsername(environment.getProperty(USERNAME));
-        dataSource.setPassword(environment.getProperty(PASSWORD));
-        return dataSource;
+        return new EmbeddedDatabaseBuilder().setType(EmbeddedDatabaseType.H2).build();
     }
 }

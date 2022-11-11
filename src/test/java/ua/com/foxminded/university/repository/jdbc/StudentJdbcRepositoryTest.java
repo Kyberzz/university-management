@@ -1,4 +1,4 @@
-package ua.com.foxminded.university.dao.jdbc;
+package ua.com.foxminded.university.repository.jdbc;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -10,13 +10,8 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceUnit;
 import javax.transaction.Transactional;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
-import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.DirtiesContext;
@@ -33,7 +28,6 @@ import ua.com.foxminded.university.repository.StudentRepository;
 @Transactional
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = RepositoryConfigTest.class)
-@TestInstance(Lifecycle.PER_CLASS)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 class StudentJdbcRepositoryTest {
     
@@ -57,7 +51,7 @@ class StudentJdbcRepositoryTest {
     @Autowired
     private StudentRepository studentRepository;
     
-    @BeforeAll 
+    @BeforeEach 
     void init() {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
@@ -78,21 +72,6 @@ class StudentJdbcRepositoryTest {
         entityManager.getTransaction().commit();
         entityManager.close();
     }
-    /*
-    @AfterEach
-    void cleanUp() {
-        EntityManager entityManager = entityManagerFactory.createEntityManager();
-        entityManager.getTransaction().begin();
-        GroupEntity firstGroup = entityManager.find(GroupEntity.class, GROUP_ID_NUMBER);
-        entityManager.remove(firstGroup);
-        GroupEntity secondGroup = entityManager.find(GroupEntity.class, NEW_GROUP_ID_NUMBER);
-        entityManager.remove(secondGroup);
-        StudentEntity student = entityManager.find(StudentEntity.class, STUDENT_ID_NUMBER);
-        entityManager.remove(student);
-        entityManager.getTransaction().commit();
-        entityManager.close();
-    }
-    */
     
     @Test
     void update_DeletingGroupIdOfStudent_StudentHasNoGroup() throws RepositoryException {
