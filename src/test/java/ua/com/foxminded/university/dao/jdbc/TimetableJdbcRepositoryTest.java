@@ -15,7 +15,7 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import ua.com.foxminded.university.config.AppConfigTest;
+import ua.com.foxminded.university.config.RepositoryConfigTest;
 import ua.com.foxminded.university.entity.CourseEntity;
 import ua.com.foxminded.university.entity.DayOfWeek;
 import ua.com.foxminded.university.entity.GroupEntity;
@@ -25,7 +25,7 @@ import ua.com.foxminded.university.repository.TimetableRepository;
 
 @Transactional
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
-@ContextConfiguration(classes = AppConfigTest.class)
+@ContextConfiguration(classes = RepositoryConfigTest.class)
 @ExtendWith(SpringExtension.class)
 class TimetableJdbcRepositoryTest {
     

@@ -17,7 +17,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
-import ua.com.foxminded.university.config.AppConfigTest;
+import ua.com.foxminded.university.config.RepositoryConfigTest;
 import ua.com.foxminded.university.entity.CourseEntity;
 import ua.com.foxminded.university.entity.TeacherEntity;
 import ua.com.foxminded.university.repository.RepositoryException;
@@ -25,7 +25,7 @@ import ua.com.foxminded.university.repository.TeacherRepository;
 
 @Transactional
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
-@ContextConfiguration(classes = AppConfigTest.class)
+@ContextConfiguration(classes = RepositoryConfigTest.class)
 @ExtendWith(SpringExtension.class)
 class TeacherJdbcRepositoryTest {
     

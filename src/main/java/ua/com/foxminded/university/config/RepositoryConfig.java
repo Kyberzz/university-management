@@ -22,10 +22,10 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @EnableJpaRepositories(basePackages = "ua.com.foxminded.university.repository")
 @EnableTransactionManagement
-@PropertySource("/jdbc.properties")
+//@PropertySource("/jdbc.properties")
 @ComponentScan(basePackages = "ua.com.foxminded.university")
 @Configuration
-public class AppConfig {
+public class RepositoryConfig {
     
     private static final String ENTITY_PACKAGE = "ua.com.foxminded.university.entity";
     private static final String PASSWORD = "jdbc.password";
@@ -36,7 +36,7 @@ public class AppConfig {
     private Environment environment;
     
     @Autowired
-    public AppConfig(Environment environment) {
+    public RepositoryConfig(Environment environment) {
         this.environment = environment;
     }
     

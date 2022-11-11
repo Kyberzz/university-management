@@ -19,7 +19,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
-import ua.com.foxminded.university.config.AppConfigTest;
+import ua.com.foxminded.university.config.RepositoryConfigTest;
 import ua.com.foxminded.university.entity.CourseEntity;
 import ua.com.foxminded.university.entity.DayOfWeek;
 import ua.com.foxminded.university.entity.GroupEntity;
@@ -29,7 +29,7 @@ import ua.com.foxminded.university.repository.CourseRepository;
 import ua.com.foxminded.university.repository.RepositoryException;
 
 @Transactional
-@ContextConfiguration(classes = AppConfigTest.class)
+@ContextConfiguration(classes = RepositoryConfigTest.class)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 @ExtendWith(SpringExtension.class)
 class CourseJdbcRepositoryTest {
