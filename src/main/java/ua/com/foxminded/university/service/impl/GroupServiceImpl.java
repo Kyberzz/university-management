@@ -21,17 +21,17 @@ import ua.com.foxminded.university.service.ServiceException;
 @Transactional
 public class GroupServiceImpl implements GroupService<GroupModel> {
     
-    private GroupRepository groupDao;
+    private GroupRepository groupRepository;
     
     @Autowired
     public GroupServiceImpl(GroupRepository groupDao) {
-        this.groupDao = groupDao;
+        this.groupRepository = groupDao;
     }
     
     @Override
     public GroupModel getStudentListByGroupId(int id) throws ServiceException {
         try {
-            GroupEntity groupEntity = groupDao.getStudentListByGroupId(id);
+            GroupEntity groupEntity = groupRepository.findStudentListById(id);
             ModelMapper modelMapper = new ModelMapper();
             return modelMapper.map(groupEntity, GroupModel.class);
         } catch (RepositoryException | IllegalArgumentException | ConfigurationException | MappingException e) {
@@ -42,7 +42,7 @@ public class GroupServiceImpl implements GroupService<GroupModel> {
     @Override
     public GroupModel getTimetableListByGroupId(int id) throws ServiceException {
         try {
-            GroupEntity groupEntity = groupDao.getTimetableListByGroupId(id);
+            GroupEntity groupEntity = groupRepository.findTimetableListById(id);
             ModelMapper modelMapper = new ModelMapper();
             return modelMapper.map(groupEntity, GroupModel.class);
         } catch (RepositoryException | IllegalArgumentException | ConfigurationException | MappingException e) {

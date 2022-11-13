@@ -27,7 +27,7 @@ class TeacherServiceImplTestTest {
     private TeacherServiceImpl teacherService;
     
     @Mock
-    private TeacherRepository teacherDaoMock;
+    private TeacherRepository teacherRepositoryMock;
 
     @Test
     
@@ -35,8 +35,8 @@ class TeacherServiceImplTestTest {
                                                                                    ServiceException {
         TeacherEntity teacher = new TeacherEntity();
         teacher.setCourseList(new ArrayList<>());
-        when(teacherDaoMock.getCourseListByTeacherId(anyInt())).thenReturn(teacher);
+        when(teacherRepositoryMock.findCourseListById(anyInt())).thenReturn(teacher);
         teacherService.getCourseListByTeacherId(COURSE_ID);
-        verify(teacherDaoMock, times(1)).getCourseListByTeacherId(anyInt());
+        verify(teacherRepositoryMock, times(1)).findCourseListById(anyInt());
     }
 }

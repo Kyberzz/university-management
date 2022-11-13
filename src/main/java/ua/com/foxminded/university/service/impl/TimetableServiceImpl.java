@@ -20,11 +20,11 @@ import ua.com.foxminded.university.service.TimetableService;
 @Transactional
 public class TimetableServiceImpl implements TimetableService<TimetableModel> {
     
-    private TimetableRepository timetableDao;
+    private TimetableRepository timetableRepository;
     
     @Autowired
     public TimetableServiceImpl(TimetableRepository timetableDao) {
-        this.timetableDao = timetableDao;
+        this.timetableRepository = timetableDao;
     }
     
     @Override
@@ -33,8 +33,8 @@ public class TimetableServiceImpl implements TimetableService<TimetableModel> {
         
         try {
             TimetableEntity timetableEntity = modelMapper.map(timetableModel, TimetableEntity.class);
-            timetableDao.update(timetableEntity);
-        } catch (RepositoryException | IllegalArgumentException | ConfigurationException | MappingException e) {
+            timetableRepository.save(timetableEntity);
+        } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
             throw new ServiceException("Updating the timetable failed.", e);
         }
     }

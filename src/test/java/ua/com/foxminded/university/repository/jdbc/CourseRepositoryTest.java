@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
+import java.util.Optional;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceContext;
@@ -32,7 +34,7 @@ import ua.com.foxminded.university.repository.RepositoryException;
 @ContextConfiguration(classes = RepositoryConfigTest.class)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 @ExtendWith(SpringExtension.class)
-class CourseJdbcRepositoryTest {
+class CourseRepositoryTest {
     
     private static final String GROUP_NAME = "lk-89";
     private static final String WEEK_DAY = "THURSDAY";
@@ -100,8 +102,8 @@ class CourseJdbcRepositoryTest {
     }
 
     @Test
-    void getTimetableListByCourseId_GettingDatabaseTimetableData_CorrectData() throws RepositoryException {
-        CourseEntity receivedCourse = courseRepository.getTimetableListByCourseId(COURSE_ID);
+    void findTimetableListById_GettingDatabaseTimetableData_CorrectData() throws RepositoryException {
+        CourseEntity receivedCourse = courseRepository.findTimetableListById(COURSE_ID);
         
         assertEquals(COURSE_ID, receivedCourse.getId());
         assertEquals(COURSE_NAME, receivedCourse.getName());
@@ -116,12 +118,12 @@ class CourseJdbcRepositoryTest {
     
     @Test
     void getById_GettingDatabaseCourseData_CorrectData() throws RepositoryException {
-        CourseEntity receivedCourse = courseRepository.getById(COURSE_ID);
+        Optional<CourseEntity> receivedCourse = courseRepository.findById(COURSE_ID);
         
-        assertEquals(COURSE_ID, receivedCourse.getId());
-        assertEquals(COURSE_NAME, receivedCourse.getName());
-        assertEquals(TEACHER_ID, receivedCourse.getTeacher().getId());
-        assertEquals(COURSE_DESCRIPTION, receivedCourse.getDescription());
+        assertEquals(COURSE_ID, receivedCourse.get().getId());
+        assertEquals(COURSE_NAME, receivedCourse.get().getName());
+        assertEquals(TEACHER_ID, receivedCourse.get().getTeacher().getId());
+        assertEquals(COURSE_DESCRIPTION, receivedCourse.get().getDescription());
     }
 
     @Test
@@ -134,7 +136,7 @@ class CourseJdbcRepositoryTest {
         teacher.setId(NEW_TEACHER_ID);
         course.setTeacher(teacher);
         
-        courseRepository.update(course);
+        courseRepository.save(course);
         
         CourseEntity databaseCourse = entityManager.find(CourseEntity.class, COURSE_ID);
         assertEquals(COURSE_ID, databaseCourse.getId());
@@ -151,7 +153,7 @@ class CourseJdbcRepositoryTest {
         course.setTeacher(null);
         course.setDescription(null);
         
-        courseRepository.update(course);
+        courseRepository.save(course);
         
         CourseEntity updatedCourse = entityManager.find(CourseEntity.class, COURSE_ID);
         
@@ -178,7 +180,7 @@ class CourseJdbcRepositoryTest {
         course.setName(NEW_COURSE_NAME);
         course.setDescription(NEW_COURSE_DESCRIPTION);
 
-        courseRepository.insert(course);
+        courseRepository.save(course);
         
         CourseEntity insertedCourse = entityManager.find(CourseEntity.class, NEW_COURSE_ID);
         assertEquals(NEW_COURSE_ID, insertedCourse.getId());

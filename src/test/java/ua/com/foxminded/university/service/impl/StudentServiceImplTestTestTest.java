@@ -24,13 +24,13 @@ class StudentServiceImplTestTestTest {
     StudentServiceImpl studentService;
     
     @Mock
-    StudentRepository studentDaoMock;
+    StudentRepository studentRepositoryMock;
 
     @Test
     void updateStudent_CallingInnerMethod_CorrectCallQuantity() throws ServiceException, RepositoryException {
         StudentModel studentModel = new StudentModel();
         studentModel.setGroup(new GroupModel());
         studentService.updateStudent(studentModel);
-        verify(studentDaoMock, times(1)).update(ArgumentMatchers.<StudentEntity>any());
+        verify(studentRepositoryMock, times(1)).save(ArgumentMatchers.<StudentEntity>any());
     }
 }

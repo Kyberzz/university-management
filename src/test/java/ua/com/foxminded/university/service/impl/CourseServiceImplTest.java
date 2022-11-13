@@ -30,7 +30,7 @@ class CourseServiceImplTest {
     private CourseServiceImpl courseService;
     
     @Mock
-    private CourseRepository courseDaoMock;
+    private CourseRepository courseRepositoryMock;
     
     @Test
     void updateCourse_CollingDaoObject_CorrectCallQuantity() throws ServiceException, 
@@ -38,7 +38,7 @@ class CourseServiceImplTest {
         CourseModel courseModel = new CourseModel();
         courseModel.setTeacher(new TeacherModel());
         courseService.updateCourse(courseModel);
-        verify(courseDaoMock, times(1)).update(ArgumentMatchers.<CourseEntity>any());
+        verify(courseRepositoryMock, times(1)).save(ArgumentMatchers.<CourseEntity>any());
     }
     
     @Test
@@ -47,8 +47,8 @@ class CourseServiceImplTest {
         CourseEntity courseEntity = new CourseEntity();
         courseEntity.setTeacher(new TeacherEntity());
         courseEntity.setTimetableList(new ArrayList<>());
-        when(courseDaoMock.getTimetableListByCourseId(ArgumentMatchers.anyInt())).thenReturn(courseEntity);
+        when(courseRepositoryMock.findTimetableListById(ArgumentMatchers.anyInt())).thenReturn(courseEntity);
         courseService.getTimetableListByCourseId(COURSE_ID);
-        verify(courseDaoMock, times(1)).getTimetableListByCourseId(ArgumentMatchers.anyInt());
+        verify(courseRepositoryMock, times(1)).findTimetableListById(ArgumentMatchers.anyInt());
     }
 }

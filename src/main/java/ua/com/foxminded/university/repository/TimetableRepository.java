@@ -1,9 +1,11 @@
 package ua.com.foxminded.university.repository;
 
+import org.springframework.data.jpa.repository.JpaRepository;
+
 import ua.com.foxminded.university.entity.TimetableEntity;
 
-public interface TimetableRepository extends GenericRepository<TimetableEntity> {
+public interface TimetableRepository extends JpaRepository<TimetableEntity, Integer> {
     
-    public TimetableEntity getCourseByTimetableId(int id) throws RepositoryException;
-    public TimetableEntity getGroupByTimetableId(int id) throws RepositoryException;
+    public TimetableEntity findCourseById(Integer id) throws RepositoryException;
+    public TimetableEntity findGroupById(Integer id) throws RepositoryException;
 }

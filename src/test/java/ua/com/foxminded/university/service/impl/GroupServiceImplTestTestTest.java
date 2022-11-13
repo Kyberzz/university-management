@@ -27,23 +27,23 @@ class GroupServiceImplTestTestTest {
     private GroupServiceImpl groupService;
     
     @Mock
-    private GroupRepository groupDaoMock;
+    private GroupRepository groupRepositoryMock;
     
     @Test
-    void getStudentListByGroupId() throws RepositoryException, ServiceException {
+    void findStudentListById() throws RepositoryException, ServiceException {
         GroupEntity groupEntity = new GroupEntity();
         groupEntity.setStudentList(new ArrayList<>());
-        when(groupDaoMock.getStudentListByGroupId(ArgumentMatchers.anyInt())).thenReturn(groupEntity);
+        when(groupRepositoryMock.findStudentListById(ArgumentMatchers.anyInt())).thenReturn(groupEntity);
         groupService.getStudentListByGroupId(GROUP_ID);
-        verify(groupDaoMock, times(1)).getStudentListByGroupId(ArgumentMatchers.anyInt());
+        verify(groupRepositoryMock, times(1)).findStudentListById(ArgumentMatchers.anyInt());
     }
     @Test
-    void getTimetableListByGroupId_CallingInnerMethods_CorrectCallQuantity() throws RepositoryException, 
+    void findTimetableListById_CallingInnerMethods_CorrectCallQuantity() throws RepositoryException, 
                                                                                     ServiceException {
         GroupEntity groupEntity = new GroupEntity();
         groupEntity.setTimetableList(new ArrayList<>());;
-        when(groupDaoMock.getTimetableListByGroupId(ArgumentMatchers.anyInt())).thenReturn(groupEntity);
+        when(groupRepositoryMock.findTimetableListById(ArgumentMatchers.anyInt())).thenReturn(groupEntity);
         groupService.getTimetableListByGroupId(GROUP_ID);
-        verify(groupDaoMock, times(1)).getTimetableListByGroupId(ArgumentMatchers.anyInt());
+        verify(groupRepositoryMock, times(1)).findTimetableListById(ArgumentMatchers.anyInt());
     }
 }

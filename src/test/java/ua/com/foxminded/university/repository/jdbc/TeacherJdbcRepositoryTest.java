@@ -2,6 +2,8 @@ package ua.com.foxminded.university.repository.jdbc;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.Optional;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceContext;
@@ -69,7 +71,7 @@ class TeacherJdbcRepositoryTest {
     @Test
     void getCourseListByTeacherId_ReceivingTeacherDatabaseData_CorrectReceivedData() 
             throws RepositoryException {
-        TeacherEntity teacherData = teacherRepository.getCourseListByTeacherId(TEACHER_ID);
+        TeacherEntity teacherData = teacherRepository.findCourseListById(TEACHER_ID);
         
         assertEquals(TEACHER_ID, teacherData.getId());
         assertEquals(TEACHER_FIRST_NAME, teacherData.getFirstName());
@@ -82,11 +84,11 @@ class TeacherJdbcRepositoryTest {
     
     @Test
     void getById_ReceivingTeacherDatabaseData_CorrectReceivedData() throws RepositoryException {
-        TeacherEntity teacher = teacherRepository.getById(TEACHER_ID);
+        Optional<TeacherEntity> teacher = teacherRepository.findById(TEACHER_ID);
         
-        assertEquals(TEACHER_FIRST_NAME, teacher.getFirstName());
-        assertEquals(TEACHER_LAST_NAME, teacher.getLastName());
-        assertEquals(TEACHER_ID, teacher.getId());
+        assertEquals(TEACHER_FIRST_NAME, teacher.get().getFirstName());
+        assertEquals(TEACHER_LAST_NAME, teacher.get().getLastName());
+        assertEquals(TEACHER_ID, teacher.get().getId());
     }
     
     @Test
@@ -105,7 +107,7 @@ class TeacherJdbcRepositoryTest {
         TeacherEntity teacher = new TeacherEntity();
         teacher.setFirstName(NEW_TEACHER_FIRST_NAME);
         teacher.setLastName(NEW_TEACHER_LAST_NAME);
-        TeacherEntity teacherWithId = teacherRepository.insert(teacher);
+        TeacherEntity teacherWithId = teacherRepository.save(teacher);
 
         TeacherEntity insertedTeacher = entityManager.find(TeacherEntity.class, NEW_TEACHER_ID);
         
@@ -120,7 +122,7 @@ class TeacherJdbcRepositoryTest {
         teacherData.setId(TEACHER_ID);
         teacherData.setFirstName(NEW_TEACHER_FIRST_NAME);
         teacherData.setLastName(NEW_TEACHER_LAST_NAME);
-        teacherRepository.update(teacherData);
+        teacherRepository.save(teacherData);
         
         TeacherEntity updatedTeacherData = entityManager.find(TeacherEntity.class, TEACHER_ID);
         

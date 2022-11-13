@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
+import java.util.Optional;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceContext;
@@ -29,7 +31,7 @@ import ua.com.foxminded.university.repository.StudentRepository;
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = RepositoryConfigTest.class)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
-class StudentJdbcRepositoryTest {
+class StudentRepositoryTest {
     
     private static final String NEW_GROUP_NAME = "rc-58";
     private static final String GROUP_NAME = "rs-01";
@@ -79,7 +81,7 @@ class StudentJdbcRepositoryTest {
         student.setId(STUDENT_ID_NUMBER);
         student.setGroup(null);
         
-        studentRepository.update(student);
+        studentRepository.save(student);
         
         StudentEntity updatedStudent = entityManager.find(StudentEntity.class, STUDENT_ID_NUMBER);
         assertNull(updatedStudent.getGroup());
@@ -95,7 +97,7 @@ class StudentJdbcRepositoryTest {
         group.setId(NEW_GROUP_ID_NUMBER);
         student.setGroup(group);
 
-        studentRepository.update(student);
+        studentRepository.save(student);
         
         StudentEntity databaseStudent = entityManager.find(StudentEntity.class, STUDENT_ID_NUMBER);
         assertEquals(NEW_FIRST_NAME_STUDENT, databaseStudent.getFirstName());
@@ -124,7 +126,7 @@ class StudentJdbcRepositoryTest {
         student.setLastName(NEW_LAST_NAME_STUDENT);
         student.setGroup(group);
         
-        StudentEntity studentWithId = studentRepository.insert(student);
+        StudentEntity studentWithId = studentRepository.save(student);
         
         StudentEntity databaseStudent = entityManager.find(StudentEntity.class, NEW_STUDENT_ID_NUMBER);
         
@@ -136,17 +138,17 @@ class StudentJdbcRepositoryTest {
     
     @Test
     void getById_GettingStudent_CorrectStudentData() throws RepositoryException {
-        StudentEntity student = studentRepository.getById(STUDENT_ID_NUMBER);
+        Optional<StudentEntity> student = studentRepository.findById(STUDENT_ID_NUMBER);
         
-        assertEquals(STUDENT_ID_NUMBER, student.getId());
-        assertEquals(FIRST_NAME_STUDENT, student.getFirstName());
-        assertEquals(LAST_NAME_STUDENT, student.getLastName());
-        assertEquals(GROUP_ID_NUMBER, student.getGroup().getId());
+        assertEquals(STUDENT_ID_NUMBER, student.get().getId());
+        assertEquals(FIRST_NAME_STUDENT, student.get().getFirstName());
+        assertEquals(LAST_NAME_STUDENT, student.get().getLastName());
+        assertEquals(GROUP_ID_NUMBER, student.get().getGroup().getId());
     }
     
     @Test
-    void getGroupByStudentId_GettingDatabaseData_CorrectReceivedData() throws RepositoryException {
-        StudentEntity studentData = studentRepository.getGroupByStudentId(GROUP_ID_NUMBER);
+    void findGroupById_GettingDatabaseData_CorrectReceivedData() throws RepositoryException {
+        StudentEntity studentData = studentRepository.findGroupById(GROUP_ID_NUMBER);
         
         assertEquals(STUDENT_ID_NUMBER, studentData.getId());
         assertEquals(FIRST_NAME_STUDENT, studentData.getFirstName());

@@ -26,7 +26,7 @@ class TimetableServiceImplTestTestTest {
     private TimetableServiceImpl timetableService;
     
     @Mock
-    private TimetableRepository timetableDao;
+    private TimetableRepository timetableRepository;
 
     @Test
     void updateTimetable_CallingDaoObject_CorrectCallQuantity() throws ServiceException, RepositoryException {
@@ -35,6 +35,6 @@ class TimetableServiceImplTestTestTest {
         timetableModel.setGroup(new GroupModel());
         timetableModel.setWeekDay(WeekDayModel.FRIDAY);
         timetableService.updateTimetable(timetableModel);
-        verify(timetableDao, times(1)).update(ArgumentMatchers.<TimetableEntity>any());
+        verify(timetableRepository, times(1)).save(ArgumentMatchers.<TimetableEntity>any());
     }
 }

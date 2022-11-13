@@ -20,11 +20,11 @@ import ua.com.foxminded.university.service.StudentService;
 @Transactional
 public class StudentServiceImpl implements StudentService<StudentModel> {
     
-    private StudentRepository studentDao;
+    private StudentRepository studentRepository;
     
     @Autowired
     public StudentServiceImpl(StudentRepository studentDao) {
-        this.studentDao = studentDao;
+        this.studentRepository = studentDao;
     }
     
     @Override
@@ -33,8 +33,8 @@ public class StudentServiceImpl implements StudentService<StudentModel> {
        
         try {
             StudentEntity studentEntity = modelMapper.map(studentModel, StudentEntity.class);
-            studentDao.update(studentEntity);
-        } catch (RepositoryException | IllegalArgumentException | ConfigurationException | MappingException e) {
+            studentRepository.save(studentEntity);
+        } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
             throw new ServiceException("Udating the student data failed.", e);
         }
     }
