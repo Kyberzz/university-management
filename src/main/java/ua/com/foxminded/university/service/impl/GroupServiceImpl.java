@@ -16,9 +16,10 @@ import ua.com.foxminded.university.repository.GroupRepository;
 import ua.com.foxminded.university.service.GroupService;
 import ua.com.foxminded.university.service.ServiceException;
 
-@Service
+
 @Slf4j
 @Transactional
+@Service
 public class GroupServiceImpl implements GroupService<GroupModel> {
     
     private GroupRepository groupRepository;

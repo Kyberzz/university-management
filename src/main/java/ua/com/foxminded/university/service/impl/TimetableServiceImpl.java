@@ -15,9 +15,10 @@ import ua.com.foxminded.university.repository.TimetableRepository;
 import ua.com.foxminded.university.service.ServiceException;
 import ua.com.foxminded.university.service.TimetableService;
 
-@Service
+
 @Slf4j
 @Transactional
+@Service
 public class TimetableServiceImpl implements TimetableService<TimetableModel> {
     
     private TimetableRepository timetableRepository;

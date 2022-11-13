@@ -15,9 +15,10 @@ import ua.com.foxminded.university.repository.StudentRepository;
 import ua.com.foxminded.university.service.ServiceException;
 import ua.com.foxminded.university.service.StudentService;
 
-@Service
+
 @Slf4j
 @Transactional
+@Service
 public class StudentServiceImpl implements StudentService<StudentModel> {
     
     private StudentRepository studentRepository;

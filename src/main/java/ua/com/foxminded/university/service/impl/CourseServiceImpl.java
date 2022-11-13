@@ -15,9 +15,10 @@ import ua.com.foxminded.university.repository.RepositoryException;
 import ua.com.foxminded.university.service.CourseService;
 import ua.com.foxminded.university.service.ServiceException;
 
-@Service
+
 @Slf4j
 @Transactional
+@Service
 public class CourseServiceImpl implements CourseService<CourseModel> {
     
     private CourseRepository courseRepository;
@@ -45,7 +46,8 @@ public class CourseServiceImpl implements CourseService<CourseModel> {
             CourseEntity courseEntity = courseRepository.findTimetableListById(id);
             ModelMapper modelMapper = new ModelMapper();
             return modelMapper.map(courseEntity, CourseModel.class);
-        } catch (RepositoryException | IllegalArgumentException | ConfigurationException | MappingException e) {
+        } catch (RepositoryException | IllegalArgumentException | ConfigurationException | 
+                 MappingException e) {
             throw new ServiceException("Getting timetable list of course id faled.", e);
         }
     }
