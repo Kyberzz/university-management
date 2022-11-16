@@ -25,7 +25,7 @@ import ua.com.foxminded.university.entity.TimetableEntity;
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 @ContextConfiguration(classes = RepositoryConfigTest.class)
 @ExtendWith(SpringExtension.class)
-class TimetableJdbcRepositoryTest {
+class TimetableRepositoryTest {
     
     private static final String GROUP_NAME = "kt-77";
     private static final String COURSE_NAME = "Physics";
