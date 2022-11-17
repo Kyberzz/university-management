@@ -1,10 +1,11 @@
-package ua.com.foxminded.university.repository;
+package ua.com.foxminded.university.repository.impl;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceContext;
-import javax.transaction.Transactional;
+import javax.persistence.PersistenceUnit;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,18 +15,21 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.transaction.annotation.Transactional;
 
 import ua.com.foxminded.university.config.RepositoryConfigTest;
 import ua.com.foxminded.university.entity.CourseEntity;
 import ua.com.foxminded.university.entity.DayOfWeek;
 import ua.com.foxminded.university.entity.GroupEntity;
 import ua.com.foxminded.university.entity.TimetableEntity;
+import ua.com.foxminded.university.repository.RepositoryException;
+import ua.com.foxminded.university.repository.TimetableRepository;
 
 @Transactional
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 @ContextConfiguration(classes = RepositoryConfigTest.class)
 @ExtendWith(SpringExtension.class)
-class TimetableRepositoryTest {
+class TimetableCustomRepositoryImplTest {
     
     private static final String GROUP_NAME = "kt-77";
     private static final String COURSE_NAME = "Physics";
@@ -37,6 +41,9 @@ class TimetableRepositoryTest {
     private static final int GROUP_ID = 1;
     private static final int COURSE_ID = 1;
     private static final int TIMETABLE_ID = 1;
+    
+    @PersistenceUnit
+    private EntityManagerFactory entityManagerFactory;
     
     @PersistenceContext
     private EntityManager entityManager;
@@ -71,33 +78,18 @@ class TimetableRepositoryTest {
         entityManager.persist(timetable);
     }
     
+    
     @Test
-    void findCourseById_ReceivingTimetableDatabaseData_CorrectReceivedData() 
-            throws RepositoryException {
-        TimetableEntity receivedTimetableData = timetableRepository.findCourseById(TIMETABLE_ID);
+    void findById_GettingTimetableById_CorrectRetrievedData() throws RepositoryException {
+        TimetableEntity timetable = timetableRepository.findById(TIMETABLE_ID);
         
-        assertEquals(COURSE_DESCRIPTION, receivedTimetableData.getCourse().getDescription());
-        assertEquals(COURSE_ID, receivedTimetableData.getCourse().getId());
-        assertEquals(COURSE_NAME, receivedTimetableData.getCourse().getName());
-        assertEquals(COURSE_DESCRIPTION, receivedTimetableData.getDescription());
-        assertEquals(END_TIME, receivedTimetableData.getEndTime());
-        assertEquals(GROUP_ID, receivedTimetableData.getGroup().getId());
-        assertEquals(START_TIME, receivedTimetableData.getStartTime());
-        assertEquals(TIMETABLE_ID, receivedTimetableData.getId());
-        assertEquals(WEEK_DAY, receivedTimetableData.getWeekDay().toString());
-    }
-        
-    @Test
-    void findGroupById_ReceivingTimetableDatabaseData_CorrectReceivedData() throws RepositoryException {
-        TimetableEntity timetable = timetableRepository.findGroupById(TIMETABLE_ID);
-        
-        assertEquals(GROUP_NAME, timetable.getGroup().getName());
-        assertEquals(COURSE_ID, timetable.getCourse().getId());
-        assertEquals(TIMETABLE_DESCRIPTION, timetable.getDescription());
-        assertEquals(END_TIME, timetable.getEndTime());
-        assertEquals(GROUP_ID, timetable.getGroup().getId());
         assertEquals(TIMETABLE_ID, timetable.getId());
+        assertEquals(TIMETABLE_DESCRIPTION, timetable.getDescription());
         assertEquals(START_TIME, timetable.getStartTime());
+        assertEquals(END_TIME, timetable.getEndTime());
+        assertEquals(COURSE_ID, timetable.getCourse().getId());
+        assertEquals(GROUP_ID, timetable.getGroup().getId());
         assertEquals(WEEK_DAY, timetable.getWeekDay().toString());
     }
+
 }

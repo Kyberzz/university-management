@@ -26,7 +26,7 @@ import ua.com.foxminded.university.entity.TimetableEntity;
 
 @Transactional
 @ContextConfiguration(classes = RepositoryConfigTest.class)
-@DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
+@DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 @ExtendWith(SpringExtension.class)
 class CourseRepositoryTest {
     

@@ -26,7 +26,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
                        bootstrapMode = BootstrapMode.LAZY)
 @EnableTransactionManagement
 @ComponentScan(basePackages = "ua.com.foxminded.university")
-@Configuration(proxyBeanMethods = false)
+@Configuration
 public class RepositoryConfigTest {
     
     private static final String DIALECT_TYPE = "org.hibernate.dialect.H2Dialect";

@@ -9,10 +9,10 @@ import org.springframework.context.annotation.Import;
 import ua.com.foxminded.university.config.RepositoryConfig;
 
 
-//@EnableAutoConfiguration
-//@SpringBootConfiguration
-//@Import({RepositoryConfig.class})
-@SpringBootApplication
+@EnableAutoConfiguration
+@SpringBootConfiguration
+@Import({RepositoryConfig.class})
+//@SpringBootApplication
 public class UniversityManagementApplication {
     
     public static void main(String[] args) {
