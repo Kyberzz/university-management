@@ -100,4 +100,13 @@ class CourseRepositoryTest {
         assertEquals(WEEK_DAY, receivedCourse.getTimetableList().get(FIRST_ELEMENT).getWeekDay()
                                                                                    .toString());
     }
+    
+    @Test
+    void findById_GettingCourseById_CorrectRetrievedData() throws RepositoryException {
+        CourseEntity course = courseRepository.findById(COURSE_ID);
+        assertEquals(COURSE_ID, course.getId());
+        assertEquals(COURSE_DESCRIPTION, course.getDescription());
+        assertEquals(COURSE_NAME, course.getName());
+        assertEquals(TEACHER_ID, course.getTeacher().getId());
+    }
 }

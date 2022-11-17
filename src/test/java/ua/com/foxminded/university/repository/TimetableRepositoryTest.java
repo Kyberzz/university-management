@@ -100,4 +100,17 @@ class TimetableRepositoryTest {
         assertEquals(START_TIME, timetable.getStartTime());
         assertEquals(WEEK_DAY, timetable.getWeekDay().toString());
     }
+    
+    @Test
+    void findById_GettingTimetableById_CorrectRetrievedData() throws RepositoryException {
+        TimetableEntity timetable = timetableRepository.findById(TIMETABLE_ID);
+        
+        assertEquals(TIMETABLE_ID, timetable.getId());
+        assertEquals(TIMETABLE_DESCRIPTION, timetable.getDescription());
+        assertEquals(START_TIME, timetable.getStartTime());
+        assertEquals(END_TIME, timetable.getEndTime());
+        assertEquals(COURSE_ID, timetable.getCourse().getId());
+        assertEquals(GROUP_ID, timetable.getGroup().getId());
+        assertEquals(WEEK_DAY, timetable.getWeekDay().toString());
+    }
 }

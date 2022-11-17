@@ -74,4 +74,13 @@ class TeacherRepositoryTest {
         assertEquals(COURSE_NAME, teacherData.getCourseList().get(FIST_ELEMENT).getName());
         assertEquals(COURSE_DESCRIPTION, teacherData.getCourseList().get(FIST_ELEMENT).getDescription());
     }
+    
+    @Test
+    void findById_GettingTeacherById_CorrectRetrievedData() throws RepositoryException {
+        TeacherEntity teacher = teacherRepository.findById(TEACHER_ID);
+        
+        assertEquals(TEACHER_ID, teacher.getId());
+        assertEquals(TEACHER_FIRST_NAME, teacher.getFirstName());
+        assertEquals(TEACHER_LAST_NAME, teacher.getLastName());
+    }
 }

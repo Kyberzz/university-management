@@ -29,8 +29,8 @@ import ua.com.foxminded.university.entity.StudentEntity;
 class StudentRepositoryTest {
     
     private static final String GROUP_NAME = "rs-01";
-    private static final String LAST_NAME_STUDENT = "Smith";
-    private static final String FIRST_NAME_STUDENT = "Alex";
+    private static final String STUDENT_LAST_NAME = "Smith";
+    private static final String STUDENT_FIRST_NAME = "Alex";
     private static final int GROUP_ID_NUMBER = 1;
     private static final int STUDENT_ID_NUMBER = 1;
    
@@ -54,8 +54,8 @@ class StudentRepositoryTest {
         entityManager.flush();
         
         StudentEntity student = new StudentEntity();
-        student.setFirstName(FIRST_NAME_STUDENT);
-        student.setLastName(LAST_NAME_STUDENT);
+        student.setFirstName(STUDENT_FIRST_NAME);
+        student.setLastName(STUDENT_LAST_NAME);
         student.setGroup(group);
         entityManager.persist(student);
         
@@ -68,9 +68,17 @@ class StudentRepositoryTest {
         StudentEntity studentData = studentRepository.findGroupById(GROUP_ID_NUMBER);
         
         assertEquals(STUDENT_ID_NUMBER, studentData.getId());
-        assertEquals(FIRST_NAME_STUDENT, studentData.getFirstName());
-        assertEquals(LAST_NAME_STUDENT, studentData.getLastName());
+        assertEquals(STUDENT_FIRST_NAME, studentData.getFirstName());
+        assertEquals(STUDENT_LAST_NAME, studentData.getLastName());
         assertEquals(GROUP_ID_NUMBER, studentData.getGroup().getId());
         assertEquals(GROUP_NAME, studentData.getGroup().getName());
+    }
+    
+    @Test
+    void findById_GettingStudentById_CorrectRetrievedData() throws RepositoryException {
+        StudentEntity student = studentRepository.findById(STUDENT_ID_NUMBER);
+        assertEquals(STUDENT_ID_NUMBER, student.getId());
+        assertEquals(STUDENT_FIRST_NAME, student.getFirstName());
+        assertEquals(STUDENT_LAST_NAME, student.getLastName());
     }
 }

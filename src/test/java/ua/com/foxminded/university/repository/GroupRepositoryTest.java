@@ -100,4 +100,11 @@ class GroupRepositoryTest {
         assertEquals(LAST_NAME, receivedGroup.getStudentList().get(FIRST_ELEMENT).getLastName());
         assertEquals(GROUP_ID, receivedGroup.getStudentList().get(FIRST_ELEMENT).getGroup().getId());
     }
+    
+    @Test
+    void findById_GettingGroupById_CorrectRetrievedData() throws RepositoryException {
+        GroupEntity group = groupRepository.findById(GROUP_ID);
+        assertEquals(GROUP_ID, group.getId());
+        assertEquals(GROUP_NAME, group.getName());
+    }
 }
