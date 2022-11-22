@@ -15,25 +15,27 @@ import ua.com.foxminded.university.repository.TeacherRepository;
 import ua.com.foxminded.university.service.ServiceException;
 import ua.com.foxminded.university.service.TeacherService;
 
-@Service
+
 @Slf4j
 @Transactional
+@Service
 public class TeacherServiceImpl implements TeacherService<TeacherModel> {
     
-    private TeacherRepository teacherDao; 
+    private TeacherRepository teacherRepository; 
     
     @Autowired
     public TeacherServiceImpl(TeacherRepository teacherDao) {
-        this.teacherDao = teacherDao;
+        this.teacherRepository = teacherDao;
     }
     
     @Override
     public TeacherModel getCourseListByTeacherId(int id) throws ServiceException {
         try {
-            TeacherEntity teacherEntity = teacherDao.getCourseListByTeacherId(id);
+            TeacherEntity teacherEntity = teacherRepository.findCourseListById(id);
             ModelMapper modelMapper = new ModelMapper();
             return modelMapper.map(teacherEntity, TeacherModel.class);
-        } catch (RepositoryException | IllegalArgumentException | ConfigurationException | MappingException e) {
+        } catch (RepositoryException | IllegalArgumentException | ConfigurationException | 
+                 MappingException e) {
             throw new ServiceException("Getting the courses list by the teacher id failed.", e);
         }
     }

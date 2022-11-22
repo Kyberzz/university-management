@@ -1,8 +1,11 @@
 package ua.com.foxminded.university.repository;
 
+import org.springframework.data.jpa.repository.JpaRepository;
+
 import ua.com.foxminded.university.entity.TeacherEntity;
 
-public interface TeacherRepository extends GenericRepository<TeacherEntity> {
+public interface TeacherRepository extends JpaRepository<TeacherEntity, Integer> {
     
-    public TeacherEntity getCourseListByTeacherId(int id) throws RepositoryException;
+    public TeacherEntity findCourseListById(Integer id) throws RepositoryException;
+    public TeacherEntity findById(int id) throws RepositoryException;
 }

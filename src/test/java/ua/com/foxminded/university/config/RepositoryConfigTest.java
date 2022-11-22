@@ -9,8 +9,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.data.repository.config.BootstrapMode;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.orm.jpa.JpaTransactionManager;
@@ -19,11 +21,29 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-@EnableJpaRepositories
+@PropertySource("/application.properties")
+@EnableJpaRepositories(basePackages = "ua.com.foxminded.university.repository", 
+                       bootstrapMode = BootstrapMode.LAZY)
 @EnableTransactionManagement
 @ComponentScan(basePackages = "ua.com.foxminded.university")
-@Configuration(proxyBeanMethods = false)
-public class AppConfigTest {
+@Configuration
+public class RepositoryConfigTest {
+    
+    private static final String DIALECT_TYPE = "org.hibernate.dialect.H2Dialect";
+    private static final String PERSISTENCE_DIALECT = "hibernate.dialect";
+    private static final String PERMISSION = "true";
+    private static final String SCHEMA_CREATION_ACCESS = "javax.persistence.schema-generation"
+            + ".create-database-schemase";
+    private static final String CREATION_SCHEMA_PATH = "test-schema.sql";
+    private static final String CREATION_SCHEMA_SCRIPT_SOURCE = "javax.persistence"
+            + ".schema-generation.create-script-source";
+    private static final String SOURCE_TYPE = "script-then-metadata";
+    private static final String CREATION_SCHEMA_SOURCE = "javax.persistence.schema-generation"
+            + ".create-source";
+    private static final String SCHEMA_GENERATION_ACTION = "javax.persistence.schema-generation"
+            + ".database.action";
+    private static final String ACTION_TYPE = "create";
+    private static final String ENTITY_PACKAGE = "ua.com.foxminded.university.entity";
     
     @Bean
     public PersistenceExceptionTranslationPostProcessor exceptionTranslation() {
@@ -36,12 +56,6 @@ public class AppConfigTest {
         transactionManager.setEntityManagerFactory(entityManagerFactory);
         return transactionManager;
     }
-    
-    @Bean
-    public DataSource dataSource() {
-        return new EmbeddedDatabaseBuilder().setType(EmbeddedDatabaseType.H2).build();
-    }
-    
     @Bean
     @DependsOn("dataSource")
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
@@ -51,17 +65,22 @@ public class AppConfigTest {
         
         LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
         factory.setJpaVendorAdapter(jpaVendorAdapter);
-        factory.setPackagesToScan("ua.com.foxminded.university.entity");
+        factory.setPackagesToScan(ENTITY_PACKAGE);
         factory.setDataSource(dataSource());
         
         Properties jpaProperties = new Properties();
-        jpaProperties.setProperty("javax.persistence.schema-generation.database.action", "drop-and-create");
-        jpaProperties.setProperty("javax.persistence.schema-generation.create-source", "script-then-metadata");
-        jpaProperties.setProperty("javax.persistence.schema-generation.create-script-source", "test-schema.sql");
-        jpaProperties.setProperty("javax.persistence.schema-generation.create-database-schemase", "true");
-        jpaProperties.setProperty("hibernate.dialect", "org.hibernate.dialect.H2Dialect");
+        jpaProperties.setProperty(SCHEMA_GENERATION_ACTION, ACTION_TYPE);
+        jpaProperties.setProperty(CREATION_SCHEMA_SOURCE, SOURCE_TYPE);
+        jpaProperties.setProperty(CREATION_SCHEMA_SCRIPT_SOURCE, CREATION_SCHEMA_PATH);
+        jpaProperties.setProperty(SCHEMA_CREATION_ACCESS, PERMISSION);
+        jpaProperties.setProperty(PERSISTENCE_DIALECT, DIALECT_TYPE);
         
         factory.setJpaProperties(jpaProperties);
         return factory;
+    }
+    
+    @Bean
+    public DataSource dataSource() {
+        return new EmbeddedDatabaseBuilder().setType(EmbeddedDatabaseType.H2).build();
     }
 }

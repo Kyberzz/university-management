@@ -15,16 +15,17 @@ import ua.com.foxminded.university.repository.RepositoryException;
 import ua.com.foxminded.university.service.CourseService;
 import ua.com.foxminded.university.service.ServiceException;
 
-@Service
+
 @Slf4j
 @Transactional
+@Service
 public class CourseServiceImpl implements CourseService<CourseModel> {
     
-    private CourseRepository courseDao;
+    private CourseRepository courseRepository;
     
     @Autowired
     public CourseServiceImpl(CourseRepository courseDao) {
-        this.courseDao = courseDao;
+        this.courseRepository = courseDao;
     }
     
     @Override
@@ -33,8 +34,8 @@ public class CourseServiceImpl implements CourseService<CourseModel> {
         
         try {
             CourseEntity courseEntity = modelMapper.map(courseModel, CourseEntity.class);
-            courseDao.update(courseEntity);
-        } catch (RepositoryException | IllegalArgumentException | ConfigurationException | MappingException e) {
+            courseRepository.save(courseEntity);
+        } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
             throw new ServiceException("Updating the course failed.", e);
         }
     }
@@ -42,10 +43,11 @@ public class CourseServiceImpl implements CourseService<CourseModel> {
     @Override
     public CourseModel getTimetableListByCourseId(int id) throws ServiceException {
         try {
-            CourseEntity courseEntity = courseDao.getTimetableListByCourseId(id);
+            CourseEntity courseEntity = courseRepository.findTimetableListById(id);
             ModelMapper modelMapper = new ModelMapper();
             return modelMapper.map(courseEntity, CourseModel.class);
-        } catch (RepositoryException | IllegalArgumentException | ConfigurationException | MappingException e) {
+        } catch (RepositoryException | IllegalArgumentException | ConfigurationException | 
+                 MappingException e) {
             throw new ServiceException("Getting timetable list of course id faled.", e);
         }
     }

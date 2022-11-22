@@ -1,4 +1,4 @@
-package ua.com.foxminded.university.dao.jdbc;
+package ua.com.foxminded.university.repository;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -17,25 +17,20 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
-import ua.com.foxminded.university.config.AppConfigTest;
+import ua.com.foxminded.university.config.RepositoryConfigTest;
 import ua.com.foxminded.university.entity.CourseEntity;
 import ua.com.foxminded.university.entity.TeacherEntity;
-import ua.com.foxminded.university.repository.RepositoryException;
-import ua.com.foxminded.university.repository.TeacherRepository;
 
 @Transactional
-@DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
-@ContextConfiguration(classes = AppConfigTest.class)
+@DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
+@ContextConfiguration(classes = RepositoryConfigTest.class)
 @ExtendWith(SpringExtension.class)
-class TeacherJdbcRepositoryTest {
+class TeacherRepositoryTest {
     
     private static final String COURSE_DESCRIPTION = "some description";
     private static final String COURSE_NAME = "Programming";
     private static final String TEACHER_LAST_NAME = "Ritchie";
-    private static final String NEW_TEACHER_LAST_NAME = "Musk";
-    private static final String NEW_TEACHER_FIRST_NAME = "Elon";
     private static final String TEACHER_FIRST_NAME = "Dennis";
-    private static final int NEW_TEACHER_ID = 2;
     private static final int TEACHER_ID = 1;
     private static final int COURSE_ID = 1;
     private static final int FIST_ELEMENT = 0;
@@ -67,9 +62,9 @@ class TeacherJdbcRepositoryTest {
     }
     
     @Test
-    void getCourseListByTeacherId_ReceivingTeacherDatabaseData_CorrectReceivedData() 
+    void findCourseListById_ReceivingTeacherDatabaseData_CorrectReceivedData() 
             throws RepositoryException {
-        TeacherEntity teacherData = teacherRepository.getCourseListByTeacherId(TEACHER_ID);
+        TeacherEntity teacherData = teacherRepository.findCourseListById(TEACHER_ID);
         
         assertEquals(TEACHER_ID, teacherData.getId());
         assertEquals(TEACHER_FIRST_NAME, teacherData.getFirstName());
@@ -81,51 +76,11 @@ class TeacherJdbcRepositoryTest {
     }
     
     @Test
-    void getById_ReceivingTeacherDatabaseData_CorrectReceivedData() throws RepositoryException {
-        TeacherEntity teacher = teacherRepository.getById(TEACHER_ID);
+    void findById_GettingTeacherById_CorrectRetrievedData() throws RepositoryException {
+        TeacherEntity teacher = teacherRepository.findById(TEACHER_ID);
         
+        assertEquals(TEACHER_ID, teacher.getId());
         assertEquals(TEACHER_FIRST_NAME, teacher.getFirstName());
         assertEquals(TEACHER_LAST_NAME, teacher.getLastName());
-        assertEquals(TEACHER_ID, teacher.getId());
-    }
-    
-    @Test
-    void deleteById_DeletingTeacherDatabaseData_DatabaseHasNoData() throws RepositoryException {
-        teacherRepository.deleteById(TEACHER_ID);
-        TeacherEntity teacher = new TeacherEntity();
-        teacher.setId(TEACHER_ID);
-        
-        boolean persisentTeacher = entityManager.contains(teacher);
-        assertFalse(persisentTeacher);
-    }
-    
-    
-    @Test
-    void insert_InsertingTeacherDatabaseData_DatabaseHasCorrectData() throws RepositoryException {
-        TeacherEntity teacher = new TeacherEntity();
-        teacher.setFirstName(NEW_TEACHER_FIRST_NAME);
-        teacher.setLastName(NEW_TEACHER_LAST_NAME);
-        TeacherEntity teacherWithId = teacherRepository.insert(teacher);
-
-        TeacherEntity insertedTeacher = entityManager.find(TeacherEntity.class, NEW_TEACHER_ID);
-        
-        assertEquals(NEW_TEACHER_ID, teacherWithId.getId());
-        assertEquals(NEW_TEACHER_FIRST_NAME, insertedTeacher.getFirstName());
-        assertEquals(NEW_TEACHER_LAST_NAME, insertedTeacher.getLastName());
-    }
-    
-    @Test
-    void update_UpdatingTeacherDatabaseData_DatabaseHasCorrectData() throws RepositoryException {
-        TeacherEntity teacherData = new TeacherEntity();
-        teacherData.setId(TEACHER_ID);
-        teacherData.setFirstName(NEW_TEACHER_FIRST_NAME);
-        teacherData.setLastName(NEW_TEACHER_LAST_NAME);
-        teacherRepository.update(teacherData);
-        
-        TeacherEntity updatedTeacherData = entityManager.find(TeacherEntity.class, TEACHER_ID);
-        
-        assertEquals(TEACHER_ID, updatedTeacherData.getId());
-        assertEquals(NEW_TEACHER_FIRST_NAME, updatedTeacherData.getFirstName());
-        assertEquals(NEW_TEACHER_LAST_NAME, updatedTeacherData.getLastName());
     }
 }
