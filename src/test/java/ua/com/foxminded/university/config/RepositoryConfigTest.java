@@ -21,7 +21,7 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-@PropertySource("/application.properties")
+//@PropertySource("/application.properties")
 @EnableJpaRepositories(basePackages = "ua.com.foxminded.university.repository", 
                        bootstrapMode = BootstrapMode.LAZY)
 @EnableTransactionManagement
@@ -56,6 +56,7 @@ public class RepositoryConfigTest {
         transactionManager.setEntityManagerFactory(entityManagerFactory);
         return transactionManager;
     }
+    
     @Bean
     @DependsOn("dataSource")
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {

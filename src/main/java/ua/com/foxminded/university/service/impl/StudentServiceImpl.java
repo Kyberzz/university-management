@@ -1,8 +1,12 @@
 package ua.com.foxminded.university.service.impl;
 
+import java.lang.reflect.Type;
+import java.util.List;
+
 import org.modelmapper.ConfigurationException;
 import org.modelmapper.MappingException;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +30,29 @@ public class StudentServiceImpl implements StudentService<StudentModel> {
     @Autowired
     public StudentServiceImpl(StudentRepository studentDao) {
         this.studentRepository = studentDao;
+    }
+    
+    @Override 
+    public StudentModel getStudentById(int id) throws ServiceException {
+        ModelMapper modelMapper = new ModelMapper();
+        
+        try {
+            StudentEntity studentEntity = studentRepository.findById(id);
+            StudentModel studentModel = modelMapper.map(studentEntity, StudentModel.class);
+            return studentModel;
+        } catch (RepositoryException e) {
+            throw new ServiceException("Getting student by its id failed.", e);
+        }
+    }
+    
+    @Override
+    public List<StudentModel> getAllStudents() {
+        ModelMapper modelMapper = new ModelMapper();
+
+        List<StudentEntity> studentEntities = studentRepository.findAll();
+        Type listType = new TypeToken<List<StudentModel>>() {}.getType();
+        List<StudentModel> studentModels = modelMapper.map(studentEntities, listType);
+        return studentModels;
     }
     
     @Override
