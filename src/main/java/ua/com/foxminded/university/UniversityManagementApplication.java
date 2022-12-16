@@ -1,19 +1,19 @@
 package ua.com.foxminded.university;
 
-import java.net.UnknownHostException;
-
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.context.annotation.Import;
-import ua.com.foxminded.university.buisness.BuisnessLayerSpringConfig;
+import org.springframework.boot.autoconfigure.thymeleaf.ThymeleafAutoConfiguration;
+import org.springframework.context.annotation.ComponentScan;
+import ua.com.foxminded.university.web.WebLayerSpringConfig;
 
-@EnableAutoConfiguration
+@EnableAutoConfiguration(exclude = ThymeleafAutoConfiguration.class)
 @SpringBootConfiguration
-@Import({BuisnessLayerSpringConfig.class})
+//@Import({BuisnessLayerSpringConfig.class, WebLayerSpringConfig.class})
+@ComponentScan
 public class UniversityManagementApplication {
     
-    public static void main(String[] args) throws UnknownHostException {
+    public static void main(String[] args) {
         SpringApplication.run(UniversityManagementApplication.class, args);
     }
 }

@@ -29,6 +29,8 @@ import jakarta.persistence.SharedCacheMode;
 @Configuration
 public class BuisnessLayerTestSpringConfig {
     
+    private static final String MODE_TYPE = "UNSPECIFIED";
+    private static final String SHARED_CHACHE_MODE = "jakarta.persistence.sharedCache.mode";
     private static final String DIALECT_TYPE = "org.hibernate.dialect.H2Dialect";
     private static final String PERSISTENCE_DIALECT = "hibernate.dialect";
     private static final String PERMISSION = "true";
@@ -72,7 +74,7 @@ public class BuisnessLayerTestSpringConfig {
         
         Properties jpaProperties = new Properties();
         
-        jpaProperties.setProperty("jakarta.persistence.sharedCache.mode", "UNSPECIFIED");
+        jpaProperties.setProperty(SHARED_CHACHE_MODE, MODE_TYPE);
         jpaProperties.setProperty(SCHEMA_GENERATION_ACTION, ACTION_TYPE);
         jpaProperties.setProperty(CREATION_SCHEMA_SOURCE, SOURCE_TYPE);
         jpaProperties.setProperty(CREATION_SCHEMA_SCRIPT_SOURCE, CREATION_SCHEMA_PATH);

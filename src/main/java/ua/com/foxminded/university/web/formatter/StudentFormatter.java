@@ -3,7 +3,6 @@ package ua.com.foxminded.university.web.formatter;
 import java.text.ParseException;
 import java.util.Locale;
 
-import org.aspectj.weaver.patterns.ParserException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.Formatter;
 

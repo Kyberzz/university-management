@@ -22,21 +22,23 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-@EnableJpaRepositories(basePackages = "ua.com.foxminded.university.entity.repository")
+@EnableJpaRepositories(basePackages = "ua.com.foxminded.university.buisness.entity.repository")
 @EnableTransactionManagement
 @PropertySource("/application.properties")
 @ComponentScan(basePackages = "ua.com.foxminded.university.buisness")
 @Configuration
 public class BuisnessLayerSpringConfig {
     
+    private static final String MODE_TYPE = "UNSPECIFIED";
+    private static final String SHARED_CHACHE_MODE = "jakarta.persistence.sharedCache.mode";
     private static final String DATA_SCRIPT_SOURCE = "data.sql";
-    private static final String DATA_LOADING = "javax.persistence.sql-load-script-source";
-    private static final String DIALECT_TYPE = "org.hibernate.dialect.PostgreSQL10Dialect";
+    private static final String DATA_LOADING = "jakarta.persistence.sql-load-script-source";
+    private static final String DIALECT_TYPE = "org.hibernate.dialect.PostgreSQLDialect";
     private static final String PERSISTENCE_DIALECT = "hibernate.dialect";
-    private static final String SCHEMA_GENERATION_ACTION = "javax.persistence.schema-generation"
+    private static final String SCHEMA_GENERATION_ACTION = "jakarta.persistence.schema-generation"
             + ".database.action";
     private static final String ACTION_TYPE = "none";
-    private static final String ENTITY_PACKAGE = "ua.com.foxminded.university.entity";
+    private static final String ENTITY_PACKAGE = "ua.com.foxminded.university.buisness.entity";
     private static final String PASSWORD = "spring.datasource.password";
     private static final String USERNAME = "spring.datasource.username";
     private static final String URL = "spring.datasource.url";
@@ -55,8 +57,8 @@ public class BuisnessLayerSpringConfig {
 
             @Override
             public void migrate(Flyway flyway) {
-                flyway.migrate();
                 flyway.baseline();
+                flyway.migrate();
             }
         };
     }
@@ -72,6 +74,7 @@ public class BuisnessLayerSpringConfig {
         entityManagerFactory.setJpaVendorAdapter(jpaVendorAdapter);
         
         Properties jpaProperties = new Properties();
+        jpaProperties.setProperty(SHARED_CHACHE_MODE, MODE_TYPE);
         jpaProperties.setProperty(SCHEMA_GENERATION_ACTION, ACTION_TYPE);
         jpaProperties.setProperty(DATA_LOADING, DATA_SCRIPT_SOURCE);
         jpaProperties.setProperty(PERSISTENCE_DIALECT, DIALECT_TYPE);
