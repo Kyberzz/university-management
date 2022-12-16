@@ -1,8 +1,8 @@
 /target
 /bin
-.settings
+/.settings
 .classpath
 .project
 /university-management.log
 /.factorypath
-
+/.apt_generated

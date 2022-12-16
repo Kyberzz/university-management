@@ -1,0 +1,11 @@
+@charset "UTF-8";
+
+div.seedstarterlist {
+    
+}
+
+div.student_list > table {
+	width:100%;
+ 	border: 1px solid #000;
+	border-collapse: collapse;
+}
