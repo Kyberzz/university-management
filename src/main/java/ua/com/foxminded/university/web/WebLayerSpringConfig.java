@@ -8,13 +8,14 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.web.servlet.config.annotation.DelegatingWebMvcConfiguration;
 import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 import org.thymeleaf.spring6.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring6.view.ThymeleafViewResolver;
 
 
 @Configuration
-public class WebLayerSpringConfig extends DelegatingWebMvcConfiguration implements ApplicationContextAware {
+public class WebLayerSpringConfig implements ApplicationContextAware, WebMvcConfigurer {
     
     private ApplicationContext applicationContext;
     
@@ -22,11 +23,6 @@ public class WebLayerSpringConfig extends DelegatingWebMvcConfiguration implemen
     public void setApplicationContext(ApplicationContext applicationContext) 
             throws BeansException {
         this.applicationContext = applicationContext;
-    }
-    
-    @Override
-    protected void configureViewResolvers(ViewResolverRegistry registry) {
-        this.configurers.configureViewResolvers(registry);
     }
     
     @Bean
