@@ -9,7 +9,6 @@ import ua.com.foxminded.university.web.WebLayerSpringConfig;
 
 @EnableAutoConfiguration(exclude = ThymeleafAutoConfiguration.class)
 @SpringBootConfiguration
-//@Import({BuisnessLayerSpringConfig.class, WebLayerSpringConfig.class})
 @ComponentScan
 public class UniversityManagementApplication {
     
