@@ -17,10 +17,6 @@ public class StudentFormatter implements Formatter<StudentModel>{
     @Autowired
     private StudentService<StudentModel> studentService;
     
-    public StudentFormatter() {
-        super();
-    }
-
     @Override
     public StudentModel parse(String text, Locale locale) throws ParseException {
         Integer studentId = Integer.valueOf(text);

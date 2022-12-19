@@ -6,7 +6,8 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ResourceBundleMessageSource;
-import org.springframework.web.servlet.config.annotation.DelegatingWebMvcConfiguration;
+import org.springframework.core.Ordered;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.thymeleaf.spring6.SpringTemplateEngine;
@@ -15,8 +16,8 @@ import org.thymeleaf.spring6.view.ThymeleafViewResolver;
 
 
 @Configuration
-public class WebLayerSpringConfig implements ApplicationContextAware, WebMvcConfigurer {
-    
+public class WebLayerSpringConfig implements WebMvcConfigurer, ApplicationContextAware {
+
     private ApplicationContext applicationContext;
     
     @Override
@@ -24,6 +25,18 @@ public class WebLayerSpringConfig implements ApplicationContextAware, WebMvcConf
             throws BeansException {
         this.applicationContext = applicationContext;
     }
+    
+    @Override
+    public void configureViewResolvers(ViewResolverRegistry registry) {
+        registry.viewResolver(viewResolver());
+        registry.order(Ordered.HIGHEST_PRECEDENCE);
+    }
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/images/**").addResourceLocations("/images/");
+        registry.addResourceHandler("/css/**").addResourceLocations("/css/");
+    } 
     
     @Bean
     public SpringResourceTemplateResolver templateResolver() {
@@ -47,7 +60,6 @@ public class WebLayerSpringConfig implements ApplicationContextAware, WebMvcConf
     public ThymeleafViewResolver viewResolver() {
         ThymeleafViewResolver viewResolver = new ThymeleafViewResolver();
         viewResolver.setTemplateEngine(templateEngine());
-        viewResolver.setOrder(0);
         return viewResolver;
     }
     
@@ -59,25 +71,6 @@ public class WebLayerSpringConfig implements ApplicationContextAware, WebMvcConf
     }
     
     /*
-    private ApplicationContext applicationContext;
-    
-    public WebLayerSpringConfig() {
-        super();
-    }
-    
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        this.applicationContext = applicationContext;
-    }
-    
-    @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/images/**").addResourceLocations("/images/");
-        registry.addResourceHandler("/css/**").addResourceLocations("/css/");
-    }
-    */
-    
-    /*
     @Override
     public void addFormatters(FormatterRegistry registry) {
         registry.addFormatter(studentFormatter());
@@ -87,23 +80,6 @@ public class WebLayerSpringConfig implements ApplicationContextAware, WebMvcConf
     public StudentFormatter studentFormatter() {
         return new StudentFormatter();
     }
-    
-    
-    
 
-    @Bean
-    public SpringTemplateEngine templateEngine() {
-        SpringTemplateEngine templateEngine = new SpringTemplateEngine();
-        templateEngine.setTemplateResolver(templateResolver());
-        templateEngine.setEnableSpringELCompiler(false); //it is by default
-        return templateEngine;
-    }
-    
-    @Bean 
-    public ThymeleafViewResolver viewResolver() {
-        ThymeleafViewResolver viewResolver = new ThymeleafViewResolver();
-        viewResolver.setTemplateEngine(templateEngine());
-        return viewResolver;
-    }
     */
 }

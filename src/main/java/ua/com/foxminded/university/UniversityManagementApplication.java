@@ -5,7 +5,6 @@ import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.thymeleaf.ThymeleafAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
-import ua.com.foxminded.university.web.WebLayerSpringConfig;
 
 @EnableAutoConfiguration(exclude = ThymeleafAutoConfiguration.class)
 @SpringBootConfiguration

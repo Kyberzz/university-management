@@ -20,23 +20,21 @@ import ua.com.foxminded.university.buisness.model.StudentModel;
 import ua.com.foxminded.university.buisness.model.service.ServiceException;
 import ua.com.foxminded.university.buisness.model.service.StudentService;
 
-//@Slf4j
+@Slf4j
 @Controller
-public class StudentController {
+public class UniversityManagementController {
     
     private StudentService<StudentModel> studentService;
     
     @Autowired
-    public StudentController(StudentService<StudentModel> studentService) {
+    public UniversityManagementController(StudentService<StudentModel> studentService) {
         this.studentService = studentService;
     }
     
     @RequestMapping("/")
-    public String index(Model model) {
-        var student = new StudentModel();
-        student.setFirstName("Jon");
-        student.setLastName("Snow");
-        model.addAttribute("student", student);
-        return "home";
+    public String index() {
+        return "index";
     }
+    
+    
 }

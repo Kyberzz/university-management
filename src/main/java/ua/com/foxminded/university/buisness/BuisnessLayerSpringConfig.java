@@ -8,7 +8,6 @@ import org.flywaydb.core.Flyway;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.flyway.FlywayMigrationStrategy;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
@@ -25,7 +24,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableJpaRepositories(basePackages = "ua.com.foxminded.university.buisness.entity.repository")
 @EnableTransactionManagement
 @PropertySource("/application.properties")
-//@ComponentScan(basePackages = "ua.com.foxminded.university.buisness")
 @Configuration
 public class BuisnessLayerSpringConfig {
     
