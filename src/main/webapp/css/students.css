@@ -1,0 +1,14 @@
+@charset "UTF-8";
+
+html {
+	background-color: #ffffff;
+}
+
+table, th, td {
+	border: 1px solid;
+}
+
+table>tbody {
+	text-align: center;
+}
+

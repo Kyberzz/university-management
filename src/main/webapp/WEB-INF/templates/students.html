@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Student page</title>
+<link rel="stylesheet" type="text/css" media="all"
+	href="../../css/students.css" th:href="@{/css/students.css}" />
+</head>
+<body>
+	<div th:replace="~{index::logo}"></div>
+	<br>
+	<table>
+		<thead>
+			<tr>
+				<td th:text="#{number}">Number</td>
+				<td th:text="#{student.firstName}">First name</td>
+				<td th:text="#{student.lastName}">Last name</td>
+				<td th:text="#{id}">ID</td>
+				<td th:text="#{groupid}">Group ID</td>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="student,iterationStatus : ${students}">
+				<td th:text="${iterationStatus.count}">Number</td>
+				<td th:text="${student.firstName}">First name</td>
+				<td th:text="${student.lastName}">Last name</td>
+				<td th:text="${student.id}">ID</td>
+				<td th:text="${student.groupId}">Group ID</td>
+			</tr>
+		</tbody>
+	</table>
+</body>
+</html>

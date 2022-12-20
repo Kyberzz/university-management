@@ -5,6 +5,7 @@ import java.util.Properties;
 import javax.sql.DataSource;
 
 import org.flywaydb.core.Flyway;
+import org.flywaydb.core.api.configuration.FluentConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.flyway.FlywayMigrationStrategy;
 import org.springframework.context.annotation.Bean;
@@ -29,8 +30,6 @@ public class BuisnessLayerSpringConfig {
     
     private static final String MODE_TYPE = "UNSPECIFIED";
     private static final String SHARED_CHACHE_MODE = "jakarta.persistence.sharedCache.mode";
-    private static final String DATA_SCRIPT_SOURCE = "data.sql";
-    private static final String DATA_LOADING = "jakarta.persistence.sql-load-script-source";
     private static final String DIALECT_TYPE = "org.hibernate.dialect.PostgreSQLDialect";
     private static final String PERSISTENCE_DIALECT = "hibernate.dialect";
     private static final String SCHEMA_GENERATION_ACTION = "jakarta.persistence.schema-generation"
@@ -48,20 +47,20 @@ public class BuisnessLayerSpringConfig {
     public BuisnessLayerSpringConfig(Environment environment) {
 		this.environment = environment;
 	}
-
-	@Bean
+	
+    @Bean
     public FlywayMigrationStrategy flywayStrategy() {
         return new FlywayMigrationStrategy() {
 
             @Override
             public void migrate(Flyway flyway) {
-                flyway.baseline();
-                flyway.migrate();
+             //   flyway.baseline();
+             //   flyway.migrate();
             }
         };
     }
-   
-    @Bean
+
+	@Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         LocalContainerEntityManagerFactoryBean entityManagerFactory = 
                 new LocalContainerEntityManagerFactoryBean();
@@ -72,10 +71,10 @@ public class BuisnessLayerSpringConfig {
         entityManagerFactory.setJpaVendorAdapter(jpaVendorAdapter);
         
         Properties jpaProperties = new Properties();
-        jpaProperties.setProperty(SHARED_CHACHE_MODE, MODE_TYPE);
+        
         jpaProperties.setProperty(SCHEMA_GENERATION_ACTION, ACTION_TYPE);
-        jpaProperties.setProperty(DATA_LOADING, DATA_SCRIPT_SOURCE);
         jpaProperties.setProperty(PERSISTENCE_DIALECT, DIALECT_TYPE);
+        jpaProperties.setProperty(SHARED_CHACHE_MODE, MODE_TYPE);
         entityManagerFactory.setJpaProperties(jpaProperties);
         return entityManagerFactory;
     }

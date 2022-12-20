@@ -1,0 +1,49 @@
+@charset "UTF-8";
+
+html {
+	background-color: rgb(78, 78, 78);
+}
+
+body {
+	font-size: 18px;
+	width: 960px;
+	margin: 0px auto;
+	background-color: #ffffff;
+	border: 2px solid #5CAF50;
+	height: 700px
+}
+
+h2 {
+	margin-top: 50px;
+	margin-bottom: 30px;
+	width: 400px;
+	margin: auto;
+	text-align: center;
+}
+
+form fieldset {
+	height: 300px;
+	width: 900px;
+	margin: auto;
+}
+
+form div>label {
+	width: 100px;
+	font-weight: bolt;
+	float: left;
+	text-align: right;
+	margin-right: 20px;
+	line-height: 20px;
+}
+
+form div>table {
+	width: 50%;
+}
+
+form div>table>thead {
+	background-color: #ddff77;
+}
+
+form div>table>tbody {
+	text-align: center;
+}

@@ -74,12 +74,12 @@ public class BuisnessLayerTestSpringConfig {
         
         Properties jpaProperties = new Properties();
         
-        jpaProperties.setProperty(SHARED_CHACHE_MODE, MODE_TYPE);
         jpaProperties.setProperty(SCHEMA_GENERATION_ACTION, ACTION_TYPE);
         jpaProperties.setProperty(CREATION_SCHEMA_SOURCE, SOURCE_TYPE);
         jpaProperties.setProperty(CREATION_SCHEMA_SCRIPT_SOURCE, CREATION_SCHEMA_PATH);
         jpaProperties.setProperty(SCHEMA_CREATION_ACCESS, PERMISSION);
         jpaProperties.setProperty(PERSISTENCE_DIALECT, DIALECT_TYPE);
+        jpaProperties.setProperty(SHARED_CHACHE_MODE, MODE_TYPE);
         
         factory.setJpaProperties(jpaProperties);
         return factory;
