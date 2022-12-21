@@ -1,8 +1,12 @@
 package ua.com.foxminded.university.buisness.model.service;
 
+import java.lang.reflect.Type;
+import java.util.List;
+
 import org.modelmapper.ConfigurationException;
 import org.modelmapper.MappingException;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +28,18 @@ public class TimetableServiceImpl implements TimetableService<TimetableModel> {
     @Autowired
     public TimetableServiceImpl(TimetableRepository timetableDao) {
         this.timetableRepository = timetableDao;
+    }
+    
+    @Override
+    public List<TimetableModel> getAllTimetables() throws ServiceException {
+        try {
+            List<TimetableEntity> timetableEntities = timetableRepository.findAll();
+            Type listType = new TypeToken<List<TimetableModel>>() {}.getType();
+            ModelMapper modelMapper = new ModelMapper();
+            return modelMapper.map(timetableEntities, listType);
+        } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
+            throw new ServiceException("Getting all timetables was failed", e);
+        }
     }
     
     @Override

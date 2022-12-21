@@ -1,8 +1,9 @@
-insert into university.teachers(first_name, last_name) values('Torvalds', 'Linus');
+insert into university.teachers(first_name, last_name) values('Linus', 'Torvalds');
 insert into university.teachers(first_name, last_name) values('Dennis', 'Ritchie');
 insert into university.courses(name, teacher_id) values('Programming', 1);
-insert into university.courses(name, teacher_id) values('Electrodynamics', 2);
-insert into university.courses(name, teacher_id) values('Сircuitry', 1);
+insert into university.courses(name, teacher_id, description) values('Electrodynamics', 2, 
+    'It is a branch of theoretical physics');
+insert into university.courses(name, teacher_id) values('Mathematics', 1);
 insert into university.groups(name) values('lt-58');
 insert into university.groups(name) values('ua-77');
 insert into university.timetable(start_time, end_time, week_day, group_id, course_id)

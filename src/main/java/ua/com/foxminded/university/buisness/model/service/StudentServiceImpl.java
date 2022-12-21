@@ -48,21 +48,22 @@ public class StudentServiceImpl implements StudentService<StudentModel> {
         
         try {
             StudentEntity studentEntity = studentRepository.findById(id);
-            StudentModel studentModel = modelMapper.map(studentEntity, StudentModel.class);
-            return studentModel;
+            return modelMapper.map(studentEntity, StudentModel.class);
         } catch (RepositoryException e) {
             throw new ServiceException("Getting student by its id failed.", e);
         }
     }
     
     @Override
-    public List<StudentModel> getAllStudents() {
-        ModelMapper modelMapper = new ModelMapper();
-
-        List<StudentEntity> studentEntities = studentRepository.findAll();
-        Type listType = new TypeToken<List<StudentModel>>() {}.getType();
-        List<StudentModel> studentModels = modelMapper.map(studentEntities, listType);
-        return studentModels;
+    public List<StudentModel> getAllStudents() throws ServiceException {
+        try {
+            List<StudentEntity> studentEntities = studentRepository.findAll();
+            ModelMapper modelMapper = new ModelMapper();
+            Type listType = new TypeToken<List<StudentModel>>() {}.getType();
+            return modelMapper.map(studentEntities, listType);
+        } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
+            throw new ServiceException("Getting all students was failed", e);
+        }
     }
     
     @Override
