@@ -9,6 +9,8 @@
 <body>
 	<div th:replace="~{index::logo}"></div>
 	<br>
+	<h2 th:text="#{students.tableName}">The table all of students in the
+		university</h2>
 	<table>
 		<thead>
 			<tr>
@@ -21,11 +23,11 @@
 		</thead>
 		<tbody>
 			<tr th:each="student,iterationStatus : ${students}">
-				<td th:text="${iterationStatus.count}">Number</td>
-				<td th:text="${student.firstName}">First name</td>
-				<td th:text="${student.lastName}">Last name</td>
-				<td th:text="${student.id}">ID</td>
-				<td th:text="${student.groupId}">Group ID</td>
+				<td th:text="${iterationStatus.count}">1</td>
+				<td th:text="${student.firstName}">Jonh</td>
+				<td th:text="${student.lastName}">Snow</td>
+				<td th:text="${student.id}">1</td>
+				<td th:text="${student.group.id}">5</td>
 			</tr>
 		</tbody>
 	</table>
