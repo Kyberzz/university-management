@@ -17,7 +17,7 @@
 				<td th:text="#{thead.number}">Number</td>
 				<td th:text="#{thead.startTime}">Start time</td>
 				<td th:text="#{thead.endTime}">End time</td>
-				<td th:text="#{thead.weekDay}">Day of week</td>
+				<td th:text="#{thead.dayOfWeek}">Day of week</td>
 				<td th:text="#{thead.description}">Description</td>
 				<td th:text="#{thead.id}">ID</td>
 			</tr>
@@ -25,9 +25,9 @@
 		<tbody>
 			<tr th:each="timetable,iterationStatus : ${timetables}">
                 <td th:text="${iterationStatus.count}">1</td>
-                <td>8:45</td>
-                <td>10:45</td>
-                <td th:text="${timetable.weekDay}">Monday</td>
+                <td th:text="${timetable.startTime}">8:45</td>
+                <td th:text="${timetable.endTime}">10:45</td>
+                <td th:text="${timetable.dayOfWeek}">Monday</td>
                 <td th:text="${timetable.description}">some description</td>
                 <td th:text="${timetable.id}">1</td>
 			</tr>

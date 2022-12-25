@@ -2,6 +2,9 @@ package ua.com.foxminded.university.buisness.entity.repository;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.time.DayOfWeek;
+import java.time.LocalTime;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,7 +20,6 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.PersistenceUnit;
 import ua.com.foxminded.university.buisness.BuisnessLayerTestSpringConfig;
-import ua.com.foxminded.university.buisness.entity.DayOfWeek;
 import ua.com.foxminded.university.buisness.entity.GroupEntity;
 import ua.com.foxminded.university.buisness.entity.StudentEntity;
 import ua.com.foxminded.university.buisness.entity.TimetableEntity;
@@ -37,8 +39,9 @@ class GroupRepositoryTest {
     private static final int FIRST_ELEMENT = 0;
     private static final int TIMETABLE_ID = 1;
     private static final int GROUP_ID = 1;
-    private static final long END_TIME = 39360000;
-    private static final long START_TIME = 36360000;
+    private static final int MINUTE = 0;
+    private static final int END_TIME = 9;
+    private static final int START_TIME = 8;
     
     @PersistenceUnit
     private EntityManagerFactory entityManagerFactory;
@@ -58,10 +61,10 @@ class GroupRepositoryTest {
         entityManager.persist(group);
        
         TimetableEntity timetable = new TimetableEntity();
-        timetable.setStartTime(START_TIME);
-        timetable.setEndTime(END_TIME);
+        timetable.setStartTime(LocalTime.of(START_TIME, MINUTE));
+        timetable.setEndTime(LocalTime.of(END_TIME, MINUTE));
         timetable.setDescription(TIMETABLE_DESCRIPTION);
-        timetable.setWeekDay(DayOfWeek.valueOf(WEEK_DAY));
+        timetable.setDayOfWeek(DayOfWeek.valueOf(WEEK_DAY));
         timetable.setGroup(group);
         entityManager.persist(timetable);
 
@@ -84,7 +87,7 @@ class GroupRepositoryTest {
         assertEquals(TIMETABLE_ID, receivedGroup.getTimetableList().get(FIRST_ELEMENT).getId());
         assertEquals(START_TIME, receivedGroup.getTimetableList().get(FIRST_ELEMENT).getStartTime());
         assertEquals(END_TIME, receivedGroup.getTimetableList().get(FIRST_ELEMENT).getEndTime());
-        assertEquals(WEEK_DAY, receivedGroup.getTimetableList().get(FIRST_ELEMENT).getWeekDay()
+        assertEquals(WEEK_DAY, receivedGroup.getTimetableList().get(FIRST_ELEMENT).getDayOfWeek()
                                                                                   .toString());
     }
 

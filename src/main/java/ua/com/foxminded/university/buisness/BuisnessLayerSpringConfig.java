@@ -54,8 +54,8 @@ public class BuisnessLayerSpringConfig {
 
             @Override
             public void migrate(Flyway flyway) {
-              //  flyway.baseline();
-             //   flyway.migrate();
+                //flyway.baseline();
+                //flyway.migrate();
             }
         };
     }

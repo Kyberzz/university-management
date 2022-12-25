@@ -2,6 +2,9 @@ package ua.com.foxminded.university.buisness.entity.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.time.DayOfWeek;
+import java.time.LocalTime;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,7 +21,6 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.PersistenceUnit;
 import ua.com.foxminded.university.buisness.BuisnessLayerTestSpringConfig;
 import ua.com.foxminded.university.buisness.entity.CourseEntity;
-import ua.com.foxminded.university.buisness.entity.DayOfWeek;
 import ua.com.foxminded.university.buisness.entity.GroupEntity;
 import ua.com.foxminded.university.buisness.entity.TeacherEntity;
 import ua.com.foxminded.university.buisness.entity.TimetableEntity;
@@ -36,8 +38,9 @@ class CourseRepositoryTest {
     private static final String COURSE_NAME = "Programming";
     private static final String TIMETABLE_DESCRIPTION = "some description";
     private static final String COURSE_DESCRIPTION = "some description";
-    private static final long END_TIME = 39360000;
-    private static final long START_TIME = 36360000;
+    private static final int MINUTE = 0;
+    private static final int END_TIME = 9;
+    private static final int START_TIME = 8;
     private static final int COURSE_ID = 1;
     private static final int GROUP_ID = 1;
     private static final int TIMETABLE_ID = 1;
@@ -77,9 +80,9 @@ class CourseRepositoryTest {
         timetable.setGroup(group);
         timetable.setCourse(course);
         timetable.setDescription(TIMETABLE_DESCRIPTION);
-        timetable.setEndTime(END_TIME);
-        timetable.setStartTime(START_TIME);
-        timetable.setWeekDay(DayOfWeek.valueOf(WEEK_DAY));
+        timetable.setEndTime(LocalTime.of(END_TIME, MINUTE));
+        timetable.setStartTime(LocalTime.of(START_TIME, MINUTE));
+        timetable.setDayOfWeek(DayOfWeek.valueOf(WEEK_DAY));
         entityManager.persist(timetable);
         entityManager.getTransaction().commit();
     }
@@ -96,7 +99,7 @@ class CourseRepositoryTest {
         assertEquals(END_TIME, receivedCourse.getTimetableList().get(FIRST_ELEMENT).getEndTime());
         assertEquals(GROUP_ID, receivedCourse.getTimetableList().get(FIRST_ELEMENT).getGroup().getId());
         assertEquals(TIMETABLE_ID, receivedCourse.getTimetableList().get(FIRST_ELEMENT).getId());
-        assertEquals(WEEK_DAY, receivedCourse.getTimetableList().get(FIRST_ELEMENT).getWeekDay()
+        assertEquals(WEEK_DAY, receivedCourse.getTimetableList().get(FIRST_ELEMENT).getDayOfWeek()
                                                                                    .toString());
     }
     

@@ -2,6 +2,8 @@
 package ua.com.foxminded.university.buisness.entity;
 
 import java.io.Serializable;
+import java.time.DayOfWeek;
+import java.time.LocalTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -27,10 +29,10 @@ public class TimetableEntity implements Serializable {
     private Integer id;
     
     @Column(name = "start_time")
-    private long startTime;
+    private LocalTime startTime;
     
     @Column(name = "end_time")
-    private long endTime;
+    private LocalTime endTime;
     private String description;
     
     @ManyToOne(fetch = FetchType.LAZY)
@@ -43,5 +45,5 @@ public class TimetableEntity implements Serializable {
     
     @Enumerated(EnumType.STRING)
     @Column(name = "week_day")
-    private DayOfWeek weekDay;
+    private DayOfWeek dayOfWeek;
 }
