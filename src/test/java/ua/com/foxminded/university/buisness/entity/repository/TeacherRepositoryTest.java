@@ -8,6 +8,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +21,7 @@ import ua.com.foxminded.university.buisness.BuisnessLayerTestSpringConfig;
 import ua.com.foxminded.university.buisness.entity.CourseEntity;
 import ua.com.foxminded.university.buisness.entity.TeacherEntity;
 
+@ActiveProfiles("test")
 @Transactional
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 @ContextConfiguration(classes = BuisnessLayerTestSpringConfig.class)

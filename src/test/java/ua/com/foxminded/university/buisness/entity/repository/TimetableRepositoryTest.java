@@ -11,6 +11,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -22,6 +23,7 @@ import ua.com.foxminded.university.buisness.entity.CourseEntity;
 import ua.com.foxminded.university.buisness.entity.GroupEntity;
 import ua.com.foxminded.university.buisness.entity.TimetableEntity;
 
+@ActiveProfiles("test")
 @Transactional
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 @ContextConfiguration(classes = BuisnessLayerTestSpringConfig.class)
@@ -33,7 +35,7 @@ class TimetableRepositoryTest {
     private static final String WEEK_DAY = "SUNDAY";
     private static final String COURSE_DESCRIPTION = "some description";
     private static final String TIMETABLE_DESCRIPTION = "some description";
-    private static final int MINUTE = 8;
+    private static final int MINUTE = 0;
     private static final int START_TIME = 8;
     private static final int END_TIME = 9;
     private static final int GROUP_ID = 1;
@@ -82,9 +84,9 @@ class TimetableRepositoryTest {
         assertEquals(COURSE_ID, receivedTimetableData.getCourse().getId());
         assertEquals(COURSE_NAME, receivedTimetableData.getCourse().getName());
         assertEquals(COURSE_DESCRIPTION, receivedTimetableData.getDescription());
-        assertEquals(END_TIME, receivedTimetableData.getEndTime());
+        assertEquals(LocalTime.of(END_TIME, MINUTE), receivedTimetableData.getEndTime());
         assertEquals(GROUP_ID, receivedTimetableData.getGroup().getId());
-        assertEquals(START_TIME, receivedTimetableData.getStartTime());
+        assertEquals(LocalTime.of(START_TIME, MINUTE), receivedTimetableData.getStartTime());
         assertEquals(TIMETABLE_ID, receivedTimetableData.getId());
         assertEquals(WEEK_DAY, receivedTimetableData.getDayOfWeek().toString());
     }
@@ -96,10 +98,10 @@ class TimetableRepositoryTest {
         assertEquals(GROUP_NAME, timetable.getGroup().getName());
         assertEquals(COURSE_ID, timetable.getCourse().getId());
         assertEquals(TIMETABLE_DESCRIPTION, timetable.getDescription());
-        assertEquals(END_TIME, timetable.getEndTime());
+        assertEquals(LocalTime.of(END_TIME, MINUTE), timetable.getEndTime());
         assertEquals(GROUP_ID, timetable.getGroup().getId());
         assertEquals(TIMETABLE_ID, timetable.getId());
-        assertEquals(START_TIME, timetable.getStartTime());
+        assertEquals(LocalTime.of(START_TIME, MINUTE), timetable.getStartTime());
         assertEquals(WEEK_DAY, timetable.getDayOfWeek().toString());
     }
     
@@ -109,8 +111,8 @@ class TimetableRepositoryTest {
         
         assertEquals(TIMETABLE_ID, timetable.getId());
         assertEquals(TIMETABLE_DESCRIPTION, timetable.getDescription());
-        assertEquals(START_TIME, timetable.getStartTime());
-        assertEquals(END_TIME, timetable.getEndTime());
+        assertEquals(LocalTime.of(START_TIME, MINUTE), timetable.getStartTime());
+        assertEquals(LocalTime.of(END_TIME, MINUTE), timetable.getEndTime());
         assertEquals(COURSE_ID, timetable.getCourse().getId());
         assertEquals(GROUP_ID, timetable.getGroup().getId());
         assertEquals(WEEK_DAY, timetable.getDayOfWeek().toString());

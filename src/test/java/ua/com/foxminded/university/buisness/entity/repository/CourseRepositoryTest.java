@@ -11,6 +11,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +26,7 @@ import ua.com.foxminded.university.buisness.entity.GroupEntity;
 import ua.com.foxminded.university.buisness.entity.TeacherEntity;
 import ua.com.foxminded.university.buisness.entity.TimetableEntity;
 
+@ActiveProfiles("test")
 @Transactional
 @ContextConfiguration(classes = BuisnessLayerTestSpringConfig.class)
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -94,10 +96,16 @@ class CourseRepositoryTest {
         assertEquals(COURSE_ID, receivedCourse.getId());
         assertEquals(COURSE_NAME, receivedCourse.getName());
         assertEquals(TEACHER_ID, receivedCourse.getTeacher().getId());
-        assertEquals(COURSE_ID, receivedCourse.getTimetableList().get(FIRST_ELEMENT).getCourse().getId());
-        assertEquals(START_TIME, receivedCourse.getTimetableList().get(FIRST_ELEMENT).getStartTime());
-        assertEquals(END_TIME, receivedCourse.getTimetableList().get(FIRST_ELEMENT).getEndTime());
-        assertEquals(GROUP_ID, receivedCourse.getTimetableList().get(FIRST_ELEMENT).getGroup().getId());
+        assertEquals(COURSE_ID, receivedCourse.getTimetableList().get(FIRST_ELEMENT)
+                                                                 .getCourse()
+                                                                 .getId());
+        assertEquals(LocalTime.of(START_TIME, MINUTE), 
+                     receivedCourse.getTimetableList().get(FIRST_ELEMENT).getStartTime());
+        assertEquals(LocalTime.of(END_TIME, MINUTE), 
+                     receivedCourse.getTimetableList().get(FIRST_ELEMENT).getEndTime());
+        assertEquals(GROUP_ID, receivedCourse.getTimetableList().get(FIRST_ELEMENT)
+                                                                .getGroup()
+                                                                .getId());
         assertEquals(TIMETABLE_ID, receivedCourse.getTimetableList().get(FIRST_ELEMENT).getId());
         assertEquals(WEEK_DAY, receivedCourse.getTimetableList().get(FIRST_ELEMENT).getDayOfWeek()
                                                                                    .toString());
