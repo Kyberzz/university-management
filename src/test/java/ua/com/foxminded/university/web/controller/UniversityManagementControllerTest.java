@@ -3,12 +3,11 @@ package ua.com.foxminded.university.web.controller;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import ua.com.foxminded.university.buisness.model.CourseModel;
 import ua.com.foxminded.university.buisness.model.GroupModel;
@@ -21,8 +20,7 @@ import ua.com.foxminded.university.buisness.model.service.StudentService;
 import ua.com.foxminded.university.buisness.model.service.TeacherService;
 import ua.com.foxminded.university.buisness.model.service.TimetableService;
 
-@SpringBootTest
-//@AutoConfigureMockMvc
+@WebMvcTest
 class UniversityManagementControllerTest {
     
     @MockBean
@@ -40,14 +38,8 @@ class UniversityManagementControllerTest {
     @MockBean
     StudentService<StudentModel> studentService;
     
+    @Autowired
     private MockMvc mockMvc;
-    
-    @BeforeEach
-    public void setup() {
-        mockMvc = MockMvcBuilders.standaloneSetup(
-                new UniversityManagementController(studentService, teacherService, groupService, 
-                                                   coureseService, timetableService)).build();
-    }
     
     @Test
     void getIndex_gettingIndexPage_CorrectResponce() throws Exception {
