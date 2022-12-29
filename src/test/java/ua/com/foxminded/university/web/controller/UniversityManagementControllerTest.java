@@ -42,14 +42,14 @@ class UniversityManagementControllerTest {
     private MockMvc mockMvc;
     
     @Test
-    void getIndex_gettingIndexPage_CorrectResponce() throws Exception {
+    void shouldRenderIndexPage_WhenCall() throws Exception {
         mockMvc.perform(get("/"))
                .andExpect(status().isOk())
                .andExpect(view().name("index"));
     }
     
     @Test
-    void getAllTimetables_gettingTimetables_CorrectResponce() throws Exception {
+    void shouldReturnAllTimetablesAndRenderTimetablesView_WhenCall() throws Exception {
         mockMvc.perform(get("/index").param("getAllTimetables", "#"))
                .andExpect(status().isOk())
                .andExpect(model().attributeExists("timetables"))
@@ -57,7 +57,7 @@ class UniversityManagementControllerTest {
     }
     
     @Test
-    void getAllTeachers_gettingTeachers_CorrectResponce() throws Exception {
+    void shouldReturnAllTeachersAndRenderTeachersView_WhenCall() throws Exception {
         mockMvc.perform(get("/index").param("getAllTeachers", "#"))
                .andExpect(status().isOk())
                .andExpect(model().attributeExists("teachers"))
@@ -65,7 +65,7 @@ class UniversityManagementControllerTest {
     }
     
     @Test
-    void getAllCourses_gettingCourses_CorrectResponce() throws Exception {
+    void shouldReturnAllCoursesAndRednerTeachersView_WhenCall() throws Exception {
         mockMvc.perform(get("/index").param("getAllCourses", "#"))
                .andExpect(status().isOk())
                .andExpect(model().attributeExists("courses"))
@@ -73,7 +73,7 @@ class UniversityManagementControllerTest {
     }
     
     @Test 
-    void getAllGroups_gettingGroups_CorrectResponce() throws Exception {
+    void shouldReturnAllGroupsAndRenderGroupsView_WhenCall() throws Exception {
         mockMvc.perform(get("/index").param("getAllGroups", "#"))
                .andExpect(status().isOk())
                .andExpect(model().attributeExists("groups"))
@@ -81,7 +81,7 @@ class UniversityManagementControllerTest {
     }
     
     @Test
-    void getAllStudents_gettingStudents_CorrectResponce() throws Exception {
+    void shouldReturnAllStudentsAndRenderStudentsView_WhenCall() throws Exception {
         mockMvc.perform(get("/index").param("getAllStudents", "#"))
                .andExpect(status().isOk())
                .andExpect(model().attributeExists("students"))

@@ -45,7 +45,7 @@ public class UniversityManagementController {
     }
     
     @RequestMapping("/")
-    public String getIndex() {
+    public String renderIndexView() {
         return "index";
     }
     
@@ -83,7 +83,7 @@ public class UniversityManagementController {
     }
     
     @RequestMapping(value = "/index", params = "getAllStudents")
-    public String getAllStudents(Model model) {
+    public String getStudents(Model model) {
         try {
             List<StudentModel> students = studentService.getAllStudents();
             model.addAttribute("students", students);
