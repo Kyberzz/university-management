@@ -6,6 +6,7 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.thymeleaf.ThymeleafAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
 
+
 @EnableAutoConfiguration(exclude = {ThymeleafAutoConfiguration.class}) 
 @SpringBootConfiguration
 @ComponentScan

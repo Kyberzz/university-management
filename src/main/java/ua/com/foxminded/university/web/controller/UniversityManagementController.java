@@ -45,7 +45,7 @@ public class UniversityManagementController {
     }
     
     @RequestMapping("/")
-    public String index() {
+    public String getIndex() {
         return "index";
     }
     

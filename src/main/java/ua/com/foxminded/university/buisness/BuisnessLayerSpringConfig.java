@@ -24,7 +24,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @EnableJpaRepositories(basePackages = "ua.com.foxminded.university.buisness.entity.repository")
 @EnableTransactionManagement
-@PropertySource("/application.properties")
+@PropertySource("classpath:application.properties")
 @Configuration
 public class BuisnessLayerSpringConfig {
     
