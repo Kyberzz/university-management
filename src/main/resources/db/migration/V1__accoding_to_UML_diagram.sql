@@ -1,7 +1,7 @@
 -- create role university with login password '1234'
 -- create database university owner university
-drop schema if exists university cascade;
-create schema university;
+--drop schema if exists university cascade;
+--create schema university;
 
 create sequence university.teachers_seq as integer;
 create table university.teachers (

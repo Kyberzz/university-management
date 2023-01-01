@@ -9,7 +9,7 @@
         <relativePath />
     </parent>
     <groupId>ua.com.foxminded.university</groupId>
-    <artifactId>university-managment</artifactId>
+    <artifactId>university-management</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>war</packaging>
     <name>The university management program</name>

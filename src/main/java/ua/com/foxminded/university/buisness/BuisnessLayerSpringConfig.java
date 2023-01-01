@@ -5,7 +5,6 @@ import java.util.Properties;
 import javax.sql.DataSource;
 
 import org.flywaydb.core.Flyway;
-import org.flywaydb.core.api.configuration.FluentConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.flyway.FlywayMigrationStrategy;
 import org.springframework.context.annotation.Bean;
@@ -48,18 +47,18 @@ public class BuisnessLayerSpringConfig {
 		this.environment = environment;
 	}
 	
+    
     @Bean
     public FlywayMigrationStrategy flywayStrategy() {
         return new FlywayMigrationStrategy() {
 
             @Override
             public void migrate(Flyway flyway) {
-                //flyway.baseline();
-                //flyway.migrate();
+                flyway.migrate();
             }
         };
     }
-
+    
 	@Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         LocalContainerEntityManagerFactoryBean entityManagerFactory = 
