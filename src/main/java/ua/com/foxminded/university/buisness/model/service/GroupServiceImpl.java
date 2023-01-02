@@ -3,14 +3,15 @@ package ua.com.foxminded.university.buisness.model.service;
 import java.lang.reflect.Type;
 import java.util.List;
 
+
 import org.modelmapper.ConfigurationException;
 import org.modelmapper.MappingException;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import ua.com.foxminded.university.buisness.entity.GroupEntity;
 import ua.com.foxminded.university.buisness.entity.repository.GroupRepository;

@@ -2,6 +2,8 @@ package ua.com.foxminded.university.buisness;
 
 import java.util.Properties;
 
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.SharedCacheMode;
 import javax.sql.DataSource;
 
 import org.springframework.context.annotation.Bean;
@@ -20,8 +22,6 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.SharedCacheMode;
 
 @Profile("test")
 @EnableJpaRepositories(basePackages = "ua.com.foxminded.university.buisness.entity.repository", 
