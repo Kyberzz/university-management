@@ -4,8 +4,8 @@ import java.util.Properties;
 
 import javax.sql.DataSource;
 
-import org.flywaydb.core.Flyway;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.flyway.FlywayConfigurationCustomizer;
 import org.springframework.boot.autoconfigure.flyway.FlywayMigrationStrategy;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,6 +27,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Configuration
 public class BuisnessLayerSpringConfig {
     
+    private static final String SCHEMA_NAME = "university";
     private static final String MODE_TYPE = "UNSPECIFIED";
     private static final String SHARED_CHACHE_MODE = "jakarta.persistence.sharedCache.mode";
     private static final String DIALECT_TYPE = "org.hibernate.dialect.PostgreSQLDialect";
@@ -47,16 +48,14 @@ public class BuisnessLayerSpringConfig {
 		this.environment = environment;
 	}
 	
+    @Bean 
+    public FlywayConfigurationCustomizer flywayConfigurationCustomizer() {
+        return configuration -> configuration.schemas(SCHEMA_NAME);        
+    }
     
     @Bean
     public FlywayMigrationStrategy flywayStrategy() {
-        return new FlywayMigrationStrategy() {
-
-            @Override
-            public void migrate(Flyway flyway) {
-                flyway.migrate();
-            }
-        };
+        return flyway -> flyway.migrate();
     }
     
 	@Bean
