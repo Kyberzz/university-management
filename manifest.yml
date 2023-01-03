@@ -1,0 +1,9 @@
+---
+applications:
+  - name: university-management
+    buildpacks:
+      - java_buildpack
+    path: target/university-management-0.0.1-SNAPSHOT.war
+    services:
+      - postres
+  
