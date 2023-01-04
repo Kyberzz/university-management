@@ -24,10 +24,10 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 
 @Profile("test")
-@EnableJpaRepositories(basePackages = "ua.com.foxminded.university.buisness.entity.repository", 
+@EnableJpaRepositories(basePackages = "ua.com.foxminded.university.repository", 
                        bootstrapMode = BootstrapMode.LAZY)
 @EnableTransactionManagement
-@ComponentScan(basePackages = "ua.com.foxminded.university.buisness")
+@ComponentScan(basePackages = "ua.com.foxminded.university.repository")
 @Configuration
 public class RepositoryTestConfig {
     
@@ -47,7 +47,7 @@ public class RepositoryTestConfig {
     private static final String SCHEMA_GENERATION_ACTION = "jakarta.persistence.schema-generation"
             + ".database.action";
     private static final String ACTION_TYPE = "create";
-    private static final String ENTITY_PACKAGE = "ua.com.foxminded.university.buisness.entity";
+    private static final String ENTITY_PACKAGE = "ua.com.foxminded.university.entity";
     
     @Bean
     public PersistenceExceptionTranslationPostProcessor exceptionTranslation() {
