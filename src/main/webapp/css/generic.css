@@ -1,0 +1,25 @@
+@charset "UTF-8";
+
+html {
+	background-color: #ffffff;
+}
+
+h2 {
+	font-size: 20px;
+	text-align: center;
+}
+
+table {
+	width: 50%;
+	margin: auto;
+	text-align: center;
+}
+
+table>thead {
+	background-color: #ddff77;
+}
+
+table>th,td {
+	border: 1px solid;
+}
+

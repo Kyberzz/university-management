@@ -13,17 +13,20 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
-import ua.com.foxminded.university.config.RepositoryConfigTest;
+import ua.com.foxminded.university.config.RepositoryTestConfig;
 import ua.com.foxminded.university.entity.CourseEntity;
 import ua.com.foxminded.university.entity.TeacherEntity;
+import ua.com.foxminded.univesity.exception.RepositoryException;
 
+@ActiveProfiles("test")
 @Transactional
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
-@ContextConfiguration(classes = RepositoryConfigTest.class)
+@ContextConfiguration(classes = RepositoryTestConfig.class)
 @ExtendWith(SpringExtension.class)
 class TeacherRepositoryTest {
     

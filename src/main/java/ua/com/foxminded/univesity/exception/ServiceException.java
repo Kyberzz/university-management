@@ -1,4 +1,4 @@
-package ua.com.foxminded.university.service;
+package ua.com.foxminded.univesity.exception;
 
 public class ServiceException extends Exception {
     private static final long serialVersionUID = 1L; 

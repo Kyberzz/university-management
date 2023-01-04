@@ -4,12 +4,10 @@ import java.util.Properties;
 
 import javax.sql.DataSource;
 
-import org.flywaydb.core.Flyway;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.flyway.FlywayConfigurationCustomizer;
 import org.springframework.boot.autoconfigure.flyway.FlywayMigrationStrategy;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
@@ -23,17 +21,18 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-@EnableAutoConfiguration
 @EnableJpaRepositories(basePackages = "ua.com.foxminded.university.repository")
 @EnableTransactionManagement
-@PropertySource("/application.properties")
-@ComponentScan(basePackages = "ua.com.foxminded.university")
+@PropertySource("classpath:application.properties")
 @Configuration
 public class RepositoryConfig {
     
-    private static final String DIALECT_TYPE = "org.hibernate.dialect.PostgreSQL10Dialect";
+    private static final String SCHEMA_NAME = "university";
+    private static final String MODE_TYPE = "UNSPECIFIED";
+    private static final String SHARED_CHACHE_MODE = "jakarta.persistence.sharedCache.mode";
+    private static final String DIALECT_TYPE = "org.hibernate.dialect.PostgreSQLDialect";
     private static final String PERSISTENCE_DIALECT = "hibernate.dialect";
-    private static final String SCHEMA_GENERATION_ACTION = "javax.persistence.schema-generation"
+    private static final String SCHEMA_GENERATION_ACTION = "jakarta.persistence.schema-generation"
             + ".database.action";
     private static final String ACTION_TYPE = "none";
     private static final String ENTITY_PACKAGE = "ua.com.foxminded.university.entity";
@@ -42,26 +41,24 @@ public class RepositoryConfig {
     private static final String URL = "spring.datasource.url";
     private static final String DRIVER_CLASS_NAME = "spring.datasource.driver-class-name";
     
-    private Environment environment;
+    Environment environment;
     
     @Autowired
     public RepositoryConfig(Environment environment) {
-        this.environment = environment;
+		this.environment = environment;
+	}
+	
+    @Bean 
+    public FlywayConfigurationCustomizer flywayConfigurationCustomizer() {
+        return configuration -> configuration.schemas(SCHEMA_NAME);        
     }
     
     @Bean
     public FlywayMigrationStrategy flywayStrategy() {
-        return new FlywayMigrationStrategy() {
-
-            @Override
-            public void migrate(Flyway flyway) {
-                flyway.migrate();
-                flyway.baseline();
-            }
-        };
+        return flyway -> flyway.migrate();
     }
     
-    @Bean
+	@Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         LocalContainerEntityManagerFactoryBean entityManagerFactory = 
                 new LocalContainerEntityManagerFactoryBean();
@@ -72,8 +69,10 @@ public class RepositoryConfig {
         entityManagerFactory.setJpaVendorAdapter(jpaVendorAdapter);
         
         Properties jpaProperties = new Properties();
+        
         jpaProperties.setProperty(SCHEMA_GENERATION_ACTION, ACTION_TYPE);
         jpaProperties.setProperty(PERSISTENCE_DIALECT, DIALECT_TYPE);
+        jpaProperties.setProperty(SHARED_CHACHE_MODE, MODE_TYPE);
         entityManagerFactory.setJpaProperties(jpaProperties);
         return entityManagerFactory;
     }
@@ -100,3 +99,5 @@ public class RepositoryConfig {
         return jpaTransactionManager;
     }
 }
+
+

@@ -3,16 +3,11 @@ package ua.com.foxminded.university;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.ComponentScan;
 
-import ua.com.foxminded.university.config.RepositoryConfig;
-
-
-@EnableAutoConfiguration
+@EnableAutoConfiguration 
 @SpringBootConfiguration
-@Import({RepositoryConfig.class})
-//@SpringBootApplication
+@ComponentScan
 public class UniversityManagementApplication {
     
     public static void main(String[] args) {

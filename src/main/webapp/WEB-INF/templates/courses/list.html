@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<title>courses</title>
+<link rel="stylesheet" type="text/css" media="all"
+	href="../../css/generic.css" th:href="@{/css/generic.css}" />
+</head>
+<body>
+	<div th:replace="~{index::logo}"></div>
+	<br>
+	<h2 th:text="#{courses.tableName}">All courses of the university</h2>
+	<table>
+		<thead>
+			<tr>
+				<td th:text="#{thead.number}">Number</td>
+				<td th:text="#{thead.courseName}">Course name</td>
+				<td th:text="#{thead.description}">Description</td>
+				<td th:text="#{thead.courseId}">Course ID</td>
+			</tr>
+		</thead>
+		<tbody>
+		<tr th:each="cours,iterationStatus : ${courses}">
+		  <td th:text="${iterationStatus.count}">1</td>
+		  <td th:text="${cours.name}">Programming</td>
+		  <td th:text="${cours.description}">some description</td>
+		  <td th:text="${cours.id}">1</td>
+		</tr>
+		</tbody>
+	</table>
+</body>
+</html>

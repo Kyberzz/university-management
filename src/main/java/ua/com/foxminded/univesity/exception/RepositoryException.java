@@ -1,4 +1,4 @@
-package ua.com.foxminded.university.repository;
+package ua.com.foxminded.univesity.exception;
 
 public class RepositoryException extends Exception {
 

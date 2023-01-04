@@ -2,6 +2,9 @@ package ua.com.foxminded.university.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.time.DayOfWeek;
+import java.time.LocalTime;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceContext;
@@ -13,19 +16,21 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
-import ua.com.foxminded.university.config.RepositoryConfigTest;
+import ua.com.foxminded.university.config.RepositoryTestConfig;
 import ua.com.foxminded.university.entity.CourseEntity;
-import ua.com.foxminded.university.entity.DayOfWeek;
 import ua.com.foxminded.university.entity.GroupEntity;
 import ua.com.foxminded.university.entity.TeacherEntity;
 import ua.com.foxminded.university.entity.TimetableEntity;
+import ua.com.foxminded.univesity.exception.RepositoryException;
 
+@ActiveProfiles("test")
 @Transactional
-@ContextConfiguration(classes = RepositoryConfigTest.class)
+@ContextConfiguration(classes = RepositoryTestConfig.class)
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 @ExtendWith(SpringExtension.class)
 class CourseRepositoryTest {
@@ -37,8 +42,9 @@ class CourseRepositoryTest {
     private static final String COURSE_NAME = "Programming";
     private static final String TIMETABLE_DESCRIPTION = "some description";
     private static final String COURSE_DESCRIPTION = "some description";
-    private static final long END_TIME = 39360000;
-    private static final long START_TIME = 36360000;
+    private static final int MINUTE = 0;
+    private static final int END_TIME = 9;
+    private static final int START_TIME = 8;
     private static final int COURSE_ID = 1;
     private static final int GROUP_ID = 1;
     private static final int TIMETABLE_ID = 1;
@@ -78,9 +84,9 @@ class CourseRepositoryTest {
         timetable.setGroup(group);
         timetable.setCourse(course);
         timetable.setDescription(TIMETABLE_DESCRIPTION);
-        timetable.setEndTime(END_TIME);
-        timetable.setStartTime(START_TIME);
-        timetable.setWeekDay(DayOfWeek.valueOf(WEEK_DAY));
+        timetable.setEndTime(LocalTime.of(END_TIME, MINUTE));
+        timetable.setStartTime(LocalTime.of(START_TIME, MINUTE));
+        timetable.setDayOfWeek(DayOfWeek.valueOf(WEEK_DAY));
         entityManager.persist(timetable);
         entityManager.getTransaction().commit();
     }
@@ -92,12 +98,18 @@ class CourseRepositoryTest {
         assertEquals(COURSE_ID, receivedCourse.getId());
         assertEquals(COURSE_NAME, receivedCourse.getName());
         assertEquals(TEACHER_ID, receivedCourse.getTeacher().getId());
-        assertEquals(COURSE_ID, receivedCourse.getTimetableList().get(FIRST_ELEMENT).getCourse().getId());
-        assertEquals(START_TIME, receivedCourse.getTimetableList().get(FIRST_ELEMENT).getStartTime());
-        assertEquals(END_TIME, receivedCourse.getTimetableList().get(FIRST_ELEMENT).getEndTime());
-        assertEquals(GROUP_ID, receivedCourse.getTimetableList().get(FIRST_ELEMENT).getGroup().getId());
+        assertEquals(COURSE_ID, receivedCourse.getTimetableList().get(FIRST_ELEMENT)
+                                                                 .getCourse()
+                                                                 .getId());
+        assertEquals(LocalTime.of(START_TIME, MINUTE), 
+                     receivedCourse.getTimetableList().get(FIRST_ELEMENT).getStartTime());
+        assertEquals(LocalTime.of(END_TIME, MINUTE), 
+                     receivedCourse.getTimetableList().get(FIRST_ELEMENT).getEndTime());
+        assertEquals(GROUP_ID, receivedCourse.getTimetableList().get(FIRST_ELEMENT)
+                                                                .getGroup()
+                                                                .getId());
         assertEquals(TIMETABLE_ID, receivedCourse.getTimetableList().get(FIRST_ELEMENT).getId());
-        assertEquals(WEEK_DAY, receivedCourse.getTimetableList().get(FIRST_ELEMENT).getWeekDay()
+        assertEquals(WEEK_DAY, receivedCourse.getTimetableList().get(FIRST_ELEMENT).getDayOfWeek()
                                                                                    .toString());
     }
     

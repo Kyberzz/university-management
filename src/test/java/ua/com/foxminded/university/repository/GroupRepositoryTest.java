@@ -2,6 +2,9 @@ package ua.com.foxminded.university.repository;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.time.DayOfWeek;
+import java.time.LocalTime;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceContext;
@@ -13,19 +16,21 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
-import ua.com.foxminded.university.config.RepositoryConfigTest;
-import ua.com.foxminded.university.entity.DayOfWeek;
+import ua.com.foxminded.university.config.RepositoryTestConfig;
 import ua.com.foxminded.university.entity.GroupEntity;
 import ua.com.foxminded.university.entity.StudentEntity;
 import ua.com.foxminded.university.entity.TimetableEntity;
+import ua.com.foxminded.univesity.exception.RepositoryException;
 
+@ActiveProfiles("test")
+@ContextConfiguration(classes = RepositoryTestConfig.class)
 @Transactional
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
-@ContextConfiguration(classes = RepositoryConfigTest.class)
 @ExtendWith(SpringExtension.class)
 class GroupRepositoryTest {
     
@@ -38,8 +43,9 @@ class GroupRepositoryTest {
     private static final int FIRST_ELEMENT = 0;
     private static final int TIMETABLE_ID = 1;
     private static final int GROUP_ID = 1;
-    private static final long END_TIME = 39360000;
-    private static final long START_TIME = 36360000;
+    private static final int MINUTE = 0;
+    private static final int END_TIME = 9;
+    private static final int START_TIME = 8;
     
     @PersistenceUnit
     private EntityManagerFactory entityManagerFactory;
@@ -59,10 +65,10 @@ class GroupRepositoryTest {
         entityManager.persist(group);
        
         TimetableEntity timetable = new TimetableEntity();
-        timetable.setStartTime(START_TIME);
-        timetable.setEndTime(END_TIME);
+        timetable.setStartTime(LocalTime.of(START_TIME, MINUTE));
+        timetable.setEndTime(LocalTime.of(END_TIME, MINUTE));
         timetable.setDescription(TIMETABLE_DESCRIPTION);
-        timetable.setWeekDay(DayOfWeek.valueOf(WEEK_DAY));
+        timetable.setDayOfWeek(DayOfWeek.valueOf(WEEK_DAY));
         timetable.setGroup(group);
         entityManager.persist(timetable);
 
@@ -83,9 +89,11 @@ class GroupRepositoryTest {
         assertEquals(TIMETABLE_DESCRIPTION, receivedGroup.getTimetableList().get(FIRST_ELEMENT)
                                                                             .getDescription());
         assertEquals(TIMETABLE_ID, receivedGroup.getTimetableList().get(FIRST_ELEMENT).getId());
-        assertEquals(START_TIME, receivedGroup.getTimetableList().get(FIRST_ELEMENT).getStartTime());
-        assertEquals(END_TIME, receivedGroup.getTimetableList().get(FIRST_ELEMENT).getEndTime());
-        assertEquals(WEEK_DAY, receivedGroup.getTimetableList().get(FIRST_ELEMENT).getWeekDay()
+        assertEquals(LocalTime.of(START_TIME, MINUTE), 
+                     receivedGroup.getTimetableList().get(FIRST_ELEMENT).getStartTime());
+        assertEquals(LocalTime.of(END_TIME, MINUTE), 
+                     receivedGroup.getTimetableList().get(FIRST_ELEMENT).getEndTime());
+        assertEquals(WEEK_DAY, receivedGroup.getTimetableList().get(FIRST_ELEMENT).getDayOfWeek()
                                                                                   .toString());
     }
 

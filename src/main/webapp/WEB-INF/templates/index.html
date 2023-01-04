@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<title>index</title>
+<link rel="stylesheet" type="text/css" media="all"
+	href="../../css/index.css" th:href="@{/css/index.css}" />
+</head>
+<body>
+	<div th:fragment="logo">
+		<img src="../../images/foxminded_logo.png"
+			alt="Foxminded university logo" title="Foxminded university logo"
+			th:src="@{/images/foxminded_logo.png}"
+			th:alt-title="#{logo.title}" />
+	</div>
+
+	<br />
+
+	<h2 th:text="#{index.universityName}">Foxminded university</h2>
+
+	<br />
+	<br />
+
+	<form action="#" th:action="@{index}" method="get">
+		<fieldset>
+			<legend th:text="#{index.universityData}">The university
+				data</legend>
+
+			<div>
+				<label th:text="|#{index.menu.menu}:|">Menu:</label>
+				<table>
+					<thead>
+						<tr>
+							<th th:text="#{index.menu.row}">Row</th>
+							<th th:text="#{index.menu.item}">Item</th>
+							<th />
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>1</td>
+							<td th:text="#{index.menu.teachers}">Teachers</td>
+							<td>
+								<button type="submit" name="getAllTeachers"
+									th:text="#{index.menu.show}">show</button>
+							</td>
+						</tr>
+						<tr>
+							<td>2</td>
+							<td th:text="#{index.menu.students}">Students</td>
+							<td>
+								<button type="submit" name="getAllStudents"
+									th:text="#{index.menu.show}">show</button>
+							</td>
+						</tr>
+						<tr>
+							<td>3</td>
+							<td th:text="#{index.menu.groups}">Groups</td>
+							<td>
+								<button type="submit" name="getAllGroups"
+									th:text="#{index.menu.show}">show</button>
+							</td>
+						</tr>
+						<tr>
+							<td>4</td>
+							<td th:text="#{index.menu.courses}">Courses</td>
+							<td>
+								<button type="submit" name="getAllCourses"
+									th:text="#{index.menu.show}">show</button>
+							</td>
+						</tr>
+						<tr>
+							<td>5</td>
+							<td th:text="#{index.menu.timetables}">Timetables</td>
+							<td>
+								<button type="submit" name="getAllTimetables"
+									th:text="#{index.menu.show}">show</button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</fieldset>
+	</form>
+</body>
+</html>

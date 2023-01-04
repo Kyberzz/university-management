@@ -3,13 +3,14 @@ package ua.com.foxminded.university.config;
 import java.util.Properties;
 
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.SharedCacheMode;
 import javax.sql.DataSource;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.Profile;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.repository.config.BootstrapMode;
@@ -21,26 +22,29 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-@PropertySource("/application.properties")
+
+@Profile("test")
 @EnableJpaRepositories(basePackages = "ua.com.foxminded.university.repository", 
                        bootstrapMode = BootstrapMode.LAZY)
 @EnableTransactionManagement
-@ComponentScan(basePackages = "ua.com.foxminded.university")
+@ComponentScan(basePackages = "ua.com.foxminded.university.repository")
 @Configuration
-public class RepositoryConfigTest {
+public class RepositoryTestConfig {
     
+    private static final String MODE_TYPE = "UNSPECIFIED";
+    private static final String SHARED_CHACHE_MODE = "jakarta.persistence.sharedCache.mode";
     private static final String DIALECT_TYPE = "org.hibernate.dialect.H2Dialect";
     private static final String PERSISTENCE_DIALECT = "hibernate.dialect";
     private static final String PERMISSION = "true";
-    private static final String SCHEMA_CREATION_ACCESS = "javax.persistence.schema-generation"
+    private static final String SCHEMA_CREATION_ACCESS = "jakarta.persistence.schema-generation"
             + ".create-database-schemase";
     private static final String CREATION_SCHEMA_PATH = "test-schema.sql";
-    private static final String CREATION_SCHEMA_SCRIPT_SOURCE = "javax.persistence"
+    private static final String CREATION_SCHEMA_SCRIPT_SOURCE = "jakarta.persistence"
             + ".schema-generation.create-script-source";
     private static final String SOURCE_TYPE = "script-then-metadata";
-    private static final String CREATION_SCHEMA_SOURCE = "javax.persistence.schema-generation"
+    private static final String CREATION_SCHEMA_SOURCE = "jakarta.persistence.schema-generation"
             + ".create-source";
-    private static final String SCHEMA_GENERATION_ACTION = "javax.persistence.schema-generation"
+    private static final String SCHEMA_GENERATION_ACTION = "jakarta.persistence.schema-generation"
             + ".database.action";
     private static final String ACTION_TYPE = "create";
     private static final String ENTITY_PACKAGE = "ua.com.foxminded.university.entity";
@@ -56,6 +60,7 @@ public class RepositoryConfigTest {
         transactionManager.setEntityManagerFactory(entityManagerFactory);
         return transactionManager;
     }
+    
     @Bean
     @DependsOn("dataSource")
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
@@ -67,13 +72,16 @@ public class RepositoryConfigTest {
         factory.setJpaVendorAdapter(jpaVendorAdapter);
         factory.setPackagesToScan(ENTITY_PACKAGE);
         factory.setDataSource(dataSource());
+        factory.setSharedCacheMode(SharedCacheMode.UNSPECIFIED);
         
         Properties jpaProperties = new Properties();
+        
         jpaProperties.setProperty(SCHEMA_GENERATION_ACTION, ACTION_TYPE);
         jpaProperties.setProperty(CREATION_SCHEMA_SOURCE, SOURCE_TYPE);
         jpaProperties.setProperty(CREATION_SCHEMA_SCRIPT_SOURCE, CREATION_SCHEMA_PATH);
         jpaProperties.setProperty(SCHEMA_CREATION_ACCESS, PERMISSION);
         jpaProperties.setProperty(PERSISTENCE_DIALECT, DIALECT_TYPE);
+        jpaProperties.setProperty(SHARED_CHACHE_MODE, MODE_TYPE);
         
         factory.setJpaProperties(jpaProperties);
         return factory;
