@@ -1,36 +1,31 @@
 package ua.com.foxminded.university.controller;
 
-import java.util.List;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.web.servlet.MockMvc;
 
-import lombok.extern.slf4j.Slf4j;
 import ua.com.foxminded.university.model.StudentModel;
 import ua.com.foxminded.university.service.StudentService;
-import ua.com.foxminded.univesity.exception.ServiceException;
 
-@Slf4j
-@Controller
+@WebMvcTest
 public class StudentControllerTest {
     
-    private StudentService<StudentModel> studentService;
+    @MockBean
+    private StudentService<StudentModel> studentServiceMock;
     
     @Autowired
-    public StudentControllerTest(StudentService<StudentModel> studentService) {
-        this.studentService = studentService;
-    }
+    private MockMvc mockMvc;
     
-    @RequestMapping(value = "/index", params = "getAllStudents")
-    public String getAllStudents(Model model) {
-        try {
-            List<StudentModel> students = studentService.getAllStudents();
-            model.addAttribute("students", students);
-        } catch (ServiceException e) {
-            log.error("Getting all students was failed", e);
-        }
-        return "students/list";
+    @Test
+    void shouldRenderStudentsList() throws Exception {
+        mockMvc.perform(get("/index").param("getAllStudents", "#"))
+               .andExpect(status().isOk())
+               .andExpect(model().attributeExists("students"))
+               .andExpect(view().name("students/list"));
     }
 }
