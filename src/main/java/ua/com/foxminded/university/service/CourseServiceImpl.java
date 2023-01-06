@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import ua.com.foxminded.university.entity.CourseEntity;
 import ua.com.foxminded.university.model.CourseModel;
 import ua.com.foxminded.university.repository.CourseRepository;
+import ua.com.foxminded.univesity.exception.ExceptionMessage;
 import ua.com.foxminded.univesity.exception.RepositoryException;
 import ua.com.foxminded.univesity.exception.ServiceException;
 
@@ -38,8 +39,12 @@ public class CourseServiceImpl implements CourseService<CourseModel> {
             Type listType = new TypeToken<List<CourseModel>>() {}.getType();
             ModelMapper modelMapper = new ModelMapper();
             return modelMapper.map(courseEntities, listType);
-        } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
-            throw new ServiceException("Getting all courses was failed", e);
+        } catch (IllegalArgumentException e) {
+            throw new ServiceException(ExceptionMessage.ILLEGAL_MODELMAPPER_ARGUMENT, e);
+        } catch (ConfigurationException e) {
+            throw new ServiceException(ExceptionMessage.INCORRECT_MODELMAPPER_CONFIGURATION, e);
+        } catch (MappingException e) {
+            throw new ServiceException (ExceptionMessage.FAILURE_MAPPING_OPERATION, e);
         }
     }
     
@@ -50,8 +55,12 @@ public class CourseServiceImpl implements CourseService<CourseModel> {
         try {
             CourseEntity courseEntity = modelMapper.map(courseModel, CourseEntity.class);
             courseRepository.save(courseEntity);
-        } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
-            throw new ServiceException("Updating the course failed.", e);
+        } catch (IllegalArgumentException e) {
+            throw new ServiceException(ExceptionMessage.ILLEGAL_MODELMAPPER_ARGUMENT, e);
+        } catch (ConfigurationException e) {
+            throw new ServiceException(ExceptionMessage.INCORRECT_MODELMAPPER_CONFIGURATION, e);
+        } catch (MappingException e) {
+            throw new ServiceException (ExceptionMessage.FAILURE_MAPPING_OPERATION, e);
         }
     }
    
@@ -61,9 +70,14 @@ public class CourseServiceImpl implements CourseService<CourseModel> {
             CourseEntity courseEntity = courseRepository.findTimetableListById(id);
             ModelMapper modelMapper = new ModelMapper();
             return modelMapper.map(courseEntity, CourseModel.class);
-        } catch (RepositoryException | IllegalArgumentException | ConfigurationException | 
-                 MappingException e) {
-            throw new ServiceException("Getting timetable list of course id faled.", e);
+        } catch (RepositoryException e) {
+            throw new ServiceException(ExceptionMessage.DATABASE_FAILURE, e);
+        } catch (IllegalArgumentException e) {
+            throw new ServiceException(ExceptionMessage.ILLEGAL_MODELMAPPER_ARGUMENT, e);
+        } catch (ConfigurationException e) {
+            throw new ServiceException(ExceptionMessage.INCORRECT_MODELMAPPER_CONFIGURATION, e);
+        } catch (MappingException e) {
+            throw new ServiceException (ExceptionMessage.FAILURE_MAPPING_OPERATION, e);
         }
     }
 }

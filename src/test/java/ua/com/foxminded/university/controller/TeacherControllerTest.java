@@ -9,10 +9,11 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import ua.com.foxminded.university.model.TeacherModel;
 import ua.com.foxminded.university.service.TeacherService;
+import ua.com.foxminded.university.service.TeacherServiceImpl;
 
 class TeacherControllerTest {
     
-    private TeacherService<TeacherModel> teacherServiceMock = Mockito.mock(TeacherService.class);
+    private TeacherService<TeacherModel> teacherServiceMock =  Mockito.mock(TeacherServiceImpl.class);
     private TeacherController teacherController = new TeacherController(teacherServiceMock);
     private MockMvc mockMvc = MockMvcBuilders.standaloneSetup(teacherController).build();
 
