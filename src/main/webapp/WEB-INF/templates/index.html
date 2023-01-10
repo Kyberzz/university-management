@@ -17,19 +17,18 @@
 			th:src="@{/images/foxminded_logo.png}" th:alt-title="#{logo.title}">
 	</div>
 
-	<p class="text-center fs-1" th:text="#{index.universityName}">Foxminded
-		university</p>
+	<h1 class="text-center fs-2" th:text="#{index.universityName}">Foxminded
+		university</h1>
 
 	<div class="container">
 		<div class="row justify-content-center">
-			<div class="col-10">
+			<div class="col-9">
 				<form action="#" th:action="@{index}" method="get">
 					<fieldset class="border p-3">
-						<legend class="float-none w-auto p-2 text-start"
+						<legend class="float-none w-auto p-2 text-start fs-5"
 							th:text="#{index.universityData}">The university data</legend>
 						<div class="container">
 							<div class="row justify-content-center">
-								<!-- <div class="col-3 text-end" th:text="|#{index.menu.menu}:|">Menu:</div> -->
 								<div class="col-5">
 									<div class="d-grid gap-2">
 										<button type="submit" class="btn btn-success"

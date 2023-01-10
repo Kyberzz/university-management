@@ -1,34 +1,99 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>students</title>
-<link rel="stylesheet" type="text/css" media="all"
-	href="../../css/generic.css" th:href="@{/css/generic.css}" />
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The student list</title>
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
+	crossorigin="anonymous">
 </head>
 <body>
 	<div th:replace="~{index::logo}"></div>
-	<br>
-	<h2 th:text="#{students.tableName}">All students of the university</h2>
-	<table>
-		<thead>
-			<tr>
-				<td th:text="#{thead.number}">Number</td>
-				<td th:text="#{thead.firstName}">First name</td>
-				<td th:text="#{thead.lastName}">Last name</td>
-				<td th:text="#{thead.id}">ID</td>
-				<td th:text="#{thead.groupId}">Group ID</td>
-			</tr>
-		</thead>
-		<tbody>
-			<tr th:each="student,iterationStatus : ${students}">
-				<td th:text="${iterationStatus.count}">1</td>
-				<td th:text="${student.firstName}">John</td>
-				<td th:text="${student.lastName}">Snow</td>
-				<td th:text="${student.id}">1</td>
-				<td th:text="${student.group.id}">5</td>
-			</tr>
-		</tbody>
-	</table>
+	<div class="container">
+		<div class="row">
+			<div class="col-2">
+				<div class="d-grid gap-2 justify-content-center">
+					<button class="btn btn-primary" type="button"
+						data-bs-toggle="offcanvas" data-bs-target="#addStudent"
+						aria-controls="offcanvasTop" th:text="#{students.addStudent}">Add
+						student</button>
+					<div class="offcanvas offcanvas-top" tabindex="-1" id="addStudent"
+						aria-labelledy="offcanvasTopLabel">
+						<div class="offcanvas-header">
+							<h5 class="offcanvas-title" th:text="#{students.addStudent}">Add
+								student</h5>
+							<button type="button" class="btn-close"
+								data-bs-dismiss="offcanvas" aria-label="close"></button>
+						</div>
+						<div class="offcanvas-body">My content</div>
+					</div>
+
+					<button class="btn btn-primary" type="button"
+						data-bs-toggle="offcanvas" data-bs-target="#deleteStudent"
+						aria-controls="offcanvasTop" th:text="#{students.deleteStudent}">Delete
+						student</button>
+					<div class="offcanvas offcanvas-top" tabindex="-1"
+						id="deleteStudent" aria-labelledy="offcanvasTopLabel">
+						<div class="offcanvas-header">
+							<h5 class="offcanvas-title" th:text="#{students.deleteStudent}">Delete
+								student</h5>
+							<button type="button" class="btn-close"
+								data-bs-dismiss="offcanvas" aria-label="close"></button>
+						</div>
+						<div class="offcanvas-body">My content</div>
+					</div>
+
+					<button class="btn btn-primary" type="button"
+						data-bs-toggle="offcanvas" data-bs-target="#editStudent"
+						aria-controls="offcanvasTop" th:text="#{students.editStudent}">Edit
+						course</button>
+					<div class="offcanvas offcanvas-top" tabindex="-1" id="editStudent"
+						aria-labelledy="offcanvasTopLabel">
+						<div class="offcanvas-header">
+							<h5 class="offcanvas-title" th:text="#{students.editStudent}">Edit
+								student</h5>
+							<button type="button" class="btn-close"
+								data-bs-dismiss="offcanvas" aria-label="close"></button>
+						</div>
+						<div class="offcanvas-body">My content</div>
+					</div>
+				</div>
+			</div>
+
+
+			<div class="col-10">
+				<p class="text-center fs-1" th:text="#{courses.tableName}">All
+					students of the university</p>
+				<table class="table">
+					<thead>
+						<tr>
+							<th scope="col" th:text="#{thead.number}">#</th>
+							<th scope="col" th:text="#{thead.firstName}">First name</th>
+							<th scope="col" th:text="#{thead.lastName}">Last name</th>
+							<th scope="col" th:text="#{thead.id}">ID</th>
+							<th scope="col" th:text="#{thead.groupId}">Group ID</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="student,iterationStatus : ${students}">
+							<th scope="row" th:text="${iterationStatus.count}">1</th>
+							<td th:text="${student.firstName}">John</td>
+							<td th:text="${student.lastName}">Snow</td>
+							<td th:text="${student.id}">1</td>
+							<td th:text="${student.group.id}">5</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+		crossorigin="anonymous"></script>
 </body>
 </html>
