@@ -11,11 +11,7 @@
 	crossorigin="anonymous">
 </head>
 <body>
-	<div th:fragment="logo">
-		<img src="../../images/foxminded_logo.png" class="border border-0"
-			alt="Foxminded university logo" title="Foxminded university logo"
-			th:src="@{/images/foxminded_logo.png}" th:alt-title="#{logo.title}">
-	</div>
+	<div th:replace="~{fragments::logo}"></div>
 
 	<h1 class="text-center fs-2" th:text="#{index.universityName}">Foxminded
 		university</h1>
@@ -35,8 +31,8 @@
 											name="getAllTeachers" th:text="#{index.menu.teachers}">Teachers</button>
 										<button type="submit" class="btn btn-success"
 											name="getAllStudents" th:text="#{index.menu.students}">Students</button>
-										<button type="submit" class="btn btn-success" name="getAllGroups"
-											th:text="#{index.menu.groups}">Groups</button>
+										<button type="submit" class="btn btn-success"
+											name="getAllGroups" th:text="#{index.menu.groups}">Groups</button>
 										<button type="submit" class="btn btn-success"
 											name="getAllCourses" th:text="#{index.menu.courses}">Courses</button>
 										<button type="submit" class="btn btn-success"
