@@ -1,7 +1,5 @@
 package ua.com.foxminded.university.service;
 
-import static ua.com.foxminded.univesity.exception.ExceptionMessage.*;
-
 import java.lang.reflect.Type;
 import java.util.List;
 
@@ -35,17 +33,14 @@ public class CourseServiceImpl implements CourseService<CourseModel> {
     
     @Override
     public List<CourseModel> getAllCourses() throws ServiceException {
-        List<CourseModel> courses = null;
-       
         try {
             List<CourseEntity> courseEntities = courseRepository.findAll();
             Type listType = new TypeToken<List<CourseModel>>() {}.getType();
             ModelMapper modelMapper = new ModelMapper();
-            courses = modelMapper.map(courseEntities, listType);
+            return modelMapper.map(courseEntities, listType);
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
-            selectErrorMessage(e);
+            throw new ServiceException("Getting all courses was failed.", e); 
         }
-        return courses;
     }
     
     @Override
@@ -56,7 +51,7 @@ public class CourseServiceImpl implements CourseService<CourseModel> {
             CourseEntity courseEntity = modelMapper.map(courseModel, CourseEntity.class);
             courseRepository.save(courseEntity);
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
-            selectErrorMessage(e);
+            throw new ServiceException("Updating all courses was failed", e);
         }
     }
    
@@ -69,20 +64,8 @@ public class CourseServiceImpl implements CourseService<CourseModel> {
             course = modelMapper.map(courseEntity, CourseModel.class);
         } catch (RepositoryException | IllegalArgumentException | 
                  ConfigurationException | MappingException e) {
-            selectErrorMessage(e);
+            throw new ServiceException("Getting timetable list of the course id was failed", e);
         }
         return course;
-    }
-    
-    private void selectErrorMessage(Exception e) throws ServiceException {
-        if (e.getClass() == IllegalArgumentException.class) {
-            throw new ServiceException(ILLEGAL_MODELMAPPER_ARGUMENT, e);
-        } else if (e.getClass() == ConfigurationException.class) {
-            throw new ServiceException(CONFIGURATION_MODELMAPPER_EXCEPTION, e);
-        } else if (e.getClass() == MappingException.class) {
-            throw new ServiceException(MAPPING_FAILURE_OPERATION, e);
-        } else if (e.getClass() == RepositoryException.class) {
-            throw new ServiceException(REPOSITORY_FAILURE, e);
-        }
     }
 }
