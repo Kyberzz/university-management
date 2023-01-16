@@ -19,7 +19,6 @@ import ua.com.foxminded.university.repository.GroupRepository;
 import ua.com.foxminded.univesity.exception.RepositoryException;
 import ua.com.foxminded.univesity.exception.ServiceException;
 
-
 @Slf4j
 @Transactional
 @Service
