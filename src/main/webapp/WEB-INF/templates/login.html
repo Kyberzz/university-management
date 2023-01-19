@@ -17,11 +17,30 @@
 				<h3 th:text="#{login.enter}">Enter your login and password</h3>
 			</div>
 		</div>
-		<form th:action="@{/login}" method="post">
+
+
+		<form class="row g-3">
+			<div class="col-auto">
+				<label for="staticEmail2" class="visually-hidden">Email</label> <input
+					type="text" readonly class="form-control-plaintext"
+					id="staticEmail2" value="email@example.com">
+			</div>
+			<div class="col-auto">
+				<label for="inputPassword2" class="visually-hidden">Password</label>
+				<input type="password" class="form-control" id="inputPassword2"
+					placeholder="Password">
+			</div>
+			<div class="col-auto">
+				<button type="submit" class="btn btn-primary mb-3">Confirm
+					identity</button>
+			</div>
+		</form>
+
+		<form action="#" th:action="@{/login}" method="post">
 			<div class="row justify-content-center">
 				<div class="col-5">
 					<div class="form-floating mb-3">
-						<input type="text" name="username" class="form-control" id="floatingInput"
+						<input type="text" name="username" class="form-control"
 							placeholder="name@example.com"> <label
 							for="floatingInput" th:text="|#{login.login}:|">User
 							login:</label>
@@ -31,15 +50,15 @@
 			<div class="row justify-content-center">
 				<div class="col-5">
 					<div class="form-floating mb-3">
-						<input type="password" name="password" class="form-control" id="floatingInput"
-							placeholder="name@example.com"> <label
+						<input type="password" name="password" class="form-control"
+							id="floatingInput" placeholder="name@example.com"> <label
 							for="floatingInput" th:text="|#{login.password}:|">Password:</label>
 					</div>
 				</div>
 			</div>
 			<div class="row">
 				<div class="col-12">
-					<input type="submit" class="btn btn-primary"
+					<input class="btn btn-primary" type="submit"
 						th:attr="value=#{login.SignIn}" value="Sign In" />
 				</div>
 			</div>
@@ -49,7 +68,6 @@
 						username or password.</h4>
 				</div>
 			</div>
-			
 		</form>
 	</div>
 

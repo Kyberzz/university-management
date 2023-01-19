@@ -11,30 +11,8 @@
 	crossorigin="anonymous">
 </head>
 <body>
-	<nav class="navbar bg-body-tertiary sticky-top">
-		<form class="container-fluid gap-2">
-			<div th:replace="~{fragments/logo::foxmindedLogo}"></div>
-			<button class="btn btn-primary ms-auto" th:formaction="@{/login}"
-				sec:authorize="!isAuthenticated()" th:text="#{login.SignIn}">Sign
-				In</button>
-
-			<div class="ms-auto text-end" sec:authorize="isAuthenticated()">
-				<span th:text="|#{authorize.prephraseName}: |">Authenticate
-					as:</span><br> <span class="fw-bold" sec:authentication="name">User
-					nick</span><br>
-				<button class="btn btn-sm btn-secondary mt-2"
-					th:formaction="@{/logout}" method="post"
-					th:text="#{login.SignOut}">Sign Out</button>
-			</div>
-		</form>
-	</nav>
-	<button class="btn btn-sm btn-secondary mt-2"
-					th:formaction="@{/logout}" th:method="post"
-					th:text="#{login.SignOut}">Sign Out</button>
-	<form th:action="@{/logout}" method="post">
-		<input type="submit" value="Out" />
-	</form>
-
+	<div th:replace="~{fragments/header::navigationBar}"></div>
+	
 	<h1 class="text-center fs-2 mt-5" th:text="#{index.universityName}">Foxminded
 		university</h1>
 
