@@ -3,7 +3,7 @@ package ua.com.foxminded.university.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import ua.com.foxminded.university.entity.TimetableEntity;
-import ua.com.foxminded.univesity.exception.RepositoryException;
+import ua.com.foxminded.university.exception.RepositoryException;
 
 public interface TimetableRepository extends JpaRepository<TimetableEntity, Integer> {
     

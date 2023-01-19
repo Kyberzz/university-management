@@ -2,8 +2,8 @@ package ua.com.foxminded.university.service;
 
 import java.util.List;
 
+import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.StudentModel;
-import ua.com.foxminded.univesity.exception.ServiceException;
 
 public interface StudentService<T> {
     

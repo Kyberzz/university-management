@@ -1,5 +1,6 @@
 package ua.com.foxminded.university.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -19,11 +20,11 @@ public class SecurityConfig {
     
     @Bean 
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests(request -> request.mvcMatchers("/", "/index").hasRole("ADMIN")
-                                                   //  .permitAll()
-                                                   //  .anyRequest()
-                                                   //  .authenticated()
-                                                     )
+        http.authorizeHttpRequests(request -> request.mvcMatchers("/", "/index", "/home")
+                                                  //   .hasRole("ADMIN")
+                                                     .permitAll()
+                                                     .anyRequest()
+                                                     .authenticated())
             .formLogin(form -> form.loginPage("/login").permitAll())
             .logout(LogoutConfigurer::permitAll);
         return http.build();
@@ -34,8 +35,8 @@ public class SecurityConfig {
         PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
         
         UserDetails user = User.withUsername("admin")
-                               .password("admin_pass") //the password needs to be encoded
                                .passwordEncoder(encoder::encode)
+                               .password("admin")
                                .roles("ADMIN")
                                .build();
         

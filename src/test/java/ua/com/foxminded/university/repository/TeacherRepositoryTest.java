@@ -21,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ua.com.foxminded.university.config.RepositoryTestConfig;
 import ua.com.foxminded.university.entity.CourseEntity;
 import ua.com.foxminded.university.entity.TeacherEntity;
-import ua.com.foxminded.univesity.exception.RepositoryException;
+import ua.com.foxminded.university.exception.RepositoryException;
 
 @ActiveProfiles("test")
 @Transactional

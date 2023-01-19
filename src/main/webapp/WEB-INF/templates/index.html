@@ -11,15 +11,37 @@
 	crossorigin="anonymous">
 </head>
 <body>
-	<div th:replace="~{fragments::logo}"></div>
+	<nav class="navbar bg-body-tertiary sticky-top">
+		<form class="container-fluid gap-2">
+			<div th:replace="~{fragments/logo::foxmindedLogo}"></div>
+			<button class="btn btn-primary ms-auto" th:formaction="@{/login}"
+				sec:authorize="!isAuthenticated()" th:text="#{login.SignIn}">Sign
+				In</button>
 
-	<h1 class="text-center fs-2" th:text="#{index.universityName}">Foxminded
+			<div class="ms-auto text-end" sec:authorize="isAuthenticated()">
+				<span th:text="|#{authorize.prephraseName}: |">Authenticate
+					as:</span><br> <span class="fw-bold" sec:authentication="name">User
+					nick</span><br>
+				<button class="btn btn-sm btn-secondary mt-2"
+					th:formaction="@{/logout}" method="post"
+					th:text="#{login.SignOut}">Sign Out</button>
+			</div>
+		</form>
+	</nav>
+	<button class="btn btn-sm btn-secondary mt-2"
+					th:formaction="@{/logout}" th:method="post"
+					th:text="#{login.SignOut}">Sign Out</button>
+	<form th:action="@{/logout}" method="post">
+		<input type="submit" value="Out" />
+	</form>
+
+	<h1 class="text-center fs-2 mt-5" th:text="#{index.universityName}">Foxminded
 		university</h1>
 
 	<div class="container">
 		<div class="row justify-content-center">
 			<div class="col-9">
-				<form action="#" th:action="@{index}" method="get">
+				<form>
 					<fieldset class="border p-3">
 						<legend class="float-none w-auto p-2 text-start fs-5"
 							th:text="#{index.universityData}">The university data</legend>
@@ -27,17 +49,21 @@
 							<div class="row justify-content-center">
 								<div class="col-5">
 									<div class="d-grid gap-2">
-										<button type="submit" class="btn btn-success"
-											name="getAllTeachers" th:text="#{index.menu.teachers}">Teachers</button>
-										<button type="submit" class="btn btn-success"
-											name="getAllStudents" th:text="#{index.menu.students}">Students</button>
-										<button type="submit" class="btn btn-success"
-											name="getAllGroups" th:text="#{index.menu.groups}">Groups</button>
-										<button type="submit" class="btn btn-success"
-											name="getAllCourses" th:text="#{index.menu.courses}">Courses</button>
-										<button type="submit" class="btn btn-success"
-											name="getAllTimetables" th:text="#{index.menu.timetables}">Timetables</button>
-
+										<button class="btn btn-success"
+											th:formaction="@{/teachers/list}"
+											th:text="#{index.menu.teachers}">Teachers</button>
+										<button class="btn btn-success"
+											th:formaction="@{/students/list}"
+											th:text="#{index.menu.students}">Students</button>
+										<button class="btn btn-success"
+											th:formaction="@{/groups/list}"
+											th:text="#{index.menu.groups}">Groups</button>
+										<button class="btn btn-success"
+											th:formaction="@{/courses/list}"
+											th:text="#{index.menu.courses}">Courses</button>
+										<button class="btn btn-success"
+											th:formaction="@{/timetables/list}"
+											th:text="#{index.menu.timetables}">Timetables</button>
 									</div>
 								</div>
 							</div>

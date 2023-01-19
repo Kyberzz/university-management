@@ -8,9 +8,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import lombok.extern.slf4j.Slf4j;
+import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.TimetableModel;
 import ua.com.foxminded.university.service.TimetableService;
-import ua.com.foxminded.univesity.exception.ServiceException;
 
 @Slf4j
 @Controller
@@ -23,7 +23,7 @@ public class TimetableController {
         this.timetableService = timetableService;
     }
     
-    @RequestMapping(value = "/index", params = "getAllTimetables")
+    @RequestMapping("/timetables/list")
     public String getAllTimetables(Model model) {
         try {
             List<TimetableModel> timetables = timetableService.getAllTimetables();

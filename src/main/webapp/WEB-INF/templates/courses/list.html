@@ -11,7 +11,8 @@
 	crossorigin="anonymous">
 </head>
 <body>
-	<div th:replace="~{fragments::navigationBar}"></div>
+	<div th:replace="~{fragments/header::navigationBar}"></div>
+
 	<div class="offcanvas offcanvas-top" tabindex="-1" id="add"
 		aria-labelledy="offcanvasTopLabel">
 		<div class="offcanvas-header">
@@ -35,7 +36,8 @@
 	<div class="offcanvas offcanvas-top" tabindex="-1" id="edit"
 		aria-labelledy="offcanvasTopLabel">
 		<div class="offcanvas-header">
-			<h5 class="offcanvas-title" th:text="#{courses.editCourse}">Edit a course</h5>
+			<h5 class="offcanvas-title" th:text="#{courses.editCourse}">Edit
+				a course</h5>
 			<button type="button" class="btn-close" data-bs-dismiss="offcanvas"
 				aria-label="close"></button>
 		</div>

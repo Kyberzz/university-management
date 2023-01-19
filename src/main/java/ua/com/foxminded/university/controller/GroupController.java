@@ -8,9 +8,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import lombok.extern.slf4j.Slf4j;
+import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.GroupModel;
 import ua.com.foxminded.university.service.GroupService;
-import ua.com.foxminded.univesity.exception.ServiceException;
 
 @Slf4j
 @Controller
@@ -23,7 +23,7 @@ public class GroupController {
         this.groupService = groupService;
     }
     
-    @RequestMapping(value = "/index", params = "getAllGroups")
+    @RequestMapping("/groups/list")
     public String getAllGroups(Model model) {
         try {
             List<GroupModel> groups = groupService.getAllGroups();

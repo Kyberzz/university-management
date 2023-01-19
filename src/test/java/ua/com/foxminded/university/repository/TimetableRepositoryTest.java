@@ -23,7 +23,7 @@ import ua.com.foxminded.university.config.RepositoryTestConfig;
 import ua.com.foxminded.university.entity.CourseEntity;
 import ua.com.foxminded.university.entity.GroupEntity;
 import ua.com.foxminded.university.entity.TimetableEntity;
-import ua.com.foxminded.univesity.exception.RepositoryException;
+import ua.com.foxminded.university.exception.RepositoryException;
 
 @ActiveProfiles("test")
 @Transactional

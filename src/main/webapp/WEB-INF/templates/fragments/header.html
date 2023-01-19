@@ -14,21 +14,21 @@
 	<nav class="navbar bg-body-tertiary sticky-top"
 		th:fragment="navigationBar">
 		<form class="container-fluid gap-2">
-			<img src="../../images/foxminded_logo.png" class="img-fluid rounded"
-				width="100" alt="Foxminded university logo"
-				title="Foxminded university logo"
-				th:src="@{/images/foxminded_logo.png}" th:alt-title="#{logo.title}"
-				th:fragment="logo">
+
+			<div th:replace="~{fragments/logo::foxmindedLogo}"></div>
 
 			<button class="btn btn-success ms-auto" type="button"
 				data-bs-toggle="offcanvas" data-bs-target="#add"
-				aria-controls="offcanvasTop" th:text="#{fragments.add}">Add</button>
+				aria-controls="offcanvasTop"
+				th:text="#{fragments.add}">Add</button>
 			<button class="btn btn-success mx-3" type="button"
 				data-bs-toggle="offcanvas" data-bs-target="#delete"
-				aria-controls="offcanvasTop" th:text="#{fragments.delete}">Delete</button>
+				aria-controls="offcanvasTop" 
+				th:text="#{fragments.delete}">Delete</button>
 			<button class="btn btn-success me-3" type="button"
 				data-bs-toggle="offcanvas" data-bs-target="#edit"
-				aria-controls="offcanvasTop" th:text="#{fragments.edit}">Edit</button>
+				aria-controls="offcanvasTop"
+				th:text="#{fragments.edit}">Edit</button>
 		</form>
 	</nav>
 

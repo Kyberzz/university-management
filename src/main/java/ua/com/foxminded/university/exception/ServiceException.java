@@ -1,4 +1,4 @@
-package ua.com.foxminded.univesity.exception;
+package ua.com.foxminded.university.exception;
 
 public class ServiceException extends Exception {
     

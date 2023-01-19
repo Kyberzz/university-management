@@ -14,10 +14,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.extern.slf4j.Slf4j;
 import ua.com.foxminded.university.entity.GroupEntity;
+import ua.com.foxminded.university.exception.RepositoryException;
+import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.GroupModel;
 import ua.com.foxminded.university.repository.GroupRepository;
-import ua.com.foxminded.univesity.exception.RepositoryException;
-import ua.com.foxminded.univesity.exception.ServiceException;
 
 @Slf4j
 @Transactional

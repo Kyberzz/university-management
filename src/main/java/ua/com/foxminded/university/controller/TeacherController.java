@@ -8,9 +8,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import lombok.extern.slf4j.Slf4j;
+import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.TeacherModel;
 import ua.com.foxminded.university.service.TeacherService;
-import ua.com.foxminded.univesity.exception.ServiceException;
 
 @Slf4j
 @Controller
@@ -23,7 +23,7 @@ public class TeacherController {
         this.teacherService = teacherService;
     }
     
-    @RequestMapping(value = "/index", params = "getAllTeachers")
+    @RequestMapping(value = "/teachers/list")
     public String getAllTeachers(Model model) {
         try {
             List<TeacherModel> teachers = teacherService.getAllTeachers();

@@ -2,7 +2,7 @@ package ua.com.foxminded.university.service;
 
 import java.util.List;
 
-import ua.com.foxminded.univesity.exception.ServiceException;
+import ua.com.foxminded.university.exception.ServiceException;
 
 public interface CourseService<T> {
     

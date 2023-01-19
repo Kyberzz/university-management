@@ -3,7 +3,7 @@ package ua.com.foxminded.university.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import ua.com.foxminded.university.entity.GroupEntity;
-import ua.com.foxminded.univesity.exception.RepositoryException;
+import ua.com.foxminded.university.exception.RepositoryException;
 
 public interface GroupRepository extends JpaRepository<GroupEntity, Integer> {
     

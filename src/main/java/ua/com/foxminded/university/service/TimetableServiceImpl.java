@@ -13,10 +13,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.extern.slf4j.Slf4j;
 import ua.com.foxminded.university.entity.TimetableEntity;
+import ua.com.foxminded.university.exception.RepositoryException;
+import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.TimetableModel;
 import ua.com.foxminded.university.repository.TimetableRepository;
-import ua.com.foxminded.univesity.exception.RepositoryException;
-import ua.com.foxminded.univesity.exception.ServiceException;
 
 
 @Slf4j
