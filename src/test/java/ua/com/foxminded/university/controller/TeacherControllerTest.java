@@ -19,7 +19,7 @@ class TeacherControllerTest {
 
     @Test
     void shuldRenderTeachersListView() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/index").param("getAllTeachers", "#"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/teachers/list"))
                .andExpect(MockMvcResultMatchers.status().isOk())
                .andExpect(MockMvcResultMatchers.model().attributeExists("teachers"))
                .andExpect(MockMvcResultMatchers.view().name("teachers/list"));

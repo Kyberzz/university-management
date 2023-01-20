@@ -11,12 +11,13 @@
 	crossorigin="anonymous">
 </head>
 <body>
-	<nav class="navbar bg-body-tertiary sticky-top" th:fragment="navigationBar">
+	<nav class="navbar bg-body-tertiary sticky-top"
+		th:fragment="navigationBar">
 		<div class="ms-2" th:insert="~{fragments/logo::foxmindedLogo}"></div>
 
-		<div th:if="${#execInfo.processedTemplateName} != index">
+		<div class="ms-auto" th:if="${#execInfo.processedTemplateName} != index">
 			<form class="container-fluid gap-2">
-				<button class="btn btn-success ms-auto" type="button"
+				<button class="btn btn-success" type="button"
 					data-bs-toggle="offcanvas" data-bs-target="#add"
 					aria-controls="offcanvasTop" th:text="#{fragments.add}">Add</button>
 				<button class="btn btn-success mx-3" type="button"
@@ -31,18 +32,19 @@
 		<div th:if="${#execInfo.processedTemplateName} == index">
 			<form action="#" th:action="@{/login}"
 				sec:authorize="!isAuthenticated()">
-				<button class="btn btn-primary ms-auto me-2" th:text="#{login.SignIn}">Sign
-					In</button>
+				<button class="btn btn-primary ms-auto me-2"
+					th:text="#{login.SignIn}">Sign In</button>
 			</form>
-			<div class="ms-auto text-end me-2" sec:authorize="isAuthenticated()">
-				<span th:text="|#{authorize.prephraseName}: |">Authenticate
-					as:</span><br> <span class="fw-bold" sec:authentication="name">User
-					nick</span><br>
-				<form action="#" th:action="@{/logout}" method="post">
-					<button class="btn btn-sm btn-secondary mt-2"
-						th:text="#{login.SignOut}">Sign Out</button>
-				</form>
-			</div>
+		</div>
+
+		<div class="text-end me-2" sec:authorize="isAuthenticated()">
+			<span th:text="|#{authorize.prephraseName}: |">Authenticate
+				as:</span><br> <span class="fw-bold" sec:authentication="name">User
+				nick</span><br>
+			<form action="#" th:action="@{/logout}" method="post">
+				<button class="btn btn-sm btn-secondary mt-2"
+					th:text="#{login.SignOut}">Sign Out</button>
+			</form>
 		</div>
 	</nav>
 
