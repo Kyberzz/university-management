@@ -1,7 +1,6 @@
 package ua.com.foxminded.university.entity;
 
 import java.io.Serializable;
-import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,16 +8,15 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import lombok.Data;
 
 @Entity
-@Table(name = "teachers", schema = "university")
+@Table(name = "staff", schema = "university")
 @Data
-public class TeacherEntity implements Serializable {
+public class StaffEntity implements Serializable {
     
     private static final long serialVersionUID = 1L;
     
@@ -31,10 +29,8 @@ public class TeacherEntity implements Serializable {
     
     @Column(name = "last_name")
     private String lastName;
+    private String position;
     
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "teacher")
-    private List<CourseEntity> courseList;
-    
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "teacher")
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "staff")
     private CredentialsEntity credentials;
 }

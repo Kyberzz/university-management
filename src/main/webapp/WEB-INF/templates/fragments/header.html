@@ -33,17 +33,24 @@
 			<form action="#" th:action="@{/login}"
 				sec:authorize="!isAuthenticated()">
 				<button class="btn btn-primary ms-auto me-2"
-					th:text="#{login.SignIn}">Sign In</button>
+					th:text="#{header.SignIn}">Sign In</button>
+			</form>
+		</div>
+		
+		<div sec:authorize="hasRole('ROLE_ADMIN')" class="text-ent me-2">
+			<form action="#" th:action="@{/authorize}">
+				<button class="btn btn-primary ms-auto me-2"
+					th:text="#{header.authorize}">Sign In</button>
 			</form>
 		</div>
 
 		<div class="text-end me-2" sec:authorize="isAuthenticated()">
-			<span th:text="|#{authorize.prephraseName}: |">Authenticate
+			<span th:text="|#{header.authorize.prephraseName}: |">Authenticated
 				as:</span><br> <span class="fw-bold" sec:authentication="name">User
 				nick</span><br>
 			<form action="#" th:action="@{/logout}" method="post">
 				<button class="btn btn-sm btn-secondary mt-2"
-					th:text="#{login.SignOut}">Sign Out</button>
+					th:text="#{header.SignOut}">Sign Out</button>
 			</form>
 		</div>
 	</nav>

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>login</title>
+<title>Bootstrap demo</title>
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
 	rel="stylesheet"
@@ -14,18 +14,17 @@
 	<div class="container text-center">
 		<div class="row mt-5 mb-3 justify-content-center">
 			<div class="col-5">
-				<h3 th:text="#{login.enter}">Enter your login and password</h3>
+				<h3 th:text="#{authorization.startMessage}">A new profile</h3>
 			</div>
 		</div>
 
-		<form action="#" th:action="@{/login}" method="post">
+		<form action="#" th:action="@{/authorization}" method="post" th:object="@{credentials}">
 			<div class="row justify-content-center">
 				<div class="col-5">
 					<div class="form-floating mb-3">
-						<input type="text" name="username" class="form-control"
-							placeholder="name@example.com"><label
-							for="floatingInput" th:text="|#{login.login}:|">User
-							login:</label>
+						<input type="email" name="email" class="form-control"
+							placeholder="name@example.com"><label for="floatingInput"
+							th:text="|#{authorization.email}:|">Email:</label>
 					</div>
 				</div>
 			</div>
@@ -38,18 +37,38 @@
 					</div>
 				</div>
 			</div>
+			<div class="row justify-content-center">
+				<div class="col-5">
+					<div class="form-floating mb-3">
+						<input type="password" name="#" class="form-control"
+							id="floatingInput" placeholder="name@example.com"><label
+							for="floatingInput" th:text="|#{authorization.confirmPassword}:|">Confirm
+							the password:</label>
+					</div>
+				</div>
+			</div>
+			
+			
+			<select th:field="*{rows[__${rowStat.index}__].variety}">
+				<option th:each="var : ${allVarieties}" th:value="${var.id}"
+					th:text="${var.name}">Thymus Thymi</option>
+			</select>
+			
+			
 			<div class="row">
 				<div class="col-12">
 					<input class="btn btn-primary" type="submit"
-						th:attr="value=#{header.SignIn}" value="Sign In" />
+						th:attr="value=#{authorization.create}" value="Create" />
 				</div>
 			</div>
+			<!-- 
 			<div class="row mt-3">
 				<div class="col-12">
 					<h4 th:if="${param.error}" th:text="#{login.invalidLogin}">Invalid
 						username or password.</h4>
 				</div>
 			</div>
+			 -->
 		</form>
 	</div>
 
