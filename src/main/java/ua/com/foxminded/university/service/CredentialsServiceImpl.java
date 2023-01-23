@@ -1,7 +1,9 @@
 package ua.com.foxminded.university.service;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.modelmapper.ConfigurationException;
 import org.modelmapper.MappingException;
@@ -26,6 +28,18 @@ public class CredentialsServiceImpl implements CredentialsService<CredentialsMod
     @Autowired
     public CredentialsServiceImpl(CredentialsRepository credentialsRepository) {
         this.credentialsRepository = credentialsRepository;
+    }
+    
+    @Override
+    public CredentialsModel getAllAuthorities() throws ServiceException {
+    List<CredentialsEntity> credentialsList = credentialsRepository.findAll();
+    List<String> allAuthorites = credentialsList.stream()
+                                                .map(credentials -> credentials.getAuthority())
+                                                .distinct()
+                                                .collect(Collectors.toList());
+    CredentialsModel credentials = new CredentialsModel();
+    credentials.setAuthorities(allAuthorites);
+    return credentials;
     }
     
     @Override

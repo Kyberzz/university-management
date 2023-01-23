@@ -1,10 +1,9 @@
 package ua.com.foxminded.university.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -24,14 +23,27 @@ public class CredentialsController {
         this.credentialsService = credentialsService;
     }
 
-    @RequestMapping("/authorization")
+    @GetMapping("/authorization")
     public String authorize(Model model) {
         try {
-      //      List<CredentialsModel> credentialsList = credentialsService.getAll();
-            model.addAttribute("credentialsList", credentialsList);
+            CredentialsModel credentials = credentialsService.getAllAuthorities();
+            model.addAttribute("credentials", credentials);
         } catch (ServiceException e) {
             log.error("Authorizing a new profile failed.");
         }
         return "authorization";
     }
+    
+    /*
+    @PostMapping("/authorization")
+    public String addAuthorizeProfile(Model model) {
+        try {
+            
+            
+        } catch (Exception e) {
+            
+        }
+        
+    }
+    */
 }

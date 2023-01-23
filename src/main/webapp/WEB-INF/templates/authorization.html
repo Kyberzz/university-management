@@ -18,7 +18,7 @@
 			</div>
 		</div>
 
-		<form action="#" th:action="@{/authorization}" method="post" th:object="@{credentials}">
+		<form action="#" th:action="@{/authorization}" method="post" th:object="${credentials}">
 			<div class="row justify-content-center">
 				<div class="col-5">
 					<div class="form-floating mb-3">
@@ -49,9 +49,9 @@
 			</div>
 			
 			
-			<select th:field="*{rows[__${rowStat.index}__].variety}">
-				<option th:each="var : ${allVarieties}" th:value="${var.id}"
-					th:text="${var.name}">Thymus Thymi</option>
+			<select th:field="*{authority}">
+				<option th:each="authority : ${credentials.authorities}" th:value="${authority}"
+					th:text="${authority}">ADMIN</option>
 			</select>
 			
 			

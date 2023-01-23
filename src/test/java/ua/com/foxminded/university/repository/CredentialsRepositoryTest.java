@@ -2,6 +2,8 @@ package ua.com.foxminded.university.repository;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceContext;
@@ -28,6 +30,12 @@ import ua.com.foxminded.university.exception.RepositoryException;
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 @ExtendWith(SpringExtension.class)
 class CredentialsRepositoryTest {
+    public static final int ROLES_QUANTITY = 2;
+    public static final String EMAIL_TWO = "emailTwo";
+    public static final String AUTHORITY_USER = "USER";
+    public static final String AUTHORITY_ADMIN = "ADMIN";
+    public static final String EMAIL_ONE = "emailOne";
+    public static final String PASSWORD = "password";
     
     @PersistenceContext
     private EntityManager entityManager;
@@ -43,17 +51,22 @@ class CredentialsRepositoryTest {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         
         entityManager.getTransaction().begin();
-        CredentialsEntity credentials = new CredentialsEntity();
-        credentials.setPassword("admin");
-        credentials.setEmail("apache");
-        entityManager.persist(credentials);
+        CredentialsEntity firstEmailCredentials = new CredentialsEntity();
+        firstEmailCredentials.setAuthority(AUTHORITY_ADMIN);
+        firstEmailCredentials.setPassword(PASSWORD);
+        firstEmailCredentials.setEmail(EMAIL_ONE);
+        entityManager.persist(firstEmailCredentials);
+        CredentialsEntity secondEmailCredentials = new CredentialsEntity();
+        secondEmailCredentials.setAuthority(AUTHORITY_USER);
+        secondEmailCredentials.setEmail(EMAIL_TWO);
+        secondEmailCredentials.setPassword(PASSWORD);
+        entityManager.persist(secondEmailCredentials);
         entityManager.getTransaction().commit();
     }
-
+    
     @Test
-    void getByEmail_ShouldReturnCredentialsInstance_WhenEnterEmail() throws RepositoryException {
-        CredentialsEntity credentials = credentialsRepository.findByEmail("apache");
-        
-        assertEquals("admin", credentials.getPassword());
+    void findByEmail_ShouldReturnCredentialsInstance_WhenEnterEmail() throws RepositoryException {
+        CredentialsEntity credentials = credentialsRepository.findByEmail(EMAIL_ONE);
+        assertEquals(PASSWORD, credentials.getPassword());
     }
 }
