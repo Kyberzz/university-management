@@ -34,19 +34,19 @@ public class CustomUserDetailsService implements UserDetailsService {
         try {
             UserModel user = userService.getUserAuthorityByEmail(email);
             
-            if (user.getIsActive()) {
+            if (Boolean.TRUE.equals(user.getIsActive())) {
                 String persistedEmail = user.getEmail();
                 String password = user.getPassword();
                 String authority = user.getAuthority().toString();
                 PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
                 
-                userDetails = User.withUsername(email)
+                userDetails = User.withUsername(persistedEmail)
                                   .roles(authority)
                                   .password(password)
                                   .passwordEncoder(encoder::encode)
                                   .build();
             } else {
-                
+                // throw new Exception ?
             }
             return userDetails;
         } catch (ServiceException e) {
