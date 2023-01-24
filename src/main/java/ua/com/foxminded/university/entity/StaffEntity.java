@@ -31,6 +31,6 @@ public class StaffEntity implements Serializable {
     private String lastName;
     private String position;
     
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "staff")
-    private CredentialsEntity credentials;
+    @OneToOne(fetch = FetchType.LAZY)
+    private UserEntity user;
 }

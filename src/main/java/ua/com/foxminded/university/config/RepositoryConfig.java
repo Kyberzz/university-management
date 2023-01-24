@@ -4,6 +4,7 @@ import java.util.Properties;
 
 import javax.sql.DataSource;
 
+import org.flywaydb.core.Flyway;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.flyway.FlywayConfigurationCustomizer;
 import org.springframework.boot.autoconfigure.flyway.FlywayMigrationStrategy;
@@ -51,12 +52,12 @@ public class RepositoryConfig {
 	
     @Bean 
     public FlywayConfigurationCustomizer flywayConfigurationCustomizer() {
-        return configuration -> configuration.schemas(SCHEMA_NAME);        
+         return configuration -> configuration.schemas(SCHEMA_NAME);
     }
     
     @Bean
     public FlywayMigrationStrategy flywayStrategy() {
-        return flyway -> flyway.migrate();
+        return Flyway::migrate;
     }
     
 	@Bean

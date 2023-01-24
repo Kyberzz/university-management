@@ -36,6 +36,7 @@ public class StudentEntity implements Serializable {
     @JoinColumn(name = "group_id")
     private GroupEntity group;
     
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "student")
-    private CredentialsEntity credentials;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private UserEntity user;
 }

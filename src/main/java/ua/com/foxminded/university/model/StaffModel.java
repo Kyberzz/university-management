@@ -9,5 +9,5 @@ public class StaffModel {
     private String firstName;
     private String lastName;
     private String position;
-    private CredentialsModel credentials;
+    private AuthorityModel credentials;
 }

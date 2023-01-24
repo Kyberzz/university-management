@@ -9,24 +9,24 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import lombok.extern.slf4j.Slf4j;
 import ua.com.foxminded.university.exception.ServiceException;
-import ua.com.foxminded.university.model.CredentialsModel;
-import ua.com.foxminded.university.service.CredentialsService;
+import ua.com.foxminded.university.model.AuthorityModel;
+import ua.com.foxminded.university.service.AuthorityService;
 
 @Slf4j
 @Controller
 public class CredentialsController {
     
-    CredentialsService<CredentialsModel> credentialsService;
+    AuthorityService<AuthorityModel> credentialsService;
     
     @Autowired
-    public CredentialsController(CredentialsService<CredentialsModel> credentialsService) {
+    public CredentialsController(AuthorityService<AuthorityModel> credentialsService) {
         this.credentialsService = credentialsService;
     }
 
     @GetMapping("/authorization")
     public String authorize(Model model) {
         try {
-            CredentialsModel credentials = credentialsService.getAllAuthorities();
+            AuthorityModel credentials = credentialsService.getAllAuthorityKinds();
             model.addAttribute("credentials", credentials);
         } catch (ServiceException e) {
             log.error("Authorizing a new profile failed.");

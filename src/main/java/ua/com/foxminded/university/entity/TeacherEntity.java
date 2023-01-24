@@ -9,6 +9,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -35,6 +36,7 @@ public class TeacherEntity implements Serializable {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "teacher")
     private List<CourseEntity> courseList;
     
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "teacher")
-    private CredentialsEntity credentials;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private UserEntity user;
 }

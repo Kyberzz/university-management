@@ -20,7 +20,7 @@ import javax.persistence.Table;
 import lombok.Data;
 
 @Entity
-@Table(name = "timetable", schema = "university")
+@Table(name = "timetables", schema = "university")
 @Data
 public class TimetableEntity implements Serializable {
 
