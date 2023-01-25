@@ -22,9 +22,9 @@ public class UserServiceImpl implements UserService<UserModel> {
     }
     
     @Override
-    public UserModel getUserAuthorityByEmail(String email) throws ServiceException {
+    public UserModel getActiveUserAuthorityByEmail(String email) throws ServiceException {
         try {
-            UserEntity userEntity = userRepository.findByEmail(email);
+            UserEntity userEntity = userRepository.findActiveUserByEmail(email);
             ModelMapper modelMapper = new ModelMapper();
             return modelMapper.map(userEntity, UserModel.class);
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {

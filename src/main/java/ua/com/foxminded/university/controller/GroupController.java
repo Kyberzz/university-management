@@ -14,7 +14,7 @@ import ua.com.foxminded.university.service.GroupService;
 
 @Slf4j
 @Controller
-public class GroupController {
+public class GroupController extends DefaultController {
     
     private GroupService<GroupModel> groupService;
 

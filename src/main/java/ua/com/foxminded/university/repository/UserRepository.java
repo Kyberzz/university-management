@@ -8,6 +8,7 @@ import ua.com.foxminded.university.entity.UserEntity;
 
 public interface UserRepository extends JpaRepository<UserEntity, Integer> {
     
-    @Query("select u from UserEntity u join fetch u.authority where u.email = :email")
-    public UserEntity findByEmail(@Param("email")String email);
+    @Query("select u from UserEntity u join fetch u.authority "
+         + "where u.email = :email and u.isActive = true")
+    public UserEntity findActiveUserByEmail(@Param("email")String email);
 }

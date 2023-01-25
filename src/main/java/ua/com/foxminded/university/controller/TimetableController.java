@@ -14,7 +14,7 @@ import ua.com.foxminded.university.service.TimetableService;
 
 @Slf4j
 @Controller
-public class TimetableController {
+public class TimetableController extends DefaultController {
     
     private TimetableService<TimetableModel> timetableService;
     

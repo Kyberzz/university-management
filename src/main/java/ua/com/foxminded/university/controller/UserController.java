@@ -9,12 +9,11 @@ import lombok.extern.slf4j.Slf4j;
 import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.AuthorityModel;
 import ua.com.foxminded.university.model.UserModel;
-import ua.com.foxminded.university.service.AuthorityService;
 import ua.com.foxminded.university.service.UserService;
 
 @Slf4j
 @Controller
-public class UserController {
+public class UserController extends DefaultController {
 
     UserService<UserModel> userService;
 

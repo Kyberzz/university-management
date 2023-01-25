@@ -4,5 +4,5 @@ import ua.com.foxminded.university.exception.ServiceException;
 
 public interface UserService<T> {
     
-    public T getUserAuthorityByEmail(String email) throws ServiceException;
+    public T getActiveUserAuthorityByEmail(String email) throws ServiceException;
 }

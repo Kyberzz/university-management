@@ -50,6 +50,7 @@ class UserRepositoryTest {
         UserEntity user = new UserEntity();
         user.setIsActive(true);
         user.setEmail(EMAIL);
+        user.setPassword(PASSWORD);
         entityManager.persist(user);
         
         AuthorityEntity authority = new AuthorityEntity();
@@ -61,7 +62,7 @@ class UserRepositoryTest {
 
     @Test
     void findByEmail_shouldReternUserWithAuthority() {
-        UserEntity user = userRepository.findByEmail(EMAIL);
+        UserEntity user = userRepository.findActiveUserByEmail(EMAIL);
         assertEquals(EMAIL, user.getEmail());
         assertTrue(user.getIsActive());
         assertEquals(PASSWORD, user.getPassword());

@@ -14,7 +14,7 @@ import ua.com.foxminded.university.service.CourseService;
 
 @Slf4j
 @Controller
-public class CourseController {
+public class CourseController extends DefaultController {
     
     private CourseService<CourseModel> courseService;
     
