@@ -4,12 +4,14 @@ import org.modelmapper.ConfigurationException;
 import org.modelmapper.MappingException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import ua.com.foxminded.university.entity.UserEntity;
 import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.UserModel;
 import ua.com.foxminded.university.repository.UserRepository;
 
+@Service
 public class UserServiceImpl implements UserService<UserModel> {
     
     UserRepository userRepository;
@@ -18,7 +20,8 @@ public class UserServiceImpl implements UserService<UserModel> {
     public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
-
+    
+    @Override
     public UserModel getUserAuthorityByEmail(String email) throws ServiceException {
         try {
             UserEntity userEntity = userRepository.findByEmail(email);

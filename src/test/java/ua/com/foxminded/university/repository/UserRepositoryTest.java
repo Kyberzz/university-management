@@ -30,10 +30,14 @@ import ua.com.foxminded.university.entity.UserEntity;
 @ActiveProfiles("test")
 class UserRepositoryTest {
     
-    public static final String EMAIL = "email@com";
+    public static final String PASSWORD = "admin";
+    public static final String EMAIL = "admin";
     
     @PersistenceUnit
     EntityManagerFactory entityManagerFactory;
+    
+    @PersistenceContext
+    EntityManager entityManager;
     
     @Autowired
     UserRepository userRepository;
@@ -56,8 +60,10 @@ class UserRepositoryTest {
     }
 
     @Test
-    void findByEmail_shouldReternWithAuthority() {
+    void findByEmail_shouldReternUserWithAuthority() {
         UserEntity user = userRepository.findByEmail(EMAIL);
         assertEquals(EMAIL, user.getEmail());
+        assertTrue(user.getIsActive());
+        assertEquals(PASSWORD, user.getPassword());
     }
 }

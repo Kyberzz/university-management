@@ -18,22 +18,22 @@ import ua.com.foxminded.university.entity.AuthorityEntity;
 import ua.com.foxminded.university.exception.RepositoryException;
 import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.AuthorityModel;
-import ua.com.foxminded.university.repository.CredentialsRepository;
+import ua.com.foxminded.university.repository.AuthorityRepository;
 
 @Slf4j
 @Service
 public class AuthorityServiceImpl implements AuthorityService<AuthorityModel> {
     
-    private CredentialsRepository credentialsRepository;
+    private AuthorityRepository authorityRepository;
     
     @Autowired
-    public AuthorityServiceImpl(CredentialsRepository credentialsRepository) {
-        this.credentialsRepository = credentialsRepository;
+    public AuthorityServiceImpl(AuthorityRepository credentialsRepository) {
+        this.authorityRepository = credentialsRepository;
     }
     
     @Override
-    public AuthorityModel getAllAuthorityKinds() throws ServiceException {
-    List<AuthorityEntity> authorities = credentialsRepository.findAll();
+    public AuthorityModel getAllAuthoritySorts() throws ServiceException {
+    List<AuthorityEntity> authorities = authorityRepository.findAll();
     List<Authorities> authorityKinds = authorities.stream().map(AuthorityEntity::getAuthority)
                                                            .distinct()
                                                            .collect(Collectors.toList());
@@ -45,7 +45,7 @@ public class AuthorityServiceImpl implements AuthorityService<AuthorityModel> {
     @Override
     public List<AuthorityModel> getAll() throws ServiceException {
         try {
-            List<AuthorityEntity> credentialsEntities = credentialsRepository.findAll();
+            List<AuthorityEntity> credentialsEntities = authorityRepository.findAll();
             ModelMapper modelMapper = new ModelMapper();
             Type listType = new TypeToken<List<AuthorityModel>>() {}.getType();
             return modelMapper.map(credentialsEntities, listType);

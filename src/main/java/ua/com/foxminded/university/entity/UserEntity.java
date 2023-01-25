@@ -24,6 +24,7 @@ public class UserEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String email;
+    private String password;
     
     @Column(name = "is_active")
     private Boolean isActive;

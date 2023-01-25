@@ -18,7 +18,8 @@
 			</div>
 		</div>
 
-		<form action="#" th:action="@{/authorization}" method="post" th:object="${credentials}">
+		<form action="#" th:action="@{/authorization}" method="post"
+			th:object="${user}">
 			<div class="row justify-content-center">
 				<div class="col-5">
 					<div class="form-floating mb-3">
@@ -47,28 +48,24 @@
 					</div>
 				</div>
 			</div>
-			
-			
-			<select th:field="*{authority}">
-				<option th:each="authority : ${credentials.authorities}" th:value="${authority}"
-					th:text="${authority}">ADMIN</option>
-			</select>
-			
-			
-			<div class="row">
+			<div class="row justify-content-center">
+				<div class="col-5 form-floating">
+					<select th:field="*{authority.authority}" class="form-select"
+						id="floatingSelect" aria-label="Floating label select example">
+						<option
+							th:each="authority : ${T(ua.com.foxminded.university.entity.Authorities).values()}"
+							th:value="${authority}" th:text="${authority.representation}">Admin</option>
+					</select> <label class="ms-2" for="floatingSelect"
+						th:text="|#{authorization.selectProfile}:|">Pofile:</label>
+				</div>
+			</div>
+
+			<div class="row mt-4">
 				<div class="col-12">
 					<input class="btn btn-primary" type="submit"
 						th:attr="value=#{authorization.create}" value="Create" />
 				</div>
 			</div>
-			<!-- 
-			<div class="row mt-3">
-				<div class="col-12">
-					<h4 th:if="${param.error}" th:text="#{login.invalidLogin}">Invalid
-						username or password.</h4>
-				</div>
-			</div>
-			 -->
 		</form>
 	</div>
 

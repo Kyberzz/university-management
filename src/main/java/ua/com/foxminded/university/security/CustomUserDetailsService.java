@@ -1,4 +1,4 @@
-package ua.com.foxminded.university.config;
+package ua.com.foxminded.university.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
@@ -11,9 +11,7 @@ import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
 import ua.com.foxminded.university.exception.ServiceException;
-import ua.com.foxminded.university.model.AuthorityModel;
 import ua.com.foxminded.university.model.UserModel;
-import ua.com.foxminded.university.service.AuthorityService;
 import ua.com.foxminded.university.service.UserService;
 
 @Slf4j
@@ -21,7 +19,7 @@ import ua.com.foxminded.university.service.UserService;
 public class CustomUserDetailsService implements UserDetailsService {
 
     private UserService<UserModel> userService;
-    
+
     @Autowired
     public CustomUserDetailsService(UserService<UserModel> userService) {
         this.userService = userService;
@@ -29,29 +27,20 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        UserDetails userDetails = null;
-        
+
         try {
             UserModel user = userService.getUserAuthorityByEmail(email);
-            
-            if (Boolean.TRUE.equals(user.getIsActive())) {
-                String persistedEmail = user.getEmail();
-                String password = user.getPassword();
-                String authority = user.getAuthority().toString();
-                PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
-                
-                userDetails = User.withUsername(persistedEmail)
-                                  .roles(authority)
-                                  .password(password)
-                                  .passwordEncoder(encoder::encode)
-                                  .build();
-            } else {
-                // throw new Exception ?
-            }
-            return userDetails;
+            String password = user.getPassword();
+            String authority = user.getAuthority().getAuthority().toString();
+            PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+
+            return User.withUsername(email)
+                       .roles(authority)
+                       .password(password)
+                       .passwordEncoder(encoder::encode)
+                       .build();
         } catch (ServiceException e) {
             throw new UsernameNotFoundException("Getting user credentials failed.");
         }
     }
 }
-
