@@ -15,7 +15,8 @@
 		th:fragment="navigationBar">
 		<div class="ms-2" th:insert="~{fragments/logo::foxmindedLogo}"></div>
 
-		<div class="ms-auto" th:if="${#execInfo.processedTemplateName} != index">
+		<div class="justify-content-center"
+			th:if="${#execInfo.processedTemplateName} != index">
 			<form class="container-fluid gap-2">
 				<button class="btn btn-success" type="button"
 					data-bs-toggle="offcanvas" data-bs-target="#add"
@@ -36,22 +37,31 @@
 					th:text="#{header.SignIn}">Sign In</button>
 			</form>
 		</div>
-		
-		<div sec:authorize="hasRole('ROLE_ADMIN')" class="text-ent me-2">
-			<form action="#" th:action="@{/authorize}">
-				<button class="btn btn-primary ms-auto me-2"
-					th:text="#{header.authorize}">Sign In</button>
-			</form>
-		</div>
+		<div class="d-grid gap-2 me-2 text-end" sec:authorize="isAuthenticated()">
+			<div class="row">
+				<div class=col>
+					<span th:text="|#{header.authenticatedAs}: |">Authenticated
+						as:</span> <span class="fw-bold" sec:authentication="name">User
+						nick</span>
+				</div>
+			</div>
+			<div class="row gx-2">
+				<div class="col-7">
+					<form action="#" th:action="@{/adminpanel}"
+						sec:authorize="hasRole('ROLE_ADMINISTRATOR')">
+						<button class="btn btn-sm btn-primary"
+							th:text="#{header.adminPanel}">Admin panel</button>
+					</form>
+				</div>
+				<div class="col-5">
+					<form action="#" th:action="@{/logout}" method="post">
+						<button class="btn btn-sm btn-secondary"
+							th:text="#{header.SignOut}">Sign Out</button>
+					</form>
+				</div>
+			</div>
 
-		<div class="text-end me-2" sec:authorize="isAuthenticated()">
-			<span th:text="|#{header.authorize.prephraseName}: |">Authenticated
-				as:</span><br> <span class="fw-bold" sec:authentication="name">User
-				nick</span><br>
-			<form action="#" th:action="@{/logout}" method="post">
-				<button class="btn btn-sm btn-secondary mt-2"
-					th:text="#{header.SignOut}">Sign Out</button>
-			</form>
+
 		</div>
 	</nav>
 
