@@ -7,30 +7,24 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import lombok.extern.slf4j.Slf4j;
 import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.StudentModel;
 import ua.com.foxminded.university.service.StudentService;
 
-@Slf4j
 @Controller
-public class StudentController extends DefaultController{
-    
+public class StudentController extends DefaultController {
+
     private StudentService<StudentModel> studentService;
-    
+
     @Autowired
     public StudentController(StudentService<StudentModel> studentService) {
         this.studentService = studentService;
     }
-    
+
     @RequestMapping("/students/list")
-    public String getAllStudents(Model model) {
-        try {
-            List<StudentModel> students = studentService.getAllStudents();
-            model.addAttribute("students", students);
-        } catch (ServiceException e) {
-            log.error("Getting all students was failed", e);
-        }
+    public String getAllStudents(Model model) throws ServiceException {
+        List<StudentModel> students = studentService.getAllStudents();
+        model.addAttribute("students", students);
         return "students/list";
     }
 }

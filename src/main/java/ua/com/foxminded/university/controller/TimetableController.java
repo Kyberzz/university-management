@@ -7,30 +7,24 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import lombok.extern.slf4j.Slf4j;
 import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.TimetableModel;
 import ua.com.foxminded.university.service.TimetableService;
 
-@Slf4j
 @Controller
 public class TimetableController extends DefaultController {
-    
+
     private TimetableService<TimetableModel> timetableService;
-    
+
     @Autowired
     public TimetableController(TimetableService<TimetableModel> timetableService) {
         this.timetableService = timetableService;
     }
-    
+
     @RequestMapping("/timetables/list")
-    public String getAllTimetables(Model model) {
-        try {
-            List<TimetableModel> timetables = timetableService.getAllTimetables();
-            model.addAttribute("timetables", timetables);
-        } catch (ServiceException e) {
-            log.error("Getting all timetables was failed", e);
-        }
+    public String getAllTimetables(Model model) throws ServiceException {
+        List<TimetableModel> timetables = timetableService.getAllTimetables();
+        model.addAttribute("timetables", timetables);
         return "timetables/list";
     }
 }

@@ -5,13 +5,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import lombok.extern.slf4j.Slf4j;
-import ua.com.foxminded.university.exception.ServiceException;
-import ua.com.foxminded.university.model.AuthorityModel;
 import ua.com.foxminded.university.model.UserModel;
 import ua.com.foxminded.university.service.UserService;
 
-@Slf4j
 @Controller
 public class UserController extends DefaultController {
 

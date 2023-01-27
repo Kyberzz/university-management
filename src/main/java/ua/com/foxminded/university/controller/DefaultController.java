@@ -8,11 +8,13 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.ModelAndView;
 
 import lombok.extern.slf4j.Slf4j;
+import ua.com.foxminded.university.exception.ServiceException;
 
 @Slf4j
 public class DefaultController {
     
-    @ExceptionHandler(Exception.class)
+    
+    @ExceptionHandler(ServiceException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public void defaultExceptionHandler(HttpServletRequest request, Exception e) {
         log.error("The exception during execution of the program", e);
