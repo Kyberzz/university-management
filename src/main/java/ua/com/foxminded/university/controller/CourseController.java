@@ -23,7 +23,7 @@ public class CourseController extends DefaultController {
         this.courseService = courseService;
     }
     
-    @RequestMapping("/courses/list")
+    @RequestMapping("courses/list")
     public String getAllCourses(Model model) {
         try {
             List<CourseModel> courses = courseService.getAllCourses();

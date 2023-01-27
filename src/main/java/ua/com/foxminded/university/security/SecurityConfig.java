@@ -1,4 +1,4 @@
-package ua.com.foxminded.university.config;
+package ua.com.foxminded.university.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,7 +12,7 @@ public class SecurityConfig {
     
     @Bean 
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests(request -> request.mvcMatchers("/", "/images/**")
+        http.authorizeHttpRequests(request -> request.mvcMatchers("/", "/index" ,"/images/**")
                                                      .permitAll()
                                                      .anyRequest()
                                                      .authenticated())

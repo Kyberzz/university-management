@@ -13,8 +13,11 @@
 <body
 	th:with="httpStatus=${T(org.springframework.http.HttpStatus).valueOf(#response.status)}">
 	<h1 th:text="|${httpStatus} - ${httpStatus.reasonPhrase}|">404</h1>
-	<a href="index.html" th:href="@{/index}" th:text="error.indexLink">Back
-		to Home Page</a>
+
+	<p th:if="${url}">
+		<b>Page:</b> <span th:text="${url}">Page URL</span>
+	</p>
+
 	<script
 		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
 		integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
