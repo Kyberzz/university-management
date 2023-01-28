@@ -1,7 +1,6 @@
 package ua.com.foxminded.university.controller;
 
-import javax.servlet.http.HttpServletRequest;
-
+import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -13,13 +12,12 @@ import ua.com.foxminded.university.exception.ServiceException;
 @Slf4j
 public class DefaultController {
     
-    
-    @ExceptionHandler(ServiceException.class)
+    @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public void defaultExceptionHandler(HttpServletRequest request, Exception e) {
+    public void defaultExceptionHandler(Exception e) {
         log.error("The exception during execution of the program", e);
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("url", request.getRequestURI());
+      //  modelAndView.addObject("url", request.getURI());
         modelAndView.setViewName("error");
     }
 }

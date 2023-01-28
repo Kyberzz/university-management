@@ -15,8 +15,8 @@
 	<div class="offcanvas offcanvas-top" tabindex="-1" id="add"
 		aria-labelledy="offcanvasTopLabel">
 		<div class="offcanvas-header">
-			<h5 class="offcanvas-title" th:text="#{students.addStudent}">Add a
-				student</h5>
+			<h5 class="offcanvas-title" th:text="#{students.addStudent}">Add
+				a student</h5>
 			<button type="button" class="btn-close" data-bs-dismiss="offcanvas"
 				aria-label="close"></button>
 		</div>
@@ -35,14 +35,14 @@
 	<div class="offcanvas offcanvas-top" tabindex="-1" id="edit"
 		aria-labelledy="offcanvasTopLabel">
 		<div class="offcanvas-header">
-			<h5 class="offcanvas-title" th:text="#{students.editStudent}">Edit a
-				student</h5>
+			<h5 class="offcanvas-title" th:text="#{students.editStudent}">Edit
+				a student</h5>
 			<button type="button" class="btn-close" data-bs-dismiss="offcanvas"
 				aria-label="close"></button>
 		</div>
 		<div class="offcanvas-body">My content</div>
 	</div>
-	
+
 	<div class="container">
 		<div class="row justify-content-center">
 			<div class="col-10">
@@ -65,12 +65,90 @@
 							<td th:text="${student.lastName}">Snow</td>
 							<td th:text="${student.id}">1</td>
 							<td th:text="${student.group.id}">5</td>
+							<td>
+								<!-- Button trigger modal -->
+								<button type="button" class="btn btn-success btn-sm"
+									data-bs-toggle="modal"
+									th:data-bs-target="|#modal${iterationStatus.index}|">
+									Edit</button> <!-- Modal -->
+								<div class="modal fade" th:id="|modal${iterationStatus.index}|"
+									tabindex="-1" aria-labelledby="exampleModalLabel"
+									aria-hidden="true">
+
+									<div class="modal-dialog">
+										<form class="modal-content" th:action="@{/students/list}"
+											th:object="${editedStudent}" method="post">
+											<div class="modal-header">
+												<h1 class="modal-title fs-5" id="exampleModalLabel"
+													th:text="#{edit.editStudent}">Edit the student</h1>
+												<button type="button" class="btn-close"
+													data-bs-dismiss="modal" aria-label="Close"></button>
+											</div>
+											<div class="modal-body">
+												<div class="container-fluid">
+													<div class="row text-start">
+														<div class="col-3" th:text="|#{thead.id}: |">ID</div>
+														<div class="col" th:text="${student.id}">7</div>
+														<div>
+															<input type="text" name="studentId" value=5>
+														</div>
+
+
+													</div>
+													<div class="row text-start mt-2">
+														<div class="col-3" th:text="|#{thead.firstName}: |">Fist
+															name:</div>
+														<div class="col" th:text="${student.firstName}">Dennis</div>
+														<div class="col">
+															<input class="form-control form-control-sm" type="text"
+																th:aria-label="#{edit.newFirstName}"
+																th:placeholder="#{edit.newFirstName}"
+																th:field="*{firstName}">
+														</div>
+													</div>
+													<div class="row text-start mt-2">
+														<div class="col-3" th:text="|#{thead.lastName}: |">Last
+															name:</div>
+														<div class="col" th:text="${student.lastName}">Ritchie</div>
+														<div class="col">
+															<input class="form-control form-control-sm" type="text"
+																placeholder="#" th:aria-label="#{edit.newLastName}"
+																th:placeholder="#{edit.newLastName}"
+																th:field="*{lastName}">
+														</div>
+													</div>
+													<div class="row text-start mt-2">
+														<div class="col-3" th:text="|#{thead.groupId}: |">Group
+															ID</div>
+														<div class="col" th:text="${student.group.id}"></div>
+														<div class="col">
+															<input class="form-control form-control-sm" type="text"
+																placeholder="#" aria-label="#{edit.newGroupId}"
+																th:placeholder="#{edit.newGroupId}"
+																th:field="*{group.id}">
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="modal-footer">
+												<button type="button" class="btn btn-secondary"
+													data-bs-dismiss="modal">Close</button>
+												<button type="submit" class="btn btn-primary">Save
+													changes</button>
+											</div>
+										</form>
+									</div>
+								</div>
+
+							</td>
 						</tr>
 					</tbody>
 				</table>
 			</div>
 		</div>
 	</div>
+
+
 
 	<script
 		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
