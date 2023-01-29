@@ -4,8 +4,8 @@ create sequence university.users_seq as integer;
 create table university.users(
 	id integer default nextval('university.users_seq'::regclass) primary key,
 	email varchar not null,
-	password varchar not null,
-	is_active boolean not null
+	password varchar,
+	is_active boolean
 );
 alter sequence university.users_seq owned by university.users.id;
 

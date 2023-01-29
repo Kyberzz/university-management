@@ -30,14 +30,14 @@ public class StudentController extends DefaultController {
 
     @RequestMapping("/students/list")
     public String getAllStudents(Model model) throws ServiceException {
-        List<StudentModel> students = studentService.getAllStudents();
+        List<StudentModel> students = studentService.getAllStudentsWithEmail();
         StudentModel student = new StudentModel();
         model.addAttribute("editedStudent", student);
         model.addAttribute("students", students);
         return "students/list";
     }
     
-    @PostMapping(value = "/students/list")
+    @PostMapping(value = "/students/list", params = "studentId")
     public String editStdent(@RequestParam("studentId") int studentId, StudentModel editedStudent, 
                              BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
@@ -48,5 +48,11 @@ public class StudentController extends DefaultController {
             log.error(String.valueOf(studentId));
             return "redirect:/students/list";
         }
+    }
+    
+    @PostMapping(value ="/students/list", params = "deleteStudentId")
+    public String deleteStudent(@RequestParam("deleteStudentId") int studentId) {
+        log.error(String.valueOf(studentId));
+        return "redirect:/students/list";
     }
 }

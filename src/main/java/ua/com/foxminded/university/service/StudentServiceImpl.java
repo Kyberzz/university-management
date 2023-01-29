@@ -57,13 +57,15 @@ public class StudentServiceImpl implements StudentService<StudentModel> {
     }
     
     @Override
-    public List<StudentModel> getAllStudents() throws ServiceException {
+    public List<StudentModel> getAllStudentsWithEmail() throws ServiceException {
         try {
-            List<StudentEntity> studentEntities = studentRepository.findAll();
+            List<StudentEntity> studentEntities = studentRepository.getAllStudentsWithEmail();
             ModelMapper modelMapper = new ModelMapper();
             Type listType = new TypeToken<List<StudentModel>>() {}.getType();
-            return modelMapper.map(studentEntities, listType);
-        } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
+            List<StudentModel> students = modelMapper.map(studentEntities, listType);
+            return students;
+        } catch (RepositoryException | IllegalArgumentException | ConfigurationException | 
+                 MappingException e) {
             throw new ServiceException("Getting all students was failed", e);
         }
     }

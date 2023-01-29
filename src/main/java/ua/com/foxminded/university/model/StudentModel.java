@@ -9,4 +9,5 @@ public class StudentModel {
     private GroupModel group;
     private String firstName;
     private String lastName;
+    private UserModel user;
 }
