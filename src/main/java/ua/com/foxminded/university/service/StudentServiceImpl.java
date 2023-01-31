@@ -7,7 +7,6 @@ import org.modelmapper.ConfigurationException;
 import org.modelmapper.MappingException;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
-import org.postgresql.gss.GSSOutputStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,7 +17,6 @@ import ua.com.foxminded.university.exception.RepositoryException;
 import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.StudentModel;
 import ua.com.foxminded.university.repository.StudentRepository;
-
 
 @Slf4j
 @Transactional
@@ -89,87 +87,60 @@ public class StudentServiceImpl implements StudentService<StudentModel> {
             StudentEntity changedEntity = modelMapper.map(model, StudentEntity.class);
             StudentEntity originEntity = studentRepository.findById(model.getId());
             
-            if (changedEntity.getUser() != null) {
-                String email = changedEntity.getUser().getEmail();
-                
-                if (email.equals(EMPTY_STRING)) {
-                    if (originEntity.getUser() != null) {
-                        String originEmail = originEntity.getUser().getEmail();
-                        changedEntity.getUser().setEmail(originEmail);
-                    } else {
-                        changedEntity.setUser(null);
-                    }
-                }
-                if (email.equals(String.valueOf(ZERO))) {
-                    changedEntity.setUser(null);
-                }
-            }
-            
-            if (changedEntity.getGroup() != null) {
-                Integer groupId = changedEntity.getGroup().getId();
-                
-                if (groupId == null && originEntity.getGroup() != null) {
-                        Integer originGroupId = originEntity.getGroup().getId();
-                        changedEntity.getGroup().setId(originGroupId);
-                } else if (groupId == null && originEntity.getGroup() == null) {
-                    changedEntity.setGroup(null);
-                } else if (groupId == ZERO) {
-                    changedEntity.setGroup(null);
-                } 
-            }
-            
-            
-            
-           
-            
-            
-            
-            
-            
-            
-            /*
-            String firstName = changedEntity.getFirstName();
-            
-            if (firstName == null || firstName.equals(EMPTY_STRING)) {
-                changedEntity.setFirstName(originEntity.getFirstName());
-            }
-            
-            String lastName = changedEntity.getLastName();
-            
-            if (lastName == null || lastName.equals(EMPTY_STRING)) {
-                changedEntity.setLastName(originEntity.getLastName());
-            }
-            
-            if (changedEntity.getGroup() != null) {
-                Integer groupId = changedEntity.getGroup().getId();
-                
-                if (groupId == 0) {
-                    changedEntity.setGroup(null);
-                }
-                
-                if (groupId == null) {
-                    Integer originId = originEntity.getGroup().getId();
-                    changedEntity.getGroup().setId(originId);
-                }
-            }
-            
-            if (changedEntity.getUser() != null) {
-                String email = changedEntity.getUser().getEmail();
-                
-                if (email.equals(EMPTY_STRING)) {
-                    String originEmail = originEntity.getUser().getEmail(); 
-                    changedEntity.getUser().setEmail(originEmail);
-                }
-                
-                if (email.equals(String.valueOf(ZERO))) {
-                    changedEntity.setUser(null);
-                }
-            }
-            */
+            prepareEmailToPersist(changedEntity, originEntity);
+            prepareGroupToPersist(changedEntity, originEntity);
+            prepareNameToPersist(changedEntity, originEntity);
             studentRepository.saveAndFlush(changedEntity);
         } catch (RepositoryException | IllegalArgumentException | ConfigurationException | 
                  MappingException e) {
             throw new ServiceException("Udating the student data failed.", e);
+        }
+    }
+    
+    private void prepareGroupToPersist(StudentEntity changedEntity, StudentEntity originEntity) {
+        if (changedEntity.getGroup() != null) {
+            Integer groupId = changedEntity.getGroup().getId();
+            
+            if (groupId == null && originEntity.getGroup() != null) {
+                    Integer originGroupId = originEntity.getGroup().getId();
+                    changedEntity.getGroup().setId(originGroupId);
+            } else if (groupId == null && originEntity.getGroup() == null) {
+                changedEntity.setGroup(null);
+            } else if (groupId == ZERO) {
+                changedEntity.setGroup(null);
+            } 
+        }
+    }
+    
+    private void prepareNameToPersist(StudentEntity changedEntity, StudentEntity originEntity) {
+        if (changedEntity.getFirstName() != null) {
+            if (changedEntity.getFirstName().equals(EMPTY_STRING)) {
+                String originFirstName = originEntity.getFirstName();
+                changedEntity.setFirstName(originFirstName);
+            }
+
+            if (changedEntity.getLastName().equals(EMPTY_STRING)) {
+                String originLastName = originEntity.getLastName();
+                changedEntity.setLastName(originLastName);
+            }
+        }
+    }
+    
+    private void prepareEmailToPersist(StudentEntity changedEntity, StudentEntity originEntity) {
+        if (changedEntity.getUser() != null) {
+            String email = changedEntity.getUser().getEmail();
+            
+            if (email.equals(EMPTY_STRING)) {
+                if (originEntity.getUser() != null) {
+                    String originEmail = originEntity.getUser().getEmail();
+                    changedEntity.getUser().setEmail(originEmail);
+                } else {
+                    changedEntity.setUser(null);
+                }
+            }
+            if (email.equals(String.valueOf(ZERO))) {
+                changedEntity.setUser(null);
+            }
         }
     }
 }
