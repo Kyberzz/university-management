@@ -2,6 +2,7 @@ package ua.com.foxminded.university.entity;
 
 import java.io.Serializable;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -36,7 +37,8 @@ public class StudentEntity implements Serializable {
     @JoinColumn(name = "group_id")
     private GroupEntity group;
     
-    @OneToOne(fetch = FetchType.LAZY)
+    
+    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     @JoinColumn(name = "user_id")
     private UserEntity user;
 }

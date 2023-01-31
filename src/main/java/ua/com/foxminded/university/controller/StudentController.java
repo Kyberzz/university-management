@@ -30,7 +30,7 @@ public class StudentController extends DefaultController {
 
     @RequestMapping("/students/list")
     public String getAllStudents(Model model) throws ServiceException {
-        List<StudentModel> students = studentService.getAllStudentsWithEmail();
+        List<StudentModel> students = studentService.getAllStudentsIncludingEmails();
         StudentModel student = new StudentModel();
         model.addAttribute("editedStudent", student);
         model.addAttribute("students", students);
@@ -38,21 +38,21 @@ public class StudentController extends DefaultController {
     }
     
     @PostMapping(value = "/students/list", params = "studentId")
-    public String editStdent(@RequestParam("studentId") int studentId, StudentModel editedStudent, 
-                             BindingResult bindingResult, Model model) {
+    public String editStudent(@RequestParam("studentId") int studentId, StudentModel editedStudent, 
+                             BindingResult bindingResult, Model model) throws ServiceException {
         if (bindingResult.hasErrors()) {
             return "error";
         } else {
-            
-            log.error(editedStudent.toString());
-            log.error(String.valueOf(studentId));
+            editedStudent.setId(studentId);
+            log.error(editedStudent.toString() + "-----controller");
+            studentService.editStudent(editedStudent);
             return "redirect:/students/list";
         }
     }
     
     @PostMapping(value ="/students/list", params = "deleteStudentId")
-    public String deleteStudent(@RequestParam("deleteStudentId") int studentId) {
-        log.error(String.valueOf(studentId));
+    public String deleteStudent(@RequestParam("deleteStudentId") int studentId) throws ServiceException {
+        studentService.deleteStudentById(studentId);
         return "redirect:/students/list";
     }
 }

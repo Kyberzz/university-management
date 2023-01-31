@@ -22,6 +22,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
 import ua.com.foxminded.university.config.RepositoryConfig;
+import ua.com.foxminded.university.config.RepositoryTestConfig;
 import ua.com.foxminded.university.entity.GroupEntity;
 import ua.com.foxminded.university.entity.StudentEntity;
 import ua.com.foxminded.university.entity.UserEntity;
@@ -30,7 +31,7 @@ import ua.com.foxminded.university.exception.RepositoryException;
 @ActiveProfiles("test")
 @Transactional
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = RepositoryConfig.class)
+@ContextConfiguration(classes = RepositoryTestConfig.class)
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 class StudentRepositoryTest {
     
@@ -75,10 +76,10 @@ class StudentRepositoryTest {
         entityManager.getTransaction().commit();
         entityManager.close();
     }
-
+    
     @Test
-    void getAllStudentsWithEmail_shouldReturnAllStudentsAndEmails() throws RepositoryException {
-        List<StudentEntity> students = studentRepository.getAllStudentsWithEmail();
+    void getAllStudentsWithEmail_ShouldReturnAllStudentsAndEmails() throws RepositoryException {
+        List<StudentEntity> students = studentRepository.getAllStudentsIncludingEmails();
         
         assertEquals(EMAIL, students.get(FIRST_ELEMENT).getUser().getEmail());
     }
