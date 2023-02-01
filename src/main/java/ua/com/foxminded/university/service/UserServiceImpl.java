@@ -22,6 +22,13 @@ public class UserServiceImpl implements UserService<UserModel> {
     }
     
     @Override
+    public void udateUser(UserModel model) throws ServiceException {
+        ModelMapper modelMapper = new ModelMapper();
+        UserEntity entity = modelMapper.map(model, UserEntity.class);
+        userRepository.saveAndFlush(entity);
+    }
+    
+    @Override
     public UserModel getActiveUserAuthorityByEmail(String email) throws ServiceException {
         try {
             UserEntity userEntity = userRepository.findActiveUserByEmail(email);

@@ -159,7 +159,9 @@
 															th:text="${student.user != null} ? ${student.user.email} : '---'"></div>
 														<div class="col-5">
 															<input class="form-control form-control-sm" type="email"
-																th:field="*{user.email}" />
+																th:field="*{user.email}" /> 
+															<input type="hidden" name="userId" 
+																th:value="${student.user != null} ? ${student.user.id} : 'null'"/>
 														</div>
 													</div>
 												</div>

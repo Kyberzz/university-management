@@ -7,8 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -63,7 +61,9 @@ public class StudentController extends DefaultController {
     }
     
     @PostMapping(value = "/edit", params = "studentId")
-    public String editStudent(@RequestParam("studentId") int studentId, StudentModel studentModel, 
+    public String editStudent(@RequestParam("studentId") int studentId, 
+                              @RequestParam("userId") Integer userId, 
+                              StudentModel studentModel, 
                               BindingResult bindingResult, Model model) throws ServiceException {
         if (bindingResult.hasErrors()) {
             bindingResult.getAllErrors().stream()
@@ -73,7 +73,10 @@ public class StudentController extends DefaultController {
             if (studentModel.getGroup() != null && studentModel.getGroup().getId() == null) {
                     studentModel.setGroup(null);
             }
+            
+            log.error(studentModel.toString());
             studentModel.setId(studentId);
+            studentModel.getUser().setId(userId);
             studentService.updateStudent(studentModel);
             return "redirect:/students/list";
         }
