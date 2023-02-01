@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.extern.slf4j.Slf4j;
 import ua.com.foxminded.university.entity.StudentEntity;
+import ua.com.foxminded.university.exception.RepositoryException;
 import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.StudentModel;
 import ua.com.foxminded.university.repository.StudentRepository;
@@ -42,10 +43,9 @@ public class StudentServiceImpl implements StudentService<StudentModel> {
     }
     
     @Override
-    public void addStudent(StudentModel studentModel) throws ServiceException {
-        ModelMapper modelMapper = new ModelMapper();
-        
+    public void updateStudent(StudentModel studentModel) throws ServiceException {
         try {
+            ModelMapper modelMapper = new ModelMapper();
             StudentEntity studentEntity = modelMapper.map(studentModel, StudentEntity.class);
             studentRepository.save(studentEntity);
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
@@ -60,7 +60,7 @@ public class StudentServiceImpl implements StudentService<StudentModel> {
         try {
             StudentEntity studentEntity = studentRepository.findById(id);
             return modelMapper.map(studentEntity, StudentModel.class);
-        } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
+        } catch (IllegalArgumentException | ConfigurationException | MappingException | RepositoryException e) {
             throw new ServiceException("Getting student by its id failed.", e);
         }
     }
@@ -79,66 +79,14 @@ public class StudentServiceImpl implements StudentService<StudentModel> {
     }
     
     @Override
-    public void editStudent(StudentModel model) throws ServiceException {
+    public void addStudent(StudentModel model) throws ServiceException {
         try {
             ModelMapper modelMapper = new ModelMapper();
-            StudentEntity changedEntity = modelMapper.map(model, StudentEntity.class);
-            StudentEntity originEntity = studentRepository.findById(model.getId());
-            
-            prepareEmailToPersist(changedEntity, originEntity);
-            prepareGroupToPersist(changedEntity, originEntity);
-            prepareStudentNameToPersist(changedEntity, originEntity);
-            studentRepository.saveAndFlush(changedEntity);
+            StudentEntity entity = modelMapper.map(model, StudentEntity.class);
+            studentRepository.saveAndFlush(entity);
         } catch (IllegalArgumentException | ConfigurationException | 
                  MappingException e) {
             throw new ServiceException("Udating the student data failed.", e);
-        }
-    }
-    
-    private void prepareGroupToPersist(StudentEntity changedEntity, StudentEntity originEntity) {
-        if (changedEntity.getGroup() != null) {
-            Integer groupId = changedEntity.getGroup().getId();
-            
-            if (groupId == null && originEntity.getGroup() != null) {
-                    Integer originGroupId = originEntity.getGroup().getId();
-                    changedEntity.getGroup().setId(originGroupId);
-            } else if (groupId == null && originEntity.getGroup() == null) {
-                changedEntity.setGroup(null);
-            } else if (groupId == ZERO) {
-                changedEntity.setGroup(null);
-            } 
-        }
-    }
-    
-    private void prepareStudentNameToPersist(StudentEntity changedEntity, StudentEntity originEntity) {
-        if (changedEntity.getFirstName() != null) {
-            if (changedEntity.getFirstName().equals(EMPTY_STRING)) {
-                String originFirstName = originEntity.getFirstName();
-                changedEntity.setFirstName(originFirstName);
-            }
-
-            if (changedEntity.getLastName().equals(EMPTY_STRING)) {
-                String originLastName = originEntity.getLastName();
-                changedEntity.setLastName(originLastName);
-            }
-        }
-    }
-    
-    private void prepareEmailToPersist(StudentEntity changedEntity, StudentEntity originEntity) {
-        if (changedEntity.getUser() != null) {
-            String email = changedEntity.getUser().getEmail();
-            
-            if (email.equals(EMPTY_STRING)) {
-                if (originEntity.getUser() != null) {
-                    String originEmail = originEntity.getUser().getEmail();
-                    changedEntity.getUser().setEmail(originEmail);
-                } else {
-                    changedEntity.setUser(null);
-                }
-            }
-            if (email.equals(String.valueOf(ZERO))) {
-                changedEntity.setUser(null);
-            }
         }
     }
 }

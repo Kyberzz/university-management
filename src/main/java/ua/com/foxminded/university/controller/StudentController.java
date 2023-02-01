@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -59,18 +61,22 @@ public class StudentController extends DefaultController {
     public String editStudent(@RequestParam("studentId") int studentId, StudentModel studentModel, 
                               BindingResult bindingResult, Model model) throws ServiceException {
         if (bindingResult.hasErrors()) {
+            bindingResult.getAllErrors().stream()
+                                        .forEach(error -> log.error(error.getDefaultMessage()));
             return "error";
         } else {
-            StudentModel student = (StudentModel) model.getAttribute("studentModel");
-            log.error(String.valueOf(student));
+            if (studentModel.getGroup() != null && studentModel.getGroup().getId() == null) {
+                    studentModel.setGroup(null);
+            }
             studentModel.setId(studentId);
-            studentService.editStudent(studentModel);
+            studentService.updateStudent(studentModel);
             return "redirect:/students/list";
         }
     }
     
     @PostMapping(value ="/delete", params = "deleteStudentId")
-    public String deleteStudent(@RequestParam("deleteStudentId") int studentId) throws ServiceException {
+    public String deleteStudent(@RequestParam("deleteStudentId") int studentId)
+            throws ServiceException {
         studentService.deleteStudentById(studentId);
         return "redirect:/students/list";
     }

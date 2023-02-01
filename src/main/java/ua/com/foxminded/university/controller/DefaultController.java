@@ -9,13 +9,14 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class DefaultController {
-  
-    @ExceptionHandler(SecurityException.class)
+  /*
+    @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public void defaultExceptionHandler(SecurityException e) {
+    public void defaultExceptionHandler(Exception e) {
         log.error("The exception during execution of the program", e);
         ModelAndView modelAndView = new ModelAndView();
       //  modelAndView.addObject("url", request.getRequestURI());
         modelAndView.setViewName("error");
     }
+    */
 }
