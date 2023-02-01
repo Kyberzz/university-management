@@ -41,19 +41,19 @@
 								placeholder="name@example.com"> <label
 								for="floatingInput" th:text="|#{thead.email}:|"></label>
 						</div>
-						<div class="row mb-3 text-start" th:text="|#{thead.groupName}: |"> Group name:
-						</div>
+						<div class="row mb-3 text-start" th:text="|#{thead.groupName}: |">
+							Group name:</div>
 						<div class="row mb-3">
 							<select class="form-select" aria-label="Default select example"
 								th:field="*{group}">
 								<option th:each="group :${groups}" th:value="${group.id}"
 									th:text=${group.name}>kt-17</option>
-								
+
 								<!-- 
 								<option th:value="null">null</option>
 								 -->
-								
-								
+
+
 							</select>
 						</div>
 					</div>
@@ -149,12 +149,12 @@
 														<div class="col-4"
 															th:text="${student.group != null} ? ${student.group.name} : '---'"></div>
 														<div class="col-5">
-														
-														<select class="form-select"
-																aria-label="Default select example" th:field="*{group.id}">
+															<select class="form-select"
+																aria-label="Default select example"
+																th:field="*{group.id}">
 																<option th:each="group :${groups}"
 																	th:value="${group.id}" th:text=${group.name}>kt-17</option>
-																<option th:value="null">null</option>
+																<option th:value="null" th:text="#{thead.null}">null</option>
 															</select>
 														</div>
 													</div>
