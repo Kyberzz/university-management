@@ -36,11 +36,16 @@ public class StudentController extends DefaultController {
     }
 
     @PostMapping("/add")
-    public String addStudent(StudentModel studentModel, 
-                             BindingResult bindintResult) throws ServiceException {
-        if (bindintResult.hasErrors()) {
+    public String addStudent(StudentModel studentModel, BindingResult bindingResult) 
+            throws ServiceException {
+        if (bindingResult.hasErrors()) {
+            bindingResult.getAllErrors().stream()
+                                        .forEach(error -> log.error(error.getDefaultMessage()));
             return "error";
         } else {
+            if (studentModel.getGroup() != null && studentModel.getGroup().getId() == null) {
+                studentModel.setGroup(null);
+            }
             studentService.addStudent(studentModel);
             return "redirect:/students/list";
         }
