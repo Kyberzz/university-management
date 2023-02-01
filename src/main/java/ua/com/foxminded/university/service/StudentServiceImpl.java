@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.extern.slf4j.Slf4j;
 import ua.com.foxminded.university.entity.StudentEntity;
-import ua.com.foxminded.university.exception.RepositoryException;
 import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.StudentModel;
 import ua.com.foxminded.university.repository.StudentRepository;
@@ -61,8 +60,7 @@ public class StudentServiceImpl implements StudentService<StudentModel> {
         try {
             StudentEntity studentEntity = studentRepository.findById(id);
             return modelMapper.map(studentEntity, StudentModel.class);
-        } catch (IllegalArgumentException | ConfigurationException | MappingException | 
-                 RepositoryException e) {
+        } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
             throw new ServiceException("Getting student by its id failed.", e);
         }
     }
@@ -70,12 +68,12 @@ public class StudentServiceImpl implements StudentService<StudentModel> {
     @Override
     public List<StudentModel> getAllStudentsIncludingEmails() throws ServiceException {
         try {
-            List<StudentEntity> studentEntities = studentRepository.getAllStudentsIncludingEmails();
+            List<StudentEntity> studentEntities = studentRepository.findAll();
             ModelMapper modelMapper = new ModelMapper();
             Type listType = new TypeToken<List<StudentModel>>() {}.getType();
             return modelMapper.map(studentEntities, listType);
         } catch (IllegalArgumentException | ConfigurationException | 
-                 MappingException | RepositoryException e) {
+                 MappingException e) {
             throw new ServiceException("Getting all students was failed", e);
         }
     }
@@ -89,9 +87,9 @@ public class StudentServiceImpl implements StudentService<StudentModel> {
             
             prepareEmailToPersist(changedEntity, originEntity);
             prepareGroupToPersist(changedEntity, originEntity);
-            prepareNameToPersist(changedEntity, originEntity);
+            prepareStudentNameToPersist(changedEntity, originEntity);
             studentRepository.saveAndFlush(changedEntity);
-        } catch (RepositoryException | IllegalArgumentException | ConfigurationException | 
+        } catch (IllegalArgumentException | ConfigurationException | 
                  MappingException e) {
             throw new ServiceException("Udating the student data failed.", e);
         }
@@ -112,7 +110,7 @@ public class StudentServiceImpl implements StudentService<StudentModel> {
         }
     }
     
-    private void prepareNameToPersist(StudentEntity changedEntity, StudentEntity originEntity) {
+    private void prepareStudentNameToPersist(StudentEntity changedEntity, StudentEntity originEntity) {
         if (changedEntity.getFirstName() != null) {
             if (changedEntity.getFirstName().equals(EMPTY_STRING)) {
                 String originFirstName = originEntity.getFirstName();

@@ -11,7 +11,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import ua.com.foxminded.university.model.GroupModel;
 import ua.com.foxminded.university.model.StudentModel;
+import ua.com.foxminded.university.service.GroupService;
 import ua.com.foxminded.university.service.StudentService;
 
 @WebMvcTest
@@ -20,12 +22,16 @@ class StudentControllerTest {
     @MockBean
     private StudentService<StudentModel> studentServiceMock;
     
+    @MockBean
+    private GroupService<GroupModel> groupServiceMock;
+    
     @Autowired
     private MockMvc mockMvc;
     
     @BeforeEach
     void setup() {
-        mockMvc = MockMvcBuilders.standaloneSetup(new StudentController(studentServiceMock))
+        mockMvc = MockMvcBuilders.standaloneSetup(new StudentController(studentServiceMock, 
+                                                                        groupServiceMock))
                                  .build();
     }
     

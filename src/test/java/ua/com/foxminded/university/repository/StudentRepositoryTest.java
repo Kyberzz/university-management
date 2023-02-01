@@ -3,8 +3,6 @@ package ua.com.foxminded.university.repository;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.List;
-
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceContext;
@@ -21,7 +19,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
-import ua.com.foxminded.university.config.RepositoryConfig;
 import ua.com.foxminded.university.config.RepositoryTestConfig;
 import ua.com.foxminded.university.entity.GroupEntity;
 import ua.com.foxminded.university.entity.StudentEntity;
@@ -39,7 +36,6 @@ class StudentRepositoryTest {
     private static final String GROUP_NAME = "rs-01";
     private static final String STUDENT_LAST_NAME = "Smith";
     private static final String STUDENT_FIRST_NAME = "Alex";
-    private static final int FIRST_ELEMENT = 0;
     private static final int GROUP_ID_NUMBER = 1;
     private static final int STUDENT_ID_NUMBER = 1;
     
@@ -75,13 +71,6 @@ class StudentRepositoryTest {
         
         entityManager.getTransaction().commit();
         entityManager.close();
-    }
-    
-    @Test
-    void getAllStudentsWithEmail_ShouldReturnAllStudentsAndEmails() throws RepositoryException {
-        List<StudentEntity> students = studentRepository.getAllStudentsIncludingEmails();
-        
-        assertEquals(EMAIL, students.get(FIRST_ELEMENT).getUser().getEmail());
     }
     
     @Test
