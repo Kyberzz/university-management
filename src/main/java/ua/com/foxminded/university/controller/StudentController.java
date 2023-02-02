@@ -34,19 +34,14 @@ public class StudentController extends DefaultController {
     }
 
     @PostMapping("/add")
-    public String addStudent(StudentModel studentModel, BindingResult bindingResult) 
-            throws ServiceException {
+    public String addStudent(StudentModel studentModel, 
+                             BindingResult bindingResult) throws ServiceException {
         if (bindingResult.hasErrors()) {
-            bindingResult.getAllErrors().stream()
-                                        .forEach(error -> log.error(error.getDefaultMessage()));
-            return "error";
-        } else {
-            if (studentModel.getGroup() != null && studentModel.getGroup().getId() == null) {
-                studentModel.setGroup(null);
-            }
-            studentService.addStudent(studentModel);
-            return "redirect:/students/list";
+            handleBindingResultError(bindingResult);
         }
+
+        studentService.addStudent(studentModel);
+        return "redirect:/students/list";
     }
 
     @RequestMapping("/list")
@@ -62,24 +57,17 @@ public class StudentController extends DefaultController {
     
     @PostMapping(value = "/edit", params = "studentId")
     public String editStudent(@RequestParam("studentId") int studentId, 
-                              @RequestParam("userId") Integer userId, 
+                              @RequestParam("userId") Integer userId,
                               StudentModel studentModel, 
                               BindingResult bindingResult, Model model) throws ServiceException {
         if (bindingResult.hasErrors()) {
-            bindingResult.getAllErrors().stream()
-                                        .forEach(error -> log.error(error.getDefaultMessage()));
-            return "error";
-        } else {
-            if (studentModel.getGroup() != null && studentModel.getGroup().getId() == null) {
-                    studentModel.setGroup(null);
-            }
-            
-            log.error(studentModel.toString());
-            studentModel.setId(studentId);
-            studentModel.getUser().setId(userId);
-            studentService.updateStudent(studentModel);
-            return "redirect:/students/list";
+            handleBindingResultError(bindingResult);
         }
+
+        studentModel.setId(studentId);
+        studentModel.getUser().setId(userId);
+        studentService.updateStudent(studentModel);
+        return "redirect:/students/list";
     }
     
     @PostMapping(value ="/delete", params = "deleteStudentId")
@@ -87,5 +75,12 @@ public class StudentController extends DefaultController {
             throws ServiceException {
         studentService.deleteStudentById(studentId);
         return "redirect:/students/list";
+    }
+
+    private String handleBindingResultError(BindingResult bindingResult) {
+        bindingResult.getAllErrors()
+                     .stream()
+                     .forEach(error -> log.error(error.getDefaultMessage()));
+        return "error";
     }
 }
