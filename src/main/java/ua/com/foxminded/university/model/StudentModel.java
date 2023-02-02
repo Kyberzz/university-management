@@ -11,16 +11,7 @@ public class StudentModel {
     private String lastName;
     private UserModel user;
     
-    
-    public void setGroup(GroupModel group) {
-        if (hasGroup(group)) {
-            this.group = group;
-        } else {
-            this.group = null;
-        }
-    }
-     
-    private boolean hasGroup(GroupModel group) {
-        return group.getId() != null;
+    public boolean hasGroup() {
+        return group !=null && group.getId() != null;
     }
 }

@@ -63,7 +63,11 @@ public class StudentController extends DefaultController {
         if (bindingResult.hasErrors()) {
             handleBindingResultError(bindingResult);
         }
-
+        
+        if (!studentModel.hasGroup()) {
+            studentModel.setGroup(null);
+        }
+        
         studentModel.setId(studentId);
         studentModel.getUser().setId(userId);
         studentService.updateStudent(studentModel);

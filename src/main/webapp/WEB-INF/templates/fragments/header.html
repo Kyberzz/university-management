@@ -18,7 +18,7 @@
 		<div class="justify-content-center"
 			th:if="${#execInfo.processedTemplateName} != index">
 			<div class="container-fluid gap-2">
-				<button type="button" class="btn btn-success" data-bs-toggle="modal"
+				<button type="button" class="btn btn-success btn-lg" data-bs-toggle="modal"
 					data-bs-target="#add" th:text="#{fragments.add}">Add</button>
 			</div>
 		</div>
@@ -41,7 +41,7 @@
 			</div>
 			<div class="row gx-2">
 				<div class="col-7">
-					<form action="#" th:action="@{/adminpanel}"
+					<form action="#" th:action="@{/users/list}"
 						sec:authorize="hasRole('ROLE_ADMINISTRATOR')">
 						<button class="btn btn-sm btn-primary"
 							th:text="#{header.adminPanel}">Admin panel</button>

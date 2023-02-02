@@ -4,11 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import ua.com.foxminded.university.model.UserModel;
 import ua.com.foxminded.university.service.UserService;
 
 @Controller
+@RequestMapping("/users")
 public class UserController extends DefaultController {
 
     UserService<UserModel> userService;
@@ -16,6 +18,11 @@ public class UserController extends DefaultController {
     @Autowired
     public UserController(UserService<UserModel> userService) {
         this.userService = userService;
+    }
+    
+    @GetMapping("/list")
+    public String listAllUsers() {
+        return "users/list";
     }
 
     @GetMapping("/authorization")
@@ -25,6 +32,10 @@ public class UserController extends DefaultController {
         model.addAttribute("user", userModel);
         return "authorization";
     }
+    
+    
+    
+    
 
     /*
      * @PostMapping("/authorization") public String addAuthorizeProfile(Model model)
