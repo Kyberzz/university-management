@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.extern.slf4j.Slf4j;
 import ua.com.foxminded.university.entity.TeacherEntity;
-import ua.com.foxminded.university.exception.RepositoryException;
 import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.TeacherModel;
 import ua.com.foxminded.university.repository.TeacherRepository;
@@ -49,7 +48,7 @@ public class TeacherServiceImpl implements TeacherService<TeacherModel> {
             TeacherEntity teacherEntity = teacherRepository.findCourseListById(id);
             ModelMapper modelMapper = new ModelMapper();
             return modelMapper.map(teacherEntity, TeacherModel.class);
-        } catch (RepositoryException | IllegalArgumentException | ConfigurationException | 
+        } catch (IllegalArgumentException | ConfigurationException | 
                  MappingException e) {
             throw new ServiceException("Getting the courses list by the teacher id failed.", e);
         }

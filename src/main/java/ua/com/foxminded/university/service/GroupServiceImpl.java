@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.extern.slf4j.Slf4j;
 import ua.com.foxminded.university.entity.GroupEntity;
-import ua.com.foxminded.university.exception.RepositoryException;
 import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.GroupModel;
 import ua.com.foxminded.university.repository.GroupRepository;
@@ -49,7 +48,7 @@ public class GroupServiceImpl implements GroupService<GroupModel> {
             GroupEntity groupEntity = groupRepository.findStudentListById(id);
             ModelMapper modelMapper = new ModelMapper();
             return modelMapper.map(groupEntity, GroupModel.class);
-        } catch (RepositoryException | IllegalArgumentException | ConfigurationException | MappingException e) {
+        } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
             throw new ServiceException("Getting students list of the group failed.", e);
         }
     }
@@ -60,7 +59,7 @@ public class GroupServiceImpl implements GroupService<GroupModel> {
             GroupEntity groupEntity = groupRepository.findTimetableListById(id);
             ModelMapper modelMapper = new ModelMapper();
             return modelMapper.map(groupEntity, GroupModel.class);
-        } catch (RepositoryException | IllegalArgumentException | ConfigurationException | MappingException e) {
+        } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
             throw new ServiceException("Getting timebales list of the group failed.", e);
         }
     }

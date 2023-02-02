@@ -2,6 +2,8 @@ package ua.com.foxminded.university.repository;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceContext;
@@ -30,8 +32,10 @@ import ua.com.foxminded.university.entity.UserEntity;
 @ActiveProfiles("test")
 class UserRepositoryTest {
     
+    public static final int USER_QUANTITY = 1;
     public static final String PASSWORD = "admin";
-    public static final String EMAIL = "admin";
+    public static final String EMAIL_B = "email@com";
+    public static final String EMAIL_A = "admin@com";
     
     @PersistenceUnit
     EntityManagerFactory entityManagerFactory;
@@ -49,9 +53,13 @@ class UserRepositoryTest {
              
         UserEntity user = new UserEntity();
         user.setIsActive(true);
-        user.setEmail(EMAIL);
+        user.setEmail(EMAIL_A);
         user.setPassword(PASSWORD);
         entityManager.persist(user);
+        
+        UserEntity anotherUser = new UserEntity();
+        anotherUser.setEmail(EMAIL_B);
+        entityManager.persist(anotherUser);
         
         AuthorityEntity authority = new AuthorityEntity();
         authority.setAuthority(Authorities.ADMINISTRATOR);
@@ -59,11 +67,17 @@ class UserRepositoryTest {
         entityManager.persist(authority);
         entityManager.getTransaction().commit();
     }
+    
+    @Test
+    void getAllHavingPassword_shouldReturnAllUsersHavingPassword() {
+        List<UserEntity> users = userRepository.getAllHavingPassword();
+        assertEquals(USER_QUANTITY, users.size());
+    }
 
     @Test
     void findByEmail_shouldReternUserWithAuthority() {
-        UserEntity user = userRepository.findActiveUserByEmail(EMAIL);
-        assertEquals(EMAIL, user.getEmail());
+        UserEntity user = userRepository.findActiveUserByEmail(EMAIL_A);
+        assertEquals(EMAIL_A, user.getEmail());
         assertTrue(user.getIsActive());
         assertEquals(PASSWORD, user.getPassword());
     }

@@ -1,10 +1,12 @@
 package ua.com.foxminded.university.service;
 
+import java.lang.reflect.Type;
 import java.util.List;
 
 import org.modelmapper.ConfigurationException;
 import org.modelmapper.MappingException;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +27,14 @@ public class UserServiceImpl implements UserService<UserModel> {
     
     @Override
     public List<UserModel> getAllUsers() throws ServiceException {
-        
+        try {
+            List<UserEntity> entities = userRepository.getAllHavingPassword();
+            ModelMapper modelMapper = new ModelMapper();
+            Type type = new TypeToken<List<UserModel>>() {}.getType();
+            return modelMapper.map(entities, type);
+        } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
+            throw new ServiceException("Getting all users having emails failed.", e);
+        }
     }
     
     @Override

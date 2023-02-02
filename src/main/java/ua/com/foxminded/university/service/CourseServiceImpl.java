@@ -62,8 +62,7 @@ public class CourseServiceImpl implements CourseService<CourseModel> {
             CourseEntity courseEntity = courseRepository.findTimetableListById(id);
             ModelMapper modelMapper = new ModelMapper();
             course = modelMapper.map(courseEntity, CourseModel.class);
-        } catch (RepositoryException | IllegalArgumentException | 
-                 ConfigurationException | MappingException e) {
+        } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
             throw new ServiceException("Getting timetable list of the course id was failed", e);
         }
         return course;

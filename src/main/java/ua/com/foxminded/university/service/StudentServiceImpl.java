@@ -60,7 +60,7 @@ public class StudentServiceImpl implements StudentService<StudentModel> {
         try {
             StudentEntity studentEntity = studentRepository.findById(id);
             return modelMapper.map(studentEntity, StudentModel.class);
-        } catch (IllegalArgumentException | ConfigurationException | MappingException | RepositoryException e) {
+        } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
             throw new ServiceException("Getting student by its id failed.", e);
         }
     }

@@ -7,5 +7,4 @@ import ua.com.foxminded.university.entity.AuthorityEntity;
 
 @Repository
 public interface AuthorityRepository extends JpaRepository<AuthorityEntity, Integer> {
-    
 }
