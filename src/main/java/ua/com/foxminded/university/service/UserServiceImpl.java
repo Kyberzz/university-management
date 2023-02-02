@@ -1,5 +1,7 @@
 package ua.com.foxminded.university.service;
 
+import java.util.List;
+
 import org.modelmapper.ConfigurationException;
 import org.modelmapper.MappingException;
 import org.modelmapper.ModelMapper;
@@ -19,6 +21,11 @@ public class UserServiceImpl implements UserService<UserModel> {
     @Autowired
     public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
+    }
+    
+    @Override
+    public List<UserModel> getAllUsers() throws ServiceException {
+        
     }
     
     @Override

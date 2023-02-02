@@ -22,11 +22,19 @@
 				<table class="table">
 					<thead>
 						<tr >
-							<th scope="col"></th>
+							<th scope="col" th:text="#{thead.number}">#</th>
+							<th scope="col" th:text="#{thead.firstName}">First name</th>
+							<th scope="col" th:text="#{thead.lastName}">Last name</th>
+							<th scope="col" th:text="#{thead.email}">Email</th>
+							<th scope="col" th:text="#{thead.password}">Password</th>
+							<th scope="col" th:text="#{thead.authority}">Authority</th>
+							<th scope="col" th:text="#{thead.role}">Role</th>
+							<th scope="col" th:text="#{thead.active}">Active</th>
+							<th scope="col" th:text="#{thead.userId}">User ID</th>
 						</tr>
 					</thead>
 					<tbody>
-						<tr>
+						<tr th:each="user,iterationStatus : ${users}">
 							<th scope="row"></th>
 							<td></td>
 						</tr>
