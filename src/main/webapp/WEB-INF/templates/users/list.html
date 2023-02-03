@@ -12,32 +12,123 @@
 </head>
 <body>
 	<div th:replace="~{fragments/header::navigationBar}"></div>
+
+	<form class="modal fade" id="add" data-bs-backdrop="static"
+		data-bs-keyboard="false" tabindex="-1"
+		aria-labelledby="staticBackdropLabel" aria-hidden="true"
+		th:action="@{/users/authorize}" method="post"
+		th:object=${userModel}>
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h1 class="modal-title fs-5" id="staticBackdropLabel"
+						th:text="#{users.addTitle}">Authorize a user</h1>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<div class="container-fluid">
+						<div class="row">
+							<div class="col-6" th:text="|#{thead.email}: |">Email:</div>
+							<div class="col-6">
+								<select class="form-select" aria-label="Defalt select example"
+									th:field="*{id}">
+									<option th:each="user : ${users}" th:value="${user.id}"
+										th:text="${user.email}">email@com</option>
+								</select>
+							</div>
+						</div>
+						<div class="row mt-2">
+							<div class="col-6" th:text="|#{users.authority}: |">Authority</div>
+							<div class="col-6">
+								<select th:field="*{authority.authority}" class="form-select"
+									id="floatingSelect" aria-label="Defalt select example">
+									<option
+										th:each="authority : ${T(ua.com.foxminded.university.entity.Authorities).values()}"
+										th:value="${authority}" th:text="${authority.representation}">Admin</option>
+								</select>
+							</div>
+						</div>
+						<div class="row mt-2">
+							<div class="col-6" th:text="|#{thead.active}: |">Active
+								status :</div>
+							<div class="col">
+								<select th:field="*{isActive}" class="form-select"
+									id="floatingSelect" aria-label="Default select example">
+									<option th:value='true' th:text="#{users.enabled}"></option>
+									<option th:value='false' th:text="#{users.disabled}"></option>
+								</select>
+							</div>
+						</div>
+						<div class="row mt-2">
+							<div class="col-6" th:text="|#{thead.password}: |">Password:
+							</div>
+							<div class="col-6">
+								<input type="password" class="form-control" id="floatingInput"
+									name="password" />
+							</div>
+						</div>
+						<div class="row mt-2">
+							<div class="col-6" th:text="|#{users.confirmPassword}: |">Confirm
+								password:</div>
+							<div class="col-6">
+								<input type="password" class="form-control" id="floatingInput"
+									name="passwordConfirm" />
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary"
+						data-bs-dismiss="modal">Close</button>
+					<button type="submit" class="btn btn-primary"
+						th:text="#{users.authorized}">Authorized</button>
+				</div>
+			</div>
+		</div>
+	</form>
+
 	<div class="container">
 		<div class="row">
 			<p class="text-center fs-1 mt-5" th:text="#{users.tableName}">All
 				authorized users of the university</p>
 		</div>
-		<div class="row">
+		<div class="row justify-content-center">
 			<div class="col-10">
 				<table class="table">
 					<thead>
-						<tr >
+						<tr>
 							<th scope="col" th:text="#{thead.number}">#</th>
 							<th scope="col" th:text="#{thead.firstName}">First name</th>
 							<th scope="col" th:text="#{thead.lastName}">Last name</th>
 							<th scope="col" th:text="#{thead.email}">Email</th>
 							<th scope="col" th:text="#{thead.password}">Password</th>
 							<th scope="col" th:text="#{thead.authority}">Authority</th>
-							<th scope="col" th:text="#{thead.role}">Role</th>
-							<th scope="col" th:text="#{thead.active}">Active</th>
+							<th scope="col" th:text="#{thead.active}">Enabled</th>
 							<th scope="col" th:text="#{thead.userId}">User ID</th>
+							<th></th>
+							<td></td>
 						</tr>
 					</thead>
 					<tbody>
 						<tr th:each="user,iterationStatus : ${users}">
-							<th scope="row"></th>
+							<th scope="row" th:text="${iterationStatus.count}">1</th>
+							<td th:text="${user.firstName}">Linus</td>
+							<td th:text="${user.lastName}">Torvalds</td>
+							<td th:text="${user.email}">email@com</td>
+							<td th:text="${user.password}">*****</td>
+							<td
+								th:text="${user.authority != null} ? ${user.authority.authority.representation} : '---'">
+								Administrator</td>
+							<td
+								th:text="${user.isActive != null or true} ? 'Enabled' : 'Disabled'">true</td>
+							<td th:text="${user.id}">7</td>
 							<td></td>
+
+							<td></td>
+
 						</tr>
+
 					</tbody>
 				</table>
 			</div>
@@ -46,9 +137,6 @@
 
 
 
-
-
-	<h1>Hello, world!</h1>
 	<script
 		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
 		integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"

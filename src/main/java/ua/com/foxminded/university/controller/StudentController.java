@@ -59,7 +59,7 @@ public class StudentController extends DefaultController {
     public String editStudent(@RequestParam("studentId") int studentId, 
                               @RequestParam("userId") Integer userId,
                               StudentModel studentModel, 
-                              BindingResult bindingResult, Model model) throws ServiceException {
+                              BindingResult bindingResult) throws ServiceException {
         if (bindingResult.hasErrors()) {
             handleBindingResultError(bindingResult);
         }

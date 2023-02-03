@@ -29,13 +29,13 @@ public class UserEntity implements Serializable {
     @Column(name = "is_active")
     private Boolean isActive;
     
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "user")
+    @OneToOne(fetch = FetchType.EAGER, mappedBy = "user")
     private TeacherEntity teacher;
     
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "user")
+    @OneToOne(fetch = FetchType.EAGER, mappedBy = "user")
     private StudentEntity student;
     
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "user")
+    @OneToOne(fetch = FetchType.EAGER, mappedBy = "user")
     private StaffEntity staff;
     
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "user")

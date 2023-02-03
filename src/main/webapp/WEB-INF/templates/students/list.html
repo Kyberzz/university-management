@@ -33,7 +33,7 @@
 						</div>
 						<div class="row form-floating mb-3">
 							<input type="text" class="form-control" id="floatingInput"
-								placeholder="#" th:field="*{lastName}"> <label
+								placeholder="#" th:field="*{lastName}"><label
 								for="floatingInput" th:text="|#{thead.lastName}:|"></label>
 						</div>
 						<div class="row form-floating mb-3">
@@ -81,7 +81,7 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr th:each="student,iterationStatus : ${students}">
+							<tr th:each="student,iterationStatus : ${students}">
 							<th scope="row" th:text="${iterationStatus.count}">1</th>
 							<td th:text="${student.firstName}">John</td>
 							<td th:text="${student.lastName}">Snow</td>
@@ -97,7 +97,6 @@
 									th:text="#{button.edit}">Edit</button>
 								<div class="modal fade" th:id="|edit${iterationStatus.index}|"
 									tabindex="-1" aria-labelledby="editStudent" aria-hidden="true">
-
 									<div class="modal-dialog">
 										<form class="modal-content" th:action="@{/students/edit}"
 											th:object="${studentModel}" method="post">
@@ -175,8 +174,8 @@
 										</form>
 									</div>
 								</div>
-
 							</td>
+
 							<td class="text-start">
 								<button type="button" class="btn btn-success btn-sm"
 									data-bs-toggle="modal"

@@ -1,7 +1,9 @@
 package ua.com.foxminded.university.service;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.modelmapper.ConfigurationException;
 import org.modelmapper.MappingException;
@@ -24,17 +26,30 @@ public class UserServiceImpl implements UserService<UserModel> {
     public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
-    
+
     @Override
-    public List<UserModel> getAllUsers() throws ServiceException {
-        try {
-            List<UserEntity> entities = userRepository.getAllHavingPassword();
-            ModelMapper modelMapper = new ModelMapper();
-            Type type = new TypeToken<List<UserModel>>() {}.getType();
-            return modelMapper.map(entities, type);
-        } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
-            throw new ServiceException("Getting all users having emails failed.", e);
-        }
+    public List<UserModel> getAllUsers() {
+        List<UserEntity> entities = userRepository.getAllHavingPassword();
+        ModelMapper modelMapper = new ModelMapper();
+        Type type = new TypeToken<List<UserModel>>() {}.getType();
+        List<UserModel> models = modelMapper.map(entities, type);
+        List<UserModel> namedModels;
+        namedModels = models.stream()
+                            .map(model -> {
+                                if (model.getTeacher() != null) {
+                                    model.setFirstName(model.getTeacher().getFirstName());
+                                    model.setLastName(model.getTeacher().getLastName());
+                                } else if (model.getStudent() != null) {
+                                    model.setFirstName(model.getStudent().getFirstName());
+                                    model.setLastName(model.getStudent().getLastName());
+                                } else if (model.getStaff() != null) {
+                                    model.setFirstName(model.getStaff().getFirstName());
+                                    model.setLastName(model.getStaff().getLastName());
+                                }
+                                return model;
+                            })
+                            .collect(Collectors.toList());
+        return namedModels;
     }
     
     @Override

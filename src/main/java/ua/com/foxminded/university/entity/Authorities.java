@@ -1,7 +1,6 @@
 package ua.com.foxminded.university.entity;
 
 public enum Authorities {
-    USER("User"), 
     ADMINISTRATOR ("Administrator"), 
     STAFF("Staff"), 
     STUDENT("Student");
