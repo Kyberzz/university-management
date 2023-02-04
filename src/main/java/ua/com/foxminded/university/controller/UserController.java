@@ -2,14 +2,20 @@ package ua.com.foxminded.university.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.servlet.ModelAndView;
 
 import lombok.extern.slf4j.Slf4j;
 import ua.com.foxminded.university.exception.ServiceException;
@@ -40,29 +46,21 @@ public class UserController extends DefaultController {
     @PostMapping(value = "/authorize", params = {"password", "passwordConfirm"})
     public String authorize(@RequestParam("password") String password, 
                             @RequestParam("passwordConfirm") String passwordConfirm,
-                            UserModel userModel, BindingResult bindingResult) {
+                            UserModel userModel, 
+                            BindingResult bindingResult) throws ServiceException {
         if (bindingResult.hasErrors()) {
             bindingResult.getAllErrors().stream()
                                         .forEach(error -> log.error(error.getDefaultMessage()));
             return "error";
         }
-        
+
         if (!password.equals(passwordConfirm)) {
             return "users/nonconfirm";
             
         }
+        userModel.setPassword(password);
+        userService.udateUser(userModel);
         
         return "redirect:/users/list";
     }
-    
-
-    /*
-     * @PostMapping("/authorization") public String addAuthorizeProfile(Model model)
-     * { try {
-     * 
-     * 
-     * } catch (Exception e) {
-     * 
-     * } }
-     */
 }

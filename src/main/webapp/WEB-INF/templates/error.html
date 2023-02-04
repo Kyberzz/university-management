@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" xmlns:th="tymeleaf.org">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -15,7 +15,8 @@
 	<h1 th:text="|${httpStatus} - ${httpStatus.reasonPhrase}|">404</h1>
 
 	<p th:if="${url}">
-		<b>Page:</b> <span th:text="${url}">Page URL</span>
+		<b th:text="|#{error.errorCause}: |">Page:</b>
+		<a th:href="@{__${url}__}" th:text="@{__${url}__}">Page URL</a>
 	</p>
 
 	<script

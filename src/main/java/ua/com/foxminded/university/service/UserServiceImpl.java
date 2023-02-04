@@ -54,9 +54,13 @@ public class UserServiceImpl implements UserService<UserModel> {
     
     @Override
     public void udateUser(UserModel model) throws ServiceException {
-        ModelMapper modelMapper = new ModelMapper();
-        UserEntity entity = modelMapper.map(model, UserEntity.class);
-        userRepository.saveAndFlush(entity);
+        try {
+            ModelMapper modelMapper = new ModelMapper();
+            UserEntity entity = modelMapper.map(model, UserEntity.class);
+            userRepository.saveAndFlush(entity);
+        } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
+            throw new ServiceException("Updating user failes", e);
+        }
     }
     
     @Override
