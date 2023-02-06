@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -22,10 +23,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
+import lombok.extern.slf4j.Slf4j;
 import ua.com.foxminded.university.config.RepositoryTestConfig;
 import ua.com.foxminded.university.controller.UserController;
+import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.UserModel;
 
+@Slf4j
 @AutoConfigureMockMvc
 @SpringBootTest
 //(classes = RepositoryTestConfig.class)
@@ -44,18 +48,16 @@ class UserControllerIntegrationTest {
 
     @Test
     void authorize_shouldAuthorizeExistingUser() throws Exception {
-        UserModel userModel = new UserModel();
-        userModel.setId(2);
-        userModel.setEmail("emmmm");
-        
-        mockMvc.perform(MockMvcRequestBuilders.post("/users/authorize")
-                                              .flashAttr("userModel",userModel)
-                                              .param("password", "4")
-                                              .param("passwordConfirm", "4"))
-               .andDo(print())
-               .andExpect(MockMvcResultMatchers.status().isOk());
-             //  .andExpect(MockMvcResultMatchers.forwardedUrl("error"));
-             //  .andExpect(MockMvcResultMatchers.redirectedUrl("/users/list"));
+            UserModel userModel = new UserModel();
+            userModel.setId(2);
+            userModel.setEmail("@@@@@@@@");
+            
+            mockMvc.perform(MockMvcRequestBuilders.post("/users/authorize")
+                                                  .flashAttr("userModel",userModel)
+                                                  .param("password", "4")
+                                                  .param("passwordConfirm", "4"))
+                   .andDo(print())
+                   .andExpect(redirectedUrl("/users/list"));
     }
     
     @Test
