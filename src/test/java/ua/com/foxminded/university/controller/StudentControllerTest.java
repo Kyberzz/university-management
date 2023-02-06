@@ -36,7 +36,7 @@ class StudentControllerTest {
     }
     
     @Test
-    void shouldRenderStudentsList() throws Exception {
+    void getAllStudents_shouldRenderStudentsList() throws Exception {
         mockMvc.perform(get("/students/list"))
                .andExpect(status().isOk())
                .andExpect(model().attributeExists("students"))

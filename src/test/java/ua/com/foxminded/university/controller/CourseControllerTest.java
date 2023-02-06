@@ -23,12 +23,10 @@ class CourseControllerTest {
     @Autowired
     private MockMvc mockMvc;
     
-    
     @BeforeEach
     void setup() {
         mockMvc = MockMvcBuilders.standaloneSetup(new CourseController(courseServiceMock)).build();
     }
-
 
     @Test
     void shuldRenderCoursesListView() throws Exception {
