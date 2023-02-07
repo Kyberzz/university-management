@@ -28,7 +28,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         try {
             UserModel user = userService.getActiveUserAuthorityByEmail(email);
             String password = user.getPassword();
-            String authority = user.getAuthority().getAuthority().toString();
+            String authority = user.getUserAuthority().getAuthority().toString();
             PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
 
             return User.withUsername(email)

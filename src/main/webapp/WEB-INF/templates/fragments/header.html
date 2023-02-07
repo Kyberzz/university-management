@@ -16,12 +16,19 @@
 		<div class="ms-2" th:insert="~{fragments/logo::foxmindedLogo}"></div>
 
 		<div class="justify-content-center"
-			th:if="${#execInfo.processedTemplateName} != index">
+			th:if="${#execInfo.processedTemplateName != 'index' and #execInfo.processedTemplateName != 'users/list'}">
 			<div class="container-fluid gap-2">
 				<button type="button" class="btn btn-success btn-lg" data-bs-toggle="modal"
 					data-bs-target="#add" th:text="#{fragments.add}">Add</button>
 			</div>
 		</div>
+		<div class="justify-content-center"
+   th:if="${#execInfo.processedTemplateName == 'users/list'}">
+   <div class="container-fluid gap-2">
+    <button type="button" class="btn btn-success btn-lg" data-bs-toggle="modal"
+     data-bs-target="#add" th:text="#{fragments.authorizeUser}">Authorize user</button>
+   </div>
+  </div>
 
 		<div th:if="${#execInfo.processedTemplateName} == index">
 			<form action="#" th:action="@{/login}"

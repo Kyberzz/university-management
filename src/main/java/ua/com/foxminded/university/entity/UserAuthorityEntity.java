@@ -18,7 +18,7 @@ import lombok.Data;
 @Entity
 @Data
 @Table(name = "authorities", schema = "university")
-public class AuthorityEntity implements Serializable {
+public class UserAuthorityEntity implements Serializable {
     
     public static final long serialVersionUID = 1L;
     
@@ -27,7 +27,7 @@ public class AuthorityEntity implements Serializable {
     private Integer id;
     
     @Enumerated(EnumType.STRING)
-    private Authorities authority;
+    private Authority authority;
     
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")

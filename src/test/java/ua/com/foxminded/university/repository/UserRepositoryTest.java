@@ -21,8 +21,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import ua.com.foxminded.university.config.RepositoryTestConfig;
-import ua.com.foxminded.university.entity.Authorities;
-import ua.com.foxminded.university.entity.AuthorityEntity;
+import ua.com.foxminded.university.entity.Authority;
+import ua.com.foxminded.university.entity.UserAuthorityEntity;
 import ua.com.foxminded.university.entity.UserEntity;
 
 @ExtendWith(SpringExtension.class)
@@ -36,6 +36,7 @@ class UserRepositoryTest {
     public static final String PASSWORD = "admin";
     public static final String EMAIL_B = "email@com";
     public static final String EMAIL_A = "admin@com";
+    public static final int USER_ID = 1;
     
     @PersistenceUnit
     EntityManagerFactory entityManagerFactory;
@@ -61,11 +62,17 @@ class UserRepositoryTest {
         anotherUser.setEmail(EMAIL_B);
         entityManager.persist(anotherUser);
         
-        AuthorityEntity authority = new AuthorityEntity();
-        authority.setAuthority(Authorities.ADMINISTRATOR);
+        UserAuthorityEntity authority = new UserAuthorityEntity();
+        authority.setAuthority(Authority.ADMINISTRATOR);
         authority.setUser(user);
         entityManager.persist(authority);
         entityManager.getTransaction().commit();
+    }
+    
+    @Test
+    void getByEmail_shouldReturnUser_whenEnterEmaill() {
+        UserEntity user = userRepository.findByEmail(EMAIL_A);
+        assertEquals(USER_ID, user.getId());
     }
     
     @Test

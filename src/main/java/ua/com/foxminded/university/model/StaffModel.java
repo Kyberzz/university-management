@@ -13,5 +13,5 @@ public class StaffModel implements Serializable {
     private String firstName;
     private String lastName;
     private String position;
-    private AuthorityModel credentials;
+    private UserAuthorityModel credentials;
 }

@@ -2,24 +2,20 @@ package ua.com.foxminded.university.controller;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.servlet.ModelAndView;
 
 import lombok.extern.slf4j.Slf4j;
 import ua.com.foxminded.university.exception.ServiceException;
+import ua.com.foxminded.university.model.UserAuthorityModel;
 import ua.com.foxminded.university.model.UserModel;
+import ua.com.foxminded.university.service.UserAuthorityService;
 import ua.com.foxminded.university.service.UserService;
 
 @Slf4j
@@ -28,39 +24,61 @@ import ua.com.foxminded.university.service.UserService;
 public class UserController extends DefaultController {
 
     UserService<UserModel> userService;
+    UserAuthorityService<UserAuthorityModel> userAuthotiryService;
 
     @Autowired
-    public UserController(UserService<UserModel> userService) {
+    public UserController(UserService<UserModel> userService,
+            UserAuthorityService<UserAuthorityModel> userAuthotiryService) {
         this.userService = userService;
+        this.userAuthotiryService = userAuthotiryService;
     }
-    
+
     @GetMapping("/list")
     public String listAllUsers(Model model) throws ServiceException {
-        List<UserModel> users = userService.getAllUsers();
-        UserModel authorizedUser = new UserModel();
-        model.addAttribute("users", users);
-        model.addAttribute("userModel", authorizedUser);
+        List<UserModel> allUsers = userService.getAllUsers();
+        List<UserModel> notAuthorizedUsers = userService.getNotAuthorizedUsers();
+        UserModel newUser = new UserModel();
+        model.addAttribute("notAuthorizedUsers", notAuthorizedUsers);
+        model.addAttribute("allUsers", allUsers);
+        model.addAttribute("updatedUser", newUser);
         return "users/list";
     }
 
     @PostMapping(value = "/authorize", params = {"password", "passwordConfirm"})
-    public String authorize(@RequestParam("password") String password, 
-                            @RequestParam("passwordConfirm") String passwordConfirm,
-                            UserModel userModel, 
-                            BindingResult bindingResult) throws ServiceException {
-        if (bindingResult.hasErrors()) {
-            bindingResult.getAllErrors().stream()
-                                        .forEach(error -> log.error(error.getDefaultMessage()));
-            return "error";
-        }
+    public String authorizeUser(@RequestParam("email") String email,
+                                @RequestParam("password") String password, 
+                                @RequestParam("passwordConfirm") String passwordConfirm,
+                                UserModel updatedUser, 
+                                BindingResult bindingResult) throws ServiceException {
+        handleBindingResultError(bindingResult);
 
         if (!password.equals(passwordConfirm)) {
-            return "users/nonconfirm";
-            
+            return "users/noconfirm";
         }
-        userModel.setPassword(password);
-        userService.udateUser(userModel);
         
+        UserModel persistedUser = null;
+        
+        try {
+            persistedUser = userService.getByEmail(email);
+        } catch (ServiceException e) {
+            return "users/notfound";
+        }
+
+        persistedUser.setEmail(updatedUser.getEmail());
+        persistedUser.setPassword(password);
+        persistedUser.setIsActive(updatedUser.getIsActive());
+
+        UserAuthorityModel userAuthority = updatedUser.getUserAuthority();
+        userAuthority.setUser(persistedUser);
+        persistedUser.setUserAuthority(userAuthority);
+        userService.updateUser(persistedUser);
         return "redirect:/users/list";
+    }
+    
+    private String handleBindingResultError(BindingResult bindingResult) {
+        bindingResult.getAllErrors()
+                     .stream()
+                     .forEach(error -> log.error(error.getDefaultMessage()));
+        return "error";
     }
 }

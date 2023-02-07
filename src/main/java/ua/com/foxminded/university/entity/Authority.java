@@ -1,13 +1,13 @@
 package ua.com.foxminded.university.entity;
 
-public enum Authorities {
+public enum Authority {
     ADMINISTRATOR ("Administrator"), 
     STAFF("Staff"), 
     STUDENT("Student");
     
     private final String representation;
 
-    private Authorities(String represantation) {
+    private Authority(String represantation) {
         this.representation = represantation;
     }
 

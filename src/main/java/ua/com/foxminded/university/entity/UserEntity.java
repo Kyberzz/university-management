@@ -2,6 +2,7 @@ package ua.com.foxminded.university.entity;
 
 import java.io.Serializable;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -38,6 +39,7 @@ public class UserEntity implements Serializable {
     @OneToOne(fetch = FetchType.EAGER, mappedBy = "user")
     private StaffEntity staff;
     
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "user")
-    private AuthorityEntity authority;
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "user", cascade = {CascadeType.ALL}, 
+              orphanRemoval = true)
+    private UserAuthorityEntity userAuthority;
 }
