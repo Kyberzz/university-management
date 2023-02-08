@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" xmlns:th="thymeleaf.org">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -31,7 +31,7 @@
   </div>
 
 		<div th:if="${#execInfo.processedTemplateName} == index">
-			<form action="#" th:action="@{/login}"
+			<form action="#" th:action="@{/greeting}"
 				sec:authorize="!isAuthenticated()">
 				<button class="btn btn-primary ms-auto me-2"
 					th:text="#{header.SignIn}">Sign In</button>
