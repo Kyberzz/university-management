@@ -49,7 +49,7 @@ public class StudentController extends DefaultController {
         List<StudentModel> students = studentService.getAllStudentsIncludingEmails();
         List<GroupModel> groups = groupService.getAllGroups();
         StudentModel student = new StudentModel();
-        model.addAttribute("studentModel", student);
+        model.addAttribute("updatedStudent", student);
         model.addAttribute("students", students);
         model.addAttribute("groups", groups);
         return "students/list";
@@ -57,20 +57,30 @@ public class StudentController extends DefaultController {
     
     @PostMapping(value = "/edit", params = "studentId")
     public String editStudent(@RequestParam("studentId") int studentId, 
-                              @RequestParam("userId") Integer userId,
-                              StudentModel studentModel, 
+                              StudentModel updatedStudent, 
                               BindingResult bindingResult) throws ServiceException {
         if (bindingResult.hasErrors()) {
             handleBindingResultError(bindingResult);
         }
+        StudentModel persistedStudent = studentService.getStudentById(studentId);
+        persistedStudent.setFirstName(updatedStudent.getFirstName());
+        persistedStudent.setLastName(updatedStudent.getLastName());
         
-        if (!studentModel.hasGroup()) {
-            studentModel.setGroup(null);
+        if (updatedStudent.hasUser()) {
+            String email = updatedStudent.getUser().getEmail();
+            
+            if (persistedStudent.hasUser()) {
+                persistedStudent.getUser().setEmail(email);
+            } else {
+                persistedStudent.setUser(updatedStudent.getUser());
+            }
         }
         
-        studentModel.setId(studentId);
-        studentModel.getUser().setId(userId);
-        studentService.updateStudent(studentModel);
+        if (updatedStudent.hasGroup()) {
+            updatedStudent.getGroup().setStudent(persistedStudent);
+            persistedStudent.setGroup(updatedStudent.getGroup());
+        }
+        studentService.updateStudent(persistedStudent);
         return "redirect:/students/list";
     }
     
@@ -80,7 +90,7 @@ public class StudentController extends DefaultController {
         studentService.deleteStudentById(studentId);
         return "redirect:/students/list";
     }
-
+    
     private String handleBindingResultError(BindingResult bindingResult) {
         bindingResult.getAllErrors()
                      .stream()

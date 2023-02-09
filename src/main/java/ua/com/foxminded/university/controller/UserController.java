@@ -32,6 +32,37 @@ public class UserController extends DefaultController {
         this.userService = userService;
         this.userAuthotiryService = userAuthotiryService;
     }
+    
+    @PostMapping(value = "/delete", params = "userId")
+    public String delete(@RequestParam("userId") Integer userId) throws ServiceException {
+        userService.deleteById(userId);
+        return "redirect:/users/list";
+    }
+    
+    @PostMapping(value = "/edit", params = {"userId"})
+    public String editUser(@RequestParam("userId") Integer userId, 
+                           UserModel updatedUser, 
+                           BindingResult bindingResult) throws ServiceException {
+        if (bindingResult.hasErrors()) {
+            handleBindingResultError(bindingResult);
+        }
+        UserModel persistedUser = userService.getUserById(userId);
+        persistedUser.setEmail(updatedUser.getEmail());
+        persistedUser.setIsActive(updatedUser.getIsActive());
+
+        if (persistedUser.hasUserAuthority() && updatedUser.hasUserAuthority()) {
+            Integer userAuthorityId = persistedUser.getUserAuthority().getId();
+            updatedUser.getUserAuthority().setId(userAuthorityId);
+        }
+        
+        if (updatedUser.hasUserAuthority()) {
+            updatedUser.getUserAuthority().setUser(persistedUser);
+            persistedUser.setUserAuthority(updatedUser.getUserAuthority());
+        }
+        
+        userService.updateUser(persistedUser);
+        return "redirect:/users/list";
+    }
 
     @GetMapping("/list")
     public String listAllUsers(Model model) throws ServiceException {

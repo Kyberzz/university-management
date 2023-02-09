@@ -11,6 +11,7 @@ public class GroupModel implements Serializable {
 
     private Integer id;
     private String name;
-    private List<TimetableModel> timetableList;
+    private StudentModel student;
     private List<StudentModel> studentList;
+    private List<TimetableModel> timetableList;
 }

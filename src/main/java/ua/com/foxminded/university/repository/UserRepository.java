@@ -10,6 +10,7 @@ import ua.com.foxminded.university.entity.UserEntity;
 
 public interface UserRepository extends JpaRepository<UserEntity, Integer> {
     
+    public UserEntity findById(int id);
     public UserEntity findByEmail(String email);
        
     @Query("select u from UserEntity u where u.password != 'null'")

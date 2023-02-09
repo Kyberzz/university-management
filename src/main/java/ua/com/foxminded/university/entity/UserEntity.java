@@ -33,7 +33,7 @@ public class UserEntity implements Serializable {
     @OneToOne(fetch = FetchType.EAGER, mappedBy = "user")
     private TeacherEntity teacher;
     
-    @OneToOne(fetch = FetchType.EAGER, mappedBy = "user")
+    @OneToOne(fetch = FetchType.EAGER, mappedBy = "user", cascade = {CascadeType.ALL})
     private StudentEntity student;
     
     @OneToOne(fetch = FetchType.EAGER, mappedBy = "user")

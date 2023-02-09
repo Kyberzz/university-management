@@ -12,10 +12,10 @@ public class TimetableModel implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private Integer id;
-    private GroupModel group;
-    private CourseModel course;
     private LocalTime startTime;
     private LocalTime endTime;
     private String description;
     private DayOfWeek dayOfWeek;
+    private CourseModel course;
+    private GroupModel group;
 }

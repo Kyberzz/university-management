@@ -8,6 +8,8 @@ import org.modelmapper.ConfigurationException;
 import org.modelmapper.MappingException;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
+import org.modelmapper.convention.MatchingStrategies;
+import org.modelmapper.spi.MatchingStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +29,26 @@ public class UserServiceImpl implements UserService<UserModel> {
     @Autowired
     public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
+    }
+    
+    public void deleteById(Integer id) throws ServiceException {
+        try {
+            userRepository.deleteById(id);
+        } catch (IllegalArgumentException e) {
+            throw new ServiceException("Deleting the user fails.", e);
+        }
+    }
+    
+    @Override
+    public UserModel getUserById(int id) throws ServiceException {
+        UserEntity entity = userRepository.findById(id);
+        try {
+            ModelMapper modelMapper = new ModelMapper();
+            modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+            return modelMapper.map(entity, UserModel.class);
+        } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
+            throw new ServiceException("Getting user by the id fails.", e);
+        }
     }
     
     @Override
@@ -63,6 +85,7 @@ public class UserServiceImpl implements UserService<UserModel> {
         try {
             List<UserEntity> entities = userRepository.findAll();
             ModelMapper modelMapper = new ModelMapper();
+            modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
             Type type = new TypeToken<List<UserModel>>() {}.getType();
             List<UserModel> models = modelMapper.map(entities, type);
             List<UserModel> namedModels;
@@ -90,7 +113,8 @@ public class UserServiceImpl implements UserService<UserModel> {
     @Override
     public void updateUser(UserModel user) throws ServiceException {
         try {
-        ModelMapper modelMapper = new ModelMapper();
+            ModelMapper modelMapper = new ModelMapper();
+            modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
             
             modelMapper.typeMap(UserModel.class, UserEntity.class).addMappings(mapper -> {
                 mapper.map(src -> src.getUserAuthority().getAuthority(), 
@@ -105,7 +129,7 @@ public class UserServiceImpl implements UserService<UserModel> {
     }
     
     @Override
-    public UserModel getActiveUserAuthorityByEmail(String email) throws ServiceException {
+    public UserModel getActiveUserByEmail(String email) throws ServiceException {
         try {
             UserEntity userEntity = userRepository.findActiveUserByEmail(email);
             ModelMapper modelMapper = new ModelMapper();

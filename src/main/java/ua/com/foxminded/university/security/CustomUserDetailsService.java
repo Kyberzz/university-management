@@ -26,7 +26,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         try {
-            UserModel user = userService.getActiveUserAuthorityByEmail(email);
+            UserModel user = userService.getActiveUserByEmail(email);
             String password = user.getPassword();
             String authority = user.getUserAuthority().getAuthority().toString();
             PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();

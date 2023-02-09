@@ -5,78 +5,78 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>The timetable list</title>
 <link
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
-	rel="stylesheet"
-	integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
-	crossorigin="anonymous">
+ href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+ rel="stylesheet"
+ integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
+ crossorigin="anonymous">
 </head>
 <body>
-	<div th:replace="~{fragments/header::navigationBar}"></div>
-	<div class="offcanvas offcanvas-top" tabindex="-1" id="add"
-		aria-labelledy="offcanvasTopLabel">
-		<div class="offcanvas-header">
-			<h5 class="offcanvas-title" th:text="#{timetables.addTimetable}">Add
-				a timetable</h5>
-			<button type="button" class="btn-close" data-bs-dismiss="offcanvas"
-				aria-label="close"></button>
-		</div>
-		<div class="offcanvas-body">My content</div>
-	</div>
-	<div class="offcanvas offcanvas-top" tabindex="-1" id="delete"
-		aria-labelledy="offcanvasTopLabel">
-		<div class="offcanvas-header">
-			<h5 class="offcanvas-title" th:text="#{timetables.deleteTimetable}">Delete
-				a timetable</h5>
-			<button type="button" class="btn-close" data-bs-dismiss="offcanvas"
-				aria-label="close"></button>
-		</div>
-		<div class="offcanvas-body">My content</div>
-	</div>
-	<div class="offcanvas offcanvas-top" tabindex="-1" id="edit"
-		aria-labelledy="offcanvasTopLabel">
-		<div class="offcanvas-header">
-			<h5 class="offcanvas-title" th:text="#{timetables.editTimetable}">Edit
-				a teacher</h5>
-			<button type="button" class="btn-close" data-bs-dismiss="offcanvas"
-				aria-label="close"></button>
-		</div>
-		<div class="offcanvas-body">My content</div>
-	</div>
+ <div th:replace="~{fragments/header::navigationBar}"></div>
+ <div class="offcanvas offcanvas-top" tabindex="-1" id="add"
+  aria-labelledy="offcanvasTopLabel">
+  <div class="offcanvas-header">
+   <h5 class="offcanvas-title" th:text="#{timetables.addTimetable}">Add
+    a timetable</h5>
+   <button type="button" class="btn-close" data-bs-dismiss="offcanvas"
+    aria-label="close"></button>
+  </div>
+  <div class="offcanvas-body">My content</div>
+ </div>
+ <div class="offcanvas offcanvas-top" tabindex="-1" id="delete"
+  aria-labelledy="offcanvasTopLabel">
+  <div class="offcanvas-header">
+   <h5 class="offcanvas-title" th:text="#{timetables.deleteTimetable}">Delete
+    a timetable</h5>
+   <button type="button" class="btn-close" data-bs-dismiss="offcanvas"
+    aria-label="close"></button>
+  </div>
+  <div class="offcanvas-body">My content</div>
+ </div>
+ <div class="offcanvas offcanvas-top" tabindex="-1" id="edit"
+  aria-labelledy="offcanvasTopLabel">
+  <div class="offcanvas-header">
+   <h5 class="offcanvas-title" th:text="#{timetables.editTimetable}">Edit
+    a teacher</h5>
+   <button type="button" class="btn-close" data-bs-dismiss="offcanvas"
+    aria-label="close"></button>
+  </div>
+  <div class="offcanvas-body">My content</div>
+ </div>
 
-	<div class="container">
-		<div class="row justify-content-center">
-			<div class="col-10">
-				<p class="text-center fs-1 mt-5" th:text="#{timetables.tableName}">All
-					timetables of the university</p>
-				<table class="table">
-					<thead>
-						<tr>
-							<th scope="col" th:text="#{thead.number}">#</th>
-							<th scope="col" th:text="#{thead.startTime}">Start time</th>
-							<th scope="col" th:text="#{thead.endTime}">End time</th>
-							<th scope="col" th:text="#{thead.dayOfWeek}">Day of week</th>
-							<th scope="col" th:text="#{thead.description}">Description</th>
-							<th scope="col" th:text="#{thead.id}">ID</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr th:each="timetable,iterationStatus : ${timetables}">
-							<th scope="row" th:text="${iterationStatus.count}">1</th>
-							<td th:text="${timetable.startTime}">8:45</td>
-							<td th:text="${timetable.endTime}">10:45</td>
-							<td th:text="${timetable.dayOfWeek}">Monday</td>
-							<td th:text="${timetable.description}">some description</td>
-							<td th:text="${timetable.id}">1</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-		</div>
-	</div>
+ <div class="container">
+  <div class="row justify-content-center">
+   <div class="col-10">
+    <p class="text-center fs-1 mt-5" th:text="#{timetables.tableName}">All
+     timetables of the university</p>
+    <table class="table">
+     <thead>
+      <tr>
+       <th scope="col" th:text="#{thead.number}">#</th>
+       <th scope="col" th:text="#{thead.startTime}">Start time</th>
+       <th scope="col" th:text="#{thead.endTime}">End time</th>
+       <th scope="col" th:text="#{thead.dayOfWeek}">Day of week</th>
+       <th scope="col" th:text="#{thead.description}">Description</th>
+       <th scope="col" th:text="#{timetables.timetableId}">ID</th>
+      </tr>
+     </thead>
+     <tbody>
+      <tr th:each="timetable,iterationStatus : ${timetables}">
+       <th scope="row" th:text="${iterationStatus.count}">1</th>
+       <td th:text="${timetable.startTime}">8:45</td>
+       <td th:text="${timetable.endTime}">10:45</td>
+       <td th:text="${timetable.dayOfWeek}">Monday</td>
+       <td th:text="${timetable.description}">some description</td>
+       <td th:text="${timetable.id}">1</td>
+      </tr>
+     </tbody>
+    </table>
+   </div>
+  </div>
+ </div>
 
-	<script
-		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
-		integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
-		crossorigin="anonymous"></script>
+ <script
+  src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+  integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+  crossorigin="anonymous"></script>
 </body>
 </html>

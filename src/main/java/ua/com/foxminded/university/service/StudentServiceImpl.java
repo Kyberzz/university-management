@@ -7,6 +7,8 @@ import org.modelmapper.ConfigurationException;
 import org.modelmapper.MappingException;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
+import org.modelmapper.convention.MatchingStrategies;
+import org.modelmapper.spi.MatchingStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,13 +57,13 @@ public class StudentServiceImpl implements StudentService<StudentModel> {
     
     @Override 
     public StudentModel getStudentById(int id) throws ServiceException {
-        ModelMapper modelMapper = new ModelMapper();
-        
         try {
+            ModelMapper modelMapper = new ModelMapper();
+            modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
             StudentEntity studentEntity = studentRepository.findById(id);
             return modelMapper.map(studentEntity, StudentModel.class);
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
-            throw new ServiceException("Getting student by its id failed.", e);
+            throw new ServiceException("Getting a student by its id failed.", e);
         }
     }
     
@@ -70,6 +72,7 @@ public class StudentServiceImpl implements StudentService<StudentModel> {
         try {
             List<StudentEntity> studentEntities = studentRepository.findAll();
             ModelMapper modelMapper = new ModelMapper();
+            modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
             Type listType = new TypeToken<List<StudentModel>>() {}.getType();
             return modelMapper.map(studentEntities, listType);
         } catch (IllegalArgumentException | ConfigurationException | 
