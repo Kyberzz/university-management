@@ -15,7 +15,6 @@ import lombok.extern.slf4j.Slf4j;
 import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.UserAuthorityModel;
 import ua.com.foxminded.university.model.UserModel;
-import ua.com.foxminded.university.service.UserAuthorityService;
 import ua.com.foxminded.university.service.UserService;
 
 @Slf4j
@@ -24,13 +23,10 @@ import ua.com.foxminded.university.service.UserService;
 public class UserController extends DefaultController {
 
     UserService<UserModel> userService;
-    UserAuthorityService<UserAuthorityModel> userAuthotiryService;
 
     @Autowired
-    public UserController(UserService<UserModel> userService,
-            UserAuthorityService<UserAuthorityModel> userAuthotiryService) {
+    public UserController(UserService<UserModel> userService) {
         this.userService = userService;
-        this.userAuthotiryService = userAuthotiryService;
     }
     
     @PostMapping(value = "/delete", params = "userId")
@@ -49,17 +45,15 @@ public class UserController extends DefaultController {
         UserModel persistedUser = userService.getUserById(userId);
         persistedUser.setEmail(updatedUser.getEmail());
         persistedUser.setIsActive(updatedUser.getIsActive());
-
-        if (persistedUser.hasUserAuthority() && updatedUser.hasUserAuthority()) {
-            Integer userAuthorityId = persistedUser.getUserAuthority().getId();
-            updatedUser.getUserAuthority().setId(userAuthorityId);
-        }
         
         if (updatedUser.hasUserAuthority()) {
+            if (persistedUser.hasUserAuthority()) {
+                Integer userAuthorityId = persistedUser.getUserAuthority().getId();
+                updatedUser.getUserAuthority().setId(userAuthorityId);
+            }
             updatedUser.getUserAuthority().setUser(persistedUser);
             persistedUser.setUserAuthority(updatedUser.getUserAuthority());
         }
-        
         userService.updateUser(persistedUser);
         return "redirect:/users/list";
     }
