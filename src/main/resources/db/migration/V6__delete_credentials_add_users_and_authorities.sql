@@ -3,7 +3,7 @@ drop table university.credentials;
 create sequence university.users_seq as integer;
 create table university.users(
 	id integer default nextval('university.users_seq'::regclass) primary key,
-	email varchar not null,
+	email varchar not null unique,
 	password varchar,
 	is_active boolean
 );

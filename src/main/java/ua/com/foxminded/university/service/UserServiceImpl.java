@@ -55,6 +55,7 @@ public class UserServiceImpl implements UserService<UserModel> {
     public List<UserModel> getNotAuthorizedUsers() throws ServiceException {
         try {
             ModelMapper modelMapper = new ModelMapper();
+            modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
             List<UserEntity> users = userRepository.findAll();
             List<UserEntity> notAuthorizedUsers = users.stream()
                     .filter(user -> {

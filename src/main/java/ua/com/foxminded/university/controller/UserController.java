@@ -92,10 +92,15 @@ public class UserController extends DefaultController {
         persistedUser.setEmail(updatedUser.getEmail());
         persistedUser.setPassword(password);
         persistedUser.setIsActive(updatedUser.getIsActive());
-
-        UserAuthorityModel userAuthority = updatedUser.getUserAuthority();
-        userAuthority.setUser(persistedUser);
-        persistedUser.setUserAuthority(userAuthority);
+        
+        if (updatedUser.hasUserAuthority()) {
+            if (persistedUser.hasUserAuthority()) {
+                Integer userAuthorityId = persistedUser.getUserAuthority().getId();
+                updatedUser.getUserAuthority().setId(userAuthorityId);
+            }
+            updatedUser.getUserAuthority().setUser(persistedUser);
+            persistedUser.setUserAuthority(updatedUser.getUserAuthority());
+        }
         userService.updateUser(persistedUser);
         return "redirect:/users/list";
     }
