@@ -4,6 +4,10 @@ import javax.sql.DataSource;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.access.AccessDecisionVoter;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
+import org.springframework.security.access.vote.RoleHierarchyVoter;
+import org.springframework.security.authorization.AuthorizationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
@@ -21,15 +25,16 @@ public class SecurityConfig {
     private static final String USERS_BY_EMAIL_QUERY = "select email, password, is_Active "
             + "from university.users where email = ?";
     
-    /*
+    
+    
     @Bean
-    public AccessDecisionVoter hirarchyVoter() {
+    public AccessDecisionVoter<Object> roleHierarchyVoter() {
         RoleHierarchyImpl hierarchy = new RoleHierarchyImpl();
-        hierarchy.setHierarchy("ADMIN > STAFF > TEACHER > STUDENT");
+        hierarchy.setHierarchy("ROLE_ADMIN > ROLE_STUDENT\n");
+                         //    + "ROLE_STAFF > ROLE_TEACHER\n"
+                         //    + "ROLE_TEACHER > ROLE_STUDENT\n");
         return new RoleHierarchyVoter(hierarchy);
     }
-    
-*/
     
     @Bean 
     public UserDetailsManager userDetailsManager(DataSource dataSource) {
@@ -42,13 +47,19 @@ public class SecurityConfig {
 
     @Bean 
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests(request -> request.mvcMatchers("/", "/index" ,"/images/**")
-                                                     .permitAll()
-                                                     .anyRequest()
-                                                     .authenticated())
-            .formLogin(form -> form.loginPage("/login").permitAll())
-            .logout(logout -> logout.logoutUrl("/logout")
-                                    .logoutSuccessUrl("/"));
+//        http.authorizeHttpRequests(request -> request.mvcMatchers("/", "/index" ,"/images/**")
+//                                                     .permitAll()
+//                                                     .anyRequest()
+//                                                     .authenticated())
+        http.authorizeRequests().antMatchers("/", "/index", "/images/**").permitAll()
+                                .antMatchers("/timetables/**").hasAnyRole("STUDENT")
+                                .antMatchers("/users/**").hasRole("ADMIN")
+                                .anyRequest().authenticated()
+                                .and()
+                                .formLogin(form -> form.loginPage("/login").permitAll())
+                                .logout(logout -> logout.logoutUrl("/logout")
+                                                        .logoutSuccessUrl("/"));
+                                
         return http.build();
     }
 }
