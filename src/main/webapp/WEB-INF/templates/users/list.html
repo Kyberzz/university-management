@@ -103,7 +103,6 @@
        <th scope="col" th:text="#{thead.firstName}">First name</th>
        <th scope="col" th:text="#{thead.lastName}">Last name</th>
        <th scope="col" th:text="#{thead.email}">Email</th>
-       <th scope="col" th:text="#{thead.password}">Password</th>
        <th scope="col" th:text="#{thead.authority}">Authority</th>
        <th scope="col" th:text="#{thead.active}">Enabled</th>
        <th scope="col" th:text="#{thead.userId}">User ID</th>
@@ -117,7 +116,6 @@
        <td th:text="${user.firstName}">Linus</td>
        <td th:text="${user.lastName}">Torvalds</td>
        <td th:text="${user.email}">email@com</td>
-       <td th:text="${user.password}">*****</td>
        <td
         th:text="${user.userAuthority != null} ? ${user.userAuthority.authority.representation} : '---'">
         Administrator</td>

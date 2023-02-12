@@ -3,6 +3,8 @@ package ua.com.foxminded.university.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -13,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import lombok.extern.slf4j.Slf4j;
 import ua.com.foxminded.university.exception.ServiceException;
-import ua.com.foxminded.university.model.UserAuthorityModel;
 import ua.com.foxminded.university.model.UserModel;
 import ua.com.foxminded.university.service.UserService;
 
@@ -88,9 +89,9 @@ public class UserController extends DefaultController {
         } catch (ServiceException e) {
             return "users/notfound";
         }
-
+        PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
         persistedUser.setEmail(updatedUser.getEmail());
-        persistedUser.setPassword(password);
+        persistedUser.setPassword(encoder.encode(password));
         persistedUser.setIsActive(updatedUser.getIsActive());
         
         if (updatedUser.hasUserAuthority()) {

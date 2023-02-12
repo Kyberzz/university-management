@@ -78,6 +78,7 @@ public class UserServiceImpl implements UserService<UserModel> {
     public UserModel getByEmail(String email) throws ServiceException {
         UserEntity entity = userRepository.findByEmail(email);
         ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         return modelMapper.map(entity, UserModel.class);
     }
     
