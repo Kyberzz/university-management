@@ -8,30 +8,25 @@ import org.modelmapper.MappingException;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.modelmapper.convention.MatchingStrategies;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import lombok.extern.slf4j.Slf4j;
 import ua.com.foxminded.university.entity.TimetableEntity;
-import ua.com.foxminded.university.exception.RepositoryException;
 import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.TimetableModel;
 import ua.com.foxminded.university.repository.TimetableRepository;
 
 
-@Slf4j
 @Transactional
 @Service
 public class TimetableServiceImpl implements TimetableService<TimetableModel> {
     
     private TimetableRepository timetableRepository;
     
-    @Autowired
-    public TimetableServiceImpl(TimetableRepository timetableDao) {
-        this.timetableRepository = timetableDao;
+    public TimetableServiceImpl(TimetableRepository timetableRepository) {
+        this.timetableRepository = timetableRepository;
     }
-    
+
     @Override
     public List<TimetableModel> getAllTimetables() throws ServiceException {
         try {

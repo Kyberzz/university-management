@@ -21,15 +21,6 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
     
-    private static final String AUTHORITIES_BY_EMAIL_QUERY = "select email, authority "
-            + "from university.authorities "
-            + "join university.users on users.id=authorities.user_id "
-            + "where email = ?";
-    private static final String USERS_BY_EMAIL_QUERY = "select email, password, is_Active "
-            + "from university.users where email = ?";
-    
-    
-    
     @Bean
     public AccessDecisionVoter<Object> roleHierarchyVoter() {
         RoleHierarchyImpl hierarchy = new RoleHierarchyImpl();
@@ -54,7 +45,7 @@ public class SecurityConfig {
 //                                                     .authenticated())
         http.authorizeRequests().antMatchers("/", "/index", "/images/**").permitAll()
                                 .antMatchers("/timetables/**").hasAnyRole("STUDENT")
-                                .antMatchers("/users/**").hasRole("ADMIN")
+                                .antMatchers("/users/**").hasAuthority("ADMIN")
                                 .anyRequest().authenticated()
                                 .and()
                                 .formLogin(form -> form.loginPage("/login").permitAll())

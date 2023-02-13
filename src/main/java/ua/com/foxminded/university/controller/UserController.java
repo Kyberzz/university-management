@@ -2,7 +2,6 @@ package ua.com.foxminded.university.controller;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -23,9 +22,8 @@ import ua.com.foxminded.university.service.UserService;
 @RequestMapping("/users")
 public class UserController extends DefaultController {
 
-    UserService<UserModel> userService;
+    private UserService<UserModel> userService;
 
-    @Autowired
     public UserController(UserService<UserModel> userService) {
         this.userService = userService;
     }
@@ -45,7 +43,7 @@ public class UserController extends DefaultController {
         }
         UserModel persistedUser = userService.getUserById(userId);
         persistedUser.setEmail(updatedUser.getEmail());
-        persistedUser.setIsActive(updatedUser.getIsActive());
+        persistedUser.setStatus(updatedUser.getStatus());
         
         if (updatedUser.hasUserAuthority()) {
             if (persistedUser.hasUserAuthority()) {
@@ -92,7 +90,7 @@ public class UserController extends DefaultController {
         PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
         persistedUser.setEmail(updatedUser.getEmail());
         persistedUser.setPassword(encoder.encode(password));
-        persistedUser.setIsActive(updatedUser.getIsActive());
+        persistedUser.setStatus(updatedUser.getStatus());
         
         if (updatedUser.hasUserAuthority()) {
             if (persistedUser.hasUserAuthority()) {

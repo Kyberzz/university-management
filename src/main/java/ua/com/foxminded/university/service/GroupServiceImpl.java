@@ -8,28 +8,24 @@ import org.modelmapper.ConfigurationException;
 import org.modelmapper.MappingException;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import lombok.extern.slf4j.Slf4j;
 import ua.com.foxminded.university.entity.GroupEntity;
 import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.GroupModel;
 import ua.com.foxminded.university.repository.GroupRepository;
 
-@Slf4j
 @Transactional
 @Service
 public class GroupServiceImpl implements GroupService<GroupModel> {
     
     private GroupRepository groupRepository;
     
-    @Autowired
-    public GroupServiceImpl(GroupRepository groupDao) {
-        this.groupRepository = groupDao;
+    public GroupServiceImpl(GroupRepository groupRepository) {
+        this.groupRepository = groupRepository;
     }
-    
+
     @Override
     public List<GroupModel> getAllGroups() throws ServiceException {
         try {

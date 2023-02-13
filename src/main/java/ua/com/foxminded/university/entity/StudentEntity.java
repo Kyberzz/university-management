@@ -37,8 +37,7 @@ public class StudentEntity implements Serializable {
     @JoinColumn(name = "group_id")
     private GroupEntity group;
     
-    
-    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
+    @OneToOne(cascade = {CascadeType.ALL})
     @JoinColumn(name = "username")
     private UserEntity user;
 }

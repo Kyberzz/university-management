@@ -8,33 +8,24 @@ import org.modelmapper.MappingException;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.modelmapper.convention.MatchingStrategies;
-import org.modelmapper.spi.MatchingStrategy;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import lombok.extern.slf4j.Slf4j;
 import ua.com.foxminded.university.entity.StudentEntity;
-import ua.com.foxminded.university.exception.RepositoryException;
 import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.StudentModel;
 import ua.com.foxminded.university.repository.StudentRepository;
 
-@Slf4j
 @Transactional
 @Service
 public class StudentServiceImpl implements StudentService<StudentModel> {
     
-    public static final int ZERO = 0;
-    public static final String EMPTY_STRING = "";
-    
     private StudentRepository studentRepository;
     
-    @Autowired
-    public StudentServiceImpl(StudentRepository studentDao) {
-        this.studentRepository = studentDao;
+    public StudentServiceImpl(StudentRepository studentRepository) {
+        this.studentRepository = studentRepository;
     }
-    
+
     @Override
     public void deleteStudentById(int id) throws ServiceException {
         try {

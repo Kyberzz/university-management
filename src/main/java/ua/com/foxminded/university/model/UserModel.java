@@ -13,7 +13,7 @@ public class UserModel implements Serializable {
     private Integer id;
     private String email;
     private String password;
-    private Boolean isActive;
+    private Boolean status;
 
     private String firstName;
     private String lastName;

@@ -3,7 +3,6 @@ package ua.com.foxminded.university.service;
 import org.modelmapper.ConfigurationException;
 import org.modelmapper.MappingException;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ua.com.foxminded.university.entity.UserAuthorityEntity;
@@ -16,7 +15,6 @@ public class UserAuthorityServiceImpl implements UserAuthorityService<UserAuthor
     
     private UserAuthorityRepository userAuthorityRepository;
     
-    @Autowired
     public UserAuthorityServiceImpl(UserAuthorityRepository userAuthorityRepository) {
         this.userAuthorityRepository = userAuthorityRepository;
     }

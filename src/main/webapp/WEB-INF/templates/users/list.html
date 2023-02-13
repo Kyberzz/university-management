@@ -54,7 +54,7 @@
        <div class="col-6" th:text="|#{thead.active}: |">Active
         status :</div>
        <div class="col">
-        <select th:field="*{isActive}" class="form-select"
+        <select th:field="*{status}" class="form-select"
          id="floatingSelect" aria-label="Default select example">
          <option th:value='true' th:text="#{users.enableStatus}"></option>
          <option th:value='false' th:text="#{users.disableStatus}"></option>
@@ -105,7 +105,6 @@
        <th scope="col" th:text="#{thead.email}">Email</th>
        <th scope="col" th:text="#{thead.authority}">Authority</th>
        <th scope="col" th:text="#{thead.active}">Enabled</th>
-       <th scope="col" th:text="#{thead.userId}">User ID</th>
        <th></th>
        <th></th>
       </tr>
@@ -120,8 +119,7 @@
         th:text="${user.userAuthority != null} ? ${user.userAuthority.authority.representation} : '---'">
         Administrator</td>
        <td
-        th:text="${user.isActive} ? #{users.enableStatus} : #{users.disableStatus}">true</td>
-       <td th:text="${user.id}">7</td>
+        th:text="${user.status} ? #{users.enableStatus} : #{users.disableStatus}">true</td>
        <td>
 
         <button type="button" class="btn btn-success btn-sm"
@@ -191,9 +189,9 @@
               <div class="col-3" th:text="|#{thead.active}: |">
                Active status:</div>
               <div class="col-4"
-               th:text="${user.isActive} ? #{users.enableStatus} : #{users.disableStatus}">Enabled</div>
+               th:text="${user.status} ? #{users.enableStatus} : #{users.disableStatus}">Enabled</div>
               <div class="col-5">
-               <select th:field="*{isActive}" class="form-select"
+               <select th:field="*{status}" class="form-select"
                 id="floatingSelect" aria-label="Default select example">
                 <option th:value='true' th:text="#{select.enable}"></option>
                 <option th:value='false' th:text="#{select.disable}"></option>
@@ -257,7 +255,7 @@
               <div class="col-3" th:text="|#{thead.active}: |">
                Active status:</div>
               <div class="col-9"
-               th:text="${user.isActive} ? #{users.enableStatus} : #{users.disableStatus}">Enabled</div>
+               th:text="${user.status} ? #{users.enableStatus} : #{users.disableStatus}">Enabled</div>
              </div>
             </div>
            </div>

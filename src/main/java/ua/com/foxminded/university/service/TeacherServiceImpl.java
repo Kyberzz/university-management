@@ -8,29 +8,25 @@ import org.modelmapper.MappingException;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.modelmapper.convention.MatchingStrategies;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import lombok.extern.slf4j.Slf4j;
 import ua.com.foxminded.university.entity.TeacherEntity;
 import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.TeacherModel;
 import ua.com.foxminded.university.repository.TeacherRepository;
 
 
-@Slf4j
 @Transactional
 @Service
 public class TeacherServiceImpl implements TeacherService<TeacherModel> {
     
     private TeacherRepository teacherRepository; 
     
-    @Autowired
-    public TeacherServiceImpl(TeacherRepository teacherDao) {
-        this.teacherRepository = teacherDao;
+    public TeacherServiceImpl(TeacherRepository teacherRepository) {
+        this.teacherRepository = teacherRepository;
     }
-    
+
     @Override
     public List<TeacherModel> getAllTeachers() throws ServiceException {
         try {

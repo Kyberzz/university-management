@@ -2,7 +2,6 @@ package ua.com.foxminded.university.controller;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,7 +15,6 @@ public class TimetableController extends DefaultController {
 
     private TimetableService<TimetableModel> timetableService;
 
-    @Autowired
     public TimetableController(TimetableService<TimetableModel> timetableService) {
         this.timetableService = timetableService;
     }

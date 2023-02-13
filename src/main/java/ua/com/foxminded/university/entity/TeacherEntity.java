@@ -36,7 +36,7 @@ public class TeacherEntity implements Serializable {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "teacher")
     private List<CourseEntity> courseList;
     
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne
     @JoinColumn(name = "username")
     private UserEntity user;
 }
