@@ -10,6 +10,9 @@ import org.springframework.security.access.vote.RoleHierarchyVoter;
 import org.springframework.security.authorization.AuthorizationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
@@ -37,12 +40,20 @@ public class SecurityConfig {
     }
     
     @Bean 
-    public UserDetailsManager userDetailsManager(DataSource dataSource) {
-        JdbcUserDetailsManager manager = new JdbcUserDetailsManager();
-        manager.setDataSource(dataSource);
-        manager.setUsersByUsernameQuery(USERS_BY_EMAIL_QUERY);
-        manager.setAuthoritiesByUsernameQuery(AUTHORITIES_BY_EMAIL_QUERY);
-        return manager;
+    public UserDetailsService userDetailsManager(DataSource dataSource) {
+        JdbcUserDetailsManager 
+        JdbcDaoImpl jdbcDaoIml = new JdbcDaoImpl();
+        jdbcDaoIml.setDataSource(dataSource);
+        jdbcDaoIml.setUsersByUsernameQuery(USERS_BY_EMAIL_QUERY);
+        jdbcDaoIml.setAuthoritiesByUsernameQuery(AUTHORITIES_BY_EMAIL_QUERY);
+        
+        User.withUsername(persistedEmail)
+        .roles(authority)
+        .password(password)
+        .build();
+
+        
+        return jdbcDaoIml;
     }
 
     @Bean 
