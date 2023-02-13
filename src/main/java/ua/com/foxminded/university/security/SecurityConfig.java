@@ -41,19 +41,9 @@ public class SecurityConfig {
     
     @Bean 
     public UserDetailsService userDetailsManager(DataSource dataSource) {
-        JdbcUserDetailsManager 
-        JdbcDaoImpl jdbcDaoIml = new JdbcDaoImpl();
-        jdbcDaoIml.setDataSource(dataSource);
-        jdbcDaoIml.setUsersByUsernameQuery(USERS_BY_EMAIL_QUERY);
-        jdbcDaoIml.setAuthoritiesByUsernameQuery(AUTHORITIES_BY_EMAIL_QUERY);
-        
-        User.withUsername(persistedEmail)
-        .roles(authority)
-        .password(password)
-        .build();
-
-        
-        return jdbcDaoIml;
+        JdbcUserDetailsManager detailsManager = new JdbcUserDetailsManager();
+        detailsManager.setDataSource(dataSource);
+        return detailsManager;
     }
 
     @Bean 

@@ -36,7 +36,6 @@ class UserRepositoryTest {
     public static final String PASSWORD = "admin";
     public static final String EMAIL_B = "email@com";
     public static final String EMAIL_A = "admin@com";
-    public static final int USER_ID = 1;
     
     @PersistenceUnit
     EntityManagerFactory entityManagerFactory;
@@ -53,7 +52,7 @@ class UserRepositoryTest {
         entityManager.getTransaction().begin();
              
         UserEntity user = new UserEntity();
-        user.setIsActive(true);
+        user.setEnabled(true);
         user.setEmail(EMAIL_A);
         user.setPassword(PASSWORD);
         entityManager.persist(user);
@@ -72,7 +71,7 @@ class UserRepositoryTest {
     @Test
     void getByEmail_shouldReturnUser_whenEnterEmaill() {
         UserEntity user = userRepository.findByEmail(EMAIL_A);
-        assertEquals(USER_ID, user.getId());
+        assertEquals(EMAIL_A, user.getEmail());
     }
     
     @Test
@@ -85,7 +84,7 @@ class UserRepositoryTest {
     void findByEmail_shouldReternUserWithAuthority() {
         UserEntity user = userRepository.findActiveUserByEmail(EMAIL_A);
         assertEquals(EMAIL_A, user.getEmail());
-        assertTrue(user.getIsActive());
+        assertTrue(user.getEnabled());
         assertEquals(PASSWORD, user.getPassword());
     }
 }

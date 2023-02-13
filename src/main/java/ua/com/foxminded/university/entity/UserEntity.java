@@ -6,8 +6,6 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -16,19 +14,16 @@ import lombok.Data;
 
 @Entity
 @Data
-@Table(name = "users", schema = "university")
+@Table(name = "users")
 public class UserEntity implements Serializable {
  
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @Column(name = "username")
     private String email;
     private String password;
-    
-    @Column(name = "is_active")
-    private Boolean isActive;
+    private Boolean enabled;
     
     @OneToOne(fetch = FetchType.EAGER, mappedBy = "user")
     private TeacherEntity teacher;

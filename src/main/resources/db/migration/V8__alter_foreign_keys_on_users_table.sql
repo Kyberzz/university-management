@@ -12,4 +12,3 @@ alter table university.staffs drop constraint staffs_user_id_fkey;
 alter table university.staffs
 add constraint staffs_user_id_fkey foreign key(user_id)
 references university.users(id) on delete set null;
-

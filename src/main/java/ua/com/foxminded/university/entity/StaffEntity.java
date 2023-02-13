@@ -8,6 +8,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -32,5 +33,6 @@ public class StaffEntity implements Serializable {
     private String position;
     
     @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "username")
     private UserEntity user;
 }
