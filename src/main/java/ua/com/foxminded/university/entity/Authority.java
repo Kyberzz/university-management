@@ -1,9 +1,9 @@
 package ua.com.foxminded.university.entity;
 
 public enum Authority {
-    ADMIN ("Administrator"), 
-    STAFF("Staff"), 
-    STUDENT("Student");
+    ROLE_ADMIN ("Administrator"), 
+    ROLE_STAFF("Staff"), 
+    ROLE_STUDENT("Student");
     
     private final String representation;
 

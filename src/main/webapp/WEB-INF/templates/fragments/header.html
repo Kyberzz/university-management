@@ -51,7 +51,7 @@
    <div class="row gx-2 me-2">
     <div class="col-7">
      <form action="#" th:action="@{/users/list}"
-      sec:authorize="hasAuthority('ADMIN')">
+      sec:authorize="hasRole('ADMIN')">
       <button class="btn btn-sm btn-primary"
        th:text="#{header.adminPanel}">Admin panel</button>
      </form>

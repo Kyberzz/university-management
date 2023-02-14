@@ -62,7 +62,7 @@ class UserRepositoryTest {
         entityManager.persist(anotherUser);
         
         UserAuthorityEntity authority = new UserAuthorityEntity();
-        authority.setAuthority(Authority.ADMIN);
+        authority.setAuthority(Authority.ROLE_ADMIN);
         authority.setUser(user);
         entityManager.persist(authority);
         entityManager.getTransaction().commit();
