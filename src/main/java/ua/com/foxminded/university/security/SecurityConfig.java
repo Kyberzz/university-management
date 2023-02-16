@@ -27,7 +27,7 @@ public class SecurityConfig {
         detailsManager.setDataSource(dataSource);
         return detailsManager;
     }
-        
+
     @Bean 
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeRequests()
@@ -42,7 +42,7 @@ public class SecurityConfig {
             .and()
             .exceptionHandling().accessDeniedPage("/")
             .and()
-            .formLogin(form -> form.loginPage("/login").permitAll())
+            .formLogin(form -> form.loginPage("/login").permitAll().failureUrl("/"))
             .logout(logout -> logout.logoutUrl("/logout")
                                     .logoutSuccessUrl("/"));
         return http.build();

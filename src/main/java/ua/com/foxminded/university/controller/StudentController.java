@@ -21,6 +21,8 @@ import ua.com.foxminded.university.service.StudentService;
 @Controller
 @RequestMapping("/students")
 public class StudentController extends DefaultController {
+    
+    public static final String DEFAULT_PASSWORD = "{noop}password";
 
     private StudentService<StudentModel> studentService;
     private GroupService<GroupModel> groupService;
@@ -47,7 +49,7 @@ public class StudentController extends DefaultController {
         List<StudentModel> students = studentService.getAllStudentsIncludingEmails();
         List<GroupModel> groups = groupService.getAllGroups();
         StudentModel student = new StudentModel();
-        model.addAttribute("updatedStudent", student);
+        model.addAttribute("studentModel", student);
         model.addAttribute("students", students);
         model.addAttribute("groups", groups);
         return "students/list";
@@ -55,28 +57,33 @@ public class StudentController extends DefaultController {
     
     @PostMapping(value = "/edit", params = "studentId")
     public String editStudent(@RequestParam("studentId") int studentId, 
-                              StudentModel updatedStudent, 
+                              StudentModel studentModel, 
                               BindingResult bindingResult) throws ServiceException {
         if (bindingResult.hasErrors()) {
             handleBindingResultError(bindingResult);
         }
         StudentModel persistedStudent = studentService.getStudentById(studentId);
-        persistedStudent.setFirstName(updatedStudent.getFirstName());
-        persistedStudent.setLastName(updatedStudent.getLastName());
+        persistedStudent.setFirstName(studentModel.getFirstName());
+        persistedStudent.setLastName(studentModel.getLastName());
         
-        if (updatedStudent.hasUser()) {
-            String email = updatedStudent.getUser().getEmail();
+        if (studentModel.hasUser()) {
+            String email = studentModel.getUser().getEmail();
             
             if (persistedStudent.hasUser()) {
                 persistedStudent.getUser().setEmail(email);
             } else {
-                persistedStudent.setUser(updatedStudent.getUser());
+                studentModel.getUser().setEnabled(false);
+                studentModel.getUser().setPassword(DEFAULT_PASSWORD);
+                persistedStudent.setUser(studentModel.getUser());
             }
         }
-        
-        if (updatedStudent.hasGroup()) {
-            updatedStudent.getGroup().setStudent(persistedStudent);
-            persistedStudent.setGroup(updatedStudent.getGroup());
+
+        if (studentModel.hasGroup()) {
+            GroupModel group = studentModel.getGroup();
+            group.setStudent(persistedStudent);
+            persistedStudent.setGroup(group);
+        } else {
+            persistedStudent.setGroup(null);
         }
         studentService.updateStudent(persistedStudent);
         return "redirect:/students/list";

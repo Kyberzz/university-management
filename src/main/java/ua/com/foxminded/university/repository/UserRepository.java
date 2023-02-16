@@ -17,7 +17,6 @@ public interface UserRepository extends JpaRepository<UserEntity, Integer> {
     public List<UserEntity> getAllHavingPassword();
     
     @Query("select u from UserEntity u join fetch u.userAuthority "
-         + "where u.email = :email "
-         + "and u.status = ua.com.foxminded.university.entity.UserEntity.IS_ACTIVE")
+         + "where u.email = :email and u.enabled = true")
     public UserEntity findActiveUserByEmail(@Param("email")String email);
 }

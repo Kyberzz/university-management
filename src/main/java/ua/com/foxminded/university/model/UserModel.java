@@ -3,6 +3,9 @@ package ua.com.foxminded.university.model;
 
 import java.io.Serializable;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
+
 import lombok.Data;
 
 @Data
@@ -10,10 +13,14 @@ public class UserModel implements Serializable {
     
     private static final long serialVersionUID = 1L;
    
-    private Integer id;
+    @Email
     private String email;
+    
+    @NotNull
     private String password;
-    private Boolean status;
+    
+    @NotNull
+    private Boolean enabled;
 
     private String firstName;
     private String lastName;

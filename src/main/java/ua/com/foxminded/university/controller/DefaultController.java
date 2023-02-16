@@ -16,8 +16,9 @@ public class DefaultController {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(ServiceException.class)
     public ModelAndView defaultExceptionHandler(HttpServletRequest request, ServiceException e) {
-        log.error("The controller class method fails.", e);
         ModelAndView modelAndView = new ModelAndView();
+        log.error("The controller class method fails.", e);
+
         modelAndView.addObject("url", request.getRequestURI());
         modelAndView.setViewName("error");
         return modelAndView;

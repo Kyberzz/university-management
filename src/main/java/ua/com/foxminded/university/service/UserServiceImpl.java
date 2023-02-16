@@ -2,13 +2,26 @@ package ua.com.foxminded.university.service;
 
 import java.lang.reflect.Type;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import javax.validation.Validation;
+import javax.validation.ValidationException;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 
 import org.modelmapper.ConfigurationException;
 import org.modelmapper.MappingException;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.modelmapper.convention.MatchingStrategies;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Service;
 
 import ua.com.foxminded.university.entity.Authority;
@@ -21,28 +34,52 @@ import ua.com.foxminded.university.repository.UserRepository;
 public class UserServiceImpl implements UserService<UserModel> {
     
     private UserRepository userRepository;
+    private UserDetailsManager userDetailsManager;
     
     public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
     
-    public void deleteById(Integer id) throws ServiceException {
+    public void deleteByEmail(String email) throws ServiceException {
         try {
-            userRepository.deleteById(id);
+            userDetailsManager.deleteUser(email);
         } catch (IllegalArgumentException e) {
             throw new ServiceException("Deleting the user fails.", e);
         }
     }
     
-    @Override
-    public UserModel getUserById(int id) throws ServiceException {
-        UserEntity entity = userRepository.findById(id);
+    public void createUser(UserModel model) throws ServiceException {
         try {
-            ModelMapper modelMapper = new ModelMapper();
-            modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-            return modelMapper.map(entity, UserModel.class);
-        } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
-            throw new ServiceException("Getting user by the id fails.", e);
+            ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+            Validator validator = factory.getValidator();
+            Set<ConstraintViolation<UserModel>> violation = validator.validate(model);
+            
+            if (!violation.isEmpty()) {
+                throw new ConstraintViolationException(violation);
+            } else {
+                ModelMapper modelMapper = new ModelMapper();
+                modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+                
+                modelMapper.typeMap(UserModel.class, UserEntity.class).addMappings(mapper -> {
+                    mapper.map(src -> src.getUserAuthority().getAuthority(), 
+                            (destination, value) -> destination.getUserAuthority()
+                            .setAuthority((Authority)value));
+                });
+                
+                UserEntity entity = modelMapper.map(model, UserEntity.class);
+                
+                PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+                UserDetails user = User.builder().username(entity.getEmail())
+                        .password(entity.getPassword())
+                        .passwordEncoder(encoder::encode)
+                        .authorities(String.valueOf(entity.getUserAuthority().getAuthority()))
+                        .disabled(!entity.getEnabled())
+                        .build();
+                userDetailsManager.createUser(user);
+            }
+        } catch (ValidationException | IllegalArgumentException | ConfigurationException | 
+                 MappingException e) {
+            throw new ServiceException("Creating user object fails.", e);
         }
     }
     
@@ -108,20 +145,40 @@ public class UserServiceImpl implements UserService<UserModel> {
     }
     
     @Override
-    public void updateUser(UserModel user) throws ServiceException {
+    public void updateUser(UserModel model) throws ServiceException {
         try {
-            ModelMapper modelMapper = new ModelMapper();
-            modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+            ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+            Validator validatro = factory.getValidator();
+            Set<ConstraintViolation<UserModel>> violations = validatro.validate(model);
             
-            modelMapper.typeMap(UserModel.class, UserEntity.class).addMappings(mapper -> {
-                mapper.map(src -> src.getUserAuthority().getAuthority(), 
-                           (destination, value) -> destination.getUserAuthority()
-                                                              .setAuthority((Authority)value));
-            });
-            UserEntity entity = modelMapper.map(user, UserEntity.class);
-            userRepository.saveAndFlush(entity);
-        } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
-            throw new ServiceException("Updating user failes", e);
+            if (!violations.isEmpty()) {
+                throw new ConstraintViolationException(violations);
+            } else {
+                ModelMapper modelMapper = new ModelMapper();
+                modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+                
+                modelMapper.typeMap(UserModel.class, UserEntity.class).addMappings(mapper -> {
+                    mapper.map(src -> src.getUserAuthority().getAuthority(), 
+                               (destination, value) -> destination.getUserAuthority()
+                                                                  .setAuthority((Authority)value));
+                });
+                
+                UserEntity entity = modelMapper.map(model, UserEntity.class);
+                
+                PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+                UserDetails user = User.builder().username(entity.getEmail())
+                                                 .password(entity.getPassword())
+                                                 .passwordEncoder(encoder::encode)
+                                                 .roles(String.valueOf(entity.getUserAuthority()
+                                                                             .getAuthority()))
+                                                 .disabled(!entity.getEnabled())
+                                                 .build();
+                
+                userDetailsManager.updateUser(user);
+            }
+        } catch (ValidationException | IllegalArgumentException | ConfigurationException | 
+                 MappingException  e) {
+            throw new ServiceException("Updating user object fails.", e);
         }
     }
     

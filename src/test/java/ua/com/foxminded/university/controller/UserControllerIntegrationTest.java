@@ -1,4 +1,4 @@
-package ua.com.foxminded.university.integreation;
+package ua.com.foxminded.university.controller;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -6,6 +6,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceUnit;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,14 +30,26 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import lombok.extern.slf4j.Slf4j;
 import ua.com.foxminded.university.config.RepositoryTestConfig;
 import ua.com.foxminded.university.controller.UserController;
+import ua.com.foxminded.university.entity.Authority;
+import ua.com.foxminded.university.entity.UserAuthorityEntity;
+import ua.com.foxminded.university.entity.UserEntity;
 import ua.com.foxminded.university.exception.ServiceException;
+import ua.com.foxminded.university.model.UserAuthorityModel;
 import ua.com.foxminded.university.model.UserModel;
 
 @Slf4j
 @AutoConfigureMockMvc
 @SpringBootTest
-//(classes = RepositoryTestConfig.class)
+(classes = RepositoryTestConfig.class)
 class UserControllerIntegrationTest {
+    
+    public static final String USERS_EDIT_URL = "/users/edit";
+    public static final String USERS_LIST_URL = "/users/list";
+    public static final String EMAIL = "email@com";
+    public static final String PASSWORD = "{noop}password";
+    
+    @PersistenceUnit
+    EntityManagerFactory entityManagerFactory; 
     
     @Autowired
     private UserController userController;
@@ -44,12 +60,42 @@ class UserControllerIntegrationTest {
     @BeforeEach
     void setup() {
         mockMvc = MockMvcBuilders.standaloneSetup(userController).build();
+        
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        UserEntity user = new UserEntity();
+        user.setEmail(EMAIL);
+        user.setPassword(PASSWORD);
+        user.setEnabled(true);
+        
+        entityManager.getTransaction().begin();
+        entityManager.persist(user);
+        entityManager.flush();
+        
+        UserAuthorityEntity userAuthority = new UserAuthorityEntity();
+        userAuthority.setUser(user);
+        userAuthority.setAuthority(Authority.ROLE_ADMIN);
+        entityManager.persist(userAuthority);
+        entityManager.getTransaction().commit();
+    }
+    
+    @Test
+    void edit_shouldPerformEditingUserDetails() throws Exception {
+        UserModel userModel = new UserModel();
+        userModel.setEnabled(false);
+        userModel.setPassword(PASSWORD);
+        userModel.setUserAuthority(new UserAuthorityModel());
+        userModel.getUserAuthority().setAuthority(Authority.ROLE_STAFF);
+        
+        mockMvc.perform(MockMvcRequestBuilders.post(USERS_EDIT_URL)
+                                              .flashAttr("userModel", userModel)
+                                              .param("email", EMAIL))
+               .andDo(print())
+               .andExpect(redirectedUrl(USERS_LIST_URL));
     }
 
     @Test
     void authorize_shouldAuthorizeExistingUser() throws Exception {
             UserModel userModel = new UserModel();
-            userModel.setId(2);
             userModel.setEmail("@@@@@@@@");
             
             mockMvc.perform(MockMvcRequestBuilders.post("/users/authorize")

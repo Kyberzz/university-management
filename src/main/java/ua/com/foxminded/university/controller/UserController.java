@@ -2,8 +2,6 @@ package ua.com.foxminded.university.controller;
 
 import java.util.List;
 
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -28,22 +26,22 @@ public class UserController extends DefaultController {
         this.userService = userService;
     }
     
-    @PostMapping(value = "/delete", params = "userId")
-    public String delete(@RequestParam("userId") Integer userId) throws ServiceException {
-        userService.deleteById(userId);
+    @PostMapping(value = "/delete", params = {"email"})
+    public String delete(@RequestParam("email") String email) throws ServiceException {
+        userService.deleteByEmail(email);
         return "redirect:/users/list";
     }
     
-    @PostMapping(value = "/edit", params = {"userId"})
-    public String editUser(@RequestParam("userId") Integer userId, 
-                           UserModel updatedUser, 
-                           BindingResult bindingResult) throws ServiceException {
+    @PostMapping(value = "/edit", params = {"email"})
+    public String edit(@RequestParam("email") String email, 
+                       UserModel updatedUser, 
+                       BindingResult bindingResult) throws ServiceException {
         if (bindingResult.hasErrors()) {
             handleBindingResultError(bindingResult);
         }
-        UserModel persistedUser = userService.getUserById(userId);
+        UserModel persistedUser = userService.getByEmail(email);
         persistedUser.setEmail(updatedUser.getEmail());
-        persistedUser.setStatus(updatedUser.getStatus());
+        persistedUser.setEnabled(updatedUser.getEnabled());
         
         if (updatedUser.hasUserAuthority()) {
             if (persistedUser.hasUserAuthority()) {
@@ -61,10 +59,10 @@ public class UserController extends DefaultController {
     public String listAllUsers(Model model) throws ServiceException {
         List<UserModel> allUsers = userService.getAllUsers();
         List<UserModel> notAuthorizedUsers = userService.getNotAuthorizedUsers();
-        UserModel newUser = new UserModel();
+        UserModel modelUser = new UserModel();
         model.addAttribute("notAuthorizedUsers", notAuthorizedUsers);
         model.addAttribute("allUsers", allUsers);
-        model.addAttribute("updatedUser", newUser);
+        model.addAttribute("userModel", modelUser);
         return "users/list";
     }
 
@@ -72,7 +70,7 @@ public class UserController extends DefaultController {
     public String authorizeUser(@RequestParam("email") String email,
                                 @RequestParam("password") String password, 
                                 @RequestParam("passwordConfirm") String passwordConfirm,
-                                UserModel updatedUser, 
+                                UserModel userModel, 
                                 BindingResult bindingResult) throws ServiceException {
         handleBindingResultError(bindingResult);
 
@@ -80,27 +78,14 @@ public class UserController extends DefaultController {
             return "users/noconfirm";
         }
         
-        UserModel persistedUser = null;
-        
         try {
-            persistedUser = userService.getByEmail(email);
+            userService.getByEmail(email);
         } catch (ServiceException e) {
             return "users/notfound";
         }
-        PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
-        persistedUser.setEmail(updatedUser.getEmail());
-        persistedUser.setPassword(encoder.encode(password));
-        persistedUser.setStatus(updatedUser.getStatus());
         
-        if (updatedUser.hasUserAuthority()) {
-            if (persistedUser.hasUserAuthority()) {
-                Integer userAuthorityId = persistedUser.getUserAuthority().getId();
-                updatedUser.getUserAuthority().setId(userAuthorityId);
-            }
-            updatedUser.getUserAuthority().setUser(persistedUser);
-            persistedUser.setUserAuthority(updatedUser.getUserAuthority());
-        }
-        userService.updateUser(persistedUser);
+        userModel.setPassword(password);
+        userService.createUser(userModel);
         return "redirect:/users/list";
     }
     

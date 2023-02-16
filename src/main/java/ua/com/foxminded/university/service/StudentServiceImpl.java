@@ -2,6 +2,11 @@ package ua.com.foxminded.university.service;
 
 import java.lang.reflect.Type;
 import java.util.List;
+import java.util.Set;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import javax.validation.Validator;
 
 import org.modelmapper.ConfigurationException;
 import org.modelmapper.MappingException;
@@ -21,14 +26,16 @@ import ua.com.foxminded.university.repository.StudentRepository;
 @Service
 public class StudentServiceImpl implements StudentService<StudentModel> {
     
-    public static final String HAS_ROLE_STAFF_OR_ADMIN = "hasRole('STAFF')";
+    public static final String HAS_ROLE_STAFF_OR_ADMIN = "hasAnyRole('STAFF','ADMIN')";
     
     private StudentRepository studentRepository;
+    private Validator validator;
     
-    public StudentServiceImpl(StudentRepository studentRepository) {
+    public StudentServiceImpl(StudentRepository studentRepository, Validator validator) {
         this.studentRepository = studentRepository;
+        this.validator = validator;
     }
-    
+
     @PreAuthorize(HAS_ROLE_STAFF_OR_ADMIN)
     @Override
     public void deleteStudentById(int id) throws ServiceException {
@@ -43,9 +50,15 @@ public class StudentServiceImpl implements StudentService<StudentModel> {
     @Override
     public void updateStudent(StudentModel studentModel) throws ServiceException {
         try {
-            ModelMapper modelMapper = new ModelMapper();
-            StudentEntity studentEntity = modelMapper.map(studentModel, StudentEntity.class);
-            studentRepository.save(studentEntity);
+            Set<ConstraintViolation<StudentModel>> violations = validator.validate(studentModel);
+            
+            if (!violations.isEmpty()) {
+                throw new ConstraintViolationException(violations);
+            } else {
+                ModelMapper modelMapper = new ModelMapper();
+                StudentEntity studentEntity = modelMapper.map(studentModel, StudentEntity.class);
+                studentRepository.save(studentEntity);
+            }
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
             throw new ServiceException("The student was not added to the database", e);
         }

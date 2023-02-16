@@ -16,18 +16,13 @@ import lombok.Data;
 @Table(name = "users")
 public class UserEntity implements Serializable {
  
-    public static final boolean IS_ACTIVE = true;
-    public static final boolean IS_NOT_ACTIVE = false;
-    
     private static final long serialVersionUID = 1L;
 
     @Id
     @Column(name = "username")
     private String email;
     private String password;
-    
-    @Column(name = "enabled")
-    private Boolean status;
+    private Boolean enabled;
     
     @OneToOne(mappedBy = "user")
     private TeacherEntity teacher;

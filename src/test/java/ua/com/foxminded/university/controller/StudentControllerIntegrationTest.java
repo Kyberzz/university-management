@@ -1,4 +1,4 @@
-package ua.com.foxminded.university.integreation;
+package ua.com.foxminded.university.controller;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;

@@ -17,7 +17,7 @@
   aria-labelledby="addStudent" aria-hidden="true">
   <div class="modal-dialog">
    <form class="modal-content" th:action="@{/students/add}"
-    th:object="${updatedStudent}" method="post">
+    th:object="${studentModel}" method="post">
     <div class="modal-header">
      <h1 class="modal-title fs-5" id="addStudent"
       th:text="#{students.addStudent}">Add a student</h1>
@@ -99,7 +99,7 @@
 
         <form class="modal fade" th:id="|edit${iterationStatus.index}|"
          tabindex="-1" aria-labelledby="editStudent" aria-hidden="true"
-         th:action="@{/students/edit}" th:object="${updatedStudent}"
+         th:action="@{/students/edit}" th:object="${studentModel}"
          method="post">
          <div class="modal-dialog">
           <div class="modal-content">
