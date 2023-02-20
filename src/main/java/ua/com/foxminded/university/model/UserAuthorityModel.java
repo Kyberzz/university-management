@@ -1,10 +1,9 @@
 package ua.com.foxminded.university.model;
 
 import java.io.Serializable;
-import java.util.List;
 
 import lombok.Data;
-import ua.com.foxminded.university.entity.Authority;
+import ua.com.foxminded.university.entity.RoleAuthority;
 
 @Data
 public class UserAuthorityModel implements Serializable {
@@ -12,7 +11,8 @@ public class UserAuthorityModel implements Serializable {
     private static final long serialVersionUID = 1L;
    
     private Integer id;
-    private Authority authority;
+    private RoleAuthority roleAuthority;
     private UserModel user;
-    private List<Authority> authorities;
+
+    private Authority authority;
 }

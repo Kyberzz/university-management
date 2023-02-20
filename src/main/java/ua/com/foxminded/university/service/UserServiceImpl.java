@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Validation;
-import javax.validation.ValidationException;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
@@ -24,14 +23,17 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Service;
 
-import ua.com.foxminded.university.entity.Authority;
+import ua.com.foxminded.university.entity.RoleAuthority;
 import ua.com.foxminded.university.entity.UserEntity;
 import ua.com.foxminded.university.exception.ServiceException;
+import ua.com.foxminded.university.model.Authority;
 import ua.com.foxminded.university.model.UserModel;
 import ua.com.foxminded.university.repository.UserRepository;
 
 @Service
 public class UserServiceImpl implements UserService<UserModel> {
+    
+    public static final String PREFIX = "ROLE_";
     
     private UserRepository userRepository;
     private UserDetailsManager userDetailsManager;
@@ -50,35 +52,18 @@ public class UserServiceImpl implements UserService<UserModel> {
     
     public void createUser(UserModel model) throws ServiceException {
         try {
-            ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-            Validator validator = factory.getValidator();
-            Set<ConstraintViolation<UserModel>> violation = validator.validate(model);
-            
-            if (!violation.isEmpty()) {
-                throw new ConstraintViolationException(violation);
-            } else {
-                ModelMapper modelMapper = new ModelMapper();
-                modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-                
-                modelMapper.typeMap(UserModel.class, UserEntity.class).addMappings(mapper -> {
-                    mapper.map(src -> src.getUserAuthority().getAuthority(), 
-                            (destination, value) -> destination.getUserAuthority()
-                            .setAuthority((Authority)value));
-                });
-                
-                UserEntity entity = modelMapper.map(model, UserEntity.class);
-                
-                PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
-                UserDetails user = User.builder().username(entity.getEmail())
-                        .password(entity.getPassword())
-                        .passwordEncoder(encoder::encode)
-                        .authorities(String.valueOf(entity.getUserAuthority().getAuthority()))
-                        .disabled(!entity.getEnabled())
-                        .build();
-                userDetailsManager.createUser(user);
-            }
-        } catch (ValidationException | IllegalArgumentException | ConfigurationException | 
-                 MappingException e) {
+            validate(model);
+
+            PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+            String authority = String.valueOf(model.getUserAuthority().getAuthority());
+            UserDetails user = User.builder().username(model.getEmail())
+                                             .password(model.getPassword())
+                                             .passwordEncoder(encoder::encode)
+                                             .authorities(authority)
+                                             .disabled(!model.getEnabled())
+                                             .build();
+            userDetailsManager.createUser(user);
+        } catch (ConstraintViolationException e) {
             throw new ServiceException("Creating user object fails.", e);
         }
     }
@@ -88,19 +73,19 @@ public class UserServiceImpl implements UserService<UserModel> {
         try {
             ModelMapper modelMapper = new ModelMapper();
             modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-            List<UserEntity> users = userRepository.findAll();
-            List<UserEntity> notAuthorizedUsers = users.stream()
-                    .filter(user -> {
-                        if (user.getUserAuthority() != null && 
-                            user.getUserAuthority().getAuthority() == null) {
-                            return true;
-                        } else {
-                            return user.getUserAuthority() == null;
-                        }
-                    })
-                    .collect(Collectors.toList());
-            Type type = new TypeToken<List<UserModel>>() {}.getType();
-            return modelMapper.map(notAuthorizedUsers, type);
+            List<UserEntity> entities = userRepository.findAll();
+            List<UserEntity> notAuthorizedUsers = entities.stream().filter(user -> {
+                if (user.getUserAuthority() != null && user.getUserAuthority()
+                                                           .getRoleAuthority() == null) {
+                    return true;
+                } else {
+                    return user.getUserAuthority() == null;
+                }
+            }).collect(Collectors.toList());
+            Type type = new TypeToken<List<UserModel>>() {
+            }.getType();
+            List<UserModel> models = modelMapper.map(notAuthorizedUsers, type);
+            return setNonEntityProperties(models);
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
             throw new ServiceException("Getting not authrized users fails.", e);
         }
@@ -122,62 +107,28 @@ public class UserServiceImpl implements UserService<UserModel> {
             modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
             Type type = new TypeToken<List<UserModel>>() {}.getType();
             List<UserModel> models = modelMapper.map(entities, type);
-            List<UserModel> namedModels;
-            namedModels = models.stream()
-                                .map(model -> {
-                                    if (model.getTeacher() != null) {
-                                        model.setFirstName(model.getTeacher().getFirstName());
-                                        model.setLastName(model.getTeacher().getLastName());
-                                    } else if (model.getStudent() != null) {
-                                        model.setFirstName(model.getStudent().getFirstName());
-                                        model.setLastName(model.getStudent().getLastName());
-                                    } else if (model.getStaff() != null) {
-                                        model.setFirstName(model.getStaff().getFirstName());
-                                        model.setLastName(model.getStaff().getLastName());
-                                    }
-                                    return model;
-                                })
-                                .collect(Collectors.toList());
-            return namedModels;
+            return setNonEntityProperties(models);
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
             throw new ServiceException("Getting all students fails", e);
         }
     }
     
+    
     @Override
     public void updateUser(UserModel model) throws ServiceException {
-        try {
-            ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-            Validator validatro = factory.getValidator();
-            Set<ConstraintViolation<UserModel>> violations = validatro.validate(model);
-            
-            if (!violations.isEmpty()) {
-                throw new ConstraintViolationException(violations);
-            } else {
-                ModelMapper modelMapper = new ModelMapper();
-                modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-                
-                modelMapper.typeMap(UserModel.class, UserEntity.class).addMappings(mapper -> {
-                    mapper.map(src -> src.getUserAuthority().getAuthority(), 
-                               (destination, value) -> destination.getUserAuthority()
-                                                                  .setAuthority((Authority)value));
-                });
-                
-                UserEntity entity = modelMapper.map(model, UserEntity.class);
-                
-                PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
-                UserDetails user = User.builder().username(entity.getEmail())
-                                                 .password(entity.getPassword())
-                                                 .passwordEncoder(encoder::encode)
-                                                 .roles(String.valueOf(entity.getUserAuthority()
-                                                                             .getAuthority()))
-                                                 .disabled(!entity.getEnabled())
-                                                 .build();
-                
-                userDetailsManager.updateUser(user);
-            }
-        } catch (ValidationException | IllegalArgumentException | ConfigurationException | 
-                 MappingException  e) {
+        try {   
+            validate(model);
+
+            PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+            UserDetails user = User.builder().username(model.getEmail())
+                                             .password(model.getPassword())
+                                             .passwordEncoder(encoder::encode)
+                                             .roles(String.valueOf(model.getUserAuthority()
+                                                                        .getAuthority()))
+                                             .disabled(!model.getEnabled()).build();
+
+            userDetailsManager.updateUser(user);
+        } catch (ConstraintViolationException  e) {
             throw new ServiceException("Updating user object fails.", e);
         }
     }
@@ -191,6 +142,40 @@ public class UserServiceImpl implements UserService<UserModel> {
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
             throw new ServiceException("Getting user with its authority by its email failed", e);
         }
+    }
+    
+    private void  validate(UserModel model) throws ConstraintViolationException {
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        Validator validator = factory.getValidator();
+        Set<ConstraintViolation<UserModel>> violations = validator.validate(model);
+        
+        if (!violations.isEmpty()) {
+            throw new ConstraintViolationException(violations);
+        } 
+    }
+    
+    private List<UserModel> setNonEntityProperties(List<UserModel> models) {
+        int prefixIndex = PREFIX.length();
+        
+        return models.stream().map(model -> {
+            if (model.hasUserAuthority()) {
+                RoleAuthority roleAuthority = model.getUserAuthority().getRoleAuthority();
+                String authority = String.valueOf(roleAuthority).substring(prefixIndex);
+                model.getUserAuthority().setAuthority(Authority.valueOf(authority));
+            }
+            
+            if (model.getTeacher() != null) {
+                model.setFirstName(model.getTeacher().getFirstName());
+                model.setLastName(model.getTeacher().getLastName());
+            } else if (model.getStudent() != null) {
+                model.setFirstName(model.getStudent().getFirstName());
+                model.setLastName(model.getStudent().getLastName());
+            } else if (model.getStaff() != null) {
+                model.setFirstName(model.getStaff().getFirstName());
+                model.setLastName(model.getStaff().getLastName());
+            }
+            return model;
+        }).collect(Collectors.toList());
     }
 }
 

@@ -45,7 +45,7 @@
          class="form-select" id="floatingSelect"
          aria-label="Defalt select example">
          <option
-          th:each="authority : ${T(ua.com.foxminded.university.entity.Authority).values()}"
+          th:each="authority : ${T(ua.com.foxminded.university.model.Authority).values()}"
           th:value="${authority}" th:text="${authority.representation}">Admin</option>
         </select>
        </div>
@@ -169,7 +169,7 @@
                 class="form-select" id="floatingSelect"
                 aria-label="Defalt select example">
                 <option
-                 th:each="authority : ${T(ua.com.foxminded.university.entity.Authority).values()}"
+                 th:each="authority : ${T(ua.com.foxminded.university.model.Authority).values()}"
                  th:value="${authority}"
                  th:text="${authority.representation}">Admin</option>
                </select>

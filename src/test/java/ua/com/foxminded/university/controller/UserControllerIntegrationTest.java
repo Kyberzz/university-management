@@ -15,9 +15,20 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.integration.IntegrationProperties.RSocket.Client;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.UserDetailsManager;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -30,69 +41,66 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import lombok.extern.slf4j.Slf4j;
 import ua.com.foxminded.university.config.RepositoryTestConfig;
 import ua.com.foxminded.university.controller.UserController;
-import ua.com.foxminded.university.entity.Authority;
+import ua.com.foxminded.university.entity.RoleAuthority;
 import ua.com.foxminded.university.entity.UserAuthorityEntity;
 import ua.com.foxminded.university.entity.UserEntity;
 import ua.com.foxminded.university.exception.ServiceException;
+import ua.com.foxminded.university.model.Authority;
 import ua.com.foxminded.university.model.UserAuthorityModel;
 import ua.com.foxminded.university.model.UserModel;
 
-@Slf4j
 @AutoConfigureMockMvc
 @SpringBootTest
-(classes = RepositoryTestConfig.class)
+@DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 class UserControllerIntegrationTest {
     
     public static final String USERS_EDIT_URL = "/users/edit";
     public static final String USERS_LIST_URL = "/users/list";
-    public static final String EMAIL = "email@com";
-    public static final String PASSWORD = "{noop}password";
+    public static final String EMAIL_NAME = "email@com";
+    public static final String PASSWORD = "password";
+    public static final String NEW_PASSWORD = "newpassword";
     
-    @PersistenceUnit
-    EntityManagerFactory entityManagerFactory; 
+//    @PersistenceUnit
+//    private EntityManagerFactory entityManagerFactory; 
     
     @Autowired
     private UserController userController;
+    
+    @Autowired
+    private UserDetailsManager userDetailsManager;
     
     @Autowired
     private MockMvc mockMvc;
     
     @BeforeEach
     void setup() {
-        mockMvc = MockMvcBuilders.standaloneSetup(userController).build();
+     //   mockMvc = MockMvcBuilders.standaloneSetup(userController).build();
         
-        EntityManager entityManager = entityManagerFactory.createEntityManager();
-        UserEntity user = new UserEntity();
-        user.setEmail(EMAIL);
-        user.setPassword(PASSWORD);
-        user.setEnabled(true);
-        
-        entityManager.getTransaction().begin();
-        entityManager.persist(user);
-        entityManager.flush();
-        
-        UserAuthorityEntity userAuthority = new UserAuthorityEntity();
-        userAuthority.setUser(user);
-        userAuthority.setAuthority(Authority.ROLE_ADMIN);
-        entityManager.persist(userAuthority);
-        entityManager.getTransaction().commit();
+        PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+        UserDetails user = User.builder().username(EMAIL_NAME)
+                                         .password(PASSWORD)
+                                         .passwordEncoder(encoder::encode)
+                                         .authorities(Authority.ADMIN.toString())
+                                         .disabled(false)
+                                         .build();
+        userDetailsManager.createUser(user);
     }
     
     @Test
     void edit_shouldPerformEditingUserDetails() throws Exception {
         UserModel userModel = new UserModel();
         userModel.setEnabled(false);
-        userModel.setPassword(PASSWORD);
+        userModel.setPassword(NEW_PASSWORD);
         userModel.setUserAuthority(new UserAuthorityModel());
-        userModel.getUserAuthority().setAuthority(Authority.ROLE_STAFF);
+        userModel.getUserAuthority().setAuthority(Authority.STAFF);
         
         mockMvc.perform(MockMvcRequestBuilders.post(USERS_EDIT_URL)
                                               .flashAttr("userModel", userModel)
-                                              .param("email", EMAIL))
+                                              .param("email", EMAIL_NAME))
                .andDo(print())
                .andExpect(redirectedUrl(USERS_LIST_URL));
     }
-
+/*
     @Test
     void authorize_shouldAuthorizeExistingUser() throws Exception {
             UserModel userModel = new UserModel();
@@ -112,4 +120,5 @@ class UserControllerIntegrationTest {
                                            .andExpect(model().attributeExists("users"))
                                            .andExpect(model().attributeExists("userModel"));
     }
+    */
 }

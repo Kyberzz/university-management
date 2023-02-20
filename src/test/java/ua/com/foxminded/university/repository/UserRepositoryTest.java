@@ -21,7 +21,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import ua.com.foxminded.university.config.RepositoryTestConfig;
-import ua.com.foxminded.university.entity.Authority;
+import ua.com.foxminded.university.entity.RoleAuthority;
 import ua.com.foxminded.university.entity.UserAuthorityEntity;
 import ua.com.foxminded.university.entity.UserEntity;
 
@@ -62,7 +62,7 @@ class UserRepositoryTest {
         entityManager.persist(anotherUser);
         
         UserAuthorityEntity authority = new UserAuthorityEntity();
-        authority.setAuthority(Authority.ROLE_ADMIN);
+        authority.setRoleAuthority(RoleAuthority.ROLE_ADMIN);
         authority.setUser(user);
         entityManager.persist(authority);
         entityManager.getTransaction().commit();
