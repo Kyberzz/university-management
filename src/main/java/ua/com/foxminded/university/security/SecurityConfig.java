@@ -7,8 +7,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
+import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -22,7 +22,7 @@ public class SecurityConfig {
     public static final String ADMIN = "ADMIN";
 
     @Bean 
-    public UserDetailsService userDetailsManager(DataSource dataSource) {
+    public UserDetailsManager userDetailsManager(DataSource dataSource) {
         JdbcUserDetailsManager detailsManager = new JdbcUserDetailsManager();
         detailsManager.setDataSource(dataSource);
         return detailsManager;

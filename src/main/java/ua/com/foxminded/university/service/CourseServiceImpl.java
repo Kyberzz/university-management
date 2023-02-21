@@ -12,23 +12,21 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import lombok.RequiredArgsConstructor;
 import ua.com.foxminded.university.entity.CourseEntity;
 import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.CourseModel;
 import ua.com.foxminded.university.repository.CourseRepository;
 
-@Transactional
 @Service
+@Transactional
+@RequiredArgsConstructor
 public class CourseServiceImpl implements CourseService<CourseModel> {
     
     public static final String HAS_ROLE_STAFF_OR_ADMIN = "hasRole('STAFF')";
     
-    private CourseRepository courseRepository;
+    private final CourseRepository courseRepository;
     
-    public CourseServiceImpl(CourseRepository courseRepository) {
-        this.courseRepository = courseRepository;
-    }
-
     @Override
     public List<CourseModel> getAllCourses() throws ServiceException {
         try {

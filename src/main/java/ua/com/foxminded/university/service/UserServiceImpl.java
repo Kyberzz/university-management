@@ -24,6 +24,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Service;
 
+import lombok.RequiredArgsConstructor;
 import ua.com.foxminded.university.entity.RoleAuthority;
 import ua.com.foxminded.university.entity.UserEntity;
 import ua.com.foxminded.university.exception.ServiceException;
@@ -33,16 +34,13 @@ import ua.com.foxminded.university.repository.UserRepository;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService<UserModel> {
     
     public static final String PREFIX = "ROLE_";
     
-    private UserRepository userRepository;
-    private UserDetailsManager userDetailsManager;
-    
-    public UserServiceImpl(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+    private final UserRepository userRepository;
+    private final UserDetailsManager userDetailsManager;
     
     @Override
     public void deleteByEmail(String email) throws ServiceException {

@@ -11,22 +11,20 @@ import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import lombok.RequiredArgsConstructor;
 import ua.com.foxminded.university.entity.TeacherEntity;
 import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.TeacherModel;
 import ua.com.foxminded.university.repository.TeacherRepository;
 
 
-@Transactional
 @Service
+@Transactional
+@RequiredArgsConstructor
 public class TeacherServiceImpl implements TeacherService<TeacherModel> {
     
-    private TeacherRepository teacherRepository; 
+    private final TeacherRepository teacherRepository; 
     
-    public TeacherServiceImpl(TeacherRepository teacherRepository) {
-        this.teacherRepository = teacherRepository;
-    }
-
     @Override
     public List<TeacherModel> getAllTeachers() throws ServiceException {
         try {

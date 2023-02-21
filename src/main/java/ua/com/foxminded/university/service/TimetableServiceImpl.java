@@ -12,24 +12,22 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import lombok.RequiredArgsConstructor;
 import ua.com.foxminded.university.entity.TimetableEntity;
 import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.TimetableModel;
 import ua.com.foxminded.university.repository.TimetableRepository;
 
 
-@Transactional
 @Service
+@Transactional
+@RequiredArgsConstructor
 public class TimetableServiceImpl implements TimetableService<TimetableModel> {
     
-    public static final String HAS_ROLE_STAFF_OR_ADMIN = "hasRole('STAFF')";
+    public static final String HAS_ROLE_STAFF_OR_ADMIN = "hasAnyRole('STAFF', 'ADMIN')";
     
-    private TimetableRepository timetableRepository;
+    private final TimetableRepository timetableRepository;
     
-    public TimetableServiceImpl(TimetableRepository timetableRepository) {
-        this.timetableRepository = timetableRepository;
-    }
-
     @Override
     public List<TimetableModel> getAllTimetables() throws ServiceException {
         try {

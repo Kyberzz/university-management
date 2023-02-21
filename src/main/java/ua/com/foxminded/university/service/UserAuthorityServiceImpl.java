@@ -7,6 +7,7 @@ import org.modelmapper.MappingException;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import lombok.RequiredArgsConstructor;
 import ua.com.foxminded.university.entity.UserAuthorityEntity;
 import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.UserAuthorityModel;
@@ -14,14 +15,11 @@ import ua.com.foxminded.university.repository.UserAuthorityRepository;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class UserAuthorityServiceImpl implements UserAuthorityService<UserAuthorityModel> {
     
-    private UserAuthorityRepository userAuthorityRepository;
+    private final UserAuthorityRepository userAuthorityRepository;
     
-    public UserAuthorityServiceImpl(UserAuthorityRepository userAuthorityRepository) {
-        this.userAuthorityRepository = userAuthorityRepository;
-    }
-
     public UserAuthorityModel saveUserAuthority(UserAuthorityModel model) throws ServiceException {
         try {
             ModelMapper modelMapper = new ModelMapper();

@@ -17,27 +17,24 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import lombok.RequiredArgsConstructor;
 import ua.com.foxminded.university.entity.StudentEntity;
 import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.StudentModel;
 import ua.com.foxminded.university.repository.StudentRepository;
 
-@Transactional
 @Service
+@Transactional
+@RequiredArgsConstructor
 public class StudentServiceImpl implements StudentService<StudentModel> {
     
     public static final String HAS_ROLE_STAFF_OR_ADMIN = "hasAnyRole('STAFF','ADMIN')";
     
-    private StudentRepository studentRepository;
-    private Validator validator;
+    private final StudentRepository studentRepository;
+    private final Validator validator;
     
-    public StudentServiceImpl(StudentRepository studentRepository, Validator validator) {
-        this.studentRepository = studentRepository;
-        this.validator = validator;
-    }
-
-    @PreAuthorize(HAS_ROLE_STAFF_OR_ADMIN)
     @Override
+    @PreAuthorize(HAS_ROLE_STAFF_OR_ADMIN)
     public void deleteStudentById(int id) throws ServiceException {
         try {
             studentRepository.deleteById(id);
@@ -46,8 +43,8 @@ public class StudentServiceImpl implements StudentService<StudentModel> {
         }
     }
     
-    @PreAuthorize(HAS_ROLE_STAFF_OR_ADMIN)
     @Override
+    @PreAuthorize(HAS_ROLE_STAFF_OR_ADMIN)
     public void updateStudent(StudentModel studentModel) throws ServiceException {
         try {
             Set<ConstraintViolation<StudentModel>> violations = validator.validate(studentModel);

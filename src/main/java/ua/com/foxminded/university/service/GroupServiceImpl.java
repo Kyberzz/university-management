@@ -11,21 +11,19 @@ import org.modelmapper.TypeToken;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import lombok.RequiredArgsConstructor;
 import ua.com.foxminded.university.entity.GroupEntity;
 import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.GroupModel;
 import ua.com.foxminded.university.repository.GroupRepository;
 
-@Transactional
 @Service
+@Transactional
+@RequiredArgsConstructor
 public class GroupServiceImpl implements GroupService<GroupModel> {
     
-    private GroupRepository groupRepository;
+    private final GroupRepository groupRepository;
     
-    public GroupServiceImpl(GroupRepository groupRepository) {
-        this.groupRepository = groupRepository;
-    }
-
     @Override
     public List<GroupModel> getAllGroups() throws ServiceException {
         try {

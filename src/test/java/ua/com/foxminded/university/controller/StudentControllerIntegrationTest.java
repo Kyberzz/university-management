@@ -12,18 +12,20 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-
-import ua.com.foxminded.university.controller.StudentController;
+import org.testcontainers.junit.jupiter.Container;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 class StudentControllerIntegrationTest {
+    
+//    @Container
     
     @Autowired
     private StudentController studentController;
     
     @Autowired
     private MockMvc mockMvc;
+    
     
     @BeforeEach
     void setup() {
