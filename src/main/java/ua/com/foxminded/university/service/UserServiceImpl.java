@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.transaction.Transactional;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Validation;
@@ -31,6 +32,7 @@ import ua.com.foxminded.university.model.UserModel;
 import ua.com.foxminded.university.repository.UserRepository;
 
 @Service
+@Transactional
 public class UserServiceImpl implements UserService<UserModel> {
     
     public static final String PREFIX = "ROLE_";
@@ -42,6 +44,7 @@ public class UserServiceImpl implements UserService<UserModel> {
         this.userRepository = userRepository;
     }
     
+    @Override
     public void deleteByEmail(String email) throws ServiceException {
         try {
             userDetailsManager.deleteUser(email);
@@ -50,6 +53,7 @@ public class UserServiceImpl implements UserService<UserModel> {
         }
     }
     
+    @Override
     public void createUser(UserModel model) throws ServiceException {
         try {
             validate(model);
@@ -113,7 +117,6 @@ public class UserServiceImpl implements UserService<UserModel> {
         }
     }
     
-    
     @Override
     public void updateUser(UserModel model) throws ServiceException {
         try {   
@@ -130,17 +133,6 @@ public class UserServiceImpl implements UserService<UserModel> {
             userDetailsManager.updateUser(user);
         } catch (ConstraintViolationException  e) {
             throw new ServiceException("Updating user object fails.", e);
-        }
-    }
-    
-    @Override
-    public UserModel getActiveUserByEmail(String email) throws ServiceException {
-        try {
-            UserEntity userEntity = userRepository.findActiveUserByEmail(email);
-            ModelMapper modelMapper = new ModelMapper();
-            return modelMapper.map(userEntity, UserModel.class);
-        } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
-            throw new ServiceException("Getting user with its authority by its email failed", e);
         }
     }
     

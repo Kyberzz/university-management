@@ -17,7 +17,6 @@ import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.CourseModel;
 import ua.com.foxminded.university.repository.CourseRepository;
 
-
 @Transactional
 @Service
 public class CourseServiceImpl implements CourseService<CourseModel> {
