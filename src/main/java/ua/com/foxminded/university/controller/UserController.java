@@ -32,14 +32,15 @@ public class UserController extends DefaultController {
         return "redirect:/users/list";
     }
     
-    @PostMapping(value = "/edit", params = {"email"})
-    public String edit(@RequestParam("email") String email, 
+    @PostMapping(value = "/edit", params = {"userEmail"})
+    public String edit(@RequestParam("userEmail") String userEmail, 
                        UserModel updatedUser, 
                        BindingResult bindingResult) throws ServiceException {
         if (bindingResult.hasErrors()) {
             handleBindingResultError(bindingResult);
         }
-        UserModel persistedUser = userService.getByEmail(email);
+        log.error(userEmail);
+        UserModel persistedUser = userService.getByEmail(userEmail);
         persistedUser.setEmail(updatedUser.getEmail());
         persistedUser.setEnabled(updatedUser.getEnabled());
         

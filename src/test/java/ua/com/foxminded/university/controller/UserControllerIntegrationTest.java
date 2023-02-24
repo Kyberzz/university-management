@@ -33,6 +33,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+//import org.testcontainers.containers.PostgreSQLContainer;
+//import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
@@ -49,16 +54,22 @@ import ua.com.foxminded.university.model.Authority;
 import ua.com.foxminded.university.model.UserAuthorityModel;
 import ua.com.foxminded.university.model.UserModel;
 
+//@TestPropertySource(locations = {"/application.properties"})
+//@Testcontainers
 @AutoConfigureMockMvc
 @SpringBootTest
-@DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 class UserControllerIntegrationTest {
     
     public static final String USERS_EDIT_URL = "/users/edit";
     public static final String USERS_LIST_URL = "/users/list";
-    public static final String EMAIL_NAME = "email@com";
+    public static final String EMAIL_NAME = "gmail@com";
     public static final String PASSWORD = "password";
     public static final String NEW_PASSWORD = "newpassword";
+    
+//    @Container
+//    public static PostgreSQLContainer<?> container = new PostgreSQLContainer("postgres:latest")
+//            .withDatabaseName("university");
+    
     
 //    @PersistenceUnit
 //    private EntityManagerFactory entityManagerFactory; 
@@ -74,7 +85,8 @@ class UserControllerIntegrationTest {
     
     @BeforeEach
     void setup() {
-     //   mockMvc = MockMvcBuilders.standaloneSetup(userController).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(userController).build();
+        
         
         PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
         UserDetails user = User.builder().username(EMAIL_NAME)
@@ -84,7 +96,9 @@ class UserControllerIntegrationTest {
                                          .disabled(false)
                                          .build();
         userDetailsManager.createUser(user);
+        
     }
+    
     
     @Test
     void edit_shouldPerformEditingUserDetails() throws Exception {
@@ -100,6 +114,7 @@ class UserControllerIntegrationTest {
                .andDo(print())
                .andExpect(redirectedUrl(USERS_LIST_URL));
     }
+    
 /*
     @Test
     void authorize_shouldAuthorizeExistingUser() throws Exception {

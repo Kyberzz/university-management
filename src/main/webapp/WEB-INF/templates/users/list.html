@@ -152,12 +152,11 @@
               <div class="col-4" th:text="${user.lastName}">Jhonsonyuck</div>
              </div>
              <div class="row text-start mt-2">
-              <div class="col-3" th:text="|#{thead.email}: |">Email:
-              </div>
-              <div class="col-4" th:text="${user.email}"></div>
-              <div class="col-5">
-               <input class="form-control" type="email"
-                th:field="*{email}">
+              
+              <div class="col-3" th:text="|#{thead.email}: |">Email:</div>
+              <div class="col-4" th:text="${user.email}">email@com</div>
+              <div class="col-5"> 
+               <input class="form-control" type="email" th:field="*{email}">
               </div>
              </div>
              <div class="row text-start mt-2">
@@ -193,8 +192,7 @@
            <div class="modal-footer">
             <button type="button" class="btn btn-secondary"
              data-bs-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-primary" name="email"
-             th:value="${user.email}"
+            <button type="submit" class="btn btn-primary" name="userEmail" th:value="${user.email}"
              th:text="#{button.saveChange}">Save the change</button>
            </div>
           </div>
