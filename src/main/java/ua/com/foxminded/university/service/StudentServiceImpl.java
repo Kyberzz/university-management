@@ -87,8 +87,8 @@ public class StudentServiceImpl implements StudentService<StudentModel> {
         }
     }
     
-    @PreAuthorize(HAS_ROLE_STAFF_OR_ADMIN)
     @Override
+    @PreAuthorize(HAS_ROLE_STAFF_OR_ADMIN)
     public void addStudent(StudentModel model) throws ServiceException {
         try {
             ModelMapper modelMapper = new ModelMapper();

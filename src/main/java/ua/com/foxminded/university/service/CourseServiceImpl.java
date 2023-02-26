@@ -40,8 +40,8 @@ public class CourseServiceImpl implements CourseService<CourseModel> {
         }
     }
     
-    @PreAuthorize(HAS_ROLE_STAFF_OR_ADMIN)
     @Override
+    @PreAuthorize(HAS_ROLE_STAFF_OR_ADMIN)
     public void updateCourse(CourseModel courseModel) throws ServiceException {
         ModelMapper modelMapper = new ModelMapper();
         

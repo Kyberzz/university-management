@@ -40,12 +40,12 @@ public class UserServiceImpl implements UserService<UserModel> {
     public static final String PREFIX = "ROLE_";
     
     private final UserRepository userRepository;
-    private final UserDetailsManager userDetailsManager;
+//    private final UserDetailsManager userDetailsManager;
     
     @Override
     public void deleteByEmail(String email) throws ServiceException {
         try {
-            userDetailsManager.deleteUser(email);
+//            userDetailsManager.deleteUser(email);
         } catch (IllegalArgumentException e) {
             throw new ServiceException("Deleting the user fails.", e);
         }
@@ -64,7 +64,7 @@ public class UserServiceImpl implements UserService<UserModel> {
                                              .authorities(authority)
                                              .disabled(!model.getEnabled())
                                              .build();
-            userDetailsManager.createUser(user);
+//            userDetailsManager.createUser(user);
         } catch (ConstraintViolationException e) {
             throw new ServiceException("Creating user object fails.", e);
         }
@@ -132,7 +132,7 @@ public class UserServiceImpl implements UserService<UserModel> {
                                                                         .getAuthority()))
                                              .disabled(!model.getEnabled()).build();
 
-            userDetailsManager.updateUser(user);
+//            userDetailsManager.updateUser(user);
         } catch (ConstraintViolationException  e) {
             throw new ServiceException("Updating user object fails.", e);
         }

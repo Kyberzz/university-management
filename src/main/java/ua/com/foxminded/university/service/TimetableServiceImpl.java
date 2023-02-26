@@ -41,8 +41,8 @@ public class TimetableServiceImpl implements TimetableService<TimetableModel> {
         }
     }
     
-    @PreAuthorize(HAS_ROLE_STAFF_OR_ADMIN)
     @Override
+    @PreAuthorize(HAS_ROLE_STAFF_OR_ADMIN)
     public void updateTimetable(TimetableModel timetableModel) throws ServiceException {
         ModelMapper modelMapper = new ModelMapper();
         

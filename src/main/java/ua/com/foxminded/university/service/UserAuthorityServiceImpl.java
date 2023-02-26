@@ -20,6 +20,7 @@ public class UserAuthorityServiceImpl implements UserAuthorityService<UserAuthor
     
     private final UserAuthorityRepository userAuthorityRepository;
     
+    @Override
     public UserAuthorityModel saveUserAuthority(UserAuthorityModel model) throws ServiceException {
         try {
             ModelMapper modelMapper = new ModelMapper();
