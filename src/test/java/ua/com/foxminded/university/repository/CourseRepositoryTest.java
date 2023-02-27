@@ -26,6 +26,7 @@ import ua.com.foxminded.university.entity.CourseEntity;
 import ua.com.foxminded.university.entity.GroupEntity;
 import ua.com.foxminded.university.entity.TeacherEntity;
 import ua.com.foxminded.university.entity.TimetableEntity;
+import ua.com.foxminded.university.entity.UserEntity;
 import ua.com.foxminded.university.exception.RepositoryException;
 
 @ActiveProfiles("test")
@@ -70,15 +71,18 @@ class CourseRepositoryTest {
         entityManager.persist(group);
         
         TeacherEntity teacher = new TeacherEntity();
-        teacher.setFirstName(TEACHER_FIRST_NAME);
-        teacher.setLastName(TEACHER_LAST_NAME);
+        teacher.setUser(new UserEntity());
+        teacher.getUser().setFirstName(TEACHER_FIRST_NAME);
+        teacher.getUser().setLastName(TEACHER_LAST_NAME);
         entityManager.persist(teacher);
+        entityManager.flush();
         
         CourseEntity course = new CourseEntity();
         course.setName(COURSE_NAME);
         course.setDescription(COURSE_DESCRIPTION);
         course.setTeacher(teacher);
         entityManager.persist(course);
+        entityManager.flush();
         
         TimetableEntity timetable = new TimetableEntity();
         timetable.setGroup(group);

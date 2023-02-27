@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ua.com.foxminded.university.config.RepositoryTestConfig;
 import ua.com.foxminded.university.entity.CourseEntity;
 import ua.com.foxminded.university.entity.TeacherEntity;
+import ua.com.foxminded.university.entity.UserEntity;
 import ua.com.foxminded.university.exception.RepositoryException;
 
 @ActiveProfiles("test")
@@ -52,8 +53,9 @@ class TeacherRepositoryTest {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
         TeacherEntity teacher = new TeacherEntity();
-        teacher.setFirstName(TEACHER_FIRST_NAME);
-        teacher.setLastName(TEACHER_LAST_NAME);
+        teacher.setUser(new UserEntity());
+        teacher.getUser().setFirstName(TEACHER_FIRST_NAME);
+        teacher.getUser().setLastName(TEACHER_LAST_NAME);
         entityManager.persist(teacher);
         
         CourseEntity course = new CourseEntity();
@@ -70,8 +72,8 @@ class TeacherRepositoryTest {
         TeacherEntity teacherData = teacherRepository.findCourseListById(TEACHER_ID);
         
         assertEquals(TEACHER_ID, teacherData.getId());
-        assertEquals(TEACHER_FIRST_NAME, teacherData.getFirstName());
-        assertEquals(TEACHER_LAST_NAME, teacherData.getLastName());
+        assertEquals(TEACHER_FIRST_NAME, teacherData.getUser().getFirstName());
+        assertEquals(TEACHER_LAST_NAME, teacherData.getUser().getLastName());
         assertEquals(TEACHER_ID, teacherData.getCourseList().get(FIST_ELEMENT).getTeacher().getId());
         assertEquals(COURSE_ID, teacherData.getCourseList().get(FIST_ELEMENT).getId());
         assertEquals(COURSE_NAME, teacherData.getCourseList().get(FIST_ELEMENT).getName());
@@ -83,7 +85,7 @@ class TeacherRepositoryTest {
         TeacherEntity teacher = teacherRepository.findById(TEACHER_ID);
         
         assertEquals(TEACHER_ID, teacher.getId());
-        assertEquals(TEACHER_FIRST_NAME, teacher.getFirstName());
-        assertEquals(TEACHER_LAST_NAME, teacher.getLastName());
+        assertEquals(TEACHER_FIRST_NAME, teacher.getUser().getFirstName());
+        assertEquals(TEACHER_LAST_NAME, teacher.getUser().getLastName());
     }
 }

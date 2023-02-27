@@ -25,6 +25,7 @@ import ua.com.foxminded.university.config.RepositoryTestConfig;
 import ua.com.foxminded.university.entity.GroupEntity;
 import ua.com.foxminded.university.entity.StudentEntity;
 import ua.com.foxminded.university.entity.TimetableEntity;
+import ua.com.foxminded.university.entity.UserEntity;
 import ua.com.foxminded.university.exception.RepositoryException;
 
 @ActiveProfiles("test")
@@ -73,8 +74,9 @@ class GroupRepositoryTest {
         entityManager.persist(timetable);
 
         StudentEntity student = new StudentEntity();
-        student.setFirstName(FIST_NAME);
-        student.setLastName(LAST_NAME);
+        student.setUser(new UserEntity());
+        student.getUser().setFirstName(FIST_NAME);
+        student.getUser().setLastName(LAST_NAME);
         student.setGroup(group);
         entityManager.persist(student);
         entityManager.getTransaction().commit();
@@ -104,9 +106,12 @@ class GroupRepositoryTest {
         assertEquals(GROUP_ID, receivedGroup.getId());
         assertEquals(GROUP_NAME, receivedGroup.getName());
         assertEquals(STUDENT_ID, receivedGroup.getStudentList().get(FIRST_ELEMENT).getId());
-        assertEquals(FIST_NAME, receivedGroup.getStudentList().get(FIRST_ELEMENT).getFirstName());
-        assertEquals(LAST_NAME, receivedGroup.getStudentList().get(FIRST_ELEMENT).getLastName());
-        assertEquals(GROUP_ID, receivedGroup.getStudentList().get(FIRST_ELEMENT).getGroup().getId());
+        assertEquals(FIST_NAME, receivedGroup.getStudentList().get(FIRST_ELEMENT)
+                                                              .getUser().getFirstName());
+        assertEquals(LAST_NAME, receivedGroup.getStudentList().get(FIRST_ELEMENT)
+                                                              .getUser().getLastName());
+        assertEquals(GROUP_ID, receivedGroup.getStudentList().get(FIRST_ELEMENT)
+                                                             .getGroup().getId());
     }
     
     @Test

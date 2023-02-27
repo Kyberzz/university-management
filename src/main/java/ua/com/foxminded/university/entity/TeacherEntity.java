@@ -3,6 +3,7 @@ package ua.com.foxminded.university.entity;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -27,16 +28,10 @@ public class TeacherEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     
-    @Column(name = "first_name")
-    private String firstName;
-    
-    @Column(name = "last_name")
-    private String lastName;
-    
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "teacher")
     private List<CourseEntity> courseList;
     
-    @OneToOne
-    @JoinColumn(name = "username")
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
     private UserEntity user;
 }

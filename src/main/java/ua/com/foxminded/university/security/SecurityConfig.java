@@ -9,6 +9,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configurers.provisioning.JdbcUserDetailsManagerConfigurer;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
@@ -18,7 +19,7 @@ import lombok.RequiredArgsConstructor;
 
 @Configuration
 @EnableWebSecurity
-//@EnableMethodSecurity
+@EnableMethodSecurity
 @RequiredArgsConstructor
 @PropertySource("/security-config-queries.properties")
 public class SecurityConfig {
@@ -36,8 +37,8 @@ public class SecurityConfig {
     private final DataSource dataSource;
     
     @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder builder, 
-                                DataSource dataSource) throws Exception {
+    public void configure(AuthenticationManagerBuilder builder, 
+                          DataSource dataSource) throws Exception {
         JdbcUserDetailsManagerConfigurer<AuthenticationManagerBuilder> configurar = 
                 new JdbcUserDetailsManagerConfigurer<>();
 

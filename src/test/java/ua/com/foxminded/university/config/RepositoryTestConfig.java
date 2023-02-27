@@ -6,7 +6,6 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.SharedCacheMode;
 import javax.sql.DataSource;
 
-import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -79,8 +78,8 @@ public class RepositoryTestConfig {
         
         jpaProperties.setProperty(SCHEMA_GENERATION_ACTION, ACTION_TYPE);
         jpaProperties.setProperty(CREATION_SCHEMA_SOURCE, SOURCE_TYPE);
-        jpaProperties.setProperty(CREATION_SCHEMA_SCRIPT_SOURCE, CREATION_SCHEMA_PATH);
         jpaProperties.setProperty(SCHEMA_CREATION_ACCESS, PERMISSION);
+        jpaProperties.setProperty(CREATION_SCHEMA_SCRIPT_SOURCE, CREATION_SCHEMA_PATH);
         jpaProperties.setProperty(PERSISTENCE_DIALECT, DIALECT_TYPE);
         jpaProperties.setProperty(SHARED_CHACHE_MODE, MODE_TYPE);
         
