@@ -43,10 +43,10 @@ public class SecurityConfig {
     private final AuthenticationConfiguration configuration;
     
     
-    @Bean
-    public AuthenticationManager authenticationManager() throws Exception {
-        return configuration.getAuthenticationManager();
-    }
+//    @Bean
+//    public AuthenticationManager authenticationManager() throws Exception {
+//        return configuration.getAuthenticationManager();
+//    }
     
     @Autowired
     public void configure(AuthenticationManagerBuilder builder, 
@@ -75,7 +75,6 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 //        Filter filter = new UsernamePasswordAuthenticationFilter(authenticationManager());
                 
-//        filter.setFilterProcessesUrl("/api/login");
         http.authorizeHttpRequests(request -> request
                 .mvcMatchers("/", "/index", "/images/**").permitAll()
                 .mvcMatchers("/timetables/**").hasAnyRole(STUDENT, TEACHER, STAFF, ADMIN)
