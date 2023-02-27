@@ -11,5 +11,5 @@ public interface UserService<T> {
     public T getByEmail(String user) throws ServiceException;
     public void deleteByEmail(String email) throws ServiceException;
     public List<T> getNotAuthorizedUsers() throws ServiceException;
-    public List<T> getAllUsers() throws ServiceException;
+    public List<T> getAll() throws ServiceException;
 }

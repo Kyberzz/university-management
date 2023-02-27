@@ -38,7 +38,7 @@ class UserServiceImplTest {
     
     @Test
     void getAllUsers_shouldExecuteCorrectNumberCalls() throws ServiceException {
-        userService.getAllUsers();
+        userService.getAll();
         verify(userRepositoryMock, times(1)).findAll();
     }
 
@@ -50,13 +50,14 @@ class UserServiceImplTest {
         entity.setPassword(PASSWORD);
         entity.setUserAuthority(new UserAuthorityEntity());
         entity.getUserAuthority().setRoleAuthority(RoleAuthority.ROLE_ADMIN);
-        
         List<UserEntity> entities = new ArrayList<>();
         entities.add(entity);
         
         when(userRepositoryMock.findAll()).thenReturn(entities);
-        List<UserModel> models = userService.getAllUsers();
+        
+        List<UserModel> models = userService.getAll();
         UserModel model = models.get(FIRST_ELEMENT);
+        
         assertEquals(EMAIL, model.getEmail());
         assertTrue(model.getEnabled());
         assertEquals(PASSWORD, model.getPassword());

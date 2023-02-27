@@ -58,7 +58,7 @@ public class UserController extends DefaultController {
 
     @GetMapping("/list")
     public String listAllUsers(Model model) throws ServiceException {
-        List<UserModel> allUsers = userService.getAllUsers();
+        List<UserModel> allUsers = userService.getAll();
         List<UserModel> notAuthorizedUsers = userService.getNotAuthorizedUsers();
         UserModel modelUser = new UserModel();
         model.addAttribute("notAuthorizedUsers", notAuthorizedUsers);

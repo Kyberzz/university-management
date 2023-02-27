@@ -32,7 +32,7 @@ import ua.com.foxminded.university.entity.UserEntity;
 @ActiveProfiles("test")
 class UserRepositoryTest {
     
-    public static final int USER_QUANTITY = 1;
+    public static final int USERS_QUANTITY = 1;
     public static final String PASSWORD = "admin";
     public static final String EMAIL_B = "email@com";
     public static final String EMAIL_A = "admin@com";
@@ -69,22 +69,20 @@ class UserRepositoryTest {
     }
     
     @Test
-    void getByEmail_shouldReturnUser_whenEnterEmaill() {
+    void findByUserAuthorityIsEmpty() {
+        List<UserEntity> users = userRepository.findByUserAuthorityIsNull();
+        assertEquals(USERS_QUANTITY, users.size());
+    }
+    
+    @Test
+    void findByEmail_shouldReturnUser_whenEnterEmaill() {
         UserEntity user = userRepository.findByEmail(EMAIL_A);
         assertEquals(EMAIL_A, user.getEmail());
     }
     
     @Test
-    void getAllHavingPassword_shouldReturnAllUsersHavingPassword() {
-        List<UserEntity> users = userRepository.getAllHavingPassword();
-        assertEquals(USER_QUANTITY, users.size());
-    }
-
-    @Test
-    void findByEmail_shouldReternUserWithAuthority() {
-        UserEntity user = userRepository.findActiveUserByEmail(EMAIL_A);
-        assertEquals(EMAIL_A, user.getEmail());
-        assertTrue(user.getEnabled());
-        assertEquals(PASSWORD, user.getPassword());
+    void findByPasswordIsNotNull_shouldReturnAllUsersHavingPassword() {
+        List<UserEntity> users = userRepository.findByPasswordIsNotNull();
+        assertEquals(USERS_QUANTITY, users.size());
     }
 }
