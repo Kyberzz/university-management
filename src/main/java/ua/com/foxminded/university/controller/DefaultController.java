@@ -3,6 +3,7 @@ package ua.com.foxminded.university.controller;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.ModelAndView;
@@ -22,5 +23,12 @@ public class DefaultController {
         modelAndView.addObject("url", request.getRequestURI());
         modelAndView.setViewName("error");
         return modelAndView;
+    }
+    
+    public String handleBindingResultError(BindingResult bindingResult) {
+        bindingResult.getAllErrors()
+                     .stream()
+                     .forEach(error -> log.error(error.getDefaultMessage()));
+        return "error";
     }
 }

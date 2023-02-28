@@ -13,6 +13,5 @@ public class UserAuthorityModel implements Serializable {
     private Integer id;
     private RoleAuthority roleAuthority;
     private UserModel user;
-
     private Authority authority;
 }

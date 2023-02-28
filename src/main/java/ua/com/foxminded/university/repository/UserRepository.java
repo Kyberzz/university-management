@@ -8,6 +8,7 @@ import ua.com.foxminded.university.entity.UserEntity;
 
 public interface UserRepository extends JpaRepository<UserEntity, Integer> {
     
+    
     public List<UserEntity> findByPasswordIsNotNull();
     
     public List<UserEntity> findByUserAuthorityIsNull();

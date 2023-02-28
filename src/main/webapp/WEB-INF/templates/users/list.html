@@ -116,7 +116,7 @@
        <td th:text="${user.lastName}">Torvalds</td>
        <td th:text="${user.email}">email@com</td>
        <td
-        th:text="${user.userAuthority != null} ? ${user.userAuthority.authority.representation} : '---'">
+        th:text="${user.userAuthority != null} ? ${user.userAuthority.roleAuthority.representation} : '---'">
         Administrator</td>
        <td
         th:text="${user.enabled} ? #{users.enableStatus} : #{users.disableStatus}">true</td>
@@ -155,14 +155,12 @@
               
               <div class="col-3" th:text="|#{thead.email}: |">Email:</div>
               <div class="col-4" th:text="${user.email}">email@com</div>
-              <div class="col-5"> 
-               <input class="form-control" type="email" th:field="*{email}">
-              </div>
+             
              </div>
              <div class="row text-start mt-2">
               <div class="col-3" th:text="|#{users.authority}: |">Authority</div>
               <div class="col-4"
-               th:text="${user.userAuthority != null} ? ${user.userAuthority.authority.representation} : '---'">Admin</div>
+               th:text="${user.userAuthority != null} ? ${user.userAuthority.roleAuthority.representation} : '---'">Admin</div>
               <div class="col-5">
                <select th:field="*{userAuthority.authority}"
                 class="form-select" id="floatingSelect"
@@ -192,7 +190,7 @@
            <div class="modal-footer">
             <button type="button" class="btn btn-secondary"
              data-bs-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-primary" name="userEmail" th:value="${user.email}"
+            <button type="submit" class="btn btn-primary" name="userId" th:value="${user.id}"
              th:text="#{button.saveChange}">Save the change</button>
            </div>
           </div>
@@ -237,7 +235,7 @@
              <div class="row text-start mt-2">
               <div class="col-3" th:text="|#{users.authority}: |">Authority</div>
               <div class="col-9"
-               th:text="${user.userAuthority != null} ? ${user.userAuthority.authority.representation} : '---'"></div>
+               th:text="${user.userAuthority != null} ? ${user.userAuthority.roleAuthority.representation} : '---'"></div>
              </div>
              <div class="row text-start mt-2">
               <div class="col-3" th:text="|#{thead.active}: |">

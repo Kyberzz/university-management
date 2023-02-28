@@ -10,7 +10,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -19,10 +18,7 @@ import lombok.Data;
 
 @Entity
 @Data
-@Table(name = "authorities", 
-       indexes = {@Index(name = "ix_auth_username", 
-                         columnList = "username, authority", 
-                         unique = true)})
+@Table(name = "authorities")
 public class UserAuthorityEntity implements Serializable {
     
     public static final long serialVersionUID = 1L;
@@ -36,6 +32,6 @@ public class UserAuthorityEntity implements Serializable {
     private RoleAuthority roleAuthority;
     
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "username", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user;
 }

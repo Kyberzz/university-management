@@ -10,15 +10,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import lombok.extern.slf4j.Slf4j;
 import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.UserModel;
 import ua.com.foxminded.university.service.UserService;
 
-@Slf4j
 @Controller
 @RequestMapping("/users")
 public class UserController extends DefaultController {
+    
+    private static final String DEFAULT_PASSWORD = "{noop}pass";
 
     private UserService<UserModel> userService;
 
@@ -32,17 +32,20 @@ public class UserController extends DefaultController {
         return "redirect:/users/list";
     }
     
-    @PostMapping(value = "/edit", params = {"userEmail"})
-    public String edit(@RequestParam("userEmail") String userEmail, 
+    @PostMapping(value = "/edit", params = {"userId"})
+    public String edit(@RequestParam("userId") Integer userId, 
                        UserModel updatedUser, 
                        BindingResult bindingResult) throws ServiceException {
         if (bindingResult.hasErrors()) {
             handleBindingResultError(bindingResult);
         }
-        log.error(userEmail);
-        UserModel persistedUser = userService.getByEmail(userEmail);
-        persistedUser.setEmail(updatedUser.getEmail());
+        
+        UserModel persistedUser = userService.getById(userId);
         persistedUser.setEnabled(updatedUser.getEnabled());
+        
+        if (persistedUser.getPassword() == null) {
+            persistedUser.setPassword(DEFAULT_PASSWORD);
+        }
         
         if (updatedUser.hasUserAuthority()) {
             if (persistedUser.hasUserAuthority()) {
@@ -88,12 +91,5 @@ public class UserController extends DefaultController {
         userModel.setPassword(password);
         userService.createUser(userModel);
         return "redirect:/users/list";
-    }
-    
-    private String handleBindingResultError(BindingResult bindingResult) {
-        bindingResult.getAllErrors()
-                     .stream()
-                     .forEach(error -> log.error(error.getDefaultMessage()));
-        return "error";
     }
 }

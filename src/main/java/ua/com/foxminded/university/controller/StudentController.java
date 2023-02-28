@@ -10,28 +10,20 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import lombok.extern.slf4j.Slf4j;
+import lombok.RequiredArgsConstructor;
 import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.GroupModel;
 import ua.com.foxminded.university.model.StudentModel;
 import ua.com.foxminded.university.service.GroupService;
 import ua.com.foxminded.university.service.StudentService;
 
-@Slf4j
 @Controller
 @RequestMapping("/students")
+@RequiredArgsConstructor
 public class StudentController extends DefaultController {
     
-    public static final String DEFAULT_PASSWORD = "{noop}password";
-
-    private StudentService<StudentModel> studentService;
-    private GroupService<GroupModel> groupService;
-
-    public StudentController(StudentService<StudentModel> studentService, 
-                             GroupService<GroupModel> groupService) {
-        this.studentService = studentService;
-        this.groupService = groupService;
-    }
+    private final StudentService<StudentModel> studentService;
+    private final GroupService<GroupModel> groupService;
 
     @PostMapping("/add")
     public String addStudent(StudentModel studentModel, 
@@ -63,20 +55,9 @@ public class StudentController extends DefaultController {
             handleBindingResultError(bindingResult);
         }
         StudentModel persistedStudent = studentService.getStudentById(studentId);
-        persistedStudent.setFirstName(studentModel.getFirstName());
-        persistedStudent.setLastName(studentModel.getLastName());
-        
-        if (studentModel.hasUser()) {
-            String email = studentModel.getUser().getEmail();
-            
-            if (persistedStudent.hasUser()) {
-                persistedStudent.getUser().setEmail(email);
-            } else {
-                studentModel.getUser().setEnabled(false);
-                studentModel.getUser().setPassword(DEFAULT_PASSWORD);
-                persistedStudent.setUser(studentModel.getUser());
-            }
-        }
+        persistedStudent.getUser().setFirstName(studentModel.getUser().getFirstName());
+        persistedStudent.getUser().setLastName(studentModel.getUser().getLastName());
+        persistedStudent.getUser().setEmail(studentModel.getUser().getEmail());
 
         if (studentModel.hasGroup()) {
             GroupModel group = studentModel.getGroup();
@@ -94,12 +75,5 @@ public class StudentController extends DefaultController {
             throws ServiceException {
         studentService.deleteStudentById(studentId);
         return "redirect:/students/list";
-    }
-    
-    private String handleBindingResultError(BindingResult bindingResult) {
-        bindingResult.getAllErrors()
-                     .stream()
-                     .forEach(error -> log.error(error.getDefaultMessage()));
-        return "error";
     }
 }

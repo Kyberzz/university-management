@@ -1,24 +1,17 @@
 package ua.com.foxminded.university.security;
 
-import javax.servlet.Filter;
 import javax.sql.DataSource;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.config.annotation.authentication.configurers.provisioning.JdbcUserDetailsManagerConfigurer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
+import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import lombok.RequiredArgsConstructor;
 
@@ -29,6 +22,9 @@ import lombok.RequiredArgsConstructor;
 @PropertySource("/security-config-queries.properties")
 public class SecurityConfig {
 
+    public static final String CREATE_AUTHORITY_SLQ = "createAuthoritySql"; 
+    public static final String DELETE_USER_AUTHORITIES_QUERY = "deleteUserAuthoritiesQuery"; 
+    public static final String UPDATE_USER_SQL = "updateUserQuery"; 
     public static final String GROUP_AUTHORITIES_BY_EMAIL_QUERY = "groupAuthoritiesByEmailQuery"; 
     public static final String AUTHORITIES_BY_EMAIL_QUERY = "authoritiesByEmailQuery";
     public static final String DELETE_USER_SQL = "deleteUserSql";
@@ -40,41 +36,25 @@ public class SecurityConfig {
     
     private final Environment environment;
     private final DataSource dataSource;
-    private final AuthenticationConfiguration configuration;
-    
-    
-//    @Bean
-//    public AuthenticationManager authenticationManager() throws Exception {
-//        return configuration.getAuthenticationManager();
-//    }
-    
-    @Autowired
-    public void configure(AuthenticationManagerBuilder builder, 
-                          DataSource dataSource) throws Exception {
-        JdbcUserDetailsManagerConfigurer<AuthenticationManagerBuilder> configurar = 
-                new JdbcUserDetailsManagerConfigurer<>();
-
-        configurar.dataSource(dataSource)
-                  .usersByUsernameQuery(environment.getProperty(USERS_BY_EMAIL_QUERY))
-                  .authoritiesByUsernameQuery(environment.getProperty(USERS_BY_EMAIL_QUERY));
-        
-        builder.apply(configurar);
-    }
     
     @Bean 
-    public JdbcUserDetailsManager userDetailsManager() throws Exception {
+    public UserDetailsManager userDetailsManager() throws Exception {
         JdbcUserDetailsManager detailsManager = new JdbcUserDetailsManager(dataSource);
+        detailsManager.setCreateAuthoritySql(environment.getProperty(CREATE_AUTHORITY_SLQ));
         detailsManager.setDeleteUserSql(environment.getProperty(DELETE_USER_SQL));
+        detailsManager.setDeleteUserAuthoritiesSql(
+                environment.getProperty(DELETE_USER_AUTHORITIES_QUERY));
         detailsManager.setGroupAuthoritiesByUsernameQuery(
                 environment.getProperty(GROUP_AUTHORITIES_BY_EMAIL_QUERY));
         detailsManager.setUsersByUsernameQuery(environment.getProperty(USERS_BY_EMAIL_QUERY));
+        detailsManager.setAuthoritiesByUsernameQuery(
+                environment.getProperty(AUTHORITIES_BY_EMAIL_QUERY));
+        detailsManager.setUpdateUserSql(environment.getProperty(UPDATE_USER_SQL));
         return detailsManager;
     }
     
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-//        Filter filter = new UsernamePasswordAuthenticationFilter(authenticationManager());
-                
         http.authorizeHttpRequests(request -> request
                 .mvcMatchers("/", "/index", "/images/**").permitAll()
                 .mvcMatchers("/timetables/**").hasAnyRole(STUDENT, TEACHER, STAFF, ADMIN)
@@ -84,7 +64,6 @@ public class SecurityConfig {
                 .mvcMatchers("/courses/**").hasAnyRole(TEACHER, STAFF, ADMIN)
                 .mvcMatchers("/users/**").hasAnyRole(ADMIN)
                 .anyRequest().authenticated())
-//            .addFilter(filter)
             .formLogin(form -> form.loginPage("/login").permitAll())
             .logout(logout -> logout.logoutUrl("/logout").logoutSuccessUrl("/"));
         return http.build();

@@ -2,7 +2,6 @@ package ua.com.foxminded.university.service;
 
 import java.lang.reflect.Type;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 import javax.validation.ConstraintViolationException;
@@ -20,10 +19,8 @@ import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
-import ua.com.foxminded.university.entity.RoleAuthority;
 import ua.com.foxminded.university.entity.UserEntity;
 import ua.com.foxminded.university.exception.ServiceException;
-import ua.com.foxminded.university.model.Authority;
 import ua.com.foxminded.university.model.UserModel;
 import ua.com.foxminded.university.repository.UserRepository;
 
@@ -37,6 +34,17 @@ public class UserServiceImpl implements UserService<UserModel> {
     private final UserRepository userRepository;
     private final UserDetailsManager userDetailsManager;
     private final ValidatorService<UserModel> validatorService;
+    
+    public UserModel getById(int id) throws ServiceException {
+        try {
+            UserEntity entity = userRepository.findById(id);
+            ModelMapper modelMapper = new ModelMapper();
+            modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+            return modelMapper.map(entity, UserModel.class);
+        } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
+            throw new ServiceException("Getting user by its id fails.", e);
+        }
+    }
     
     @Override
     public void deleteByEmail(String email) throws ServiceException {
@@ -119,19 +127,6 @@ public class UserServiceImpl implements UserService<UserModel> {
         } catch (ConstraintViolationException  e) {
             throw new ServiceException("Updating user object fails.", e);
         }
-    }
-    
-    private List<UserModel> setNonEntityPropertiy(List<UserModel> models) {
-        int prefixIndex = PREFIX.length();
-        
-        return models.stream().map(model -> {
-            if (model.hasUserAuthority()) {
-                RoleAuthority roleAuthority = model.getUserAuthority().getRoleAuthority();
-                String authority = String.valueOf(roleAuthority).substring(prefixIndex);
-                model.getUserAuthority().setAuthority(Authority.valueOf(authority));
-            }
-            return model;
-        }).collect(Collectors.toList());
     }
 }
 

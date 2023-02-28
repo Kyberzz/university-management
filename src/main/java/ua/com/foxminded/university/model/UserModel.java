@@ -12,17 +12,19 @@ import lombok.Data;
 public class UserModel implements Serializable {
     
     private static final long serialVersionUID = 1L;
-   
+    
+    private Integer id;
+    
     @Email
     private String email;
     
-    @NotNull
     private String password;
+    private Boolean enabled;
     
     @NotNull
-    private Boolean enabled;
-
     private String firstName;
+    
+    @NotNull
     private String lastName;
     
     private UserAuthorityModel userAuthority;

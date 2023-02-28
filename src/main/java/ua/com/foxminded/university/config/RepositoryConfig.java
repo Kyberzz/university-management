@@ -68,14 +68,14 @@ public class RepositoryConfig {
         entityManagerFactory.setDataSource(dataSource());
         entityManagerFactory.setPackagesToScan(ENTITY_PACKAGE);
 
-        JpaVendorAdapter jpaVendorAdapter = new HibernateJpaVendorAdapter();
+        HibernateJpaVendorAdapter jpaVendorAdapter = new HibernateJpaVendorAdapter();
         entityManagerFactory.setJpaVendorAdapter(jpaVendorAdapter);
 
         Properties jpaProperties = new Properties();
-
         jpaProperties.setProperty(SCHEMA_GENERATION_ACTION, ACTION_TYPE);
         jpaProperties.setProperty(PERSISTENCE_DIALECT, DIALECT_TYPE);
         jpaProperties.setProperty(SHARED_CHACHE_MODE, MODE_TYPE);
+        
         entityManagerFactory.setJpaProperties(jpaProperties);
         return entityManagerFactory;
     }
