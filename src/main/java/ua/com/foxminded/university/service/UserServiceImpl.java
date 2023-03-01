@@ -69,7 +69,7 @@ public class UserServiceImpl implements UserService<UserModel> {
                                              .build();
             userDetailsManager.createUser(user);
         } catch (ConstraintViolationException e) {
-            throw new ServiceException("Creating user object fails.", e);
+            throw new ServiceException("Creating the user fails.", e);
         }
     }
     

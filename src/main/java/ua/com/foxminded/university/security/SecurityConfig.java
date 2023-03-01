@@ -23,7 +23,7 @@ import lombok.RequiredArgsConstructor;
 public class SecurityConfig {
 
     public static final String CREATE_AUTHORITY_SLQ = "createAuthoritySql"; 
-    public static final String DELETE_USER_AUTHORITIES_QUERY = "deleteUserAuthoritiesQuery"; 
+    public static final String DELETE_USER_AUTHORITIES_SQL = "deleteUserAuthoritiesSql"; 
     public static final String UPDATE_USER_SQL = "updateUserQuery"; 
     public static final String GROUP_AUTHORITIES_BY_EMAIL_QUERY = "groupAuthoritiesByEmailQuery"; 
     public static final String AUTHORITIES_BY_EMAIL_QUERY = "authoritiesByEmailQuery";
@@ -39,18 +39,18 @@ public class SecurityConfig {
     
     @Bean 
     public UserDetailsManager userDetailsManager() throws Exception {
-        JdbcUserDetailsManager detailsManager = new JdbcUserDetailsManager(dataSource);
-        detailsManager.setCreateAuthoritySql(environment.getProperty(CREATE_AUTHORITY_SLQ));
-        detailsManager.setDeleteUserSql(environment.getProperty(DELETE_USER_SQL));
-        detailsManager.setDeleteUserAuthoritiesSql(
-                environment.getProperty(DELETE_USER_AUTHORITIES_QUERY));
-        detailsManager.setGroupAuthoritiesByUsernameQuery(
+        JdbcUserDetailsManager manager = new JdbcUserDetailsManager(dataSource);
+        manager.setCreateAuthoritySql(environment.getProperty(CREATE_AUTHORITY_SLQ));
+        manager.setDeleteUserSql(environment.getProperty(DELETE_USER_SQL));
+        manager.setDeleteUserAuthoritiesSql(
+                environment.getProperty(DELETE_USER_AUTHORITIES_SQL));
+        manager.setGroupAuthoritiesByUsernameQuery(
                 environment.getProperty(GROUP_AUTHORITIES_BY_EMAIL_QUERY));
-        detailsManager.setUsersByUsernameQuery(environment.getProperty(USERS_BY_EMAIL_QUERY));
-        detailsManager.setAuthoritiesByUsernameQuery(
+        manager.setUsersByUsernameQuery(environment.getProperty(USERS_BY_EMAIL_QUERY));
+        manager.setAuthoritiesByUsernameQuery(
                 environment.getProperty(AUTHORITIES_BY_EMAIL_QUERY));
-        detailsManager.setUpdateUserSql(environment.getProperty(UPDATE_USER_SQL));
-        return detailsManager;
+        manager.setUpdateUserSql(environment.getProperty(UPDATE_USER_SQL));
+        return manager;
     }
     
     @Bean

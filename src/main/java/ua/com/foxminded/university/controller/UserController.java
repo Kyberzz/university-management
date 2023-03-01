@@ -10,22 +10,20 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import lombok.RequiredArgsConstructor;
 import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.UserModel;
 import ua.com.foxminded.university.service.UserService;
 
 @Controller
 @RequestMapping("/users")
+@RequiredArgsConstructor
 public class UserController extends DefaultController {
     
     private static final String DEFAULT_PASSWORD = "{noop}pass";
 
-    private UserService<UserModel> userService;
+    private final UserService<UserModel> userService;
 
-    public UserController(UserService<UserModel> userService) {
-        this.userService = userService;
-    }
-    
     @PostMapping(value = "/delete", params = {"email"})
     public String delete(@RequestParam("email") String email) throws ServiceException {
         userService.deleteByEmail(email);
