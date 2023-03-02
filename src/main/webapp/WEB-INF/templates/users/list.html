@@ -77,13 +77,13 @@
               <div class="col-6" th:text="|#{users.authority}: |">Authority</div>
               <div class="col-6" th:if="${user.email == null}">---</div>
               <div class="col-6" th:if="${user.email != null}">
-               <select th:field="*{userAuthority.authority}"
+               <select th:field="*{userAuthority.roleAuthority}"
                 class="form-select" id="floatingSelect"
                 aria-label="Defalt select example">
                 <option
-                 th:each="authority : ${T(ua.com.foxminded.university.model.Authority).values()}"
-                 th:value="${authority}"
-                 th:text="${authority.representation}">Admin</option>
+                 th:each="roleAuthority : ${T(ua.com.foxminded.university.entity.RoleAuthority).values()}"
+                 th:value="${roleAuthority}"
+                 th:text="${roleAuthority.representation}">Admin</option>
                </select>
               </div>
              </div>
@@ -175,9 +175,9 @@
                 class="form-select" id="floatingSelect"
                 aria-label="Defalt select example">
                 <option
-                 th:each="authority : ${T(ua.com.foxminded.university.model.Authority).values()}"
-                 th:value="${authority}"
-                 th:text="${authority.representation}">Administrator</option>
+                 th:each="roleAuthority : ${T(ua.com.foxminded.university.entity.RoleAuthority).values()}"
+                 th:value="${roleAuthority}"
+                 th:text="${roleAuthority.representation}">Administrator</option>
                </select>
               </div>
              </div>

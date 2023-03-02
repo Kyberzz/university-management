@@ -5,7 +5,6 @@ import java.util.Properties;
 import javax.sql.DataSource;
 
 import org.flywaydb.core.Flyway;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.flyway.FlywayConfigurationCustomizer;
 import org.springframework.boot.autoconfigure.flyway.FlywayMigrationStrategy;
 import org.springframework.context.annotation.Bean;
@@ -22,10 +21,13 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import lombok.RequiredArgsConstructor;
+
+@Configuration
 @EnableJpaRepositories(basePackages = "ua.com.foxminded.university.repository")
 @EnableTransactionManagement
 @PropertySource("classpath:application.properties")
-@Configuration
+@RequiredArgsConstructor
 public class RepositoryConfig {
 
     private static final String SCHEMA_NAME = "university";
@@ -33,7 +35,8 @@ public class RepositoryConfig {
     private static final String SHARED_CHACHE_MODE = "jakarta.persistence.sharedCache.mode";
     private static final String DIALECT_TYPE = "org.hibernate.dialect.PostgreSQLDialect";
     private static final String PERSISTENCE_DIALECT = "hibernate.dialect";
-    private static final String SCHEMA_GENERATION_ACTION = "jakarta.persistence.schema-generation" + ".database.action";
+    private static final String SCHEMA_GENERATION_ACTION = "jakarta.persistence"
+            + ".schema-generation.database.action";
     private static final String ACTION_TYPE = "none";
     private static final String ENTITY_PACKAGE = "ua.com.foxminded.university.entity";
     private static final String PASSWORD = "spring.datasource.password";
@@ -41,12 +44,7 @@ public class RepositoryConfig {
     private static final String URL = "spring.datasource.url";
     private static final String DRIVER_CLASS_NAME = "spring.datasource.driver-class-name";
 
-    Environment environment;
-
-    @Autowired
-    public RepositoryConfig(Environment environment) {
-        this.environment = environment;
-    }
+    private final Environment environment;
 
     @Bean
     public FlywayConfigurationCustomizer flywayConfigurationCustomizer() {

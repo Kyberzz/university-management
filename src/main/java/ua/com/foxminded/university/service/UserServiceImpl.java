@@ -10,7 +10,6 @@ import org.modelmapper.ConfigurationException;
 import org.modelmapper.MappingException;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
-import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
@@ -30,16 +29,16 @@ import ua.com.foxminded.university.repository.UserRepository;
 public class UserServiceImpl implements UserService<UserModel> {
     
     public static final String PREFIX = "ROLE_";
+    public static final Type TYPE = new TypeToken<List<UserModel>>() {}.getType();
     
     private final UserRepository userRepository;
     private final UserDetailsManager userDetailsManager;
     private final ValidatorService<UserModel> validatorService;
+    private final ModelMapper modelMapper;
     
     public UserModel getById(int id) throws ServiceException {
         try {
             UserEntity entity = userRepository.findById(id);
-            ModelMapper modelMapper = new ModelMapper();
-            modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
             return modelMapper.map(entity, UserModel.class);
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
             throw new ServiceException("Getting user by its id fails.", e);
@@ -76,11 +75,8 @@ public class UserServiceImpl implements UserService<UserModel> {
     @Override
     public List<UserModel> getNotAuthorizedUsers() throws ServiceException {
         try {
-            ModelMapper modelMapper = new ModelMapper();
-            modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-            Type type = new TypeToken<List<UserModel>>() {}.getType();
             List<UserEntity> entities = userRepository.findByUserAuthorityIsNull();
-            return modelMapper.map(entities, type);
+            return modelMapper.map(entities, TYPE);
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
             throw new ServiceException("Getting not authrized users fails.", e);
         }
@@ -90,8 +86,6 @@ public class UserServiceImpl implements UserService<UserModel> {
     public UserModel getByEmail(String email) throws ServiceException {
         try {
             UserEntity entity = userRepository.findByEmail(email);
-            ModelMapper modelMapper = new ModelMapper();
-            modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
             return modelMapper.map(entity, UserModel.class);
         } catch (IllegalArgumentException e) {
             throw new ServiceException("Getting the email fails", e);
@@ -102,10 +96,7 @@ public class UserServiceImpl implements UserService<UserModel> {
     public List<UserModel> getAll() throws ServiceException {
         try {
             List<UserEntity> entities = userRepository.findAll();
-            ModelMapper modelMapper = new ModelMapper();
-            modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-            Type type = new TypeToken<List<UserModel>>() {}.getType();
-            return modelMapper.map(entities, type);
+            return modelMapper.map(entities, TYPE);
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
             throw new ServiceException("Getting all students fails", e);
         }
