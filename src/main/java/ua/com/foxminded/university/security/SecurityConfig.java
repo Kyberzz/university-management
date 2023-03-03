@@ -19,9 +19,10 @@ import lombok.RequiredArgsConstructor;
 @EnableWebSecurity
 @EnableMethodSecurity
 @RequiredArgsConstructor
-@PropertySource("/security-config-queries.properties")
+@PropertySource("classpath:security-config-queries.properties")
 public class SecurityConfig {
 
+    public static final String CREATE_USER_SLQ = "createUserSql"; 
     public static final String CREATE_AUTHORITY_SLQ = "createAuthoritySql"; 
     public static final String DELETE_USER_AUTHORITIES_SQL = "deleteUserAuthoritiesSql"; 
     public static final String UPDATE_USER_SQL = "updateUserQuery"; 
@@ -50,6 +51,7 @@ public class SecurityConfig {
         manager.setAuthoritiesByUsernameQuery(
                 environment.getProperty(AUTHORITIES_BY_EMAIL_QUERY));
         manager.setUpdateUserSql(environment.getProperty(UPDATE_USER_SQL));
+        manager.setCreateUserSql(environment.getProperty(CREATE_USER_SLQ));
         return manager;
     }
     

@@ -18,7 +18,7 @@ import lombok.Data;
 
 @Entity
 @Data
-@Table(name = "authorities")
+@Table(name = "authorities", schema = "university")
 public class UserAuthorityEntity implements Serializable {
     
     public static final long serialVersionUID = 1L;
