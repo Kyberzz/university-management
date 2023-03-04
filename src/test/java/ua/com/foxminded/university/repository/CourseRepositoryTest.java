@@ -29,11 +29,11 @@ import ua.com.foxminded.university.entity.TimetableEntity;
 import ua.com.foxminded.university.entity.UserEntity;
 import ua.com.foxminded.university.exception.RepositoryException;
 
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes = RepositoryTestConfig.class)
 @ActiveProfiles("test")
 @Transactional
-@ContextConfiguration(classes = RepositoryTestConfig.class)
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
-@ExtendWith(SpringExtension.class)
 class CourseRepositoryTest {
     
     private static final String GROUP_NAME = "lk-89";

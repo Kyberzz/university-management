@@ -18,6 +18,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.UserDetailsManager;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -31,18 +32,19 @@ import ua.com.foxminded.university.model.UserAuthorityModel;
 import ua.com.foxminded.university.model.UserModel;
 import ua.com.foxminded.university.repository.UserRepository;
 
-@TestPropertySource(locations = {"/application.properties"})
-@Testcontainers
+//@TestPropertySource(locations = {"/application.properties"})
+//@Testcontainers
 @SpringBootTest
 @AutoConfigureMockMvc
-//@Transactional
+@Transactional
+@ActiveProfiles({"test-containers", "production"})
 class UserControllerIntegrationTest {
     
     public static final String LAST_NAME = "Musk";
     public static final String FIRST_NAME = "Elon";
     public static final String USERS_EDIT_URL = "/users/edit";
     public static final String USERS_LIST_URL = "/users/list";
-    public static final String EMAIL_NAME = "gmail@com";
+    public static final String EMAIL_NAME = "testy@com";
     public static final String PASSWORD = "password";
     public static final String NEW_PASSWORD = "newpassword";
     
@@ -50,10 +52,10 @@ class UserControllerIntegrationTest {
 //    public static PostgreSQLContainer<?> container = new PostgreSQLContainer("postgres:latest")
 //            .withDatabaseName("university");
     
-/*    
-    @PersistenceUnit
-    private EntityManagerFactory entityManagerFactory; 
-    */
+    
+//    @PersistenceUnit
+//    private EntityManagerFactory entityManagerFactory; 
+    
     @Autowired
     private UserRepository userRepository;
     
@@ -67,6 +69,7 @@ class UserControllerIntegrationTest {
     private MockMvc mockMvc;
     
     private UserEntity userEntity;
+    private UserModel userModel;
     
     @BeforeEach
     void setup() {
@@ -78,7 +81,7 @@ class UserControllerIntegrationTest {
         userEntity.setFirstName(EMAIL_NAME);
         userEntity.setLastName(LAST_NAME);
         
-//        userRepository.saveAndFlush(userEntity);
+        userEntity = userRepository.saveAndFlush(userEntity);
         
 //        EntityManager entityManager = entityManagerFactory.createEntityManager();
 //        entityManager.getTransaction().begin();
@@ -93,28 +96,30 @@ class UserControllerIntegrationTest {
                                .disabled(false)
                                .build();
         userDetailsManager.createUser(user);
-    }
-    /*
-    @AfterEach
-    void cleanUp() {
-        EntityManager entityManager = entityManagerFactory.createEntityManager();
-        entityManager.getTransaction().begin();
-        UserEntity persistedUser = entityManager.find(UserEntity.class, userEntity.getId());
-        entityManager.remove(persistedUser);
-    }
-    */
-    @Test
-    void edit_shouldEditUserDetails() throws Exception {
-        UserModel userModel = new UserModel();
+        
+        userModel = new UserModel();
         userModel.setEnabled(false);
         userModel.setPassword(NEW_PASSWORD);
         userModel.setUserAuthority(new UserAuthorityModel());
         userModel.getUserAuthority().setAuthority(Authority.STAFF);
-       
+    }
+    
+    @AfterEach
+    void cleanUp() {
+        userRepository.delete(userEntity);
+//        EntityManager entityManager = entityManagerFactory.createEntityManager();
+//        entityManager.getTransaction().begin();
+//        UserEntity persistedUser = entityManager.find(UserEntity.class, userEntity.getId());
+//        entityManager.remove(persistedUser);
+    }
+    
+    @Test
+    void edit_shouldEditUserDetails() throws Exception {
+        String modelId = userEntity.getId().toString(); 
         
         mockMvc.perform(MockMvcRequestBuilders.post(USERS_EDIT_URL)
                                               .flashAttr("userModel", userModel)
-                                              .param("email", EMAIL_NAME))
+                                              .param("userId", modelId))
                .andDo(print())
                .andExpect(redirectedUrl(USERS_LIST_URL));
     }

@@ -9,12 +9,9 @@ import org.springframework.boot.autoconfigure.flyway.FlywayConfigurationCustomiz
 import org.springframework.boot.autoconfigure.flyway.FlywayMigrationStrategy;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.DependsOn;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.env.Environment;
+import org.springframework.context.annotation.Profile;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
@@ -26,8 +23,8 @@ import lombok.RequiredArgsConstructor;
 @Configuration
 @EnableJpaRepositories(basePackages = "ua.com.foxminded.university.repository")
 @EnableTransactionManagement
-@PropertySource("classpath:application.properties")
 @RequiredArgsConstructor
+@Profile("production")
 public class RepositoryConfig {
 
     private static final String SCHEMA_NAME = "university";
@@ -39,13 +36,7 @@ public class RepositoryConfig {
             + ".schema-generation.database.action";
     private static final String ACTION_TYPE = "none";
     private static final String ENTITY_PACKAGE = "ua.com.foxminded.university.entity";
-    private static final String PASSWORD = "spring.datasource.password";
-    private static final String USERNAME = "spring.datasource.username";
-    private static final String URL = "spring.datasource.url";
-    private static final String DRIVER_CLASS_NAME = "spring.datasource.driver-class-name";
-
-    private final Environment environment;
-
+    
     @Bean
     public FlywayConfigurationCustomizer flywayConfigurationCustomizer() {
         return configuration -> configuration.schemas(SCHEMA_NAME);
@@ -57,11 +48,10 @@ public class RepositoryConfig {
     }
 
     @Bean
-    @DependsOn("flywayStrategy")
-    public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource) {
         LocalContainerEntityManagerFactoryBean entityManagerFactory = 
                 new LocalContainerEntityManagerFactoryBean();
-        entityManagerFactory.setDataSource(dataSource());
+        entityManagerFactory.setDataSource(dataSource);
         entityManagerFactory.setPackagesToScan(ENTITY_PACKAGE);
 
         HibernateJpaVendorAdapter jpaVendorAdapter = new HibernateJpaVendorAdapter();
@@ -77,24 +67,15 @@ public class RepositoryConfig {
     }
 
     @Bean
-    public DataSource dataSource() {
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName(environment.getProperty(DRIVER_CLASS_NAME));
-        dataSource.setUrl(environment.getProperty(URL));
-        dataSource.setUsername(environment.getProperty(USERNAME));
-        dataSource.setPassword(environment.getProperty(PASSWORD));
-        return dataSource;
-    }
-
-    @Bean
     public PersistenceExceptionTranslationPostProcessor exceptionTranslation() {
         return new PersistenceExceptionTranslationPostProcessor();
     }
 
     @Bean
-    public PlatformTransactionManager transactionManager() {
+    public PlatformTransactionManager transactionManager(DataSource dataSource) {
         JpaTransactionManager jpaTransactionManager = new JpaTransactionManager();
-        jpaTransactionManager.setEntityManagerFactory(entityManagerFactory().getObject());
+        jpaTransactionManager.setEntityManagerFactory(
+                entityManagerFactory(dataSource).getObject());
         return jpaTransactionManager;
     }
 }

@@ -112,7 +112,8 @@ public class UserServiceImpl implements UserService<UserModel> {
                                              .passwordEncoder(encoder::encode)
                                              .roles(String.valueOf(model.getUserAuthority()
                                                                         .getAuthority()))
-                                             .disabled(!model.getEnabled()).build();
+                                             .disabled(!model.getEnabled())
+                                             .build();
 
             userDetailsManager.updateUser(user);
         } catch (ConstraintViolationException  e) {

@@ -6,6 +6,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.SharedCacheMode;
 import javax.sql.DataSource;
 
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -23,12 +24,12 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 
-@Profile("test")
+@TestConfiguration
 @EnableJpaRepositories(basePackages = "ua.com.foxminded.university.repository", 
                        bootstrapMode = BootstrapMode.LAZY)
 @EnableTransactionManagement
 @ComponentScan(basePackages = "ua.com.foxminded.university.repository")
-@Configuration
+@Profile("test")
 public class RepositoryTestConfig {
     
     private static final String MODE_TYPE = "UNSPECIFIED";
@@ -68,7 +69,8 @@ public class RepositoryTestConfig {
         HibernateJpaVendorAdapter jpaVendorAdapter = new HibernateJpaVendorAdapter();
         jpaVendorAdapter.setShowSql(true);
         
-        LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
+        LocalContainerEntityManagerFactoryBean factory = 
+                new LocalContainerEntityManagerFactoryBean();
         factory.setJpaVendorAdapter(jpaVendorAdapter);
         factory.setPackagesToScan(ENTITY_PACKAGE);
         factory.setDataSource(dataSource());
