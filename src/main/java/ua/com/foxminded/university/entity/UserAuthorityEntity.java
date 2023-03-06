@@ -14,11 +14,17 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
 @Table(name = "authorities", schema = "university")
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserAuthorityEntity implements Serializable {
     
     public static final long serialVersionUID = 1L;

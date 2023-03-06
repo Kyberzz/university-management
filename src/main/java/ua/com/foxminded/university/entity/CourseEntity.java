@@ -13,11 +13,17 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "courses", schema = "university")
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class CourseEntity implements Serializable {
     
     private static final long serialVersionUID = 1L;

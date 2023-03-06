@@ -24,6 +24,9 @@ import ua.com.foxminded.university.entity.GroupEntity;
 import ua.com.foxminded.university.entity.StudentEntity;
 import ua.com.foxminded.university.entity.UserEntity;
 import ua.com.foxminded.university.exception.RepositoryException;
+import ua.com.foxminded.university.objectmother.GroupEntityMother;
+import ua.com.foxminded.university.objectmother.StudentEntityMother;
+import ua.com.foxminded.university.objectmother.UserEntityMother;
 
 @ActiveProfiles("test")
 @Transactional
@@ -48,27 +51,24 @@ class StudentRepositoryTest {
     @PersistenceUnit
     private EntityManagerFactory entityManagerFactory;
     
+    private StudentEntity student;
+    
     @BeforeEach 
     void init() {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
         
-        GroupEntity group = new GroupEntity();
-        group.setName(GROUP_NAME);
+        GroupEntity group = GroupEntityMother.complete().build();
         entityManager.persist(group);
         
-        UserEntity user = new UserEntity();
-        user.setEmail(EMAIL);
-        user.setFirstName(STUDENT_FIRST_NAME);
-        user.setLastName(STUDENT_LAST_NAME);
+        UserEntity user = UserEntityMother.complete().build();
         entityManager.persist(user);
-        entityManager.flush();
         
-        StudentEntity student = new StudentEntity();
-        student.setGroup(group);
-        student.setUser(user);
+        student = StudentEntityMother.complete()
+                                     .group(group)
+                                     .user(user)
+                                     .build();
         entityManager.persist(student);
-        
         entityManager.getTransaction().commit();
         entityManager.close();
     }
@@ -77,10 +77,12 @@ class StudentRepositoryTest {
     void findGroupById_GettingDatabaseData_CorrectReceivedData() throws RepositoryException {
         StudentEntity persistedStudent = studentRepository.findGroupById(GROUP_ID_NUMBER);
         
-        assertEquals(STUDENT_ID_NUMBER, persistedStudent.getId());
-        assertEquals(STUDENT_FIRST_NAME, persistedStudent.getUser().getFirstName());
-        assertEquals(STUDENT_LAST_NAME, persistedStudent.getUser().getLastName());
-        assertEquals(GROUP_ID_NUMBER, persistedStudent.getGroup().getId());
+        assertEquals(student.getId(), persistedStudent.getId());
+        assertEquals(student.getUser().getPersonEntity().getFirstName(), 
+                     persistedStudent.getUser().getPersonEntity().getFirstName());
+        assertEquals(student.getUser().getPersonEntity().getLastName(), 
+                     persistedStudent.getUser().getPersonEntity().getLastName());
+        assertEquals(student.getGroup().getId(), persistedStudent.getGroup().getId());
         assertEquals(GROUP_NAME, persistedStudent.getGroup().getName());
     }
     

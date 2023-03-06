@@ -2,9 +2,6 @@ package ua.com.foxminded.university.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.time.DayOfWeek;
-import java.time.LocalTime;
-
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceContext;
@@ -26,8 +23,11 @@ import ua.com.foxminded.university.entity.CourseEntity;
 import ua.com.foxminded.university.entity.GroupEntity;
 import ua.com.foxminded.university.entity.TeacherEntity;
 import ua.com.foxminded.university.entity.TimetableEntity;
-import ua.com.foxminded.university.entity.UserEntity;
 import ua.com.foxminded.university.exception.RepositoryException;
+import ua.com.foxminded.university.objectmother.CourseEntityMother;
+import ua.com.foxminded.university.objectmother.GroupEntityMother;
+import ua.com.foxminded.university.objectmother.TeacherEntityMother;
+import ua.com.foxminded.university.objectmother.TimetableEntityMother;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = RepositoryTestConfig.class)
@@ -36,20 +36,6 @@ import ua.com.foxminded.university.exception.RepositoryException;
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 class CourseRepositoryTest {
     
-    private static final String GROUP_NAME = "lk-89";
-    private static final String WEEK_DAY = "THURSDAY";
-    private static final String TEACHER_LAST_NAME = "Fock";
-    private static final String TEACHER_FIRST_NAME = "Stiven";
-    private static final String COURSE_NAME = "Programming";
-    private static final String TIMETABLE_DESCRIPTION = "some description";
-    private static final String COURSE_DESCRIPTION = "some description";
-    private static final int MINUTE = 0;
-    private static final int END_TIME = 9;
-    private static final int START_TIME = 8;
-    private static final int COURSE_ID = 1;
-    private static final int GROUP_ID = 1;
-    private static final int TIMETABLE_ID = 1;
-    private static final int TEACHER_ID = 1;
     private static final int FIRST_ELEMENT = 0;
     
     @PersistenceContext
@@ -61,68 +47,62 @@ class CourseRepositoryTest {
     @Autowired
     private CourseRepository courseRepository;
     
+    private CourseEntity course;
+    private TimetableEntity timetable;
+    
     @BeforeEach
     void init() {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
        
         entityManager.getTransaction().begin();
-        GroupEntity group = new GroupEntity();
-        group.setName(GROUP_NAME);
+        GroupEntity group = GroupEntityMother.complete().build();
         entityManager.persist(group);
         
-        TeacherEntity teacher = new TeacherEntity();
-        teacher.setUser(new UserEntity());
-        teacher.getUser().setFirstName(TEACHER_FIRST_NAME);
-        teacher.getUser().setLastName(TEACHER_LAST_NAME);
+        TeacherEntity teacher = TeacherEntityMother.complete().build();
         entityManager.persist(teacher);
-        entityManager.flush();
         
-        CourseEntity course = new CourseEntity();
-        course.setName(COURSE_NAME);
-        course.setDescription(COURSE_DESCRIPTION);
-        course.setTeacher(teacher);
+        course = CourseEntityMother.complete()
+                                   .teacher(teacher)
+                                   .build();
         entityManager.persist(course);
-        entityManager.flush();
-        
-        TimetableEntity timetable = new TimetableEntity();
-        timetable.setGroup(group);
-        timetable.setCourse(course);
-        timetable.setDescription(TIMETABLE_DESCRIPTION);
-        timetable.setEndTime(LocalTime.of(END_TIME, MINUTE));
-        timetable.setStartTime(LocalTime.of(START_TIME, MINUTE));
-        timetable.setDayOfWeek(DayOfWeek.valueOf(WEEK_DAY));
+
+        TimetableEntity timetable = TimetableEntityMother.complete()
+                                                         .group(group)
+                                                         .course(course)
+                                                         .build();
         entityManager.persist(timetable);
         entityManager.getTransaction().commit();
+        entityManager.close();
     }
 
     @Test
-    void findTimetableListById_GettingDatabaseTimetableData_CorrectData() throws RepositoryException {
-        CourseEntity receivedCourse = courseRepository.findTimetableListById(COURSE_ID);
+    void findTimetableListById_GettingDatabaseTimetableData_CorrectData() 
+            throws RepositoryException {
+        CourseEntity receivedCourse = courseRepository.findTimetableListById(course.getId());
         
-        assertEquals(COURSE_ID, receivedCourse.getId());
-        assertEquals(COURSE_NAME, receivedCourse.getName());
-        assertEquals(TEACHER_ID, receivedCourse.getTeacher().getId());
-        assertEquals(COURSE_ID, receivedCourse.getTimetableList().get(FIRST_ELEMENT)
-                                                                 .getCourse()
-                                                                 .getId());
-        assertEquals(LocalTime.of(START_TIME, MINUTE), 
+        assertEquals(course.getId(), receivedCourse.getId());
+        assertEquals(course.getName(), receivedCourse.getName());
+        assertEquals(course.getTeacher().getId(), receivedCourse.getTeacher().getId());
+        assertEquals(timetable.getId(), 
+                     receivedCourse.getTimetableList().get(FIRST_ELEMENT).getCourse().getId());
+        assertEquals(timetable.getStartTime(), 
                      receivedCourse.getTimetableList().get(FIRST_ELEMENT).getStartTime());
-        assertEquals(LocalTime.of(END_TIME, MINUTE), 
+        assertEquals(timetable.getEndTime(), 
                      receivedCourse.getTimetableList().get(FIRST_ELEMENT).getEndTime());
-        assertEquals(GROUP_ID, receivedCourse.getTimetableList().get(FIRST_ELEMENT)
-                                                                .getGroup()
-                                                                .getId());
-        assertEquals(TIMETABLE_ID, receivedCourse.getTimetableList().get(FIRST_ELEMENT).getId());
-        assertEquals(WEEK_DAY, receivedCourse.getTimetableList().get(FIRST_ELEMENT).getDayOfWeek()
-                                                                                   .toString());
+        assertEquals(timetable.getGroup().getId(), 
+                     receivedCourse.getTimetableList().get(FIRST_ELEMENT).getGroup().getId());
+        assertEquals(timetable.getId(), 
+                     receivedCourse.getTimetableList().get(FIRST_ELEMENT).getId());
+        assertEquals(timetable.getDayOfWeek(), 
+                     receivedCourse.getTimetableList().get(FIRST_ELEMENT).getDayOfWeek());
     }
     
     @Test
-    void findById_GettingCourseById_CorrectRetrievedData() throws RepositoryException {
-        CourseEntity course = courseRepository.findById(COURSE_ID);
-        assertEquals(COURSE_ID, course.getId());
-        assertEquals(COURSE_DESCRIPTION, course.getDescription());
-        assertEquals(COURSE_NAME, course.getName());
-        assertEquals(TEACHER_ID, course.getTeacher().getId());
+    void findById_ShouldReturnUserEntity() throws RepositoryException {
+        CourseEntity receivedCourse = courseRepository.findById(course.getId().intValue());
+        assertEquals(course.getId(), receivedCourse.getId());
+        assertEquals(course.getDescription(), receivedCourse.getDescription());
+        assertEquals(course.getName(), receivedCourse.getName());
+        assertEquals(course.getTeacher().getId(), receivedCourse.getTeacher().getId());
     }
 }

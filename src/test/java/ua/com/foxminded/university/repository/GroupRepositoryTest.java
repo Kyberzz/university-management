@@ -2,7 +2,6 @@ package ua.com.foxminded.university.repository;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.time.DayOfWeek;
 import java.time.LocalTime;
 
 import javax.persistence.EntityManager;
@@ -25,6 +24,10 @@ import ua.com.foxminded.university.entity.StudentEntity;
 import ua.com.foxminded.university.entity.TimetableEntity;
 import ua.com.foxminded.university.entity.UserEntity;
 import ua.com.foxminded.university.exception.RepositoryException;
+import ua.com.foxminded.university.objectmother.GroupEntityMother;
+import ua.com.foxminded.university.objectmother.StudentEntityMother;
+import ua.com.foxminded.university.objectmother.TimetableEntityMother;
+import ua.com.foxminded.university.objectmother.UserEntityMother;
 
 @ActiveProfiles("test")
 @ContextConfiguration(classes = RepositoryTestConfig.class)
@@ -58,23 +61,19 @@ class GroupRepositoryTest {
     void inint() {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
-        GroupEntity group = new GroupEntity();
-        group.setName(GROUP_NAME);
+        GroupEntity group = GroupEntityMother.complete().build();
         entityManager.persist(group);
-       
-        TimetableEntity timetable = new TimetableEntity();
-        timetable.setStartTime(LocalTime.of(START_TIME, MINUTE));
-        timetable.setEndTime(LocalTime.of(END_TIME, MINUTE));
-        timetable.setDescription(TIMETABLE_DESCRIPTION);
-        timetable.setDayOfWeek(DayOfWeek.valueOf(WEEK_DAY));
-        timetable.setGroup(group);
+        
+        TimetableEntity timetable = TimetableEntityMother.complete()
+                                                         .group(group)
+                                                         .build();
         entityManager.persist(timetable);
-
-        StudentEntity student = new StudentEntity();
-        student.setUser(new UserEntity());
-        student.getUser().setFirstName(FIST_NAME);
-        student.getUser().setLastName(LAST_NAME);
-        student.setGroup(group);
+        
+        UserEntity user = UserEntityMother.complete().build();
+        StudentEntity student = StudentEntityMother.complete()
+                                                   .group(group)
+                                                   .user(user)
+                                                   .build();
         entityManager.persist(student);
         entityManager.getTransaction().commit();
     }
@@ -104,9 +103,13 @@ class GroupRepositoryTest {
         assertEquals(GROUP_NAME, receivedGroup.getName());
         assertEquals(STUDENT_ID, receivedGroup.getStudentList().get(FIRST_ELEMENT).getId());
         assertEquals(FIST_NAME, receivedGroup.getStudentList().get(FIRST_ELEMENT)
-                                                              .getUser().getFirstName());
+                                                              .getUser()
+                                                              .getPersonEntity()
+                                                              .getFirstName());
         assertEquals(LAST_NAME, receivedGroup.getStudentList().get(FIRST_ELEMENT)
-                                                              .getUser().getLastName());
+                                                              .getUser()
+                                                              .getPersonEntity()
+                                                              .getLastName());
         assertEquals(GROUP_ID, receivedGroup.getStudentList().get(FIRST_ELEMENT)
                                                              .getGroup().getId());
     }
