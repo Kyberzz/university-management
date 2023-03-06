@@ -24,7 +24,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
-import ua.com.foxminded.university.UniversityManagementApplication;
+import ua.com.foxminded.university.UniversityManagement;
 import ua.com.foxminded.university.config.RepositoryTestConfig;
 import ua.com.foxminded.university.config.ServiceConfig;
 import ua.com.foxminded.university.entity.RoleAuthority;
@@ -33,16 +33,14 @@ import ua.com.foxminded.university.entity.UserEntity;
 import ua.com.foxminded.university.model.Authority;
 import ua.com.foxminded.university.security.SecurityConfig;
 
-//@Transactional
-//@ExtendWith(SpringExtension.class)
-//@ContextConfiguration(classes = {RepositoryTestConfig.class, SecurityConfig.class})
-@SpringBootTest(classes = UniversityManagementApplication.class)
+@Transactional
+@SpringBootTest (classes = {UniversityManagement.class, RepositoryTestConfig.class})
 @ActiveProfiles("test")
 //@DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 class JdbcUserDetailsManagerSqlTest {
     
-    public static final String NEW_PASSWORD = "{noop}newpass";
-    public static final String PASSWORD = "{noop}pass";
+    public static final String UPDATED_PASSWORD = "newpass";
+    public static final String PASSWORD = "pass";
     public static final String LAST_NAME = "Lincoln";
     public static final String FIRST_NAME = "Abraham";
     public static final String EMAIL = "email@com";
@@ -50,10 +48,14 @@ class JdbcUserDetailsManagerSqlTest {
     @PersistenceUnit
     private EntityManagerFactory entityManagerFactory;
     
+    @PersistenceContext
+    private EntityManager entityManager;
+    
     @Autowired
     private UserDetailsManager userDetailsManager;
     
     private UserEntity userEntity;
+    private PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
     
     @BeforeEach()
     void setup() {
@@ -62,7 +64,7 @@ class JdbcUserDetailsManagerSqlTest {
         userEntity.setEnabled(true);
         userEntity.setFirstName(FIRST_NAME);
         userEntity.setLastName(LAST_NAME);
-        userEntity.setPassword(PASSWORD);
+        userEntity.setPassword(encoder.encode(PASSWORD));
         
         UserAuthorityEntity userAuthorityEntity = new UserAuthorityEntity();
         userAuthorityEntity.setUser(userEntity);
@@ -75,27 +77,27 @@ class JdbcUserDetailsManagerSqlTest {
         entityManager.persist(userEntity);
         entityManager.getTransaction().commit();
     }
-
+    
+    @Test
+    void createUser_shouldCreatePartialOfUserEntity() {
+        
+    }
+    
     @Test
     void updateUser_shouldUpdatePartialOfUserEntity() {
-        PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
         UserDetails userDetails = User.builder().username(EMAIL)
                                                 .disabled(true)
-                                                .password(NEW_PASSWORD)
+                                                .password(UPDATED_PASSWORD)
                                                 .passwordEncoder(encoder::encode)
                                                 .roles(Authority.STUDENT.toString())
                                                 .build();
         userDetailsManager.updateUser(userDetails);
-        EntityManager entityManager = entityManagerFactory.createEntityManager();
         UserEntity updatedUser = entityManager.find(UserEntity.class, userEntity.getId());
         
         assertEquals(EMAIL, updatedUser.getEmail());
+        assertTrue(encoder.matches(UPDATED_PASSWORD, updatedUser.getPassword()));
         assertFalse(updatedUser.getEnabled());
-        assertEquals(NEW_PASSWORD, updatedUser.getPassword());
         assertEquals(RoleAuthority.ROLE_STUDENT, 
                      updatedUser.getUserAuthority().getRoleAuthority());
-        
-//        fail("Not yet implemented");
     }
-
 }

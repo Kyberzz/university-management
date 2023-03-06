@@ -47,7 +47,7 @@ public class RepositoryTestConfig {
             + ".create-source";
     private static final String SCHEMA_GENERATION_ACTION = "jakarta.persistence.schema-generation"
             + ".database.action";
-    private static final String ACTION_TYPE = "drop-and-create";
+    private static final String ACTION_TYPE = "create";
     private static final String ENTITY_PACKAGE = "ua.com.foxminded.university.entity";
     
     @Bean

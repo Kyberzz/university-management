@@ -1,20 +1,28 @@
-#---
-#spring:
-#  datasource:
-#    driverClassName: org.postgresql.Driver
-#    url: jdbc:postgres://64701c1104e2:f193b9be1391@postgres-84fee189-7163-459b-b15e-fad663f19e8f.cqryblsdrbcs.us-east-1.rds.amazonaws.com:4967/qPvPQAAnYWNi
-#    username: 64701c1104e2
-#    password: f193b9be1391
-#  jpa:
-#    hibernate.ddl-auto: none
-#    show_sql: false
 ---
 spring:
+  config:
+    activate:
+      on-profile:
+      - prod
+  datasource:
+    driverClassName: org.postgresql.Driver
+    url: jdbc:postgres://64701c1104e2:f193b9be1391@postgres-84fee189-7163-459b-b15e-fad663f19e8f.cqryblsdrbcs.us-east-1.rds.amazonaws.com:4967/qPvPQAAnYWNi
+    username: 64701c1104e2
+    password: f193b9be1391
+---
+spring:
+  config:
+    activate:
+      on-profile:
+      - dev
   datasource:
     driverClassName: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/university
     username: university
     password: 1234
+#  jpa:
+#    hibernate.ddl-auto: none
+#    show_sql: false
 logging:
   level:
     root: warn
@@ -23,8 +31,8 @@ logging:
 #    org.hibernate: error
 #    org.hibernate.sql: debug
 #    org.hibernate.type.descriptor.sql.BasicBinder: trace
-#    org.flywaydb: debug  
-    
+#    org.flywaydb: debug      
+
     
     
         

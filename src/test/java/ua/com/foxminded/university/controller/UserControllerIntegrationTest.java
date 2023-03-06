@@ -32,12 +32,10 @@ import ua.com.foxminded.university.model.UserAuthorityModel;
 import ua.com.foxminded.university.model.UserModel;
 import ua.com.foxminded.university.repository.UserRepository;
 
-//@TestPropertySource(locations = {"/application.properties"})
-//@Testcontainers
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
-@ActiveProfiles({"test-containers", "production"})
+@ActiveProfiles({"testcontainers", "prod"})
 class UserControllerIntegrationTest {
     
     public static final String LAST_NAME = "Musk";
@@ -48,13 +46,6 @@ class UserControllerIntegrationTest {
     public static final String PASSWORD = "password";
     public static final String NEW_PASSWORD = "newpassword";
     
-//    @Container
-//    public static PostgreSQLContainer<?> container = new PostgreSQLContainer("postgres:latest")
-//            .withDatabaseName("university");
-    
-    
-//    @PersistenceUnit
-//    private EntityManagerFactory entityManagerFactory; 
     
     @Autowired
     private UserRepository userRepository;
