@@ -38,6 +38,6 @@ public class CourseEntity implements Serializable {
     @JoinColumn(name = "teacher_id")
     private TeacherEntity teacher;
     
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "course")
-    private List<TimetableEntity> timetableList;
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "course")
+    private List<TimetableEntity> timetables;
 }

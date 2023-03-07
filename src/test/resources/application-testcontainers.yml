@@ -1,7 +1,0 @@
----
-spring:
-    datasource:
-#      driverClassName: org.postgresql.Driver
-      driverClassName: org.testcontainers.jdbc.ContainerDatabaseDriver
-      url: jdbc:tc:postgresql:14.0:///university?TC_INITSCRIPT=init-testcontainer-postgre.sql&TC_DAEMON=true
-        

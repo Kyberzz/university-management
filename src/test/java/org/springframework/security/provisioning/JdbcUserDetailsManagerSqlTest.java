@@ -31,6 +31,7 @@ import ua.com.foxminded.university.entity.RoleAuthority;
 import ua.com.foxminded.university.entity.UserAuthorityEntity;
 import ua.com.foxminded.university.entity.UserEntity;
 import ua.com.foxminded.university.model.Authority;
+import ua.com.foxminded.university.objectmother.UserEntityMother;
 import ua.com.foxminded.university.security.SecurityConfig;
 
 @Transactional
@@ -54,37 +55,26 @@ class JdbcUserDetailsManagerSqlTest {
     @Autowired
     private UserDetailsManager userDetailsManager;
     
-    private UserEntity userEntity;
-    private PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+    private UserEntity user;
     
     @BeforeEach()
     void setup() {
-        userEntity = new UserEntity();
-        userEntity.setEmail(EMAIL);
-        userEntity.setEnabled(true);
-        userEntity.setFirstName(FIRST_NAME);
-        userEntity.setLastName(LAST_NAME);
-        userEntity.setPassword(encoder.encode(PASSWORD));
-        
-        UserAuthorityEntity userAuthorityEntity = new UserAuthorityEntity();
-        userAuthorityEntity.setUser(userEntity);
-        userAuthorityEntity.setRoleAuthority(RoleAuthority.ROLE_ADMIN);
-        
-        userEntity.setUserAuthority(userAuthorityEntity);
-        
+        user = UserEntityMother.complete().build();
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
-        entityManager.persist(userEntity);
+        entityManager.persist(user);
         entityManager.getTransaction().commit();
+        entityManager.close();
     }
     
-    @Test
-    void createUser_shouldCreatePartialOfUserEntity() {
-        
-    }
+//    @Test
+//    void createUser_shouldCreatePartialOfUserEntity() {
+//        
+//    }
     
     @Test
     void updateUser_shouldUpdatePartialOfUserEntity() {
+        PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
         UserDetails userDetails = User.builder().username(EMAIL)
                                                 .disabled(true)
                                                 .password(UPDATED_PASSWORD)
@@ -92,7 +82,7 @@ class JdbcUserDetailsManagerSqlTest {
                                                 .roles(Authority.STUDENT.toString())
                                                 .build();
         userDetailsManager.updateUser(userDetails);
-        UserEntity updatedUser = entityManager.find(UserEntity.class, userEntity.getId());
+        UserEntity updatedUser = entityManager.find(UserEntity.class, user.getId());
         
         assertEquals(EMAIL, updatedUser.getEmail());
         assertTrue(encoder.matches(UPDATED_PASSWORD, updatedUser.getPassword()));

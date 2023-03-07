@@ -30,6 +30,7 @@ import ua.com.foxminded.university.entity.UserEntity;
 import ua.com.foxminded.university.model.Authority;
 import ua.com.foxminded.university.model.UserAuthorityModel;
 import ua.com.foxminded.university.model.UserModel;
+import ua.com.foxminded.university.objectmother.UserEntityMother;
 import ua.com.foxminded.university.repository.UserRepository;
 
 @SpringBootTest
@@ -59,20 +60,15 @@ class UserControllerIntegrationTest {
     @Autowired
     private MockMvc mockMvc;
     
-    private UserEntity userEntity;
+    private UserEntity user;
     private UserModel userModel;
     
     @BeforeEach
     void setup() {
         mockMvc = MockMvcBuilders.standaloneSetup(userController).build();
         
-        userEntity = new UserEntity();
-        userEntity.setEmail(EMAIL_NAME);
-        userEntity.setEnabled(true);
-        userEntity.setFirstName(EMAIL_NAME);
-        userEntity.setLastName(LAST_NAME);
-        
-        userEntity = userRepository.saveAndFlush(userEntity);
+        user = UserEntityMother.complete().build();
+        user = userRepository.saveAndFlush(user);
         
 //        EntityManager entityManager = entityManagerFactory.createEntityManager();
 //        entityManager.getTransaction().begin();
@@ -97,7 +93,7 @@ class UserControllerIntegrationTest {
     
     @AfterEach
     void cleanUp() {
-        userRepository.delete(userEntity);
+        userRepository.delete(user);
 //        EntityManager entityManager = entityManagerFactory.createEntityManager();
 //        entityManager.getTransaction().begin();
 //        UserEntity persistedUser = entityManager.find(UserEntity.class, userEntity.getId());
@@ -106,7 +102,7 @@ class UserControllerIntegrationTest {
     
     @Test
     void edit_shouldEditUserDetails() throws Exception {
-        String modelId = userEntity.getId().toString(); 
+        String modelId = user.getId().toString(); 
         
         mockMvc.perform(MockMvcRequestBuilders.post(USERS_EDIT_URL)
                                               .flashAttr("userModel", userModel)

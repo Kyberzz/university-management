@@ -39,13 +39,13 @@ public class UserEntity implements Serializable {
     @OneToOne(mappedBy = "user")
     private TeacherEntity teacher;
     
-    @OneToOne(mappedBy = "user", cascade = {CascadeType.ALL})
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private StudentEntity student;
     
     @OneToOne(mappedBy = "user")
     private StaffEntity staff;
     
-    @OneToOne(mappedBy = "user", cascade = {CascadeType.ALL}, 
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, 
               orphanRemoval = true)
     private UserAuthorityEntity userAuthority;
 }

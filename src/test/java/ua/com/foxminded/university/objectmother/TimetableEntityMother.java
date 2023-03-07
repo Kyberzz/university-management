@@ -18,5 +18,4 @@ public class TimetableEntityMother {
                                         .endTime(LocalTime.of(END_TIME, MINUTE))
                                         .startTime(LocalTime.of(START_TIME, MINUTE));
     }
-
 }

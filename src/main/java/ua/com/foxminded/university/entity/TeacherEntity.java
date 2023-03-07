@@ -34,7 +34,7 @@ public class TeacherEntity implements Serializable {
     private Integer id;
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "teacher")
-    private List<CourseEntity> courseList;
+    private List<CourseEntity> courses;
     
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")

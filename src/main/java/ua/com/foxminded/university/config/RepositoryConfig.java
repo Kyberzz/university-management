@@ -24,7 +24,7 @@ import lombok.RequiredArgsConstructor;
 @EnableJpaRepositories(basePackages = "ua.com.foxminded.university.repository")
 @EnableTransactionManagement
 @RequiredArgsConstructor
-@Profile("prod")
+//@Profile("prod")
 public class RepositoryConfig {
 
     private static final String SCHEMA_NAME = "university";

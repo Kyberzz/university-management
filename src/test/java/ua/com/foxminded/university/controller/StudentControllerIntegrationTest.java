@@ -19,7 +19,7 @@ import ua.com.foxminded.university.service.StudentService;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@ActiveProfiles({"production", "testcontainers"})
+@ActiveProfiles({"prod", "testcontainers"})
 class StudentControllerIntegrationTest {
     
     @Autowired

@@ -34,10 +34,10 @@ public class UserAuthorityEntity implements Serializable {
     Integer id;
     
     @Enumerated(EnumType.STRING)
-    @Column(name = "authority", nullable = false)
+    @Column(name = "authority")
     private RoleAuthority roleAuthority;
     
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
     private UserEntity user;
 }

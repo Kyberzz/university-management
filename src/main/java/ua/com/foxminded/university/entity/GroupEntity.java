@@ -35,5 +35,5 @@ public class GroupEntity implements Serializable {
     private List<TimetableEntity> timetableList;
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "group")
-    private List<StudentEntity> studentList;
+    private List<StudentEntity> students;
 }

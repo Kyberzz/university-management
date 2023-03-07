@@ -20,9 +20,9 @@ spring:
     url: jdbc:postgresql://localhost:5432/university
     username: university
     password: 1234
-#  jpa:
-#    hibernate.ddl-auto: none
-#    show_sql: false
+  jpa:
+    hibernate.ddl-auto: none
+    show_sql: false
 logging:
   level:
     root: warn
@@ -31,7 +31,40 @@ logging:
 #    org.hibernate: error
 #    org.hibernate.sql: debug
 #    org.hibernate.type.descriptor.sql.BasicBinder: trace
-#    org.flywaydb: debug      
+#    org.flywaydb: debug 
+---
+spring:
+  config:
+    activate:
+      on-profile:
+      - test
+  flyway:
+    enabled: false
+  datasource:
+    name: test
+    driverClassName: org.h2.Driver
+    url: jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;
+    username: sa
+    password:
+  sql:
+    init:
+      mode: embedded
+      platform: h2
+  jpa:
+    show-sql: true
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create
+---
+spring:
+  config:
+    activate:
+      on-profile:
+      - testcontainers
+  datasource:
+    driverClassName: org.testcontainers.jdbc.ContainerDatabaseDriver
+    url: jdbc:tc:postgresql:14.0:///university?TC_INITSCRIPT=init-testcontainer-postgre.sql&TC_DAEMON=true
+             
 
     
     

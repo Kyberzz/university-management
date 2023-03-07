@@ -29,6 +29,7 @@ import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.Authority;
 import ua.com.foxminded.university.model.UserAuthorityModel;
 import ua.com.foxminded.university.model.UserModel;
+import ua.com.foxminded.university.objectmother.UserEntityMother;
 import ua.com.foxminded.university.repository.UserRepository;
 
 @ExtendWith(MockitoExtension.class)
@@ -62,14 +63,7 @@ class UserServiceImplTest {
     
     @BeforeEach
     void init() {
-        entity = new UserEntity();
-        entity.setEmail(EMAIL);
-        entity.setFirstName(FIRST_NAME);
-        entity.setLastName(LAST_NAME);
-        entity.setEnabled(true);
-        entity.setPassword(PASSWORD);
-        entity.setUserAuthority(new UserAuthorityEntity());
-        entity.getUserAuthority().setRoleAuthority(RoleAuthority.ROLE_ADMIN);
+        entity = UserEntityMother.complete().build();
         
         model = new UserModel();
         model.setEmail(EMAIL);
