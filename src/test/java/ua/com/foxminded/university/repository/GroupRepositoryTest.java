@@ -63,7 +63,7 @@ class GroupRepositoryTest {
     }
 
     @Test
-    void findTimetableListById_shouldReturnTimetalbesOwnedByGroup() throws RepositoryException {
+    void findTimetableListById_ShouldReturnTimetalbesOwnedByGroup() throws RepositoryException {
         GroupEntity receivedGroup = groupRepository.findTimetableListById(group.getId());
         assertEquals(TIMETALBES_QUANTITY, receivedGroup.getTimetableList().size());
     }

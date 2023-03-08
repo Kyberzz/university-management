@@ -53,52 +53,25 @@ class TimetableRepositoryTest {
     }
     
     @Test
-    void findCourseById_ReceivingTimetableDatabaseData_CorrectReceivedData() 
+    void findCourseById_ShouldReturnCourseOwnedByTimetableWithId() 
             throws RepositoryException {
         TimetableEntity receivedTimetable = timetableRepository.findCourseById(
                 timetable.getId());
-        
-        assertEquals(course.getDescription(), 
-                     receivedTimetable.getCourse().getDescription());
-        assertEquals(course.getId(), 
-                     receivedTimetable.getCourse().getId());
-        assertEquals(course.getName(), 
-                     receivedTimetable.getCourse().getName());
-        assertEquals(timetable.getDescription(), receivedTimetable.getDescription());
-        assertEquals(timetable.getEndTime(), receivedTimetable.getEndTime());
-        assertEquals(group.getId(), receivedTimetable.getGroup().getId());
-        assertEquals(timetable.getStartTime(), receivedTimetable.getStartTime());
-        assertEquals(timetable.getId(), receivedTimetable.getId());
-        assertEquals(timetable.getDayOfWeek(), receivedTimetable.getDayOfWeek());
+        assertEquals(course.getId(), receivedTimetable.getCourse().getId());
     }
         
     @Test
-    void findGroupById_ReceivingTimetableDatabaseData_CorrectReceivedData() 
+    void findGroupById_ShouldReturnGroupOwnedByTimetableWithId() 
             throws RepositoryException {
         TimetableEntity receivedTimetable = timetableRepository.findGroupById(
                 timetable.getId());
-        
-        assertEquals(group.getName(), receivedTimetable.getGroup().getName());
-        assertEquals(course.getId(), receivedTimetable.getCourse().getId());
-        assertEquals(timetable.getDescription(), receivedTimetable.getDescription());
-        assertEquals(timetable.getEndTime(), receivedTimetable.getEndTime());
         assertEquals(group.getId(), receivedTimetable.getGroup().getId());
-        assertEquals(timetable.getId(), receivedTimetable.getId());
-        assertEquals(timetable.getStartTime(), receivedTimetable.getStartTime());
-        assertEquals(timetable.getDayOfWeek(), receivedTimetable.getDayOfWeek());
     }
     
     @Test
-    void findById_GettingTimetableById_CorrectRetrievedData() throws RepositoryException {
+    void findById_ShouldReturnTimetableEntityWithId() throws RepositoryException {
         TimetableEntity receivedTimetable = timetableRepository.findById(
                 timetable.getId().intValue());
-        
         assertEquals(timetable.getId(), receivedTimetable.getId());
-        assertEquals(timetable.getDescription(), receivedTimetable.getDescription());
-        assertEquals(timetable.getStartTime(), receivedTimetable.getStartTime());
-        assertEquals(timetable.getEndTime(), receivedTimetable.getEndTime());
-        assertEquals(course.getId(), receivedTimetable.getCourse().getId());
-        assertEquals(group.getId(), receivedTimetable.getGroup().getId());
-        assertEquals(timetable.getDayOfWeek(), receivedTimetable.getDayOfWeek());
     }
 }

@@ -7,5 +7,6 @@ import ua.com.foxminded.university.entity.StudentEntity;
 public interface StudentRepository extends JpaRepository<StudentEntity, Integer> {
 
     public StudentEntity findGroupById(Integer id);
+
     public StudentEntity findById(int id);
 }

@@ -42,9 +42,15 @@ class UserRepositoryTest {
                                                   .build();
         userRepository.saveAndFlush(userHasNoAuthority);
     }
+    
+    @Test
+    void findById_ShouldReturnUserEntityWithId() {
+        UserEntity receivedUser = userRepository.findById(user.getId().intValue());
+        assertEquals(user.getId(), receivedUser.getId());
+    }
 
     @Test
-    void findByUserAuthorityIsEmpty_shouldReturnUsersThatHaveNoAuthorityObject() {
+    void findByUserAuthorityIsNull_ShouldReturnUsersThatHaveNoAuthorityObject() {
         List<UserEntity> users = userRepository.findByUserAuthorityIsNull();
         assertEquals(USERS_QUANTITY, users.size());
     }

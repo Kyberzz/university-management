@@ -41,7 +41,7 @@ public class TeacherServiceImpl implements TeacherService<TeacherModel> {
     @Override
     public TeacherModel getCourseListByTeacherId(int id) throws ServiceException {
         try {
-            TeacherEntity teacherEntity = teacherRepository.findCourseListById(id);
+            TeacherEntity teacherEntity = teacherRepository.findCoursesById(id);
             ModelMapper modelMapper = new ModelMapper();
             return modelMapper.map(teacherEntity, TeacherModel.class);
         } catch (IllegalArgumentException | ConfigurationException | 

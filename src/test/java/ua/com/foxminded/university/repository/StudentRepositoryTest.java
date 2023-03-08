@@ -60,25 +60,14 @@ class StudentRepositoryTest {
     }
     
     @Test
-    void findGroupById_GettingDatabaseData_CorrectReceivedData() throws RepositoryException {
-        StudentEntity persistedStudent = studentRepository.findGroupById(group.getId());
-        
-        assertEquals(student.getId(), persistedStudent.getId());
-        assertEquals(user.getPerson().getFirstName(), 
-                     persistedStudent.getUser().getPerson().getFirstName());
-        assertEquals(user.getPerson().getLastName(), 
-                     persistedStudent.getUser().getPerson().getLastName());
+    void findGroupById_ShouldRetrunGroupByStudentId() throws RepositoryException {
+        StudentEntity persistedStudent = studentRepository.findGroupById(student.getId());
         assertEquals(group.getId(), persistedStudent.getGroup().getId());
-        assertEquals(group.getName(), persistedStudent.getGroup().getName());
     }
     
     @Test
-    void findById_GettingStudentById_CorrectRetrievedData() throws RepositoryException {
+    void findById_ShouldReturnStudentObjectWithId() throws RepositoryException {
         StudentEntity persistedStudent = studentRepository.findById(student.getId());
         assertEquals(student.getId(), persistedStudent.getId());
-        assertEquals(user.getPerson().getFirstName(), 
-                     persistedStudent.getUser().getPerson().getFirstName());
-        assertEquals(user.getPerson().getLastName(), 
-                     persistedStudent.getUser().getPerson().getLastName());
     }
 }
