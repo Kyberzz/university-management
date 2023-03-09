@@ -6,18 +6,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import lombok.RequiredArgsConstructor;
 import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.TeacherModel;
 import ua.com.foxminded.university.service.TeacherService;
 
 @Controller
+@RequiredArgsConstructor
 public class TeacherController extends DefaultController {
 
-    private TeacherService<TeacherModel> teacherService;
-
-    public TeacherController(TeacherService<TeacherModel> teacherService) {
-        this.teacherService = teacherService;
-    }
+    private final TeacherService<TeacherModel> teacherService;
 
     @RequestMapping(value = "/teachers/list")
     public String getAllTeachers(Model model) throws ServiceException {

@@ -28,12 +28,12 @@
      <div class="container-fluid">
       <div class="row form-floating mb-3">
        <input type="text" class="form-control" id="floatingInput"
-        placeholder="#" th:field="*{user.firstName}"> <label
+        placeholder="#" th:field="*{user.person.firstName}"> <label
         for="floatingInput" th:text="|#{thead.firstName}:|"></label>
       </div>
       <div class="row form-floating mb-3">
        <input type="text" class="form-control" id="floatingInput"
-        placeholder="#" th:field="*{user.lastName}"><label
+        placeholder="#" th:field="*{user.person.lastName}"><label
         for="floatingInput" th:text="|#{thead.lastName}:|"></label>
       </div>
       <div class="row form-floating mb-3">
@@ -83,8 +83,8 @@
      <tbody>
       <tr th:each="student,iterationStatus : ${students}">
        <th scope="row" th:text="${iterationStatus.count}">1</th>
-       <td th:text="${student.user.firstName}">John</td>
-       <td th:text="${student.user.lastName}">Snow</td>
+       <td th:text="${student.user.person.firstName}">John</td>
+       <td th:text="${student.user.person.lastName}">Snow</td>
        <td th:text="${student.id}">1</td>
        <td
         th:text="${student.group != null} ? ${student.group.name} : '---'">5</td>
@@ -123,23 +123,23 @@
              <div class="row text-start mt-2">
               <div class="col-3" th:text="|#{thead.firstName}: |">Fist
                name:</div>
-              <div class="col-4" th:text="${student.user.firstName}">Dennis</div>
+              <div class="col-4" th:text="${student.user.person.firstName}">Dennis</div>
               <div class="col-5">
                <input class="form-control form-control-sm" type="text"
                 th:placeholder="#{placeholder.enter}"
                 th:aria-label="#{placeholder.enter}"
-                th:field="*{user.firstName}">
+                th:field="*{user.person.firstName}">
               </div>
              </div>
              <div class="row text-start mt-2">
               <div class="col-3" th:text="|#{thead.lastName}: |">Last
                name:</div>
-              <div class="col-4" th:text="${student.user.lastName}">Ritchie</div>
+              <div class="col-4" th:text="${student.user.person.lastName}">Ritchie</div>
               <div class="col-5">
                <input class="form-control form-control-sm" type="text"
                 th:placeholder="#{placeholder.enter}"
                 th:aria-label="#{placeholder.enter}"
-                th:field="*{user.lastName}">
+                th:field="*{user.person.lastName}">
               </div>
              </div>
              <div class="row text-start mt-2">
@@ -211,13 +211,13 @@
               <div class="row">
                <div class="col-4" th:text="|#{thead.firstName}: |">Fist
                 name:</div>
-               <div class="col" th:text="${student.user.firstName}">
+               <div class="col" th:text="${student.user.person.firstName}">
                 First name</div>
               </div>
               <div class="row">
                <div class="col-4" th:text="|#{thead.lastName}: |">Last
                 name:</div>
-               <div class="col" th:text="${student.user.lastName}">Last
+               <div class="col" th:text="${student.user.person.lastName}">Last
                 name</div>
               </div>
               <div class="row">

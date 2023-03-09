@@ -15,9 +15,9 @@ import org.springframework.test.context.ActiveProfiles;
 
 import ua.com.foxminded.university.entity.CourseEntity;
 import ua.com.foxminded.university.entity.TeacherEntity;
+import ua.com.foxminded.university.entitymother.CourseEntityMother;
+import ua.com.foxminded.university.entitymother.TeacherEntityMother;
 import ua.com.foxminded.university.exception.RepositoryException;
-import ua.com.foxminded.university.objectmother.CourseEntityMother;
-import ua.com.foxminded.university.objectmother.TeacherEntityMother;
 
 @DataJpaTest
 @ActiveProfiles("test")

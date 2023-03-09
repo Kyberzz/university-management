@@ -55,8 +55,10 @@ public class StudentController extends DefaultController {
             handleBindingResultError(bindingResult);
         }
         StudentModel persistedStudent = studentService.getStudentById(studentId);
-        persistedStudent.getUser().setFirstName(studentModel.getUser().getFirstName());
-        persistedStudent.getUser().setLastName(studentModel.getUser().getLastName());
+        String firstName = studentModel.getUser().getPerson().getFirstName();
+        String lastName = studentModel.getUser().getPerson().getLastName();
+        persistedStudent.getUser().getPerson().setFirstName(firstName);
+        persistedStudent.getUser().getPerson().setLastName(lastName);
         persistedStudent.getUser().setEmail(studentModel.getUser().getEmail());
 
         if (studentModel.hasGroup()) {

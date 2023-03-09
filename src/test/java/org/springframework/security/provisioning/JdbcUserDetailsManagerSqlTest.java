@@ -9,10 +9,9 @@ import javax.persistence.PersistenceUnit;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.Example;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
@@ -20,31 +19,23 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.transaction.annotation.Transactional;
 
 import ua.com.foxminded.university.UniversityManagement;
-import ua.com.foxminded.university.config.RepositoryTestConfig;
-import ua.com.foxminded.university.config.ServiceConfig;
 import ua.com.foxminded.university.entity.RoleAuthority;
-import ua.com.foxminded.university.entity.UserAuthorityEntity;
 import ua.com.foxminded.university.entity.UserEntity;
+import ua.com.foxminded.university.entitymother.UserEntityMother;
 import ua.com.foxminded.university.model.Authority;
-import ua.com.foxminded.university.objectmother.UserEntityMother;
-import ua.com.foxminded.university.security.SecurityConfig;
+import ua.com.foxminded.university.repository.UserRepository;
 
-@Transactional
-@SpringBootTest (classes = {UniversityManagement.class, RepositoryTestConfig.class})
+@SpringBootTest (classes = UniversityManagement.class)
 @ActiveProfiles("test")
-//@DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
+@DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 class JdbcUserDetailsManagerSqlTest {
     
-    public static final String UPDATED_PASSWORD = "newpass";
-    public static final String PASSWORD = "pass";
+    public static final String PASSWORD = "newpass";
     public static final String LAST_NAME = "Lincoln";
     public static final String FIRST_NAME = "Abraham";
-    public static final String EMAIL = "email@com";
+    public static final String EMAIL = "newemail@com";
     
     @PersistenceUnit
     private EntityManagerFactory entityManagerFactory;
@@ -53,9 +44,13 @@ class JdbcUserDetailsManagerSqlTest {
     private EntityManager entityManager;
     
     @Autowired
+    private UserRepository userRepository;
+    
+    @Autowired
     private UserDetailsManager userDetailsManager;
     
     private UserEntity user;
+    private PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
     
     @BeforeEach()
     void setup() {
@@ -67,27 +62,45 @@ class JdbcUserDetailsManagerSqlTest {
         entityManager.close();
     }
     
-//    @Test
-//    void createUser_shouldCreatePartialOfUserEntity() {
-//        
-//    }
+    void deleteUser_ShouldDeleteUserAndUserAuthorityEntities() {
+        userDetailsManager.deleteUser(user.getEmail());
+        UserEntity receivedUser = entityManager.find(UserEntity.class, user.getId());
+        assertNull(receivedUser.getEmail());
+        assertNull(receivedUser.getEnabled());
+        assertNull(receivedUser.getPassword());
+        assertNull(receivedUser.getUserAuthority().getRoleAuthority());
+    }
     
     @Test
-    void updateUser_shouldUpdatePartialOfUserEntity() {
-        PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+    void createUser_ShouldPersistUserEntity() {
         UserDetails userDetails = User.builder().username(EMAIL)
                                                 .disabled(true)
-                                                .password(UPDATED_PASSWORD)
+                                                .password(PASSWORD)
                                                 .passwordEncoder(encoder::encode)
                                                 .roles(Authority.STUDENT.toString())
                                                 .build();
-        userDetailsManager.updateUser(userDetails);
-        UserEntity updatedUser = entityManager.find(UserEntity.class, user.getId());
+        userDetailsManager.createUser(userDetails);
+        Example<UserEntity> example = Example.of(user);
+        assertTrue(userRepository.exists(example));
+    }
+
+    @Test
+    void updateUser_ShouldUpdateUserAndUserAuthorityEntities() {
+        UserDetails userDetails = User.builder()
+                                      .username(user.getEmail())
+                                      .disabled(true)
+                                      .password(PASSWORD)
+                                      .passwordEncoder(encoder::encode)
+                                      .roles(Authority.STUDENT.toString())
+                                      .build();
         
-        assertEquals(EMAIL, updatedUser.getEmail());
-        assertTrue(encoder.matches(UPDATED_PASSWORD, updatedUser.getPassword()));
-        assertFalse(updatedUser.getEnabled());
+        userDetailsManager.updateUser(userDetails);
+        UserEntity receivedUser = entityManager.find(UserEntity.class, user.getId());
+        
+        assertEquals(user.getEmail(), receivedUser.getEmail());
+        assertTrue(encoder.matches(PASSWORD, receivedUser.getPassword()));
+        assertFalse(receivedUser.getEnabled());
         assertEquals(RoleAuthority.ROLE_STUDENT, 
-                     updatedUser.getUserAuthority().getRoleAuthority());
+                     receivedUser.getUserAuthority().getRoleAuthority());
     }
 }

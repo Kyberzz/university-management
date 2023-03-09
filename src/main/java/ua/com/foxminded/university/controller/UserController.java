@@ -20,8 +20,6 @@ import ua.com.foxminded.university.service.UserService;
 @RequiredArgsConstructor
 public class UserController extends DefaultController {
     
-    private static final String DEFAULT_PASSWORD = "{noop}pass";
-
     private final UserService<UserModel> userService;
 
     @PostMapping(value = "/delete", params = {"email"})
@@ -40,10 +38,6 @@ public class UserController extends DefaultController {
         
         UserModel persistedUser = userService.getById(userId);
         persistedUser.setEnabled(updatedUser.getEnabled());
-        
-        if (persistedUser.getPassword() == null) {
-            persistedUser.setPassword(DEFAULT_PASSWORD);
-        }
         
         if (updatedUser.hasUserAuthority()) {
             if (persistedUser.hasUserAuthority()) {

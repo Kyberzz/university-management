@@ -1,5 +1,12 @@
 ---
 spring:
+  jpa:
+    show_sql: false
+    generate-ddl: false
+  flyway:
+    default-schema: university
+---
+spring:
   config:
     activate:
       on-profile:
@@ -21,7 +28,6 @@ spring:
     username: university
     password: 1234
   jpa:
-    hibernate.ddl-auto: none
     show_sql: false
 logging:
   level:
@@ -43,7 +49,8 @@ spring:
   datasource:
     name: test
     driverClassName: org.h2.Driver
-    url: jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;
+#    url: jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;
+    url: jdbc:h2:mem:test;DB_CLOSE_ON_EXIT=FALSE;
     username: sa
     password:
   sql:
@@ -52,9 +59,12 @@ spring:
       platform: h2
   jpa:
     show-sql: true
-    database-platform: org.hibernate.dialect.H2Dialect
-    hibernate:
-      ddl-auto: create
+    database-platform: H2
+    generate-ddl: true
+logging:
+  level:
+    root: warn
+    org: warn
 ---
 spring:
   config:
@@ -64,7 +74,8 @@ spring:
   datasource:
     driverClassName: org.testcontainers.jdbc.ContainerDatabaseDriver
     url: jdbc:tc:postgresql:14.0:///university?TC_INITSCRIPT=init-testcontainer-postgre.sql&TC_DAEMON=true
-             
+  jpa:
+    show_sql: true        
 
     
     

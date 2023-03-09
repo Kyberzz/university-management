@@ -2,11 +2,11 @@
 <configuration>
     <include resource="org/springframework/boot/logging/logback/base.xml" />
     <logger name="*.university" level="error" />
-    <logger name="org.springframework.core " level="error" />
-    <logger name="org.springframework.beans" level="debug" />
-    <logger name="org.springframework.context" level="debug" />
-    <logger name="org.springframework.transaction" level="error" />
-    <logger name="org.springframework.web" level="error" />
-    <logger name="org.springframework.test" level="error" />
-    <logger name="org.hibernate" level="error" />
+    <logger name="org.springframework.core " level="warn" />
+    <logger name="org.springframework.beans" level="warn" />
+    <logger name="org.springframework.context" level="warn" />
+    <logger name="org.springframework.transaction" level="warn" />
+    <logger name="org.springframework.web" level="warn" />
+    <logger name="org.springframework.test" level="warn" />
+    <logger name="org.hibernate" level="wran" />
 </configuration>

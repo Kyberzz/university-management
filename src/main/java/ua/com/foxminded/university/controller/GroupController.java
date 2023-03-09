@@ -6,18 +6,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import lombok.RequiredArgsConstructor;
 import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.GroupModel;
 import ua.com.foxminded.university.service.GroupService;
 
 @Controller
+@RequiredArgsConstructor
 public class GroupController extends DefaultController {
 
-    private GroupService<GroupModel> groupService;
-
-    public GroupController(GroupService<GroupModel> groupService) {
-        this.groupService = groupService;
-    }
+    private final GroupService<GroupModel> groupService;
 
     @RequestMapping("/groups/list")
     public String getAllGroups(Model model) throws ServiceException {

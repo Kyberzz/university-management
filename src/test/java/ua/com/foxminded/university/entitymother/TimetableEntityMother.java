@@ -1,4 +1,4 @@
-package ua.com.foxminded.university.objectmother;
+package ua.com.foxminded.university.entitymother;
 
 import java.time.DayOfWeek;
 import java.time.LocalTime;

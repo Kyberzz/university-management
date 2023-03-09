@@ -1,4 +1,4 @@
-package ua.com.foxminded.university.objectmother;
+package ua.com.foxminded.university.entitymother;
 
 import ua.com.foxminded.university.entity.PersonEntity;
 import ua.com.foxminded.university.entity.StudentEntity;

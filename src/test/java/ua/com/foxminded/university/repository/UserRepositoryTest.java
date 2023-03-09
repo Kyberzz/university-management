@@ -13,7 +13,7 @@ import org.springframework.test.context.ActiveProfiles;
 import ua.com.foxminded.university.entity.RoleAuthority;
 import ua.com.foxminded.university.entity.UserAuthorityEntity;
 import ua.com.foxminded.university.entity.UserEntity;
-import ua.com.foxminded.university.objectmother.UserEntityMother;
+import ua.com.foxminded.university.entitymother.UserEntityMother;
 
 @DataJpaTest
 @ActiveProfiles("test")

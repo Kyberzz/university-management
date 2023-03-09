@@ -6,18 +6,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import lombok.RequiredArgsConstructor;
 import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.TimetableModel;
 import ua.com.foxminded.university.service.TimetableService;
 
 @Controller
+@RequiredArgsConstructor
 public class TimetableController extends DefaultController {
 
-    private TimetableService<TimetableModel> timetableService;
-
-    public TimetableController(TimetableService<TimetableModel> timetableService) {
-        this.timetableService = timetableService;
-    }
+    private final TimetableService<TimetableModel> timetableService;
 
     @RequestMapping("/timetables/list")
     public String getAllTimetables(Model model) throws ServiceException {

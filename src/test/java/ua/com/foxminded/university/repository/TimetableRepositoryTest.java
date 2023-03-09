@@ -15,10 +15,10 @@ import org.springframework.test.context.ActiveProfiles;
 import ua.com.foxminded.university.entity.CourseEntity;
 import ua.com.foxminded.university.entity.GroupEntity;
 import ua.com.foxminded.university.entity.TimetableEntity;
+import ua.com.foxminded.university.entitymother.CourseEntityMother;
+import ua.com.foxminded.university.entitymother.GroupEntityMother;
+import ua.com.foxminded.university.entitymother.TimetableEntityMother;
 import ua.com.foxminded.university.exception.RepositoryException;
-import ua.com.foxminded.university.objectmother.CourseEntityMother;
-import ua.com.foxminded.university.objectmother.GroupEntityMother;
-import ua.com.foxminded.university.objectmother.TimetableEntityMother;
 
 @DataJpaTest
 @ActiveProfiles("test")

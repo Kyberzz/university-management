@@ -1,7 +1,10 @@
 package ua.com.foxminded.university.controller;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -9,13 +12,20 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import ua.com.foxminded.university.model.TeacherModel;
 import ua.com.foxminded.university.service.TeacherService;
-import ua.com.foxminded.university.service.TeacherServiceImpl;
 
+@ExtendWith(SpringExtension.class)
 class TeacherControllerTest {
     
-    private TeacherService<TeacherModel> teacherServiceMock =  Mockito.mock(TeacherServiceImpl.class);
-    private TeacherController teacherController = new TeacherController(teacherServiceMock);
-    private MockMvc mockMvc = MockMvcBuilders.standaloneSetup(teacherController).build();
+    @MockBean
+    private TeacherService<TeacherModel> teacherServiceMock;
+    
+    private MockMvc mockMvc;
+    
+    @BeforeEach
+    void setup() {
+        mockMvc = MockMvcBuilders.standaloneSetup(new TeacherController(teacherServiceMock))
+                                 .build();
+    }
 
     @Test
     void shuldRenderTeachersListView() throws Exception {

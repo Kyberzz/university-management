@@ -22,14 +22,15 @@ import org.modelmapper.TypeToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 
-import ua.com.foxminded.university.entity.RoleAuthority;
-import ua.com.foxminded.university.entity.UserAuthorityEntity;
 import ua.com.foxminded.university.entity.UserEntity;
+import ua.com.foxminded.university.entitymother.UserEntityMother;
 import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.Authority;
+import ua.com.foxminded.university.model.PersonModel;
 import ua.com.foxminded.university.model.UserAuthorityModel;
 import ua.com.foxminded.university.model.UserModel;
-import ua.com.foxminded.university.objectmother.UserEntityMother;
+import ua.com.foxminded.university.modelmother.PersonModelMother;
+import ua.com.foxminded.university.modelmother.UserModelMother;
 import ua.com.foxminded.university.repository.UserRepository;
 
 @ExtendWith(MockitoExtension.class)
@@ -64,16 +65,14 @@ class UserServiceImplTest {
     @BeforeEach
     void init() {
         entity = UserEntityMother.complete().build();
-        
-        model = new UserModel();
-        model.setEmail(EMAIL);
-        model.setEnabled(true);
-        model.setFirstName(FIRST_NAME);
-        model.setLastName(LAST_NAME);
-        model.setPassword(PASSWORD);
-        model.setUserAuthority(new UserAuthorityModel());
-        model.getUserAuthority().setAuthority(Authority.ADMIN);
-        
+        PersonModel personModel = PersonModelMother.complete().build();
+        UserAuthorityModel userAuthorityModel = UserAuthorityModel.builder()
+                .authority(Authority.ADMIN)
+                .build();
+        model = UserModelMother.complete()
+                               .person(personModel)
+                               .userAuthority(userAuthorityModel)
+                               .build();
         entities = new ArrayList<>();
         entities.add(entity);
     }

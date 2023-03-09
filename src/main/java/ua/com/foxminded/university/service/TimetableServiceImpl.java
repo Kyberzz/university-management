@@ -8,7 +8,6 @@ import org.modelmapper.MappingException;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.modelmapper.convention.MatchingStrategies;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,8 +22,6 @@ import ua.com.foxminded.university.repository.TimetableRepository;
 @Transactional
 @RequiredArgsConstructor
 public class TimetableServiceImpl implements TimetableService<TimetableModel> {
-    
-    public static final String HAS_ROLE_STAFF_OR_ADMIN = "hasAnyRole('STAFF', 'ADMIN')";
     
     private final TimetableRepository timetableRepository;
     
@@ -42,7 +39,6 @@ public class TimetableServiceImpl implements TimetableService<TimetableModel> {
     }
     
     @Override
-    @PreAuthorize(HAS_ROLE_STAFF_OR_ADMIN)
     public void updateTimetable(TimetableModel timetableModel) throws ServiceException {
         ModelMapper modelMapper = new ModelMapper();
         

@@ -16,11 +16,11 @@ import ua.com.foxminded.university.entity.GroupEntity;
 import ua.com.foxminded.university.entity.StudentEntity;
 import ua.com.foxminded.university.entity.TimetableEntity;
 import ua.com.foxminded.university.entity.UserEntity;
+import ua.com.foxminded.university.entitymother.GroupEntityMother;
+import ua.com.foxminded.university.entitymother.StudentEntityMother;
+import ua.com.foxminded.university.entitymother.TimetableEntityMother;
+import ua.com.foxminded.university.entitymother.UserEntityMother;
 import ua.com.foxminded.university.exception.RepositoryException;
-import ua.com.foxminded.university.objectmother.GroupEntityMother;
-import ua.com.foxminded.university.objectmother.StudentEntityMother;
-import ua.com.foxminded.university.objectmother.TimetableEntityMother;
-import ua.com.foxminded.university.objectmother.UserEntityMother;
 
 @DataJpaTest
 @ActiveProfiles("test")

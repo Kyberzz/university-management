@@ -6,18 +6,15 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ua.com.foxminded.university.entity.RoleAuthority;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserAuthorityModel implements Serializable {
+public class PersonModel implements Serializable {
     
     private static final long serialVersionUID = 1L;
-   
-    private Integer id;
-    private RoleAuthority roleAuthority;
-    private UserModel user;
-    private Authority authority;
+    
+    private String firstName;
+    private String lastName;
 }

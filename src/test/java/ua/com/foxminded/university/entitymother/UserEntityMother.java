@@ -1,4 +1,4 @@
-package ua.com.foxminded.university.objectmother;
+package ua.com.foxminded.university.entitymother;
 
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;

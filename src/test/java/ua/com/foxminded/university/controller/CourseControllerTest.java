@@ -1,36 +1,38 @@
 package ua.com.foxminded.university.controller;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import ua.com.foxminded.university.model.CourseModel;
 import ua.com.foxminded.university.service.CourseService;
 
-@WebMvcTest
+@ExtendWith(SpringExtension.class)
 class CourseControllerTest {
     
-    @Mock
+    @MockBean
     private CourseService<CourseModel> courseServiceMock;
     
-    @Autowired
     private MockMvc mockMvc;
     
     @BeforeEach
-    void setup() {
-        mockMvc = MockMvcBuilders.standaloneSetup(new CourseController(courseServiceMock)).build();
+    void init() {
+        mockMvc = MockMvcBuilders.standaloneSetup(new CourseController(courseServiceMock))
+                                 .build();
     }
-
+    
     @Test
-    void shuldRenderCoursesListView() throws Exception {
+    void getAllCourses_ShuldRenderCoursesView() throws Exception {
         mockMvc.perform(get("/courses/list"))
+               .andDo(print())
                .andExpect(status().isOk())
                .andExpect(model().attributeExists("courses"))
                .andExpect(view().name("courses/list"));

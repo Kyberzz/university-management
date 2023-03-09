@@ -13,7 +13,6 @@ import org.modelmapper.MappingException;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.modelmapper.convention.MatchingStrategies;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,13 +27,10 @@ import ua.com.foxminded.university.repository.StudentRepository;
 @RequiredArgsConstructor
 public class StudentServiceImpl implements StudentService<StudentModel> {
     
-    public static final String HAS_ROLE_STAFF_OR_ADMIN = "hasAnyRole('STAFF','ADMIN')";
-    
     private final StudentRepository studentRepository;
     private final Validator validator;
     
     @Override
-    @PreAuthorize(HAS_ROLE_STAFF_OR_ADMIN)
     public void deleteStudentById(int id) throws ServiceException {
         try {
             studentRepository.deleteById(id);
@@ -44,7 +40,6 @@ public class StudentServiceImpl implements StudentService<StudentModel> {
     }
     
     @Override
-    @PreAuthorize(HAS_ROLE_STAFF_OR_ADMIN)
     public void updateStudent(StudentModel studentModel) throws ServiceException {
         try {
             Set<ConstraintViolation<StudentModel>> violations = validator.validate(studentModel);
@@ -88,7 +83,6 @@ public class StudentServiceImpl implements StudentService<StudentModel> {
     }
     
     @Override
-    @PreAuthorize(HAS_ROLE_STAFF_OR_ADMIN)
     public void addStudent(StudentModel model) throws ServiceException {
         try {
             ModelMapper modelMapper = new ModelMapper();
