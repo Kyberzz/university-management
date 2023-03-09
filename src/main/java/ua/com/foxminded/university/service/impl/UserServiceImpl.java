@@ -1,4 +1,4 @@
-package ua.com.foxminded.university.service;
+package ua.com.foxminded.university.service.impl;
 
 import java.lang.reflect.Type;
 import java.util.List;
@@ -22,6 +22,8 @@ import ua.com.foxminded.university.entity.UserEntity;
 import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.UserModel;
 import ua.com.foxminded.university.repository.UserRepository;
+import ua.com.foxminded.university.service.UserService;
+import ua.com.foxminded.university.service.ValidatorService;
 
 @Service
 @Transactional

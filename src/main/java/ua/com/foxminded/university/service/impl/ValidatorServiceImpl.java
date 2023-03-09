@@ -1,4 +1,4 @@
-package ua.com.foxminded.university.service;
+package ua.com.foxminded.university.service.impl;
 
 import java.util.Set;
 
@@ -9,6 +9,7 @@ import javax.validation.Validator;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
+import ua.com.foxminded.university.service.ValidatorService;
 
 @Service
 @RequiredArgsConstructor

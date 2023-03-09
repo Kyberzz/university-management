@@ -1,4 +1,4 @@
-package ua.com.foxminded.university.service;
+package ua.com.foxminded.university.service.impl;
 
 import javax.transaction.Transactional;
 
@@ -12,6 +12,7 @@ import ua.com.foxminded.university.entity.UserAuthorityEntity;
 import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.UserAuthorityModel;
 import ua.com.foxminded.university.repository.UserAuthorityRepository;
+import ua.com.foxminded.university.service.UserAuthorityService;
 
 @Service
 @Transactional

@@ -1,4 +1,4 @@
-package ua.com.foxminded.university.service;
+package ua.com.foxminded.university.service.impl;
 
 import java.lang.reflect.Type;
 import java.util.List;
@@ -21,6 +21,7 @@ import ua.com.foxminded.university.entity.StudentEntity;
 import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.StudentModel;
 import ua.com.foxminded.university.repository.StudentRepository;
+import ua.com.foxminded.university.service.StudentService;
 
 @Service
 @Transactional

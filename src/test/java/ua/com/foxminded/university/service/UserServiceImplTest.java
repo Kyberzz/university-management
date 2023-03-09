@@ -32,6 +32,8 @@ import ua.com.foxminded.university.model.UserModel;
 import ua.com.foxminded.university.modelmother.PersonModelMother;
 import ua.com.foxminded.university.modelmother.UserModelMother;
 import ua.com.foxminded.university.repository.UserRepository;
+import ua.com.foxminded.university.service.impl.UserServiceImpl;
+import ua.com.foxminded.university.service.impl.ValidatorServiceImpl;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceImplTest {
