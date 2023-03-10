@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -30,22 +31,22 @@ public class UserController extends DefaultController {
     
     @PostMapping(value = "/edit", params = {"userId"})
     public String edit(@RequestParam("userId") Integer userId, 
-                       UserModel updatedUser, 
+                       @ModelAttribute UserModel userModel, 
                        BindingResult bindingResult) throws ServiceException {
         if (bindingResult.hasErrors()) {
             handleBindingResultError(bindingResult);
         }
         
         UserModel persistedUser = userService.getById(userId);
-        persistedUser.setEnabled(updatedUser.getEnabled());
+        persistedUser.setEnabled(userModel.getEnabled());
         
-        if (updatedUser.hasUserAuthority()) {
+        if (userModel.hasUserAuthority()) {
             if (persistedUser.hasUserAuthority()) {
                 Integer userAuthorityId = persistedUser.getUserAuthority().getId();
-                updatedUser.getUserAuthority().setId(userAuthorityId);
+                userModel.getUserAuthority().setId(userAuthorityId);
             }
-            updatedUser.getUserAuthority().setUser(persistedUser);
-            persistedUser.setUserAuthority(updatedUser.getUserAuthority());
+            userModel.getUserAuthority().setUser(persistedUser);
+            persistedUser.setUserAuthority(userModel.getUserAuthority());
         }
         userService.updateUser(persistedUser);
         return "redirect:/users/list";
@@ -62,26 +63,26 @@ public class UserController extends DefaultController {
         return "users/list";
     }
 
-    @PostMapping(value = "/authorize", params = {"password", "passwordConfirm"})
+    @PostMapping(value = "/authorize", params = {"email", "password", "passwordConfirm"})
     public String authorizeUser(@RequestParam("email") String email,
                                 @RequestParam("password") String password, 
                                 @RequestParam("passwordConfirm") String passwordConfirm,
-                                UserModel userModel, 
+                                @ModelAttribute UserModel userModel, 
                                 BindingResult bindingResult) throws ServiceException {
         handleBindingResultError(bindingResult);
 
         if (!password.equals(passwordConfirm)) {
-            return "users/noconfirm";
+            return "users/no-confirm";
         }
         
         try {
             userService.getByEmail(email);
         } catch (ServiceException e) {
-            return "users/notfound";
+            return "users/not-found";
         }
         
         userModel.setPassword(password);
-        userService.createUser(userModel);
+        userService.updateUser(userModel);
         return "redirect:/users/list";
     }
 }
