@@ -3,7 +3,7 @@ package ua.com.foxminded.university.controller;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.BindingResult;
+import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.ModelAndView;
@@ -16,7 +16,7 @@ public class DefaultController {
   
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(ServiceException.class)
-    public ModelAndView defaultExceptionHandler(HttpServletRequest request, ServiceException e) {
+    public ModelAndView serviceExceptionHandler(HttpServletRequest request, ServiceException e) {
         ModelAndView modelAndView = new ModelAndView();
         log.error("The controller class method fails.", e);
 
@@ -25,10 +25,13 @@ public class DefaultController {
         return modelAndView;
     }
     
-    public String handleBindingResultError(BindingResult bindingResult) {
-        bindingResult.getAllErrors()
-                     .stream()
-                     .forEach(error -> log.error(error.getDefaultMessage()));
-        return "error";
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(BindException.class)
+    public ModelAndView binding(HttpServletRequest request, BindException e) {
+        ModelAndView modelAndView = new ModelAndView();
+        log.error("The binding request data fails", e);
+        modelAndView.addObject("url", request.getRequestURL());
+        modelAndView.setViewName("error");
+        return modelAndView;
     }
 }

@@ -29,9 +29,9 @@ spring:
     password: 1234
   jpa:
     show_sql: false
-logging:
-  level:
-    root: warn
+#logging:
+#  level:
+#    root: warn
 #    org.springframework.web: warn
 #    org.springframework.security: debug
 #    org.hibernate: error

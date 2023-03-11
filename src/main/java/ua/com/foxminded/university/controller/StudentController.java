@@ -2,9 +2,9 @@ package ua.com.foxminded.university.controller;
 
 import java.util.List;
 
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,9 +27,10 @@ public class StudentController extends DefaultController {
 
     @PostMapping("/add")
     public String addStudent(StudentModel studentModel, 
-                             BindingResult bindingResult) throws ServiceException {
+                             BindingResult bindingResult) throws ServiceException, 
+                                                                 BindException {
         if (bindingResult.hasErrors()) {
-            handleBindingResultError(bindingResult);
+            throw new BindException(bindingResult);
         }
 
         studentService.addStudent(studentModel);
@@ -50,9 +51,10 @@ public class StudentController extends DefaultController {
     @PostMapping(value = "/edit", params = "studentId")
     public String editStudent(@RequestParam("studentId") int studentId, 
                               StudentModel studentModel, 
-                              BindingResult bindingResult) throws ServiceException {
+                              BindingResult bindingResult) throws ServiceException, 
+                                                                  BindException {
         if (bindingResult.hasErrors()) {
-            handleBindingResultError(bindingResult);
+            throw new BindException(bindingResult);
         }
         StudentModel persistedStudent = studentService.getStudentById(studentId);
         String firstName = studentModel.getUser().getPerson().getFirstName();

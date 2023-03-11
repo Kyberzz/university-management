@@ -2,6 +2,8 @@ package ua.com.foxminded.university.model;
 
 import java.io.Serializable;
 
+import javax.validation.constraints.NotNull;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,5 +21,7 @@ public class UserAuthorityModel implements Serializable {
     private Integer id;
     private RoleAuthority roleAuthority;
     private UserModel user;
+    
+    @NotNull
     private Authority authority;
 }

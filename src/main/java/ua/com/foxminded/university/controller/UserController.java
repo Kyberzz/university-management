@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import lombok.RequiredArgsConstructor;
 import ua.com.foxminded.university.exception.ServiceException;
+import ua.com.foxminded.university.model.Authority;
+import ua.com.foxminded.university.model.UserAuthorityModel;
 import ua.com.foxminded.university.model.UserModel;
 import ua.com.foxminded.university.service.UserService;
 
@@ -32,22 +35,22 @@ public class UserController extends DefaultController {
     @PostMapping(value = "/edit", params = {"userId"})
     public String edit(@RequestParam("userId") Integer userId, 
                        @ModelAttribute UserModel userModel, 
-                       BindingResult bindingResult) throws ServiceException {
+                       BindingResult bindingResult) throws ServiceException, BindException {
         if (bindingResult.hasErrors()) {
-            handleBindingResultError(bindingResult);
+            throw new BindException(bindingResult);
         }
         
         UserModel persistedUser = userService.getById(userId);
         persistedUser.setEnabled(userModel.getEnabled());
+        Authority authority = userModel.getUserAuthority().getAuthority();
         
-        if (userModel.hasUserAuthority()) {
-            if (persistedUser.hasUserAuthority()) {
-                Integer userAuthorityId = persistedUser.getUserAuthority().getId();
-                userModel.getUserAuthority().setId(userAuthorityId);
-            }
-            userModel.getUserAuthority().setUser(persistedUser);
-            persistedUser.setUserAuthority(userModel.getUserAuthority());
+        if (persistedUser.hasUserAuthority()) {
+            persistedUser.getUserAuthority().setAuthority(authority);
+        } else {
+            persistedUser.setUserAuthority(new UserAuthorityModel());
+            persistedUser.getUserAuthority().setAuthority(authority);
         }
+        
         userService.updateUser(persistedUser);
         return "redirect:/users/list";
     }
@@ -68,8 +71,11 @@ public class UserController extends DefaultController {
                                 @RequestParam("password") String password, 
                                 @RequestParam("passwordConfirm") String passwordConfirm,
                                 @ModelAttribute UserModel userModel, 
-                                BindingResult bindingResult) throws ServiceException {
-        handleBindingResultError(bindingResult);
+                                BindingResult bindingResult) throws ServiceException, 
+                                                                    BindException {
+        if (bindingResult.hasErrors()) {
+            throw new BindException(bindingResult);
+        }
 
         if (!password.equals(passwordConfirm)) {
             return "users/no-confirm";
