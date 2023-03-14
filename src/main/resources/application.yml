@@ -5,6 +5,9 @@ spring:
     generate-ddl: false
   flyway:
     default-schema: university
+  thymeleaf:
+    enabled: true
+    cache: false
 ---
 spring:
   config:
@@ -29,10 +32,12 @@ spring:
     password: 1234
   jpa:
     show_sql: false
-#logging:
-#  level:
-#    root: warn
-#    org.springframework.web: warn
+ 
+    
+logging:
+  level:
+    root: warn
+    org.springframework.web: debug
 #    org.springframework.security: debug
 #    org.hibernate: error
 #    org.hibernate.sql: debug

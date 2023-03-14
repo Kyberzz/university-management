@@ -30,7 +30,6 @@ import ua.com.foxminded.university.service.ValidatorService;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService<UserModel> {
     
-    public static final String PREFIX = "ROLE_";
     public static final Type TYPE = new TypeToken<List<UserModel>>() {}.getType();
     
     private final UserRepository userRepository;
