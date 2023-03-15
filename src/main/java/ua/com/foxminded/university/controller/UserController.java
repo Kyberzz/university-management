@@ -26,8 +26,8 @@ public class UserController extends DefaultController {
     
     private final UserService<UserModel> userService;
 
-    @PostMapping(value = "/delete", params = {"email"})
-    public String delete(@RequestParam("email") String email) throws ServiceException {
+    @PostMapping(value = "/delete", params = "email")
+    public String delete(@RequestParam String email) throws ServiceException {
         userService.deleteByEmail(email);
         return "redirect:/users/list";
     }

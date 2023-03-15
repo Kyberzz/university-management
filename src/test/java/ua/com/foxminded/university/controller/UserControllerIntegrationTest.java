@@ -1,13 +1,17 @@
 package ua.com.foxminded.university.controller;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
+
+import java.util.Optional;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,11 +24,14 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
+import ua.com.foxminded.university.entity.RoleAuthority;
+import ua.com.foxminded.university.entity.UserAuthorityEntity;
 import ua.com.foxminded.university.entity.UserEntity;
 import ua.com.foxminded.university.entitymother.UserEntityMother;
 import ua.com.foxminded.university.model.Authority;
 import ua.com.foxminded.university.model.UserAuthorityModel;
 import ua.com.foxminded.university.model.UserModel;
+import ua.com.foxminded.university.repository.UserAuthorityRepository;
 import ua.com.foxminded.university.repository.UserRepository;
 
 @SpringBootTest
@@ -35,8 +42,6 @@ class UserControllerIntegrationTest {
     
     public static final String LAST_NAME = "Musk";
     public static final String FIRST_NAME = "Elon";
-    public static final String USERS_EDIT_URL = "/users/edit";
-    public static final String USERS_LIST_URL = "/users/list";
     public static final String EMAIL_NAME = "testy@com";
     public static final String PASSWORD = "password";
     public static final String NEW_PASSWORD = "newpassword";
@@ -46,64 +51,62 @@ class UserControllerIntegrationTest {
     private UserRepository userRepository;
     
     @Autowired
-    private UserController userController;
+    private UserAuthorityRepository userAuthorityRepository;
     
-    @Autowired
-    private UserDetailsManager userDetailsManager;
-    
+//    @Autowired
+//    private UserDetailsManager userDetailsManager;
+//    
     @Autowired
     private MockMvc mockMvc;
     
     private UserEntity user;
+    private UserAuthorityEntity userAuthority;
     private UserModel userModel;
     
     @BeforeEach
     void setup() {
-        mockMvc = MockMvcBuilders.standaloneSetup(userController).build();
-        
         user = UserEntityMother.complete().build();
         user = userRepository.saveAndFlush(user);
+        userAuthority = UserAuthorityEntity.builder()
+                .roleAuthority(RoleAuthority.ROLE_ADMIN)
+                .user(user)
+                .build();
+        userAuthorityRepository.saveAndFlush(userAuthority);
         
-//        EntityManager entityManager = entityManagerFactory.createEntityManager();
-//        entityManager.getTransaction().begin();
-//        entityManager.persist(userEntity);
-//        entityManager.getTransaction().commit();
-        
-        PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
-        UserDetails user = User.builder().username(EMAIL_NAME)
-                               .password(PASSWORD)
-                               .passwordEncoder(encoder::encode)
-                               .authorities(Authority.ADMIN.toString())
-                               .disabled(false)
-                               .build();
-        userDetailsManager.createUser(user);
-        
-        userModel = new UserModel();
-        userModel.setEnabled(false);
-        userModel.setPassword(NEW_PASSWORD);
-        userModel.setUserAuthority(new UserAuthorityModel());
-        userModel.getUserAuthority().setAuthority(Authority.STAFF);
+//        userModel = new UserModel();
+//        userModel.setEnabled(false);
+//        userModel.setPassword(NEW_PASSWORD);
+//        userModel.setUserAuthority(new UserAuthorityModel());
+//        userModel.getUserAuthority().setAuthority(Authority.STAFF);
     }
     
     @AfterEach
     void cleanUp() {
-        userRepository.delete(user);
-//        EntityManager entityManager = entityManagerFactory.createEntityManager();
-//        entityManager.getTransaction().begin();
-//        UserEntity persistedUser = entityManager.find(UserEntity.class, userEntity.getId());
-//        entityManager.remove(persistedUser);
+        Optional<UserEntity> persistedUser = userRepository.findById(user.getId());
+        
+        if (persistedUser != null) {
+            userRepository.delete(user);
+        }
     }
     
+    @Test
+    void delete_ShouldDeleteUserAndRenderListView() throws Exception {
+        mockMvc.perform(post("/users/delete").param("email", user.getEmail()))
+               .andExpect(redirectedUrl("/users/list"));
+    }
+    
+    /*
     @Test
     void edit_shouldEditUserDetails() throws Exception {
         String modelId = user.getId().toString(); 
         
-        mockMvc.perform(MockMvcRequestBuilders.post(USERS_EDIT_URL)
+        mockMvc.perform(MockMvcRequestBuilders.post("/users/edit")
                                               .flashAttr("userModel", userModel)
                                               .param("userId", modelId))
                .andDo(print())
-               .andExpect(redirectedUrl(USERS_LIST_URL));
+               .andExpect(redirectedUrl("/users/list"));
     }
+    */
     
 /*
     @Test

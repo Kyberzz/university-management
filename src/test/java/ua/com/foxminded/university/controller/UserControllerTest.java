@@ -20,6 +20,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import ua.com.foxminded.university.exception.ServiceException;
+import ua.com.foxminded.university.model.Authority;
+import ua.com.foxminded.university.model.UserAuthorityModel;
 import ua.com.foxminded.university.model.UserModel;
 import ua.com.foxminded.university.modelmother.UserModelMother;
 import ua.com.foxminded.university.service.UserService;
@@ -29,30 +31,30 @@ class UserControllerTest {
     
     public static final int ID = 1;
     public static final String NON_CONFIRM_PASSWORD = "pasF";
-    public static final String PASSWORD = "pass";
-    public static final String STRING_ID = "1";
-    public static final String EMAIL = "some@email";
-    public static final String USERS_LIST_URL = "/users/list";
-    public static final String USERS_DELETE_URL = "/users/delete";
     
     @MockBean
     private UserService<UserModel> userServiceMock;
     
     private MockMvc mockMvc;
-    private UserModel userModel;
+    private UserModel user;
+    private UserAuthorityModel userAuthorit;
     
     @BeforeEach
     void setup() {
-        mockMvc = MockMvcBuilders.standaloneSetup(new UserController(userServiceMock)).build();
-        userModel = UserModelMother.complete().id(ID).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(new UserController(userServiceMock))
+                                 .build();
+        user = UserModelMother.complete().id(ID).build();
+        userAuthorit = UserAuthorityModel.builder()
+                .authority(Authority.ADMIN)
+                .build();
     }
     
     @Test
     void authorizeUser_ShouldRednderNoConfirmView() throws Exception {
-        mockMvc.perform(post("/users/authorize").param("email", EMAIL)
-                                                .param("password", PASSWORD)
+        mockMvc.perform(post("/users/authorize").param("email", user.getEmail())
+                                                .param("password", user.getPassword())
                                                 .param("passwordConfirm", NON_CONFIRM_PASSWORD)
-                                                .flashAttr("userModel", userModel))
+                                                .flashAttr("userModel", user))
                .andExpect(view().name("users/no-confirm"));
     }
     
@@ -60,21 +62,21 @@ class UserControllerTest {
     void authorizeUser_ShouldRenderNotFoundView() throws Exception {
         when(userServiceMock.getByEmail(anyString()))
             .thenThrow(new ServiceException());
-        mockMvc.perform(post("/users/authorize").param("email", EMAIL)
-                                                .param("password", PASSWORD)
-                                                .param("passwordConfirm", PASSWORD)
-                                                .flashAttr("userModel", userModel))
+        mockMvc.perform(post("/users/authorize").param("email", user.getEmail())
+                                                .param("password", user.getPassword())
+                                                .param("passwordConfirm", user.getPassword())
+                                                .flashAttr("userModel", user))
                .andExpect(view().name("users/not-found"));
     }
     
     @Test
     void authorizeUser_ShouldAuthorizeUserAndRedirectToListView() throws Exception {
-        when(userServiceMock.getByEmail(anyString())).thenReturn(userModel);
+        when(userServiceMock.getByEmail(anyString())).thenReturn(user);
         
-        mockMvc.perform(post("/users/authorize").param("email", EMAIL)
-                                                .param("password", PASSWORD)
-                                                .param("passwordConfirm", PASSWORD)
-                                                .flashAttr("userModel", userModel))
+        mockMvc.perform(post("/users/authorize").param("email", user.getEmail())
+                                                .param("password", user.getPassword())
+                                                .param("passwordConfirm", user.getPassword())
+                                                .flashAttr("userModel", user))
                .andExpect(redirectedUrl("/users/list"));
         verify(userServiceMock, times(1)).updateUser(isA(UserModel.class));
     }
@@ -93,9 +95,10 @@ class UserControllerTest {
     
     @Test
     void edit_ShouldEditUserAndRediredtToListView() throws Exception {
-        when(userServiceMock.getById(anyInt())).thenReturn(userModel);
-        mockMvc.perform(post("/users/edit").param("userId", STRING_ID)
-                                           .flashAttr("userModel", userModel))
+        user.setUserAuthority(userAuthorit);
+        when(userServiceMock.getById(anyInt())).thenReturn(user);
+        mockMvc.perform(post("/users/edit").param("userId", user.getId().toString())
+                                           .flashAttr("userModel", user))
                .andExpect(redirectedUrl("/users/list"));
         
         InOrder inOrder = Mockito.inOrder(userServiceMock);
@@ -106,9 +109,9 @@ class UserControllerTest {
     @Test
     void delete_ShouldDeleteUserAndRedirectToListView() throws Exception {
         
-        mockMvc.perform(post("/users/delete").param("email", EMAIL))
+        mockMvc.perform(post("/users/delete").param("email", user.getEmail()))
                .andExpect(redirectedUrl("/users/list"));
         
-        verify(userServiceMock, times(1)).deleteByEmail(EMAIL);
+        verify(userServiceMock, times(1)).deleteByEmail(user.getEmail());
     }
 }

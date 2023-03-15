@@ -213,9 +213,9 @@
          th:text="#{button.delete}" data-bs-toggle="modal"
          th:data-bs-target="|#delete${iterationStatus.index}|">Delete</button>
 
-        <form class="modal fade"
+        <form class="modal fade" method="post"
          th:id="|delete${iterationStatus.index}|"
-         th:action="@{/users/delete}" method="post"
+         th:action="@{/users/delete}" 
          data-bs-backdrop="static" data-bs-keyboard="false"
          tabindex="-1" aria-labelledby="staticBackdropLabel"
          aria-hidden="true">
@@ -230,13 +230,12 @@
             <button type="button" class="btn-close"
              data-bs-dismiss="modal" aria-label="Close"></button>
            </div>
-           <div class="modal-body" th:action="@{/users/delete}"
-            th:object="${userModel}">
+           <div class="modal-body">
             <div class="container-fluid">
              <div class="row text-start mt-2">
               <div class="col-3" th:text="|#{users.authority}: |">Authority</div>
               <div class="col-9"
-               th:text="${user.userAuthority != null} ? ${user.userAuthority.roleAuthority.representation} : '---'"></div>
+               th:text="${user.userAuthority != null} ? ${user.userAuthority.roleAuthority.representation} : '---'">Admin</div>
              </div>
              <div class="row text-start mt-2">
               <div class="col-3" th:text="|#{thead.active}: |">
@@ -249,8 +248,8 @@
            <div class="modal-footer">
             <button type="button" class="btn btn-secondary"
              data-bs-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-primary"
-             th:text="#{button.delete}">Delete</button>
+            <button type="submit" class="btn btn-primary" name="email"
+             th:text="#{button.delete}" th:value="${user.email}">Delete</button>
            </div>
           </div>
          </div>

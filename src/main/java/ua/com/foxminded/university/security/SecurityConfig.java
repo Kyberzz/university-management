@@ -34,10 +34,9 @@ public class SecurityConfig {
     public static final String ADMIN = "ADMIN";
     
     private final Environment environment;
-    private final DataSource dataSource;
     
     @Bean 
-    public UserDetailsManager userDetailsManager() throws Exception {
+    public UserDetailsManager userDetailsManager(DataSource dataSource) {
         JdbcUserDetailsManager manager = new JdbcUserDetailsManager(dataSource);
         manager.setCreateAuthoritySql(environment.getProperty(CREATE_AUTHORITY_SLQ));
         manager.setDeleteUserSql(environment.getProperty(DELETE_USER_SQL));

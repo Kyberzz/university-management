@@ -1,4 +1,4 @@
-package org.springframework.security.provisioning;
+package ua.com.foxminded.university.security;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -16,22 +16,23 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ActiveProfiles;
 
-import ua.com.foxminded.university.UniversityManagement;
 import ua.com.foxminded.university.entity.RoleAuthority;
+import ua.com.foxminded.university.entity.UserAuthorityEntity;
 import ua.com.foxminded.university.entity.UserEntity;
 import ua.com.foxminded.university.entitymother.UserEntityMother;
 import ua.com.foxminded.university.model.Authority;
 import ua.com.foxminded.university.repository.UserRepository;
 
-@SpringBootTest (classes = UniversityManagement.class)
+@SpringBootTest
 @ActiveProfiles("test")
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
-class JdbcUserDetailsManagerSqlTest {
-    
+class SecurityUserPersistenceTest {
+
     public static final String PASSWORD = "newpass";
     public static final String LAST_NAME = "Lincoln";
     public static final String FIRST_NAME = "Abraham";
@@ -42,26 +43,38 @@ class JdbcUserDetailsManagerSqlTest {
     
     @PersistenceContext
     private EntityManager entityManager;
+
+    @Autowired
+    private UserDetailsManager userDetailsManager;
     
     @Autowired
     private UserRepository userRepository;
     
-    @Autowired
-    private UserDetailsManager userDetailsManager;
     
+    private PasswordEncoder encoder = PasswordEncoderFactories
+            .createDelegatingPasswordEncoder();
     private UserEntity user;
-    private PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+    private UserAuthorityEntity userAuthority;
     
-    @BeforeEach()
-    void setup() {
+    
+    
+    @BeforeEach
+    void init() {
         user = UserEntityMother.complete().build();
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
         entityManager.persist(user);
+        
+        userAuthority = UserAuthorityEntity.builder()
+                                           .roleAuthority(RoleAuthority.ROLE_ADMIN)
+                                           .user(user)
+                                           .build();
+        entityManager.persist(userAuthority);
         entityManager.getTransaction().commit();
         entityManager.close();
     }
     
+    @Test
     void deleteUser_ShouldDeleteUserAndUserAuthorityEntities() {
         userDetailsManager.deleteUser(user.getEmail());
         UserEntity receivedUser = entityManager.find(UserEntity.class, user.getId());
@@ -102,5 +115,14 @@ class JdbcUserDetailsManagerSqlTest {
         assertFalse(receivedUser.getEnabled());
         assertEquals(RoleAuthority.ROLE_STUDENT, 
                      receivedUser.getUserAuthority().getRoleAuthority());
+    }
+    
+    @Test
+    void loadUserByUsername_ShouldReturnUserDetailsObjectByEmail() {
+        UserDetails userDetails = userDetailsManager.loadUserByUsername(user.getEmail());
+        assertEquals(user.getEnabled(), userDetails.isEnabled());
+        assertEquals(user.getPassword(), userDetails.getPassword());
+        assertEquals(userAuthority.getRoleAuthority().toString(),
+                     userDetails.getAuthorities().iterator().next().getAuthority());
     }
 }
