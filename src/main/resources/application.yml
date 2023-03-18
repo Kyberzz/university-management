@@ -32,12 +32,13 @@ spring:
     password: 1234
   jpa:
     show_sql: false
- 
-    
+  sql:
+    init:
+      mode: always
 logging:
   level:
     root: warn
-    org.springframework.web: debug
+#    org.springframework.web: debug
 #    org.springframework.security: debug
 #    org.hibernate: error
 #    org.hibernate.sql: debug
@@ -80,8 +81,10 @@ spring:
     driverClassName: org.testcontainers.jdbc.ContainerDatabaseDriver
     url: jdbc:tc:postgresql:14.0:///university?TC_INITSCRIPT=init-testcontainer-postgre.sql&TC_DAEMON=true
   jpa:
-    show_sql: true        
-
+    show_sql: true
+#logging:        
+#  level:
+#    root: warn
     
     
         

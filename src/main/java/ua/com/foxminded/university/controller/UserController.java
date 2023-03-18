@@ -59,10 +59,9 @@ public class UserController extends DefaultController {
     public String listAllUsers(Model model) throws ServiceException {
         List<UserModel> allUsers = userService.getAll();
         List<UserModel> notAuthorizedUsers = userService.getNotAuthorizedUsers();
-        UserModel modelUser = new UserModel();
         model.addAttribute("notAuthorizedUsers", notAuthorizedUsers);
         model.addAttribute("allUsers", allUsers);
-        model.addAttribute("userModel", modelUser);
+        model.addAttribute("userModel", new UserModel());
         return "users/list";
     }
 

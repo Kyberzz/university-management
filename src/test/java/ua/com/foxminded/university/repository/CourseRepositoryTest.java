@@ -2,6 +2,8 @@ package ua.com.foxminded.university.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceUnit;
@@ -10,16 +12,20 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
 import ua.com.foxminded.university.entity.CourseEntity;
 import ua.com.foxminded.university.entity.TimetableEntity;
 import ua.com.foxminded.university.entitymother.CourseEntityMother;
 import ua.com.foxminded.university.entitymother.TimetableEntityMother;
-import ua.com.foxminded.university.exception.RepositoryException;
 
 @DataJpaTest
 @ActiveProfiles("test")
+@DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
+@Transactional
 class CourseRepositoryTest {
     
     private static final int TIMETABLES_QUANTITY = 1;
@@ -31,7 +37,6 @@ class CourseRepositoryTest {
     private CourseRepository courseRepository;
     
     private CourseEntity course;
-    private TimetableEntity timetable;
     
     @BeforeEach
     void init() {
@@ -40,7 +45,7 @@ class CourseRepositoryTest {
         course = CourseEntityMother.complete().build();
         entityManager.persist(course);
         
-        timetable = TimetableEntityMother.complete()
+        TimetableEntity timetable = TimetableEntityMother.complete()
                                          .course(course)
                                          .build();
         entityManager.persist(timetable);
@@ -49,15 +54,17 @@ class CourseRepositoryTest {
     }
 
     @Test
-    void findTimetableListById_ShouldReturnCourseWithTimetableList_WhenEnterCourseId() 
-            throws RepositoryException {
-        CourseEntity receivedCourse = courseRepository.findTimetableListById(course.getId());
-        assertEquals(TIMETABLES_QUANTITY, receivedCourse.getTimetables().size());
+    void findTimetableListById_ShouldReturnCourseWithTimetableList_WhenEnterCourseId() {
+        CourseEntity receivedCourse = courseRepository
+                .findTimetablesById(course.getId());
+        List<TimetableEntity> timetables = receivedCourse.getTimetables();
+        assertEquals(TIMETABLES_QUANTITY, timetables.size());
     }
     
     @Test
-    void findById_ShouldReturnCourseWithId() throws RepositoryException {
-        CourseEntity receivedCourse = courseRepository.findById(course.getId().intValue());
+    void findById_ShouldReturnCourseWithId() {
+        CourseEntity receivedCourse = courseRepository
+                .findById(course.getId().intValue());
         assertEquals(course.getId(), receivedCourse.getId());
     }
 }

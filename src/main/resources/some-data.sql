@@ -7,15 +7,15 @@ insert into university.courses(name, teacher_id) values('Mathematics', 1);
 insert into university.groups(name) values('lt-58');
 insert into university.groups(name) values('ua-77');
 insert into university.timetable(start_time, end_time, week_day, group_id, course_id)
-	values('8:00', '9:30', 'MONDAY', 1, 1);
+    values('8:00', '9:30', 'MONDAY', 1, 1);
 insert into university.timetable(start_time, end_time, week_day, group_id, course_id)
-	values('10:00', '11:30', 'TUESDAY', 1, 2);
+    values('10:00', '11:30', 'TUESDAY', 1, 2);
 insert into university.timetable(start_time, end_time, week_day, group_id, course_id)
-	values('8:00', '9:30', 'FRIDAY', 1, 3);
+    values('8:00', '9:30', 'FRIDAY', 1, 3);
 insert into university.timetable(start_time, end_time, week_day, group_id, course_id)
-	values('11:45', '13:15', 'TUESDAY', 2, 2);	
+    values('11:45', '13:15', 'TUESDAY', 2, 2);  
 insert into university.timetable(start_time, end_time, week_day, group_id, course_id)
-	values('9:45', '11:15', 'WEDNESDAY', 2, 3);	
+    values('9:45', '11:15', 'WEDNESDAY', 2, 3); 
 insert into university.students(first_name, last_name, group_id) values('Adam', 'Fox', 1);
 insert into university.students(first_name, last_name, group_id) values('Stiven', 'Parker', 1);
 insert into university.students(first_name, last_name, group_id) values('Oliver', 'Stoun', 1);
@@ -24,3 +24,15 @@ insert into university.students(first_name, last_name, group_id) values('Jon', '
 insert into university.students(first_name, last_name, group_id) values('Margaret', 'Thatcher', 2);
 insert into university.students(first_name, last_name, group_id) values('Sansa', 'Stark ', 2);
 insert into university.students(first_name, last_name, group_id) values('Rhaenyra ', 'Targaryen ', 2);
+
+insert into university.users(email, password, is_active) values('admin', 
+'{bcrypt}$2a$10$4w9yFzI6KlhVyKhdBJBBGeQjE6fwy8sk0FuUvM3ZuJqXTznHwVZdO', true);
+insert into university.users(email) values('email@com');
+insert into university.users(email) values('myemail@com');
+update university.students set user_id=2 where students.id=1;
+update university.students set user_id=3 where students.id=2;
+insert into university.authorities(user_id, authority) values('1', 'ADMIN');
+
+insert into public.users(username, password, enabled) values('admin', 
+'{bcrypt}$2a$10$4w9yFzI6KlhVyKhdBJBBGeQjE6fwy8sk0FuUvM3ZuJqXTznHwVZdO', true);
+insert into public.authorities(username, authority) values('admin', 'ROLE_ADMIN');

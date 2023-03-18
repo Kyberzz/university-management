@@ -8,7 +8,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import ua.com.foxminded.university.entity.RoleAuthority;
 import ua.com.foxminded.university.entity.UserAuthorityEntity;
@@ -17,6 +21,7 @@ import ua.com.foxminded.university.entitymother.UserEntityMother;
 
 @DataJpaTest
 @ActiveProfiles("test")
+@DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 class UserRepositoryTest {
 
     public static final String EMAIL = "some@email";
@@ -24,41 +29,54 @@ class UserRepositoryTest {
 
     @Autowired
     private UserRepository userRepository;
-
-    private UserEntity user;
+    
+    @Autowired
+    private UserAuthorityRepository userAuthorityRepository;
+    
+    @Autowired
+    private PlatformTransactionManager transactionManager;
+    
+    private UserEntity persistedUser;
 
     @BeforeEach
     void init() {
-        user = UserEntityMother.complete().build();
-        userRepository.saveAndFlush(user);
-        UserAuthorityEntity userAuthority = UserAuthorityEntity.builder()
-                .roleAuthority(RoleAuthority.ROLE_ADMIN)
-                .user(user).build();
-        user.setUserAuthority(userAuthority);
-        userRepository.saveAndFlush(user);
-
-        UserEntity userHasNoAuthority = UserEntity.builder()
-                                                  .email(EMAIL)
-                                                  .build();
-        userRepository.saveAndFlush(userHasNoAuthority);
+        persistedUser = new TransactionTemplate(transactionManager)
+                .execute(transactionStatus -> {
+            UserEntity user = UserEntityMother.complete().build();
+            return userRepository.save(user);
+        });
+        
+        new TransactionTemplate(transactionManager).execute(transactionStatus -> {
+            UserAuthorityEntity userAuthority = UserAuthorityEntity.builder()
+                    .user(persistedUser)
+                    .roleAuthority(RoleAuthority.ROLE_ADMIN)
+                    .build();
+            return userAuthorityRepository.save(userAuthority);
+        });
+        
+        new TransactionTemplate(transactionManager).execute(transactionStatus -> {
+            UserEntity userHasNoAuthority = UserEntity.builder().email(EMAIL).build();
+            userRepository.save(userHasNoAuthority);
+            return null;
+        });
     }
     
     @Test
-    void findById_ShouldReturnUserEntityWithId() {
-        UserEntity receivedUser = userRepository.findById(user.getId().intValue());
-        assertEquals(user.getId(), receivedUser.getId());
+    void findById_ShouldReturnEntityType() {
+        UserEntity receivedUser = userRepository.findById(persistedUser.getId().intValue());
+        assertEquals(persistedUser.getId(), receivedUser.getId());
     }
 
     @Test
-    void findByUserAuthorityIsNull_ShouldReturnUsersThatHaveNoAuthorityObject() {
-        List<UserEntity> users = userRepository.findByUserAuthorityIsNull();
+    void findByUserAuthoritiesIsNull_ShouldReturnUsersThatHaveNoAuthorityObject() {
+        List<UserEntity> users = userRepository.findByUserAuthoritiesIsNull();
         assertEquals(USERS_QUANTITY, users.size());
     }
 
     @Test
     void findByEmail_shouldReturnUser() {
-        UserEntity receivedUser = userRepository.findByEmail(user.getEmail());
-        assertEquals(user.getEmail(), receivedUser.getEmail());
+        UserEntity receivedUser = userRepository.findByEmail(persistedUser.getEmail());
+        assertEquals(persistedUser.getEmail(), receivedUser.getEmail());
     }
      
     @Test

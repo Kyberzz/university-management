@@ -54,7 +54,7 @@ public class CourseServiceImpl implements CourseService<CourseModel> {
     public CourseModel getTimetableListByCourseId(int id) throws ServiceException {
         CourseModel course = null;
         try {
-            CourseEntity courseEntity = courseRepository.findTimetableListById(id);
+            CourseEntity courseEntity = courseRepository.findTimetablesById(id);
             ModelMapper modelMapper = new ModelMapper();
             course = modelMapper.map(courseEntity, CourseModel.class);
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {

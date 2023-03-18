@@ -87,7 +87,7 @@ class UserControllerTest {
                .andExpect(status().isOk())
                .andExpect(model().attributeExists("notAuthorizedUsers"))
                .andExpect(model().attributeExists("allUsers"))
-               .andExpect(view().name("users/list"));
+               .andExpect(view().name("/users/list"));
         
         verify(userServiceMock, times(1)).getAll();
         verify(userServiceMock, times(1)).getNotAuthorizedUsers();
@@ -99,7 +99,7 @@ class UserControllerTest {
         when(userServiceMock.getById(anyInt())).thenReturn(user);
         mockMvc.perform(post("/users/edit").param("userId", user.getId().toString())
                                            .flashAttr("userModel", user))
-               .andExpect(redirectedUrl("/users/list"));
+               .andExpect(redirectedUrl("users/list"));
         
         InOrder inOrder = Mockito.inOrder(userServiceMock);
         inOrder.verify(userServiceMock, times(1)).getById(anyInt());

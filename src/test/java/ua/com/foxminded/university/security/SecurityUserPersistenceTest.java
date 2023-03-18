@@ -33,6 +33,7 @@ import ua.com.foxminded.university.repository.UserRepository;
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 class SecurityUserPersistenceTest {
 
+    public static final int FIRST_ELEMENT = 1;
     public static final String PASSWORD = "newpass";
     public static final String LAST_NAME = "Lincoln";
     public static final String FIRST_NAME = "Abraham";
@@ -78,10 +79,7 @@ class SecurityUserPersistenceTest {
     void deleteUser_ShouldDeleteUserAndUserAuthorityEntities() {
         userDetailsManager.deleteUser(user.getEmail());
         UserEntity receivedUser = entityManager.find(UserEntity.class, user.getId());
-        assertNull(receivedUser.getEmail());
-        assertNull(receivedUser.getEnabled());
-        assertNull(receivedUser.getPassword());
-        assertNull(receivedUser.getUserAuthority().getRoleAuthority());
+        assertNull(receivedUser);
     }
     
     @Test
@@ -109,12 +107,14 @@ class SecurityUserPersistenceTest {
         
         userDetailsManager.updateUser(userDetails);
         UserEntity receivedUser = entityManager.find(UserEntity.class, user.getId());
+        RoleAuthority roleAuthority = receivedUser.getUserAuthorities()
+                                                  .get(FIRST_ELEMENT)
+                                                  .getRoleAuthority();
         
         assertEquals(user.getEmail(), receivedUser.getEmail());
         assertTrue(encoder.matches(PASSWORD, receivedUser.getPassword()));
         assertFalse(receivedUser.getEnabled());
-        assertEquals(RoleAuthority.ROLE_STUDENT, 
-                     receivedUser.getUserAuthority().getRoleAuthority());
+        assertEquals(RoleAuthority.ROLE_STUDENT, roleAuthority);
     }
     
     @Test

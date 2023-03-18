@@ -102,10 +102,10 @@ class UserServiceImplTest {
 
     @Test
     void getNotAuthorizedUsers_shouldExecuteCorrectNumberCalls() throws ServiceException {
-        when(userRepositoryMock.findByUserAuthorityIsNull()).thenReturn(entities);
+        when(userRepositoryMock.findByUserAuthoritiesIsNull()).thenReturn(entities);
         Type type = new TypeToken<List<UserModel>>() {}.getType();
         userService.getNotAuthorizedUsers();
-        verify(userRepositoryMock, times(1)).findByUserAuthorityIsNull();
+        verify(userRepositoryMock, times(1)).findByUserAuthoritiesIsNull();
         verify(modelMapperMock, times(1)).map(entities, type);
     }
 
