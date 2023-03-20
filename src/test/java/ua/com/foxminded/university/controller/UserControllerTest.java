@@ -30,6 +30,7 @@ import ua.com.foxminded.university.service.UserService;
 class UserControllerTest {
     
     public static final int ID = 1;
+    public static final String BAD_CONTENT = "some string";
     public static final String NON_CONFIRM_PASSWORD = "pasF";
     
     @MockBean
@@ -43,14 +44,26 @@ class UserControllerTest {
     void setup() {
         mockMvc = MockMvcBuilders.standaloneSetup(new UserController(userServiceMock))
                                  .build();
-        user = UserModelMother.complete().id(ID).build();
         userAuthorit = UserAuthorityModel.builder()
                 .authority(Authority.ADMIN)
                 .build();
+        user = UserModelMother.complete().id(ID)
+                                         .userAuthority(userAuthorit).build();
     }
     
     @Test
-    void authorizeUser_ShouldRednderNoConfirmView() throws Exception {
+    void authorize_ShouldReturnBadRequestResponseStatus() throws Exception {
+        
+        mockMvc.perform(post("/users/authorize").param("email", user.getEmail())
+                                                    .param("password", user.getPassword())
+                                                    .param("passwordConfirm", user.getPassword())
+                                                    .content(BAD_CONTENT))
+               .andExpect(status().is4xxClientError())
+               .andExpect(view().name("error"));
+    }
+    
+    @Test
+    void authorize_ShouldRednderNoConfirmView() throws Exception {
         mockMvc.perform(post("/users/authorize").param("email", user.getEmail())
                                                 .param("password", user.getPassword())
                                                 .param("passwordConfirm", NON_CONFIRM_PASSWORD)
@@ -59,9 +72,8 @@ class UserControllerTest {
     }
     
     @Test
-    void authorizeUser_ShouldRenderNotFoundView() throws Exception {
-        when(userServiceMock.getByEmail(anyString()))
-            .thenThrow(new ServiceException());
+    void authorize_ShouldRenderNotFoundView() throws Exception {
+        when(userServiceMock.getByEmail(anyString())).thenThrow(new ServiceException());
         mockMvc.perform(post("/users/authorize").param("email", user.getEmail())
                                                 .param("password", user.getPassword())
                                                 .param("passwordConfirm", user.getPassword())
@@ -70,7 +82,7 @@ class UserControllerTest {
     }
     
     @Test
-    void authorizeUser_ShouldAuthorizeUserAndRedirectToListView() throws Exception {
+    void authorize_ShouldAuthorizeUserAndRedirectToListView() throws Exception {
         when(userServiceMock.getByEmail(anyString())).thenReturn(user);
         
         mockMvc.perform(post("/users/authorize").param("email", user.getEmail())
@@ -82,7 +94,7 @@ class UserControllerTest {
     }
     
     @Test
-    void listAllUsers_ShouldAddAttributesAndRenderToListView() throws Exception {
+    void listAll_ShouldAddAttributesAndRenderToListView() throws Exception {
         mockMvc.perform(get("/users/list"))
                .andExpect(status().isOk())
                .andExpect(model().attributeExists("notAuthorizedUsers"))
@@ -91,6 +103,16 @@ class UserControllerTest {
         
         verify(userServiceMock, times(1)).getAll();
         verify(userServiceMock, times(1)).getNotAuthorizedUsers();
+    }
+    
+    @Test
+    void edit_ShouldReturnBadRequestResponseStatus() throws Exception {
+        user.setUserAuthority(userAuthorit);
+        when(userServiceMock.getById(anyInt())).thenReturn(user);
+        mockMvc.perform(post("/users/edit").param("userId", user.getId().toString())
+                                           .content(BAD_CONTENT))
+               .andExpect(status().is4xxClientError())
+               .andExpect(view().name("error"));
     }
     
     @Test
@@ -108,7 +130,6 @@ class UserControllerTest {
     
     @Test
     void delete_ShouldDeleteUserAndRedirectToListView() throws Exception {
-        
         mockMvc.perform(post("/users/delete").param("email", user.getEmail()))
                .andExpect(redirectedUrl("/users/list"));
         
