@@ -21,7 +21,6 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
-
 import ua.com.foxminded.university.entity.UserEntity;
 import ua.com.foxminded.university.entitymother.UserEntityMother;
 import ua.com.foxminded.university.exception.ServiceException;
@@ -102,10 +101,10 @@ class UserServiceImplTest {
 
     @Test
     void getNotAuthorizedUsers_shouldExecuteCorrectNumberCalls() throws ServiceException {
-        when(userRepositoryMock.findByUserAuthoritiesIsNull()).thenReturn(entities);
+        when(userRepositoryMock.findByUserAuthorityIsNull()).thenReturn(entities);
         Type type = new TypeToken<List<UserModel>>() {}.getType();
         userService.getNotAuthorizedUsers();
-        verify(userRepositoryMock, times(1)).findByUserAuthoritiesIsNull();
+        verify(userRepositoryMock, times(1)).findByUserAuthorityIsNull();
         verify(modelMapperMock, times(1)).map(entities, type);
     }
 

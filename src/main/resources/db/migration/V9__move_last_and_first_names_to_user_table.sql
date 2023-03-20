@@ -1,7 +1,3 @@
-update university.users 
-    set email='a', password = '{noop}a', first_name = 'admin', last_name = 'admin' 
-    where id = 1;
-
 alter table university.users 
     add column student_id integer references university.students(id);
     

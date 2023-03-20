@@ -76,7 +76,7 @@ public class UserServiceImpl implements UserService<UserModel> {
     @Override
     public List<UserModel> getNotAuthorizedUsers() throws ServiceException {
         try {
-            List<UserEntity> entities = userRepository.findByUserAuthoritiesIsNull();
+            List<UserEntity> entities = userRepository.findByUserAuthorityIsNull();
             return modelMapper.map(entities, TYPE);
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
             throw new ServiceException("Getting not authrized users fails.", e);

@@ -1,7 +1,6 @@
 package ua.com.foxminded.university.entity;
 
 import java.io.Serializable;
-import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Embedded;
@@ -10,7 +9,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -48,7 +46,7 @@ public class UserEntity implements Serializable {
     @OneToOne(mappedBy = "user")
     private StaffEntity staff;
     
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE, 
+    @OneToOne(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE, 
                orphanRemoval = true)
-    private List<UserAuthorityEntity> userAuthorities;
+    private UserAuthorityEntity userAuthority;
 }

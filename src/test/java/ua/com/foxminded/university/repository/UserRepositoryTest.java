@@ -69,7 +69,7 @@ class UserRepositoryTest {
 
     @Test
     void findByUserAuthoritiesIsNull_ShouldReturnUsersThatHaveNoAuthorityObject() {
-        List<UserEntity> users = userRepository.findByUserAuthoritiesIsNull();
+        List<UserEntity> users = userRepository.findByUserAuthorityIsNull();
         assertEquals(USERS_QUANTITY, users.size());
     }
 

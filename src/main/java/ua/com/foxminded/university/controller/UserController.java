@@ -70,8 +70,8 @@ public class UserController extends DefaultController {
                                 @RequestParam("password") String password, 
                                 @RequestParam("passwordConfirm") String passwordConfirm,
                                 @ModelAttribute UserModel userModel, 
-                                BindingResult bindingResult) throws ServiceException, 
-                                                                    BindException {
+                             BindingResult bindingResult) throws ServiceException, 
+                                                                 BindException {
         if (bindingResult.hasErrors()) {
             throw new BindException(bindingResult);
         }

@@ -10,7 +10,7 @@ public interface UserRepository extends JpaRepository<UserEntity, Integer> {
     
     public List<UserEntity> findByPasswordIsNotNull();
     
-    public List<UserEntity> findByUserAuthoritiesIsNull();
+    public List<UserEntity> findByUserAuthorityIsNull();
     
     public UserEntity findById(int id);
     

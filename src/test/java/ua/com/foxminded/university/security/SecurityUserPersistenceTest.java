@@ -107,8 +107,7 @@ class SecurityUserPersistenceTest {
         
         userDetailsManager.updateUser(userDetails);
         UserEntity receivedUser = entityManager.find(UserEntity.class, user.getId());
-        RoleAuthority roleAuthority = receivedUser.getUserAuthorities()
-                                                  .get(FIRST_ELEMENT)
+        RoleAuthority roleAuthority = receivedUser.getUserAuthority()
                                                   .getRoleAuthority();
         
         assertEquals(user.getEmail(), receivedUser.getEmail());
