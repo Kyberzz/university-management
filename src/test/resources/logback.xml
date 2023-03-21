@@ -16,9 +16,3 @@
     <logger name="org.springframework.test" level="warn" />
     <logger name="org.hibernate" level="warn" />
 </configuration>
-
-
-   
-
-
-

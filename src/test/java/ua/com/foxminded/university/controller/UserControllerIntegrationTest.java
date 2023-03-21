@@ -56,7 +56,8 @@ class UserControllerIntegrationTest {
     
     @Autowired
     private UserAuthorityRepository userAuthorityRepository;
-
+    
+    @Autowired
     private MockMvc mockMvc;
     private UserEntity authorizedEntity;
     private UserEntity notAuthorizedEntity;
@@ -92,6 +93,7 @@ class UserControllerIntegrationTest {
         UserAuthorityModel userAuthority = UserAuthorityModel.builder()
                 .authority(Authority.STAFF).build();
         UserModel model = UserModel.builder()
+                .email(authorizedEntity.getEmail())
                 .enabled(false)
                 .userAuthority(userAuthority).build();
 
