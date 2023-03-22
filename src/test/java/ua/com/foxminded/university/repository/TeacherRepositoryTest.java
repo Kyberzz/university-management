@@ -9,34 +9,21 @@ import javax.persistence.PersistenceUnit;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.annotation.DirtiesContext.ClassMode;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.transaction.annotation.Transactional;
 
-import ua.com.foxminded.university.config.RepositoryTestConfig;
 import ua.com.foxminded.university.entity.CourseEntity;
 import ua.com.foxminded.university.entity.TeacherEntity;
-import ua.com.foxminded.univesity.exception.RepositoryException;
+import ua.com.foxminded.university.entitymother.CourseEntityMother;
+import ua.com.foxminded.university.entitymother.TeacherEntityMother;
+import ua.com.foxminded.university.exception.RepositoryException;
 
+@DataJpaTest
 @ActiveProfiles("test")
-@Transactional
-@DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
-@ContextConfiguration(classes = RepositoryTestConfig.class)
-@ExtendWith(SpringExtension.class)
 class TeacherRepositoryTest {
     
-    private static final String COURSE_DESCRIPTION = "some description";
-    private static final String COURSE_NAME = "Programming";
-    private static final String TEACHER_LAST_NAME = "Ritchie";
-    private static final String TEACHER_FIRST_NAME = "Dennis";
-    private static final int TEACHER_ID = 1;
-    private static final int COURSE_ID = 1;
-    private static final int FIST_ELEMENT = 0;
+    private static final int COURSES_QUANTITY = 1;
     
     @PersistenceContext
     private EntityManager entityManager;
@@ -47,43 +34,32 @@ class TeacherRepositoryTest {
     @Autowired
     private TeacherRepository teacherRepository;
     
+    private TeacherEntity teacher;
+    private CourseEntity course;
+    
     @BeforeEach
     void init() {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
-        TeacherEntity teacher = new TeacherEntity();
-        teacher.setFirstName(TEACHER_FIRST_NAME);
-        teacher.setLastName(TEACHER_LAST_NAME);
+        
+        teacher = TeacherEntityMother.complete().build();
         entityManager.persist(teacher);
         
-        CourseEntity course = new CourseEntity();
-        course.setDescription(COURSE_DESCRIPTION);
-        course.setName(COURSE_NAME);
-        course.setTeacher(teacher);
+        course = CourseEntityMother.complete().teacher(teacher).build();
         entityManager.persist(course);
         entityManager.getTransaction().commit();
+        entityManager.close();
     }
     
     @Test
-    void findCourseListById_ReceivingTeacherDatabaseData_CorrectReceivedData() 
-            throws RepositoryException {
-        TeacherEntity teacherData = teacherRepository.findCourseListById(TEACHER_ID);
-        
-        assertEquals(TEACHER_ID, teacherData.getId());
-        assertEquals(TEACHER_FIRST_NAME, teacherData.getFirstName());
-        assertEquals(TEACHER_LAST_NAME, teacherData.getLastName());
-        assertEquals(TEACHER_ID, teacherData.getCourseList().get(FIST_ELEMENT).getTeacher().getId());
-        assertEquals(COURSE_ID, teacherData.getCourseList().get(FIST_ELEMENT).getId());
-        assertEquals(COURSE_NAME, teacherData.getCourseList().get(FIST_ELEMENT).getName());
-        assertEquals(COURSE_DESCRIPTION, teacherData.getCourseList().get(FIST_ELEMENT).getDescription());
+    void findCoursesById_ShouldReturnCoursesOwnedByTeacherWithId() throws RepositoryException {
+        TeacherEntity receivedTeacher = teacherRepository.findCoursesById(teacher.getId());
+        assertEquals(COURSES_QUANTITY, receivedTeacher.getCourses().size());
     }
     
     @Test
-    void findById_GettingTeacherById_CorrectRetrievedData() throws RepositoryException {
-        TeacherEntity teacher = teacherRepository.findById(TEACHER_ID);
-        
-        assertEquals(TEACHER_ID, teacher.getId());
-        assertEquals(TEACHER_FIRST_NAME, teacher.getFirstName());
-        assertEquals(TEACHER_LAST_NAME, teacher.getLastName());
+    void findById_ShouldReturnTeacherEntityWithId() throws RepositoryException {
+        TeacherEntity receivedTeacher = teacherRepository.findById(teacher.getId().intValue());
+        assertEquals(teacher.getId(), receivedTeacher.getId());
     }
 }

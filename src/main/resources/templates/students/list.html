@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The student list</title>
+<link
+ href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+ rel="stylesheet"
+ integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
+ crossorigin="anonymous">
+</head>
+<body>
+ <div th:replace="~{fragments/header::navigationBar}"></div>
+
+ <div class="modal fade" id="add" tabindex="-1"
+  aria-labelledby="addStudent" aria-hidden="true">
+  <div class="modal-dialog">
+   <form class="modal-content" th:action="@{/students/add}"
+    th:object="${studentModel}" method="post">
+    <div class="modal-header">
+     <h1 class="modal-title fs-5" id="addStudent"
+      th:text="#{students.addStudent}">Add a student</h1>
+     <button type="button" class="btn-close" data-bs-dismiss="modal"
+      aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+     <div class="container-fluid">
+      <div class="row form-floating mb-3">
+       <input type="text" class="form-control" id="floatingInput"
+        placeholder="#" th:field="*{user.person.firstName}"> <label
+        for="floatingInput" th:text="|#{thead.firstName}:|"></label>
+      </div>
+      <div class="row form-floating mb-3">
+       <input type="text" class="form-control" id="floatingInput"
+        placeholder="#" th:field="*{user.person.lastName}"><label
+        for="floatingInput" th:text="|#{thead.lastName}:|"></label>
+      </div>
+      <div class="row form-floating mb-3">
+       <input type="email" class="form-control" id="floatingInput"
+        placeholder="#"> <label for="floatingInput"
+        th:text="|#{thead.email}:|"></label>
+      </div>
+      <div class="row mb-3 text-start" th:text="|#{thead.groupName}: |">
+       Group name:</div>
+      <div class="row mb-3">
+       <select class="form-select" aria-label="Default select example"
+        th:field="*{group.id}">
+        <option th:each="group :${groups}" th:value="${group.id}"
+         th:text=${group.name}>kt-17</option>
+        <option th:value="null" th:text="#{thead.null}">null</option>
+       </select>
+      </div>
+     </div>
+    </div>
+    <div class="modal-footer">
+     <button type="button" class="btn btn-secondary"
+      data-bs-dismiss="modal">Close</button>
+     <button type="submit" class="btn btn-primary">Save changes</button>
+    </div>
+   </form>
+  </div>
+ </div>
+
+ <div class="container">
+  <div class="row justify-content-center">
+   <div class="col-10">
+    <p class="text-center fs-1 mt-5" th:text="#{students.tableName}">All
+     students of the university</p>
+    <table class="table">
+     <thead>
+      <tr>
+       <th scope="col" th:text="#{thead.number}">#</th>
+       <th scope="col" th:text="#{thead.firstName}">First name</th>
+       <th scope="col" th:text="#{thead.lastName}">Last name</th>
+       <th scope="col" th:text="#{thead.studentId}">Student ID</th>
+       <th scope="col" th:text="#{thead.groupName}">Group name</th>
+       <th scope="col" th:text="#{thead.email}">Email</th>
+       <th scope="col"></th>
+       <th scope="col"></th>
+      </tr>
+     </thead>
+     <tbody>
+      <tr th:each="student,iterationStatus : ${students}">
+       <th scope="row" th:text="${iterationStatus.count}">1</th>
+       <td th:text="${student.user.person.firstName}">John</td>
+       <td th:text="${student.user.person.lastName}">Snow</td>
+       <td th:text="${student.id}">1</td>
+       <td
+        th:text="${student.group != null} ? ${student.group.name} : '---'">5</td>
+       <td
+        th:text="${student.user != null} ? ${student.user.email} : '---'">email@com</td>
+       <td class="text-end">
+
+        <button type="button" class="btn btn-success btn-sm"
+         data-bs-toggle="modal"
+         th:data-bs-target="|#edit${iterationStatus.index}|"
+         th:text="#{button.edit}">Edit</button>
+
+        <form class="modal fade" th:id="|edit${iterationStatus.index}|"
+         tabindex="-1" aria-labelledby="editStudent" aria-hidden="true"
+         th:action="@{/students/edit}" th:object="${studentModel}"
+         method="post">
+         <div class="modal-dialog">
+          <div class="modal-content">
+           <div class="modal-header">
+            <h1 class="modal-title fs-5" id="editStudent"
+             th:text="#{students.edit}">Edit the student</h1>
+            <button type="button" class="btn-close"
+             data-bs-dismiss="modal" aria-label="Close"></button>
+           </div>
+           <div class="modal-body">
+            <div class="container-fluid">
+             <div class="row text-start">
+              <div class="col-3" th:text="|#{thead.studentId}: |">Student
+               ID</div>
+              <div class="col" th:text="${student.id}">7</div>
+              <div>
+               <input type="hidden" name="studentId"
+                th:value="${__${student.id}__}">
+              </div>
+             </div>
+             <div class="row text-start mt-2">
+              <div class="col-3" th:text="|#{thead.firstName}: |">Fist
+               name:</div>
+              <div class="col-4" th:text="${student.user.person.firstName}">Dennis</div>
+              <div class="col-5">
+               <input class="form-control form-control-sm" type="text"
+                th:placeholder="#{placeholder.enter}"
+                th:aria-label="#{placeholder.enter}"
+                th:field="*{user.person.firstName}">
+              </div>
+             </div>
+             <div class="row text-start mt-2">
+              <div class="col-3" th:text="|#{thead.lastName}: |">Last
+               name:</div>
+              <div class="col-4" th:text="${student.user.person.lastName}">Ritchie</div>
+              <div class="col-5">
+               <input class="form-control form-control-sm" type="text"
+                th:placeholder="#{placeholder.enter}"
+                th:aria-label="#{placeholder.enter}"
+                th:field="*{user.person.lastName}">
+              </div>
+             </div>
+             <div class="row text-start mt-2">
+              <div class="col-3" th:text="|#{thead.groupName}: |">Group
+               name</div>
+              <div class="col-4"
+               th:text="${student.group != null} ? ${student.group.name} : '---'"></div>
+              <div class="col-5">
+               <select class="form-select"
+                aria-label="Default select example"
+                th:field="*{group.id}">
+                <option th:each="group :${groups}"
+                 th:value="${group.id}" th:text=${group.name}>kt-17</option>
+                <option th:value="null" th:text="#{thead.null}">null</option>
+               </select>
+              </div>
+             </div>
+             <div class="row text-start mt-2">
+              <div class="col-3" th:text="|#{thead.email}: |"></div>
+              <div class="col-4"
+               th:text="${student.user != null} ? ${student.user.email} : '---'">Email</div>
+              <div class="col-5">
+               <input class="form-control form-control-sm"
+                th:placeholder="#{placeholder.enter}" type="email"
+                th:field="*{user.email}" />
+              </div>
+             </div>
+            </div>
+           </div>
+           <div class="modal-footer">
+            <button type="button" class="btn btn-secondary"
+             data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Save
+             changes</button>
+           </div>
+          </div>
+         </div>
+        </form>
+       </td>
+
+       <td class="text-start">
+        <button type="button" class="btn btn-success btn-sm"
+         data-bs-toggle="modal"
+         th:data-bs-target="|#delete${iterationStatus.index}|"
+         th:text="#{button.delete}">Delete</button>
+
+        <div class="modal fade" th:id="|delete${iterationStatus.index}|"
+         tabindex="-1" aria-labelledby="deleteStudent"
+         aria-hidden="true">
+         <div class="modal-dialog">
+          <form th:action="@{/students/delete}" class="modal-content"
+           method="post">
+           <div class="modal-header">
+            <h1 class="modal-title fs-5" id="deleteStudent"
+             th:text="#{students.delete}">Delete the student</h1>
+            <button type="button" class="btn-close"
+             data-bs-dismiss="modal" aria-label="Close"></button>
+           </div>
+           <div class="modal-body">
+            <div class="container-fluid">
+             <div class="row text-start">
+              <div class="row">
+               <div class="col-4" th:text="|#{thead.studentId}: |">ID
+                number: 7</div>
+               <div class="col" th:text="${student.id}">7</div>
+               <input type="hidden" name="deleteStudentId"
+                th:value="${__${student.id}__}">
+              </div>
+              <div class="row">
+               <div class="col-4" th:text="|#{thead.firstName}: |">Fist
+                name:</div>
+               <div class="col" th:text="${student.user.person.firstName}">
+                First name</div>
+              </div>
+              <div class="row">
+               <div class="col-4" th:text="|#{thead.lastName}: |">Last
+                name:</div>
+               <div class="col" th:text="${student.user.person.lastName}">Last
+                name</div>
+              </div>
+              <div class="row">
+               <div class="col-4" th:text="|#{thead.groupName}: |">Group
+                name</div>
+               <div class="col"
+                th:text="${student.group != null} ? ${student.group.name} : '---'"></div>
+              </div>
+             </div>
+            </div>
+           </div>
+           <div class="modal-footer">
+            <button type="button" class="btn btn-secondary"
+             data-bs-dismiss="modal" th:text="#{button.close}">Close</button>
+            <button type="submit" class="btn btn-primary"
+             th:text="#{button.confirm}">Confirm deleting</button>
+           </div>
+          </form>
+         </div>
+        </div>
+       </td>
+      </tr>
+     </tbody>
+    </table>
+   </div>
+  </div>
+ </div>
+
+ <script
+  src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+  integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+  crossorigin="anonymous"></script>
+</body>
+</html>

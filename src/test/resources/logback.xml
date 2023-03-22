@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include
+        resource="org/springframework/boot/logging/logback/defaults.xml" />
+    <include
+        resource="org/springframework/boot/logging/logback/console-appender.xml" />
+    <root level="info">
+        <appender-ref ref="CONSOLE" />
+    </root>
+    <logger name="ua.com.foxminded.university" level="warn" />
+    <logger name="org.springframework.core " level="warn" />
+    <logger name="org.springframework.beans" level="warn" />
+    <logger name="org.springframework.context" level="warn" />
+    <logger name="org.springframework.transaction" level="warn" />
+    <logger name="org.springframework.web" level="warn" />
+    <logger name="org.springframework.test" level="warn" />
+    <logger name="org.hibernate" level="warn" />
+</configuration>

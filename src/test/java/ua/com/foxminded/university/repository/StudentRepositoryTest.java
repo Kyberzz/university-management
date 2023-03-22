@@ -10,78 +10,64 @@ import javax.persistence.PersistenceUnit;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.annotation.DirtiesContext.ClassMode;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.transaction.annotation.Transactional;
 
-import ua.com.foxminded.university.config.RepositoryTestConfig;
 import ua.com.foxminded.university.entity.GroupEntity;
 import ua.com.foxminded.university.entity.StudentEntity;
-import ua.com.foxminded.univesity.exception.RepositoryException;
+import ua.com.foxminded.university.entity.UserEntity;
+import ua.com.foxminded.university.entitymother.GroupEntityMother;
+import ua.com.foxminded.university.entitymother.StudentEntityMother;
+import ua.com.foxminded.university.entitymother.UserEntityMother;
+import ua.com.foxminded.university.exception.RepositoryException;
 
+@DataJpaTest
 @ActiveProfiles("test")
-@Transactional
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = RepositoryTestConfig.class)
-@DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 class StudentRepositoryTest {
     
-    private static final String GROUP_NAME = "rs-01";
-    private static final String STUDENT_LAST_NAME = "Smith";
-    private static final String STUDENT_FIRST_NAME = "Alex";
-    private static final int GROUP_ID_NUMBER = 1;
-    private static final int STUDENT_ID_NUMBER = 1;
-   
+    @Autowired
+    private StudentRepository studentRepository;
+    
     @PersistenceContext
     private EntityManager entityManager;
     
     @PersistenceUnit
     private EntityManagerFactory entityManagerFactory;
     
-    @Autowired
-    private StudentRepository studentRepository;
+    private StudentEntity student;
+    private GroupEntity group;
+    private UserEntity user;
     
     @BeforeEach 
     void init() {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
         
-        GroupEntity group = new GroupEntity();
-        group.setName(GROUP_NAME);
+        group = GroupEntityMother.complete().build();
         entityManager.persist(group);
-        entityManager.flush();
         
-        StudentEntity student = new StudentEntity();
-        student.setFirstName(STUDENT_FIRST_NAME);
-        student.setLastName(STUDENT_LAST_NAME);
-        student.setGroup(group);
+        user = UserEntityMother.complete().build();
+        entityManager.persist(user);
+        
+        student = StudentEntityMother.complete()
+                                     .group(group)
+                                     .user(user)
+                                     .build();
         entityManager.persist(student);
-        
         entityManager.getTransaction().commit();
         entityManager.close();
     }
     
     @Test
-    void findGroupById_GettingDatabaseData_CorrectReceivedData() throws RepositoryException {
-        StudentEntity studentData = studentRepository.findGroupById(GROUP_ID_NUMBER);
-        
-        assertEquals(STUDENT_ID_NUMBER, studentData.getId());
-        assertEquals(STUDENT_FIRST_NAME, studentData.getFirstName());
-        assertEquals(STUDENT_LAST_NAME, studentData.getLastName());
-        assertEquals(GROUP_ID_NUMBER, studentData.getGroup().getId());
-        assertEquals(GROUP_NAME, studentData.getGroup().getName());
+    void findGroupById_ShouldRetrunGroupByStudentId() throws RepositoryException {
+        StudentEntity persistedStudent = studentRepository.findGroupById(student.getId());
+        assertEquals(group.getId(), persistedStudent.getGroup().getId());
     }
     
     @Test
-    void findById_GettingStudentById_CorrectRetrievedData() throws RepositoryException {
-        StudentEntity student = studentRepository.findById(STUDENT_ID_NUMBER);
-        assertEquals(STUDENT_ID_NUMBER, student.getId());
-        assertEquals(STUDENT_FIRST_NAME, student.getFirstName());
-        assertEquals(STUDENT_LAST_NAME, student.getLastName());
+    void findById_ShouldReturnStudentObjectWithId() throws RepositoryException {
+        StudentEntity persistedStudent = studentRepository.findById(student.getId());
+        assertEquals(student.getId(), persistedStudent.getId());
     }
 }

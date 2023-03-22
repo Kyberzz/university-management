@@ -11,11 +11,17 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "groups", schema = "university")
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class GroupEntity implements Serializable {
     
     private static final long serialVersionUID = 1L;
@@ -25,9 +31,9 @@ public class GroupEntity implements Serializable {
     private Integer id;
     private String name;
     
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "group")
+    @OneToMany(mappedBy = "group")
     private List<TimetableEntity> timetableList;
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "group")
-    private List<StudentEntity> studentList;
+    private List<StudentEntity> students;
 }

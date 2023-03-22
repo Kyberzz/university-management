@@ -17,11 +17,17 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "timetable", schema = "university")
+@Table(name = "timetables", schema = "university")
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class TimetableEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
