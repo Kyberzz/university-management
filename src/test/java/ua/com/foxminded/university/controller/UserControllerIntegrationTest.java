@@ -107,7 +107,7 @@ class UserControllerIntegrationTest {
     @WithUserDetails(AUTHORIZED_EMAIL)
     void listAll_ShoulAuthenticateCredentialsAndReturnStatusIsOk() throws Exception {
         mockMvc.perform(get("/users/list"))
-               .andExpect(authenticated().withRoles(ADMIN))
+               .andExpect(authenticated().withRoles(Authority.ADMIN.toString()))
                .andExpect(status().isOk());
     }
     
