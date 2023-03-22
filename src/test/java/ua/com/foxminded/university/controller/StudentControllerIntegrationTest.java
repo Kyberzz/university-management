@@ -49,7 +49,7 @@ class StudentControllerIntegrationTest {
     private MockMvc mockMvc;
     
     @Autowired
-    PlatformTransactionManager transactionManager;
+    private PlatformTransactionManager transactionManager;
     
     @BeforeTransaction
     void init() {

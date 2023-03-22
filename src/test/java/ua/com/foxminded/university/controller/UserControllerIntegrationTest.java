@@ -46,10 +46,10 @@ class UserControllerIntegrationTest {
     public static final String AUTHORIZED_EMAIL = "authorized@email";
     
     @Autowired
-    WebApplicationContext context;
+    private WebApplicationContext context;
     
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
     
     @PersistenceUnit
     private EntityManagerFactory entityManagerFactory;
