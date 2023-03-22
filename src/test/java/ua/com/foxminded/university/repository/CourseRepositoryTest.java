@@ -46,8 +46,8 @@ class CourseRepositoryTest {
         entityManager.persist(course);
         
         TimetableEntity timetable = TimetableEntityMother.complete()
-                                         .course(course)
-                                         .build();
+                                                         .course(course)
+                                                         .build();
         entityManager.persist(timetable);
         entityManager.getTransaction().commit();
         entityManager.close();
@@ -55,16 +55,14 @@ class CourseRepositoryTest {
 
     @Test
     void findTimetableListById_ShouldReturnCourseWithTimetableList_WhenEnterCourseId() {
-        CourseEntity receivedCourse = courseRepository
-                .findTimetablesById(course.getId());
+        CourseEntity receivedCourse = courseRepository.findTimetablesById(course.getId());
         List<TimetableEntity> timetables = receivedCourse.getTimetables();
         assertEquals(TIMETABLES_QUANTITY, timetables.size());
     }
     
     @Test
     void findById_ShouldReturnCourseWithId() {
-        CourseEntity receivedCourse = courseRepository
-                .findById(course.getId().intValue());
+        CourseEntity receivedCourse = courseRepository.findById(course.getId().intValue());
         assertEquals(course.getId(), receivedCourse.getId());
     }
 }

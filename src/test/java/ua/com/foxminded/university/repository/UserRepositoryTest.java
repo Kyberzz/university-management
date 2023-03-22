@@ -24,7 +24,7 @@ import ua.com.foxminded.university.entitymother.UserEntityMother;
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 class UserRepositoryTest {
 
-    public static final String EMAIL = "some@email";
+    public static final String NOT_AUTHORIZED_EMAIL = "some@email";
     public static final int USERS_QUANTITY = 1;
 
     @Autowired
@@ -40,22 +40,18 @@ class UserRepositoryTest {
 
     @BeforeEach
     void init() {
-        persistedUser = new TransactionTemplate(transactionManager)
-                .execute(transactionStatus -> {
-            UserEntity user = UserEntityMother.complete().build();
-            return userRepository.save(user);
-        });
-        
         new TransactionTemplate(transactionManager).execute(transactionStatus -> {
+            UserEntity user = UserEntityMother.complete().build();
+            persistedUser = userRepository.saveAndFlush(user);
+            
             UserAuthorityEntity userAuthority = UserAuthorityEntity.builder()
                     .user(persistedUser)
                     .roleAuthority(RoleAuthority.ROLE_ADMIN)
                     .build();
-            return userAuthorityRepository.save(userAuthority);
-        });
-        
-        new TransactionTemplate(transactionManager).execute(transactionStatus -> {
-            UserEntity userHasNoAuthority = UserEntity.builder().email(EMAIL).build();
+            userAuthorityRepository.save(userAuthority);
+            
+            UserEntity userHasNoAuthority = UserEntity.builder()
+                    .email(NOT_AUTHORIZED_EMAIL).build();
             userRepository.save(userHasNoAuthority);
             return null;
         });

@@ -115,7 +115,6 @@ public class UserServiceImpl implements UserService<UserModel> {
                                                                         .getAuthority()))
                                              .disabled(!model.getEnabled())
                                              .build();
-
             userDetailsManager.updateUser(user);
         } catch (ConstraintViolationException  e) {
             throw new ServiceException("Updating user object fails.", e);

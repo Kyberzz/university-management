@@ -45,8 +45,7 @@ class UserControllerTest {
         mockMvc = MockMvcBuilders.standaloneSetup(new UserController(userServiceMock))
                                  .build();
         userAuthorit = UserAuthorityModel.builder()
-                .authority(Authority.ADMIN)
-                .build();
+                                         .authority(Authority.ADMIN).build();
         user = UserModelMother.complete().id(ID)
                                          .userAuthority(userAuthorit).build();
     }
@@ -55,9 +54,9 @@ class UserControllerTest {
     void authorize_ShouldReturnBadRequestResponseStatus() throws Exception {
         
         mockMvc.perform(post("/users/authorize").param("email", user.getEmail())
-                                                    .param("password", user.getPassword())
-                                                    .param("passwordConfirm", user.getPassword())
-                                                    .content(BAD_CONTENT))
+                                                .param("password", user.getPassword())
+                                                .param("passwordConfirm", user.getPassword())
+                                                .content(BAD_CONTENT))
                .andExpect(status().is4xxClientError())
                .andExpect(view().name("error"));
     }

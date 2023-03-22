@@ -52,8 +52,7 @@ class TeacherRepositoryTest {
     }
     
     @Test
-    void findCoursesById_ShouldReturnCoursesOwnedByTeacherWithId() 
-            throws RepositoryException {
+    void findCoursesById_ShouldReturnCoursesOwnedByTeacherWithId() throws RepositoryException {
         TeacherEntity receivedTeacher = teacherRepository.findCoursesById(teacher.getId());
         assertEquals(COURSES_QUANTITY, receivedTeacher.getCourses().size());
     }

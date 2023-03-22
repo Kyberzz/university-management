@@ -12,6 +12,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.transaction.AfterTransaction;
 import org.springframework.test.context.transaction.BeforeTransaction;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -53,8 +54,7 @@ class StudentControllerIntegrationTest {
     
     @BeforeTransaction
     void init() {
-        new TransactionTemplate(transactionManager)
-                .execute(transactionStatus -> {
+        new TransactionTemplate(transactionManager).execute(transactionStatus -> {
             userRepository.deleteAll();
             UserEntity user = UserEntityMother.complete().build();
             userRepository.saveAndFlush(user);
@@ -64,6 +64,11 @@ class StudentControllerIntegrationTest {
             userAuthorityRepository.save(userAuthority);
             return null;
         });
+    }
+    
+    @AfterTransaction
+    void cleanUp() {
+        userRepository.deleteAll();
     }
     
     @BeforeEach

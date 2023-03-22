@@ -68,12 +68,10 @@ class UserServiceImplTest {
         entity = UserEntityMother.complete().build();
         PersonModel personModel = PersonModelMother.complete().build();
         UserAuthorityModel userAuthorityModel = UserAuthorityModel.builder()
-                .authority(Authority.ADMIN)
-                .build();
+                .authority(Authority.ADMIN).build();
         model = UserModelMother.complete()
                                .person(personModel)
-                               .userAuthority(userAuthorityModel)
-                               .build();
+                               .userAuthority(userAuthorityModel).build();
         entities = new ArrayList<>();
         entities.add(entity);
     }

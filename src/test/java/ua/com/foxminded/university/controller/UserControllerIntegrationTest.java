@@ -93,12 +93,13 @@ class UserControllerIntegrationTest {
         UserAuthorityModel userAuthority = UserAuthorityModel.builder()
                 .authority(Authority.STAFF).build();
         UserModel model = UserModel.builder()
-                .email(authorizedEntity.getEmail())
-                .enabled(false)
-                .userAuthority(userAuthority).build();
+                                   .email(authorizedEntity.getEmail())
+                                   .enabled(false)
+                                   .userAuthority(userAuthority).build();
 
         mockMvc.perform(post("/users/edit").with(csrf())
-                                           .param("userId", authorizedEntity.getId().toString())
+                                           .param("userId", authorizedEntity.getId()
+                                                                            .toString())
                                            .flashAttr("userModel", model))
                .andExpect(status().is3xxRedirection());
     }

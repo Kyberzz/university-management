@@ -40,9 +40,8 @@ public class CourseServiceImpl implements CourseService<CourseModel> {
     
     @Override
     public void updateCourse(CourseModel courseModel) throws ServiceException {
-        ModelMapper modelMapper = new ModelMapper();
-        
         try {
+            ModelMapper modelMapper = new ModelMapper();
             CourseEntity courseEntity = modelMapper.map(courseModel, CourseEntity.class);
             courseRepository.save(courseEntity);
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
@@ -52,14 +51,12 @@ public class CourseServiceImpl implements CourseService<CourseModel> {
    
     @Override
     public CourseModel getTimetableListByCourseId(int id) throws ServiceException {
-        CourseModel course = null;
         try {
             CourseEntity courseEntity = courseRepository.findTimetablesById(id);
             ModelMapper modelMapper = new ModelMapper();
-            course = modelMapper.map(courseEntity, CourseModel.class);
+            return modelMapper.map(courseEntity, CourseModel.class);
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
             throw new ServiceException("Getting timetable list of the course id was failed", e);
         }
-        return course;
     }
 }
