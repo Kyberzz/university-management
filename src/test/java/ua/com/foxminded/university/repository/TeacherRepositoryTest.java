@@ -2,6 +2,9 @@ package ua.com.foxminded.university.repository;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.Arrays;
+import java.util.HashSet;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceContext;
@@ -11,6 +14,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ActiveProfiles;
 
 import ua.com.foxminded.university.entity.CourseEntity;
@@ -21,6 +26,7 @@ import ua.com.foxminded.university.exception.RepositoryException;
 
 @DataJpaTest
 @ActiveProfiles("test")
+@DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 class TeacherRepositoryTest {
     
     private static final int COURSES_QUANTITY = 1;
@@ -38,15 +44,17 @@ class TeacherRepositoryTest {
     private CourseEntity course;
     
     @BeforeEach
-    void init() {
+    void setUp() {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
         
         teacher = TeacherEntityMother.complete().build();
         entityManager.persist(teacher);
-        
-        course = CourseEntityMother.complete().teacher(teacher).build();
+        course = CourseEntityMother.complete().build();
+        course.setTeachers(new HashSet<>(Arrays.asList(teacher)));
         entityManager.persist(course);
+        teacher.setCourses(new HashSet<>(Arrays.asList(course)));
+        entityManager.persist(teacher);
         entityManager.getTransaction().commit();
         entityManager.close();
     }
@@ -54,7 +62,7 @@ class TeacherRepositoryTest {
     @Test
     void findCoursesById_ShouldReturnCoursesOwnedByTeacherWithId() 
             throws RepositoryException {
-        TeacherEntity receivedTeacher = teacherRepository.findCoursesById(teacher.getId());
+        TeacherEntity receivedTeacher = teacherRepository.findById(teacher.getId().intValue());
         assertEquals(COURSES_QUANTITY, receivedTeacher.getCourses().size());
     }
     
