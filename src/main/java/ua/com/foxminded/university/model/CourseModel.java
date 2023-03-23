@@ -14,5 +14,5 @@ public class CourseModel implements Serializable {
     private String name;
     private String description;
     private TeacherModel teacher;
-    private List<TimetableModel> timetableList;
+    private List<TimetableModel> timetables;
 }

@@ -35,6 +35,8 @@ spring:
   sql:
     init:
       mode: always
+  flyway:
+    enabled: true
 logging:
   level:
     root: warn
@@ -64,7 +66,7 @@ spring:
       mode: embedded
       platform: h2
   jpa:
-    show-sql: true
+    show-sql: false
     database-platform: H2
     generate-ddl: true
 logging:

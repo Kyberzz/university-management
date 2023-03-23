@@ -1,21 +1,20 @@
 package ua.com.foxminded.university.entity;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Entity
@@ -24,6 +23,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(exclude = "teachers")
 public class CourseEntity implements Serializable {
     
     private static final long serialVersionUID = 1L;
@@ -34,10 +34,9 @@ public class CourseEntity implements Serializable {
     private String name;
     private String description;
     
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "teacher_id")
-    private TeacherEntity teacher;
+    @ManyToMany(mappedBy = "courses")
+    private Set<TeacherEntity> teachers;
     
     @OneToMany(mappedBy = "course")
-    private List<TimetableEntity> timetables;
+    private Set<TimetableEntity> timetables;
 }
