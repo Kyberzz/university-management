@@ -26,7 +26,6 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(exclude = "courses")
 public class TeacherEntity implements Serializable {
     
     private static final long serialVersionUID = 1L;
@@ -40,9 +39,11 @@ public class TeacherEntity implements Serializable {
             name = "teacher_course", 
             joinColumns = @JoinColumn(name = "teacher_id", referencedColumnName="id"),
             inverseJoinColumns = @JoinColumn(name = "course_id", referencedColumnName = "id"))
+    @EqualsAndHashCode.Exclude
     private Set<CourseEntity> courses;
     
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
+    @EqualsAndHashCode.Exclude
     private UserEntity user;
 }

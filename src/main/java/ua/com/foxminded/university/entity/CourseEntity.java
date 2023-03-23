@@ -23,7 +23,6 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(exclude = "teachers")
 public class CourseEntity implements Serializable {
     
     private static final long serialVersionUID = 1L;
@@ -35,8 +34,10 @@ public class CourseEntity implements Serializable {
     private String description;
     
     @ManyToMany(mappedBy = "courses")
+    @EqualsAndHashCode.Exclude
     private Set<TeacherEntity> teachers;
     
     @OneToMany(mappedBy = "course")
+    @EqualsAndHashCode.Exclude
     private Set<TimetableEntity> timetables;
 }

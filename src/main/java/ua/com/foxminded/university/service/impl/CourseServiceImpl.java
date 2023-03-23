@@ -24,24 +24,49 @@ import ua.com.foxminded.university.service.CourseService;
 public class CourseServiceImpl implements CourseService<CourseModel> {
     
     private final CourseRepository courseRepository;
+    private final ModelMapper modelMapper;
+    
+    private static final Type TYPE = new TypeToken<List<CourseModel>>() {}.getType();
     
     @Override
-    public List<CourseModel> getAllCourses() throws ServiceException {
+    public CourseModel getById(int id) throws ServiceException {
+        try {
+            CourseEntity entity = courseRepository.findById(id);
+            return modelMapper.map(entity, CourseModel.class); 
+        } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
+            throw new ServiceException("Getting a course by its id fails", e);
+        }
+    }
+    
+    @Override
+    public void deleteById(int id) {
+        courseRepository.deleteById(id);
+    }
+    
+    @Override
+    public void create(CourseModel model) throws ServiceException {
+        try {
+            CourseEntity entity = modelMapper.map(model, CourseEntity.class);
+            courseRepository.saveAndFlush(entity);
+        } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
+            throw new ServiceException("Creating the course fails", e);
+        }
+    }
+    
+    @Override
+    public List<CourseModel> getAll() throws ServiceException {
         try {
             List<CourseEntity> courseEntities = courseRepository.findAll();
-            Type listType = new TypeToken<List<CourseModel>>() {}.getType();
-            ModelMapper modelMapper = new ModelMapper();
             modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-            return modelMapper.map(courseEntities, listType);
+            return modelMapper.map(courseEntities, TYPE);
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
             throw new ServiceException("Getting all courses was failed.", e); 
         }
     }
     
     @Override
-    public void updateCourse(CourseModel courseModel) throws ServiceException {
+    public void update(CourseModel courseModel) throws ServiceException {
         try {
-            ModelMapper modelMapper = new ModelMapper();
             CourseEntity courseEntity = modelMapper.map(courseModel, CourseEntity.class);
             courseRepository.save(courseEntity);
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
@@ -53,7 +78,6 @@ public class CourseServiceImpl implements CourseService<CourseModel> {
     public CourseModel getTimetableListByCourseId(int id) throws ServiceException {
         try {
             CourseEntity courseEntity = courseRepository.findTimetablesById(id);
-            ModelMapper modelMapper = new ModelMapper();
             return modelMapper.map(courseEntity, CourseModel.class);
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
             throw new ServiceException("Getting timetable list of the course id was failed", e);

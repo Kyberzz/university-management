@@ -55,14 +55,58 @@
        <th scope="col" th:text="#{thead.courseName}">Course name</th>
        <th scope="col" th:text="#{thead.description}">Description</th>
        <th scope="col" th:text="#{courses.courseId}">ID</th>
+       <th scope="col"></th>
       </tr>
      </thead>
      <tbody>
-      <tr th:each="cours,iterationStatus : ${courses}">
+      <tr th:each="course,iterationStatus : ${courses}">
        <th scope="row" th:text="${iterationStatus.count}">1</th>
-       <td th:text="${cours.name}">Programming</td>
-       <td th:text="${cours.description}">some description</td>
-       <td th:text="${cours.id}">1</td>
+       <td><a th:href="@{/courses/__${course.id}__}"
+        th:text="${course.name}">Programming</a></td>
+       <td th:text="${course.description}">some description</td>
+       <td th:text="${course.id}">1</td>
+       <td class="text-start">
+        <button type="button" class="btn btn-outline-danger btn-sm"
+         th:text="#{button.delete}" data-bs-toggle="modal"
+         th:data-bs-target="|#delete${iterationStatus.index}|">Delete</button>
+
+        <form class="modal fade" method="post"
+         th:id="|delete${iterationStatus.index}|"
+         th:action="@{/couses/delete}" data-bs-backdrop="static"
+         data-bs-keyboard="false" tabindex="-1"
+         aria-labelledby="staticBackdropLabel" aria-hidden="true">
+         <div class="modal-dialog">
+          <div class="modal-content">
+           <div class="modal-header">
+            <h1 class="modal-title fs-5" id="sataticBackdropLabel"
+             th:text="#{courses.deleteCourse}">Delete the course</h1>
+            <button type="button" class="btn-close"
+             data-bs-dismiss="modal" aria-label="Close"></button>
+           </div>
+           <div class="modal-body">
+            <div class="container-fluid">
+             <div class="row text-start mt-2">
+              <div class="col-5" th:text="|#{thead.courseId}:|">Course
+               ID:</div>
+              <div class="col-7" th:text="${course.id}">1</div>
+             </div>
+             <div class="row text-start mt-2">
+              <div class="col-5" th:text="|#{thead.courseName}:|">Course
+               name:</div>
+              <div class="col-7" th:text="${course.name}">Programming</div>
+             </div>
+            </div>
+           </div>
+           <div class="modal-footer">
+            <button type="button" class="btn btn-secondary"
+             data-bs-dismiss="modal" th:text="#{button.close}">Close</button>
+            <button type="submit" class="btn btn-primary"
+             th:text="#{button.confirm}">Confirm deleting</button>
+           </div>
+          </div>
+         </div>
+        </form>
+       </td>
       </tr>
      </tbody>
     </table>
