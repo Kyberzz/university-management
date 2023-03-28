@@ -10,7 +10,7 @@ public interface TimetableService<T> {
 
     public static final String HAS_ROLE_STAFF_OR_ADMIN = "hasAnyRole('STAFF', 'ADMIN')";
     
-    public List<T> getAllTimetables() throws ServiceException;
+    public List<T> getAll() throws ServiceException;
     
     @PreAuthorize(HAS_ROLE_STAFF_OR_ADMIN)
     public void updateTimetable(T model) throws ServiceException;

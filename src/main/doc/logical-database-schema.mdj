@@ -815,7 +815,7 @@
 											"top": 222,
 											"width": 164.048828125,
 											"height": 14,
-											"text": "+startTime: long",
+											"text": "+lessonOrder: String",
 											"horizontalAlignment": 0
 										},
 										{
@@ -827,6 +827,7 @@
 											"model": {
 												"$ref": "AAAAAAGCIN+5d0Gwv6g="
 											},
+											"visible": false,
 											"fillColor": "#777676",
 											"font": "Arial;14;0",
 											"showShadow": false,
@@ -850,7 +851,7 @@
 											"font": "Arial;14;0",
 											"showShadow": false,
 											"left": 482,
-											"top": 254,
+											"top": 238,
 											"width": 164.048828125,
 											"height": 14,
 											"text": "+description: String",
@@ -869,7 +870,7 @@
 											"font": "Arial;14;0",
 											"showShadow": false,
 											"left": 482,
-											"top": 270,
+											"top": 254,
 											"width": 164.048828125,
 											"height": 14,
 											"text": "+weekDay: String",
@@ -882,7 +883,7 @@
 									"left": 477,
 									"top": 169,
 									"width": 174.048828125,
-									"height": 120
+									"height": 104
 								},
 								{
 									"_type": "UMLOperationCompartmentView",
@@ -897,7 +898,7 @@
 									"font": "Arial;14;0",
 									"showShadow": false,
 									"left": 477,
-									"top": 289,
+									"top": 273,
 									"width": 174.048828125,
 									"height": 10
 								},
@@ -6208,8 +6209,8 @@
 							"_parent": {
 								"$ref": "AAAAAAGCINr1mz4JWSk="
 							},
-							"name": "startTime",
-							"type": "long"
+							"name": "lessonOrder",
+							"type": "String"
 						},
 						{
 							"_type": "UMLAttribute",
