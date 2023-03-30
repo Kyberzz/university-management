@@ -60,14 +60,16 @@ class TimetableServiceImplTest {
                 any(Type.class));
     }
     
+    @Test
     void updateTimetable_ShouldExecuteCorrectCallsQuantity() throws ServiceException {
-        when(modelMapperMock.map(any(), any())).thenReturn(entity);
         TimetableModel model = new TimetableModel();
+        model.setDescription("asdf");
+        when(modelMapperMock.map(model, TimetableEntity.class)).thenReturn(entity);
         timetableSerivice.updateTimetable(model);
+        
         InOrder inOrder = Mockito.inOrder(modelMapperMock, timetableRepositoryMock);
         
-        inOrder.verify(modelMapperMock, times(1)).map(isA(TimetableModel.class), 
-                                                      TimetableEntity.class);
+        inOrder.verify(modelMapperMock, times(1)).map(model,  TimetableEntity.class);
         inOrder.verify(timetableRepositoryMock, times(1)).save(isA(TimetableEntity.class));
     }
 }

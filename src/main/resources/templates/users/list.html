@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" xmlns:th="https://www.thymeleaf.org/">
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -13,9 +13,16 @@
 <body>
  <div th:replace="~{fragments/header::navigationBar}"></div>
 
+ <nav class="ms-2" aria-label="breadcrumb" th:fragment="page-path">
+  <ol class="breadcrumb container-fluid">
+   <li class="breadcrumb-item"><a th:href="@{/}" th:text="#{href.home}">Home</a></li>
+   <li class="breadcrumb-item active" aria-current="page" th:text="#{users.pageName}">1</li>
+  </ol>
+ </nav>
+
  <div class="container">
   <div class="row">
-   <p class="text-center fs-1 mt-5" th:text="#{users.tableName}">All
+   <p class="text-center fs-4" th:text="#{users.tableName}">All
     users of the university</p>
   </div>
   <div class="row justify-content-center">

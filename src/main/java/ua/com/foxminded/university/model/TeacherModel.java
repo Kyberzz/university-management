@@ -11,7 +11,6 @@ public class TeacherModel implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private Integer id;
-    private String firstName;
-    private String lastName;
+    private PersonModel person;
     private List<CourseModel> courseList;
 }

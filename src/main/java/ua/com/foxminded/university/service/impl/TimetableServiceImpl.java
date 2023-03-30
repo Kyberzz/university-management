@@ -40,8 +40,7 @@ public class TimetableServiceImpl implements TimetableService<TimetableModel> {
     @Override
     public void updateTimetable(TimetableModel timetableModel) throws ServiceException {
         try {
-            TimetableEntity timetableEntity = modelMapper.map(timetableModel, 
-                                                              TimetableEntity.class);
+            TimetableEntity timetableEntity = modelMapper.map(timetableModel, TimetableEntity.class);
             timetableRepository.save(timetableEntity);
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
             throw new ServiceException("Updating the timetable failed.", e);

@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -12,41 +12,53 @@
 </head>
 <body>
  <div th:replace="~{fragments/header::navigationBar}"></div>
+ 
+ <nav class="ms-2" aria-label="breadcrumb" th:fragment="page-path">
+  <ol class="breadcrumb container-fluid">
+   <li class="breadcrumb-item"><a th:href="@{/}" th:text="#{href.home}">Home</a></li>
+   <li class="breadcrumb-item active" aria-current="page" th:text="#{href.courses}">Courses</li>
+  </ol>
+ </nav>
 
- <div class="offcanvas offcanvas-top" tabindex="-1" id="add"
-  aria-labelledy="offcanvasTopLabel">
-  <div class="offcanvas-header">
-   <h5 class="offcanvas-title" th:text="#{courses.addCourse}">Add
-    student</h5>
-   <button type="button" class="btn-close" data-bs-dismiss="offcanvas"
-    aria-label="close"></button>
+ <div class="modal fade" id="add" tabindex="-1"
+  aria-labelledby="addCourse" aria-hidden="true">
+  <div class="modal-dialog">
+   <form class="modal-content" th:action="@{/courses/create}"
+    th:object="${course}" method="post">
+    <div class="modal-header">
+     <h1 class="modal-title fs-5" id="addCourse"
+      th:text="#{courses.addCourse}">Add a course</h1>
+     <button type="button" class="btn-close" data-bs-dismiss="modal"
+      aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+     <div class="container-fluid">
+      <div class="row form-floating mb-3">
+       <input type="text" class="form-control" id="floatingInput"
+        placeholder="#" th:field="*{name}"> <label
+        for="floatingInput" th:text="|#{thead.courseName}:|">Course
+        name:</label>
+      </div>
+      <div class="row from-floating mb-3">
+       <textarea class="form-control" th:field="*{description}"
+        th:placeholder="|#{thead.description}...|"></textarea>
+      </div>
+     </div>
+    </div>
+    <div class="modal-footer">
+     <button type="button" class="btn btn-secondary"
+      data-bs-dismiss="modal">Close</button>
+     <button type="submit" class="btn btn-primary"
+      th:text="#{button.saveChange}">Save changes</button>
+    </div>
+   </form>
   </div>
-  <div class="offcanvas-body">My content</div>
  </div>
- <div class="offcanvas offcanvas-top" tabindex="-1" id="delete"
-  aria-labelledy="offcanvasTopLabel">
-  <div class="offcanvas-header">
-   <h5 class="offcanvas-title" th:text="#{courses.deleteCourse}">Delete
-    student</h5>
-   <button type="button" class="btn-close" data-bs-dismiss="offcanvas"
-    aria-label="close"></button>
-  </div>
-  <div class="offcanvas-body">My content</div>
- </div>
- <div class="offcanvas offcanvas-top" tabindex="-1" id="edit"
-  aria-labelledy="offcanvasTopLabel">
-  <div class="offcanvas-header">
-   <h5 class="offcanvas-title" th:text="#{courses.editCourse}">Edit
-    a course</h5>
-   <button type="button" class="btn-close" data-bs-dismiss="offcanvas"
-    aria-label="close"></button>
-  </div>
-  <div class="offcanvas-body">My content</div>
- </div>
+
  <div class="container">
   <div class="row justify-content-md-center">
    <div class="col-10">
-    <p class="text-center fs-1 mt-5" th:text="#{courses.tableName}">All
+    <p class="text-center fs-4" th:text="#{courses.tableName}">All
      courses of the university</p>
     <table class="table">
      <thead>

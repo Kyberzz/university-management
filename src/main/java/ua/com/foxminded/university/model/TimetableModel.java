@@ -16,8 +16,6 @@ public class TimetableModel implements Serializable {
     private Integer id;
     private LessonOrder lessonOrder;
     private LessonPeriod lessonPeriod;
-//    private LocalTime startTime;
-//    private LocalTime endTime;
     private String description;
     private DayOfWeek dayOfWeek;
     private CourseModel course;
