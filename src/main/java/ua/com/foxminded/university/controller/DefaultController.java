@@ -20,7 +20,6 @@ public class DefaultController {
     public ModelAndView serviceExceptionHandler(HttpServletRequest request, ServiceException e) {
         ModelAndView modelAndView = new ModelAndView();
         log.error("The controller class method fails.", e);
-
         modelAndView.addObject("url", request.getRequestURI());
         modelAndView.setViewName("error");
         return modelAndView;

@@ -2,7 +2,6 @@ package ua.com.foxminded.university.model;
 
 import java.io.Serializable;
 import java.time.DayOfWeek;
-import java.time.LocalTime;
 
 import lombok.Data;
 import ua.com.foxminded.university.entity.LessonOrder;

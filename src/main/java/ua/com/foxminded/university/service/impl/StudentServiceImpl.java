@@ -2,11 +2,6 @@ package ua.com.foxminded.university.service.impl;
 
 import java.lang.reflect.Type;
 import java.util.List;
-import java.util.Set;
-
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
-import javax.validation.Validator;
 
 import org.modelmapper.ConfigurationException;
 import org.modelmapper.MappingException;
@@ -29,7 +24,6 @@ import ua.com.foxminded.university.service.StudentService;
 public class StudentServiceImpl implements StudentService<StudentModel> {
     
     private final StudentRepository studentRepository;
-    private final Validator validator;
     
     @Override
     public void deleteStudentById(int id) throws ServiceException {
@@ -43,15 +37,9 @@ public class StudentServiceImpl implements StudentService<StudentModel> {
     @Override
     public void updateStudent(StudentModel studentModel) throws ServiceException {
         try {
-            Set<ConstraintViolation<StudentModel>> violations = validator.validate(studentModel);
-            
-            if (!violations.isEmpty()) {
-                throw new ConstraintViolationException(violations);
-            } else {
-                ModelMapper modelMapper = new ModelMapper();
-                StudentEntity studentEntity = modelMapper.map(studentModel, StudentEntity.class);
-                studentRepository.save(studentEntity);
-            }
+            ModelMapper modelMapper = new ModelMapper();
+            StudentEntity studentEntity = modelMapper.map(studentModel, StudentEntity.class);
+            studentRepository.save(studentEntity);
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
             throw new ServiceException("The student was not added to the database", e);
         }

@@ -47,6 +47,6 @@ public class UserEntity implements Serializable {
     private StaffEntity staff;
     
     @OneToOne(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE, 
-               orphanRemoval = true)
+              orphanRemoval = true)
     private UserAuthorityEntity userAuthority;
 }

@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindException;
@@ -26,9 +25,6 @@ import ua.com.foxminded.university.service.CourseService;
 @RequestMapping("/courses")
 public class CourseController extends DefaultController {
     
-//    public static final String HAS_ROLE_ADMIN = "hasRole('ADMIN')";
-//    public static final String HAS_ROLE_STAFF_OR_ADMIN = "hasRole('STAFF', 'ADMIN')";
-
     private final CourseService<CourseModel> courseService;
     
     @GetMapping("/{id}")
