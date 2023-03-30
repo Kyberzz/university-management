@@ -23,10 +23,10 @@ import ua.com.foxminded.university.service.CourseService;
 @RequiredArgsConstructor
 public class CourseServiceImpl implements CourseService<CourseModel> {
     
+    private static final Type TYPE = new TypeToken<List<CourseModel>>() {}.getType();
+
     private final CourseRepository courseRepository;
     private final ModelMapper modelMapper;
-    
-    private static final Type TYPE = new TypeToken<List<CourseModel>>() {}.getType();
     
     @Override
     public CourseModel getById(int id) throws ServiceException {

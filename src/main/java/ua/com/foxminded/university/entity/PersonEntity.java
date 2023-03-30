@@ -20,8 +20,8 @@ public class PersonEntity implements Serializable {
     private static final long serialVersionUID = 1L;
     
     @Column(name = "first_name")
-    String firstName;
+    private String firstName;
     
     @Column(name = "last_name")
-    String lastName;
+    private String lastName;
 }

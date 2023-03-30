@@ -70,7 +70,6 @@ public class CourseController extends DefaultController {
         if (bindingResult.hasErrors()) {
             throw new BindException(bindingResult);
         }
-
         courseService.create(course);   
         return "courses/list";
     }

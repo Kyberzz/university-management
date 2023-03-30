@@ -68,26 +68,26 @@ public class TimetableConverter implements Converter<TimetableEntity, TimetableM
     
     private LessonPeriodRange getLessonsPeriodRange(PropertiesCache lessonsPeriodCache) {
         LessonPeriodRange range = new LessonPeriodRange();
-        LocalTime firstStart = LocalTime.parse(
-                lessonsPeriodCache.getProperty(FIRST_LESSON_START_TIME));
-        LocalTime firstEnd = LocalTime.parse(
-                lessonsPeriodCache.getProperty(FIRST_LESSON_END_TIME));
-        LocalTime secondStart = LocalTime.parse(
-                lessonsPeriodCache.getProperty(SECOND_LESSON_START_TIME));
-        LocalTime secondEnd = LocalTime.parse(
-                lessonsPeriodCache.getProperty(SECOND_LESSON_END_TIME));
-        LocalTime thirdStart = LocalTime.parse(
-                lessonsPeriodCache.getProperty(THIRD_LESSON_START_TIME));
-        LocalTime thirdEnd = LocalTime.parse(
-                lessonsPeriodCache.getProperty(THIRD_LESSON_END_TIME));
-        LocalTime fourthStart = LocalTime.parse(
-                lessonsPeriodCache.getProperty(FOURTH_LESSON_START_TIME));
-        LocalTime fourthEnd = LocalTime.parse(
-                lessonsPeriodCache.getProperty(FOURTH_LESSON_END_TIME));
-        LocalTime fifthStart = LocalTime.parse(
-                lessonsPeriodCache.getProperty(FIFTH_LESSON_START_TIME));
-        LocalTime fifthEnd = LocalTime.parse(
-                lessonsPeriodCache.getProperty(FIFTH_LESSON_END_TIME));
+        LocalTime firstStart = LocalTime.parse(lessonsPeriodCache
+                .getProperty(FIRST_LESSON_START_TIME));
+        LocalTime firstEnd = LocalTime.parse(lessonsPeriodCache
+                .getProperty(FIRST_LESSON_END_TIME));
+        LocalTime secondStart = LocalTime.parse(lessonsPeriodCache
+                .getProperty(SECOND_LESSON_START_TIME));
+        LocalTime secondEnd = LocalTime.parse(lessonsPeriodCache
+                .getProperty(SECOND_LESSON_END_TIME));
+        LocalTime thirdStart = LocalTime.parse(lessonsPeriodCache
+                .getProperty(THIRD_LESSON_START_TIME));
+        LocalTime thirdEnd = LocalTime.parse(lessonsPeriodCache
+                .getProperty(THIRD_LESSON_END_TIME));
+        LocalTime fourthStart = LocalTime.parse(lessonsPeriodCache
+                .getProperty(FOURTH_LESSON_START_TIME));
+        LocalTime fourthEnd = LocalTime.parse(lessonsPeriodCache
+                .getProperty(FOURTH_LESSON_END_TIME));
+        LocalTime fifthStart = LocalTime.parse(lessonsPeriodCache
+                .getProperty(FIFTH_LESSON_START_TIME));
+        LocalTime fifthEnd = LocalTime.parse(lessonsPeriodCache
+                .getProperty(FIFTH_LESSON_END_TIME));
         
         range.setFirstLessonPeriod(new LessonPeriod());
         range.setSecondLessonPeriod(new LessonPeriod());
