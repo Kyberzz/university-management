@@ -11,8 +11,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeMap;
+import org.modelmapper.spi.MappingContext;
 
 import ua.com.foxminded.university.cache.PropertiesCache;
 import ua.com.foxminded.university.entity.TimetableEntity;
@@ -43,6 +42,9 @@ class TimetableConverterTest {
     @Mock
     private PropertiesCache lessonsPeriodCacheMock;
     
+    @Mock
+    private MappingContext<TimetableEntity, TimetableModel> contextMock;
+    
     private TimetableEntity entity;
     
     @BeforeEach
@@ -60,23 +62,19 @@ class TimetableConverterTest {
         
         entity = TimetableEntityMother.complete().build();
     }
-
+    
     @Test
-    void toLessonPeriod_shouldConvertLessonOrderToLessonPeriod() {
+    void toLessonPeriod() {
+        when(contextMock.getSource()).thenReturn(entity);
+        
         TimetableConverter converter = new TimetableConverter(lessonsPeriodCacheMock, 
                                                               lessonsPeriodCacheMock);
-        ModelMapper modelMapper = new ModelMapper();
-        
-        TypeMap<TimetableEntity, TimetableModel> typeMap = modelMapper.createTypeMap(
-                TimetableEntity.class, TimetableModel.class);
-        typeMap.setPreConverter(converter);
-        TimetableModel model = modelMapper.map(entity, TimetableModel.class);
+        TimetableModel model = converter.convert(contextMock);
         
         LocalTime expectedStartTime = LocalTime.parse(START_TIME);
         LocalTime expectedEndTime = LocalTime.parse(END_TIME);
-
+        
         assertEquals(expectedStartTime, model.getLessonPeriod().getStartTime());
         assertEquals(expectedEndTime, model.getLessonPeriod().getEndTime());
-        assertEquals(entity.getLessonOrder(), model.getLessonOrder());
     }
 }

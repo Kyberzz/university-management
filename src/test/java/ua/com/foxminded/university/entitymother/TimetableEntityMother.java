@@ -12,7 +12,6 @@ public class TimetableEntityMother {
     public static TimetableEntity.TimetableEntityBuilder complete() {
         return TimetableEntity.builder().dayOfWeek(DayOfWeek.MONDAY)
                                         .description(TIMETABLE_DESCRIPTION)
-                                        .lessonOrder(LessonOrder.FIFTH_LESSON)
-                                        .lessonOrder(LessonOrder.FIRST_LESSON);
+                                        .lessonOrder(LessonOrder.FIFTH_LESSON);
     }
 }
