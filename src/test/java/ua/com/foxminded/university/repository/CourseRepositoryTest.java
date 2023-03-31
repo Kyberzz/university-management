@@ -2,7 +2,7 @@ package ua.com.foxminded.university.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.List;
+import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -54,9 +54,10 @@ class CourseRepositoryTest {
     }
 
     @Test
-    void findTimetableListById_ShouldReturnCourseWithTimetableList_WhenEnterCourseId() {
-        CourseEntity receivedCourse = courseRepository.findTimetablesById(course.getId());
-        List<TimetableEntity> timetables = receivedCourse.getTimetables();
+    void findTimetablesById_ShouldReturnCourseWithTimetableList_WhenEnterCourseId() {
+        CourseEntity receivedCourse = courseRepository
+                .findTimetablesById(course.getId());
+        Set<TimetableEntity> timetables = receivedCourse.getTimetables();
         assertEquals(TIMETABLES_QUANTITY, timetables.size());
     }
     

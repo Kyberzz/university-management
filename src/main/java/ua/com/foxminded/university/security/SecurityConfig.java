@@ -5,7 +5,6 @@ import javax.sql.DataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
@@ -15,7 +14,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import lombok.RequiredArgsConstructor;
 
 @EnableWebSecurity
-@EnableMethodSecurity
 @RequiredArgsConstructor
 @PropertySource("classpath:security-config-queries.properties")
 public class SecurityConfig {
@@ -56,11 +54,11 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(request -> request
                 .mvcMatchers("/", "/index", "/images/**").permitAll()
-                .mvcMatchers("/timetables/**").hasAnyRole(STUDENT, TEACHER, STAFF, ADMIN)
-                .mvcMatchers("/teachers/**").hasAnyRole(TEACHER, STAFF, ADMIN)
-                .mvcMatchers("/students/**").hasAnyRole(TEACHER, STAFF, ADMIN)
-                .mvcMatchers("/groups/**").hasAnyRole(TEACHER, STAFF, ADMIN)
-                .mvcMatchers("/courses/**").hasAnyRole(TEACHER, STAFF, ADMIN)
+                .mvcMatchers("/timetables/**").hasAnyRole(ADMIN)
+                .mvcMatchers("/teachers/**").hasAnyRole(ADMIN)
+                .mvcMatchers("/students/**").hasAnyRole(ADMIN)
+                .mvcMatchers("/groups/**").hasAnyRole(ADMIN)
+                .mvcMatchers("/courses/**").hasAnyRole(ADMIN)
                 .mvcMatchers("/users/**").hasAnyRole(ADMIN)
                 .anyRequest().authenticated())
             .formLogin(form -> form.loginPage("/login").permitAll())

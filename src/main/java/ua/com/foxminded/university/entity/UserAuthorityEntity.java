@@ -31,7 +31,7 @@ public class UserAuthorityEntity implements Serializable {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Integer id;
+    private Integer id;
     
     @Enumerated(EnumType.STRING)
     @Column(name = "authority")

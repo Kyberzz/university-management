@@ -17,13 +17,13 @@ import ua.com.foxminded.university.service.UserAuthorityService;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class UserAuthorityServiceImpl implements UserAuthorityService<UserAuthorityModel> {
+public class UserAuthorityServiceImpl implements UserAuthorityService {
     
     private final UserAuthorityRepository userAuthorityRepository;
     
     @Override
-    public UserAuthorityModel saveUserAuthority(
-            UserAuthorityModel model) throws ServiceException {
+    public UserAuthorityModel saveUserAuthority(UserAuthorityModel model) 
+            throws ServiceException {
         try {
             ModelMapper modelMapper = new ModelMapper();
             UserAuthorityEntity entity = modelMapper.map(model, UserAuthorityEntity.class);

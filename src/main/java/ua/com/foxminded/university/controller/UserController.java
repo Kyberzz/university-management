@@ -24,7 +24,7 @@ import ua.com.foxminded.university.service.UserService;
 @RequiredArgsConstructor
 public class UserController extends DefaultController {
     
-    private final UserService<UserModel> userService;
+    private final UserService userService;
 
     @PostMapping(value = "/delete", params = "email")
     public String delete(@RequestParam String email) throws ServiceException {
@@ -42,7 +42,7 @@ public class UserController extends DefaultController {
         UserModel persistedUser = userService.getById(userId);
         persistedUser.setEnabled(userModel.getEnabled());
         persistedUser.setUserAuthority(userModel.getUserAuthority());
-        userService.updateUser(persistedUser);
+        userService.update(persistedUser);
         return "redirect:/users/list";
     }
 
@@ -78,7 +78,7 @@ public class UserController extends DefaultController {
         }
         
         userModel.setPassword(password);
-        userService.updateUser(userModel);
+        userService.update(userModel);
         return "redirect:/users/list";
     }
 }

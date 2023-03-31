@@ -13,10 +13,11 @@
 <body>
  <nav class="navbar bg-body-tertiary sticky-top"
   th:fragment="navigationBar">
+  
   <div class="ms-2" th:insert="~{fragments/logo::foxmindedLogo}"></div>
 
   <div class="justify-content-center"
-   th:if="${#execInfo.processedTemplateName != 'index' and #execInfo.processedTemplateName != 'users/list'}">
+   th:if ="!${#execInfo.processedTemplateName matches 'index|users/list|courses/course'}">
    <div class="container-fluid gap-2">
     <button type="button" class="btn btn-success btn-lg"
      data-bs-toggle="modal" data-bs-target="#add"

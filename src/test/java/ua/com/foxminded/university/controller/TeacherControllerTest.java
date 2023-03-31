@@ -10,14 +10,13 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import ua.com.foxminded.university.model.TeacherModel;
 import ua.com.foxminded.university.service.TeacherService;
 
 @ExtendWith(SpringExtension.class)
 class TeacherControllerTest {
     
     @MockBean
-    private TeacherService<TeacherModel> teacherServiceMock;
+    private TeacherService teacherServiceMock;
     
     private MockMvc mockMvc;
     

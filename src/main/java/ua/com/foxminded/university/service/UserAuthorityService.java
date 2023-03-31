@@ -1,8 +1,9 @@
 package ua.com.foxminded.university.service;
 
 import ua.com.foxminded.university.exception.ServiceException;
+import ua.com.foxminded.university.model.UserAuthorityModel;
 
-public interface UserAuthorityService<T> {
+public interface UserAuthorityService {
     
-    public T saveUserAuthority(T model) throws ServiceException;
+    public UserAuthorityModel saveUserAuthority(UserAuthorityModel user) throws ServiceException;
 }

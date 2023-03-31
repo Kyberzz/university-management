@@ -2,11 +2,6 @@ package ua.com.foxminded.university.service.impl;
 
 import java.lang.reflect.Type;
 import java.util.List;
-import java.util.Set;
-
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
-import javax.validation.Validator;
 
 import org.modelmapper.ConfigurationException;
 import org.modelmapper.MappingException;
@@ -26,13 +21,15 @@ import ua.com.foxminded.university.service.StudentService;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class StudentServiceImpl implements StudentService<StudentModel> {
+public class StudentServiceImpl implements StudentService {
     
+    private static final Type LIST_TYPE = new TypeToken<List<StudentModel>>() {}.getType();
+    
+    private final ModelMapper modelMapper;
     private final StudentRepository studentRepository;
-    private final Validator validator;
     
     @Override
-    public void deleteStudentById(int id) throws ServiceException {
+    public void deleteById(Integer id) throws ServiceException {
         try {
             studentRepository.deleteById(id);
         } catch (IllegalArgumentException e) {
@@ -41,26 +38,18 @@ public class StudentServiceImpl implements StudentService<StudentModel> {
     }
     
     @Override
-    public void updateStudent(StudentModel studentModel) throws ServiceException {
+    public void update(StudentModel studentModel) throws ServiceException {
         try {
-            Set<ConstraintViolation<StudentModel>> violations = validator.validate(studentModel);
-            
-            if (!violations.isEmpty()) {
-                throw new ConstraintViolationException(violations);
-            } else {
-                ModelMapper modelMapper = new ModelMapper();
-                StudentEntity studentEntity = modelMapper.map(studentModel, StudentEntity.class);
-                studentRepository.save(studentEntity);
-            }
+            StudentEntity studentEntity = modelMapper.map(studentModel, StudentEntity.class);
+            studentRepository.save(studentEntity);
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
             throw new ServiceException("The student was not added to the database", e);
         }
     }
     
     @Override 
-    public StudentModel getStudentById(int id) throws ServiceException {
+    public StudentModel getById(int id) throws ServiceException {
         try {
-            ModelMapper modelMapper = new ModelMapper();
             modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
             StudentEntity studentEntity = studentRepository.findById(id);
             return modelMapper.map(studentEntity, StudentModel.class);
@@ -70,13 +59,11 @@ public class StudentServiceImpl implements StudentService<StudentModel> {
     }
     
     @Override
-    public List<StudentModel> getAllStudentsIncludingEmails() throws ServiceException {
+    public List<StudentModel> getAll() throws ServiceException {
         try {
             List<StudentEntity> studentEntities = studentRepository.findAll();
-            ModelMapper modelMapper = new ModelMapper();
             modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-            Type listType = new TypeToken<List<StudentModel>>() {}.getType();
-            return modelMapper.map(studentEntities, listType);
+            return modelMapper.map(studentEntities, LIST_TYPE);
         } catch (IllegalArgumentException | ConfigurationException | 
                  MappingException e) {
             throw new ServiceException("Getting all students was failed", e);
@@ -84,9 +71,8 @@ public class StudentServiceImpl implements StudentService<StudentModel> {
     }
     
     @Override
-    public void addStudent(StudentModel model) throws ServiceException {
+    public void create(StudentModel model) throws ServiceException {
         try {
-            ModelMapper modelMapper = new ModelMapper();
             StudentEntity entity = modelMapper.map(model, StudentEntity.class);
             studentRepository.saveAndFlush(entity);
         } catch (IllegalArgumentException | ConfigurationException | 

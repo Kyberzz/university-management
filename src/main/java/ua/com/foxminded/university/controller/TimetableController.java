@@ -15,11 +15,11 @@ import ua.com.foxminded.university.service.TimetableService;
 @RequiredArgsConstructor
 public class TimetableController extends DefaultController {
 
-    private final TimetableService<TimetableModel> timetableService;
+    private final TimetableService timetableService;
 
     @RequestMapping("/timetables/list")
     public String getAllTimetables(Model model) throws ServiceException {
-        List<TimetableModel> timetables = timetableService.getAllTimetables();
+        List<TimetableModel> timetables = timetableService.getAll();
         model.addAttribute("timetables", timetables);
         return "timetables/list";
     }

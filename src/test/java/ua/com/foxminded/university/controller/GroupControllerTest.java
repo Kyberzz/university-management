@@ -11,14 +11,13 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import ua.com.foxminded.university.model.GroupModel;
 import ua.com.foxminded.university.service.GroupService;
 
 @ExtendWith(SpringExtension.class)
 class GroupControllerTest {
     
     @MockBean
-    private GroupService<GroupModel> groupServiceMock;
+    private GroupService groupServiceMock;
     
     private MockMvc mockMvc;
     

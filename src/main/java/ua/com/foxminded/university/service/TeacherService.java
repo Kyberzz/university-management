@@ -3,10 +3,11 @@ package ua.com.foxminded.university.service;
 import java.util.List;
 
 import ua.com.foxminded.university.exception.ServiceException;
+import ua.com.foxminded.university.model.TeacherModel;
 
-public interface TeacherService<T> {
+public interface TeacherService {
 
-    public List<T> getAllTeachers() throws ServiceException;
+    public List<TeacherModel> getAllTeachers() throws ServiceException;
 
-    public T getCourseListByTeacherId(int id) throws ServiceException;
+    public TeacherModel getCourseListByTeacherId(int id) throws ServiceException;
 }

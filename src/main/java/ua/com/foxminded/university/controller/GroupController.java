@@ -15,7 +15,7 @@ import ua.com.foxminded.university.service.GroupService;
 @RequiredArgsConstructor
 public class GroupController extends DefaultController {
 
-    private final GroupService<GroupModel> groupService;
+    private final GroupService groupService;
 
     @RequestMapping("/groups/list")
     public String getAllGroups(Model model) throws ServiceException {

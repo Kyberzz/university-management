@@ -23,18 +23,16 @@ import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.UserModel;
 import ua.com.foxminded.university.repository.UserRepository;
 import ua.com.foxminded.university.service.UserService;
-import ua.com.foxminded.university.service.ValidatorService;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserService<UserModel> {
+public class UserServiceImpl implements UserService {
     
     public static final Type TYPE = new TypeToken<List<UserModel>>() {}.getType();
     
     private final UserRepository userRepository;
     private final UserDetailsManager userDetailsManager;
-    private final ValidatorService<UserModel> validatorService;
     private final ModelMapper modelMapper;
     
     public UserModel getById(int id) throws ServiceException {
@@ -43,6 +41,15 @@ public class UserServiceImpl implements UserService<UserModel> {
             return modelMapper.map(entity, UserModel.class);
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
             throw new ServiceException("Getting user by its id fails.", e);
+        }
+    }
+    
+    @Override
+    public void deleteById(Integer id) throws ServiceException {
+        try {
+            userRepository.deleteById(id);
+        } catch (IllegalArgumentException e) {
+            throw new ServiceException("Deleting the user fails", e);
         }
     }
     
@@ -56,9 +63,8 @@ public class UserServiceImpl implements UserService<UserModel> {
     }
     
     @Override
-    public void createUser(UserModel model) throws ServiceException {
+    public void create(UserModel model) throws ServiceException {
         try {
-            validatorService.validate(model);
             PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
             String authority = String.valueOf(model.getUserAuthority().getAuthority());
             UserDetails user = User.builder().username(model.getEmail())
@@ -104,9 +110,8 @@ public class UserServiceImpl implements UserService<UserModel> {
     }
     
     @Override
-    public void updateUser(UserModel model) throws ServiceException {
+    public void update(UserModel model) throws ServiceException {
         try {   
-            validatorService.validate(model);
             PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
             UserDetails user = User.builder().username(model.getEmail())
                                              .password(model.getPassword())

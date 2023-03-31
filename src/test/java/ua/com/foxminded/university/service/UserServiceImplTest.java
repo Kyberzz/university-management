@@ -32,7 +32,6 @@ import ua.com.foxminded.university.modelmother.PersonModelMother;
 import ua.com.foxminded.university.modelmother.UserModelMother;
 import ua.com.foxminded.university.repository.UserRepository;
 import ua.com.foxminded.university.service.impl.UserServiceImpl;
-import ua.com.foxminded.university.service.impl.ValidatorServiceImpl;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceImplTest {
@@ -52,9 +51,6 @@ class UserServiceImplTest {
     
     @Mock
     private JdbcUserDetailsManager userDetailsManagerMock;
-    
-    @Mock
-    private ValidatorServiceImpl<UserModel> validatorServiceMock;
     
     @Mock
     private ModelMapper modelMapperMock;
@@ -92,8 +88,7 @@ class UserServiceImplTest {
 
     @Test
     void createUser_shouldExecuteCorrectNumberCalls() throws ServiceException {
-        userService.createUser(model);
-        verify(validatorServiceMock, times(1)).validate(isA(UserModel.class));
+        userService.create(model);
         verify(userDetailsManagerMock, times(1)).createUser(isA(UserDetails.class));
     }
 
@@ -125,8 +120,7 @@ class UserServiceImplTest {
     
     @Test
     void updateUser() throws ServiceException {
-        userService.updateUser(model);
-        verify(validatorServiceMock, times(1)).validate(model);
+        userService.update(model);
         verify(userDetailsManagerMock, times(1)).updateUser(isA(UserDetails.class));
     }
 }
