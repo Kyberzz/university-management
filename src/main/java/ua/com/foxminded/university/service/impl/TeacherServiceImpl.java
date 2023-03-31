@@ -22,7 +22,7 @@ import ua.com.foxminded.university.service.TeacherService;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class TeacherServiceImpl implements TeacherService<TeacherModel> {
+public class TeacherServiceImpl implements TeacherService {
     
     private final TeacherRepository teacherRepository; 
     

@@ -12,14 +12,13 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import ua.com.foxminded.university.model.CourseModel;
 import ua.com.foxminded.university.service.CourseService;
 
 @ExtendWith(SpringExtension.class)
 class CourseControllerTest {
     
     @MockBean
-    private CourseService<CourseModel> courseServiceMock;
+    private CourseService courseServiceMock;
     
     private MockMvc mockMvc;
     

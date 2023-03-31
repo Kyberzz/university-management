@@ -34,7 +34,7 @@ class UserControllerTest {
     public static final String NON_CONFIRM_PASSWORD = "pasF";
     
     @MockBean
-    private UserService<UserModel> userServiceMock;
+    private UserService userServiceMock;
     
     private MockMvc mockMvc;
     private UserModel user;
@@ -89,7 +89,7 @@ class UserControllerTest {
                                                 .param("passwordConfirm", user.getPassword())
                                                 .flashAttr("userModel", user))
                .andExpect(redirectedUrl("/users/list"));
-        verify(userServiceMock, times(1)).updateUser(isA(UserModel.class));
+        verify(userServiceMock, times(1)).update(isA(UserModel.class));
     }
     
     @Test
@@ -124,7 +124,7 @@ class UserControllerTest {
         
         InOrder inOrder = Mockito.inOrder(userServiceMock);
         inOrder.verify(userServiceMock, times(1)).getById(anyInt());
-        inOrder.verify(userServiceMock, times(1)).updateUser(isA(UserModel.class));
+        inOrder.verify(userServiceMock, times(1)).update(isA(UserModel.class));
     }
     
     @Test

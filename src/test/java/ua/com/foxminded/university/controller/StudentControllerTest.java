@@ -11,8 +11,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import ua.com.foxminded.university.model.GroupModel;
-import ua.com.foxminded.university.model.StudentModel;
 import ua.com.foxminded.university.service.GroupService;
 import ua.com.foxminded.university.service.StudentService;
 
@@ -20,10 +18,10 @@ import ua.com.foxminded.university.service.StudentService;
 class StudentControllerTest {
     
     @MockBean
-    private StudentService<StudentModel> studentServiceMock;
+    private StudentService studentServiceMock;
     
     @MockBean
-    private GroupService<GroupModel> groupServiceMock;
+    private GroupService groupServiceMock;
     
     private MockMvc mockMvc;
     

@@ -15,7 +15,7 @@ import ua.com.foxminded.university.service.TeacherService;
 @RequiredArgsConstructor
 public class TeacherController extends DefaultController {
 
-    private final TeacherService<TeacherModel> teacherService;
+    private final TeacherService teacherService;
 
     @RequestMapping(value = "/teachers/list")
     public String getAllTeachers(Model model) throws ServiceException {

@@ -21,7 +21,7 @@ import ua.com.foxminded.university.service.GroupService;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class GroupServiceImpl implements GroupService<GroupModel> {
+public class GroupServiceImpl implements GroupService {
     
     private static final Type LIST_TYPE = new TypeToken<List<GroupModel>>() {}.getType();
     

@@ -17,7 +17,7 @@ import ua.com.foxminded.university.service.UserAuthorityService;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class UserAuthorityServiceImpl implements UserAuthorityService<UserAuthorityModel> {
+public class UserAuthorityServiceImpl implements UserAuthorityService {
     
     private final UserAuthorityRepository userAuthorityRepository;
     

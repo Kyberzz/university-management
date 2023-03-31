@@ -20,7 +20,7 @@ import ua.com.foxminded.university.service.TimetableService;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class TimetableServiceImpl implements TimetableService<TimetableModel> {
+public class TimetableServiceImpl implements TimetableService {
     
     private Type listType = new TypeToken<List<TimetableModel>>() {}.getType();
     

@@ -21,7 +21,7 @@ import ua.com.foxminded.university.service.CourseService;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class CourseServiceImpl implements CourseService<CourseModel> {
+public class CourseServiceImpl implements CourseService {
     
     private static final Type TYPE = new TypeToken<List<CourseModel>>() {}.getType();
 
@@ -39,8 +39,12 @@ public class CourseServiceImpl implements CourseService<CourseModel> {
     }
     
     @Override
-    public void deleteById(int id) {
-        courseRepository.deleteById(id);
+    public void deleteById(Integer id) throws ServiceException {
+        try {
+            courseRepository.deleteById(id);
+        } catch (IllegalArgumentException e) {
+            throw new ServiceException("Deleting the course fails", e);
+        }
     }
     
     @Override

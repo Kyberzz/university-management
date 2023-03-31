@@ -22,8 +22,8 @@ import ua.com.foxminded.university.service.StudentService;
 @RequiredArgsConstructor
 public class StudentController extends DefaultController {
     
-    private final StudentService<StudentModel> studentService;
-    private final GroupService<GroupModel> groupService;
+    private final StudentService studentService;
+    private final GroupService groupService;
 
     @PostMapping("/add")
     public String addStudent(StudentModel studentModel, 
@@ -33,13 +33,13 @@ public class StudentController extends DefaultController {
             throw new BindException(bindingResult);
         }
 
-        studentService.addStudent(studentModel);
+        studentService.create(studentModel);
         return "redirect:/students/list";
     }
 
     @RequestMapping("/list")
     public String getAllStudents(Model model) throws ServiceException {
-        List<StudentModel> students = studentService.getAllStudentsIncludingEmails();
+        List<StudentModel> students = studentService.getAll();
         List<GroupModel> groups = groupService.getAllGroups();
         StudentModel student = new StudentModel();
         model.addAttribute("studentModel", student);
@@ -56,7 +56,7 @@ public class StudentController extends DefaultController {
         if (bindingResult.hasErrors()) {
             throw new BindException(bindingResult);
         }
-        StudentModel persistedStudent = studentService.getStudentById(studentId);
+        StudentModel persistedStudent = studentService.getById(studentId);
         String firstName = studentModel.getUser().getPerson().getFirstName();
         String lastName = studentModel.getUser().getPerson().getLastName();
         persistedStudent.getUser().getPerson().setFirstName(firstName);
@@ -70,14 +70,14 @@ public class StudentController extends DefaultController {
         } else {
             persistedStudent.setGroup(null);
         }
-        studentService.updateStudent(persistedStudent);
+        studentService.update(persistedStudent);
         return "redirect:/students/list";
     }
     
     @PostMapping(value ="/delete", params = "deleteStudentId")
     public String deleteStudent(@RequestParam("deleteStudentId") int studentId)
             throws ServiceException {
-        studentService.deleteStudentById(studentId);
+        studentService.deleteById(studentId);
         return "redirect:/students/list";
     }
 }

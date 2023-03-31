@@ -10,14 +10,13 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import ua.com.foxminded.university.model.TimetableModel;
 import ua.com.foxminded.university.service.TimetableService;
 
 @ExtendWith(SpringExtension.class)
 class TimetableControllerTest {
     
     @MockBean
-    private TimetableService<TimetableModel> timetableService;
+    private TimetableService timetableService;
     
     private MockMvc mockMvc;
     

@@ -25,7 +25,7 @@ import ua.com.foxminded.university.service.CourseService;
 @RequestMapping("/courses")
 public class CourseController extends DefaultController {
     
-    private final CourseService<CourseModel> courseService;
+    private final CourseService courseService;
     
     @GetMapping("/{id}")
     public String get(@PathVariable int id, Model model) throws ServiceException {

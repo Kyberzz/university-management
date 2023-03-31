@@ -21,7 +21,7 @@ import ua.com.foxminded.university.service.StudentService;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class StudentServiceImpl implements StudentService<StudentModel> {
+public class StudentServiceImpl implements StudentService {
     
     private static final Type LIST_TYPE = new TypeToken<List<StudentModel>>() {}.getType();
     
@@ -29,7 +29,7 @@ public class StudentServiceImpl implements StudentService<StudentModel> {
     private final StudentRepository studentRepository;
     
     @Override
-    public void deleteStudentById(int id) throws ServiceException {
+    public void deleteById(Integer id) throws ServiceException {
         try {
             studentRepository.deleteById(id);
         } catch (IllegalArgumentException e) {
@@ -38,7 +38,7 @@ public class StudentServiceImpl implements StudentService<StudentModel> {
     }
     
     @Override
-    public void updateStudent(StudentModel studentModel) throws ServiceException {
+    public void update(StudentModel studentModel) throws ServiceException {
         try {
             StudentEntity studentEntity = modelMapper.map(studentModel, StudentEntity.class);
             studentRepository.save(studentEntity);
@@ -48,7 +48,7 @@ public class StudentServiceImpl implements StudentService<StudentModel> {
     }
     
     @Override 
-    public StudentModel getStudentById(int id) throws ServiceException {
+    public StudentModel getById(int id) throws ServiceException {
         try {
             modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
             StudentEntity studentEntity = studentRepository.findById(id);
@@ -59,7 +59,7 @@ public class StudentServiceImpl implements StudentService<StudentModel> {
     }
     
     @Override
-    public List<StudentModel> getAllStudentsIncludingEmails() throws ServiceException {
+    public List<StudentModel> getAll() throws ServiceException {
         try {
             List<StudentEntity> studentEntities = studentRepository.findAll();
             modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
@@ -71,7 +71,7 @@ public class StudentServiceImpl implements StudentService<StudentModel> {
     }
     
     @Override
-    public void addStudent(StudentModel model) throws ServiceException {
+    public void create(StudentModel model) throws ServiceException {
         try {
             StudentEntity entity = modelMapper.map(model, StudentEntity.class);
             studentRepository.saveAndFlush(entity);
