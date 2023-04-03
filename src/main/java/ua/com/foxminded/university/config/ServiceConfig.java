@@ -38,8 +38,7 @@ public class ServiceConfig {
                 defaultLessonsPeriodCache);
         TypeMap<TimetableEntity, TimetableModel> typeMap = modelMapper.createTypeMap(
                 TimetableEntity.class, TimetableModel.class);
-        typeMap.setConverter(converter);
-        modelMapper.addConverter(converter);
+        typeMap.setPostConverter(converter);
         return modelMapper;
     }
 }

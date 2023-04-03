@@ -30,8 +30,7 @@ public class CourseServiceImpl implements CourseService {
     public CourseModel getTimetableAndTeachersByCourseId(int id) throws ServiceException {
         try {
             CourseEntity entity = courseRepository.getEagerlyById(id);
-            CourseModel model = modelMapper.map(entity, CourseModel.class);
-            return model;
+            return modelMapper.map(entity, CourseModel.class);
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
             throw new ServiceException("Fetching the course with related "
                     + "timetables and teachers fails", e);
@@ -71,7 +70,8 @@ public class CourseServiceImpl implements CourseService {
     public List<CourseModel> getAll() throws ServiceException {
         try {
             List<CourseEntity> courseEntities = courseRepository.findAll();
-            return modelMapper.map(courseEntities, TYPE);
+            List<CourseModel> list = modelMapper.map(courseEntities, TYPE);
+            return list;
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
             throw new ServiceException("Getting all courses was failed.", e); 
         }

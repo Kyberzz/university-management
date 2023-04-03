@@ -5,6 +5,7 @@ import java.util.List;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 @Data
 public class TeacherModel implements Serializable {
@@ -14,6 +15,7 @@ public class TeacherModel implements Serializable {
     private Integer id;
     
     @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private UserModel user;
     private List<CourseModel> courseList;
 }

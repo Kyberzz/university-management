@@ -5,6 +5,7 @@ import java.time.LocalTime;
 
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.modelmapper.spi.MappingContext;
 
 import lombok.RequiredArgsConstructor;
@@ -33,6 +34,7 @@ public class TimetableConverter implements Converter<TimetableEntity, TimetableM
     @Override
     public TimetableModel convert(MappingContext<TimetableEntity, TimetableModel> context) {
         ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         TimetableEntity source = context.getSource();
         TimetableModel model = modelMapper.map(source, TimetableModel.class);
         LessonPeriod lessonPeriod = toLessonPeriod(model.getLessonOrder(), 

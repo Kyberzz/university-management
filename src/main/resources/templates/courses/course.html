@@ -72,7 +72,7 @@
    <table class="table">
      <thead>
       <tr>
-       <th scope="col"></th>
+       <th scope="col" th:text="#{thead.number}">#</th>
        <th scope="col" th:text="#{thead.firstName}">First name</th>
        <th scope="col" th:text="#{thead.lastName}">Last name</th>
        <th scope="col" th:text="#{teachers.teacherId}">ID</th>
@@ -94,7 +94,7 @@
   <table class="table">
      <thead>
       <tr>
-       <th scope="col"></th>
+       <th scope="col" th:text="#{thead.number}">#</th>
        <th scope="col" th:text="#{thead.lessonOrder}">Lesson order</th>
        <th scope="col" th:text="#{thead.dayOfWeek}">Day of week</th>
        <th scope="col" th:text="#{thead.group}"></th>
@@ -103,11 +103,9 @@
      <tbody>
       <tr th:each="timetable,iterationStatus : ${course.timetables}">
        <th scope="row" th:text="${iterationStatus.count}">1</th>
-       <td th:text="${timetable.lessonOrder}">1th</td>
+       <td th:text="${timetable.lessonOrder.representation}">1th</td>
        <td th:text="${timetable.dayOfWeek}">Monday</td>
-       <!-- 
-       <td th:text="${timetable.group.name}">lt-25</td>
-        -->
+       <td th:text="${timetable.group?.name}">lt-25</td>
        
       </tr>
      </tbody>

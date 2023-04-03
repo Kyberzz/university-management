@@ -9,5 +9,5 @@ public enum LessonOrder {
     FIRST_LESSON("1th"), SECOND_LESSON("2th"), THIRD_LESSON("3th"), FOURTH_LESSON("4th"), 
     FIFTH_LESSON("5th");
     
-    private final String representaion;
+    private final String representation;
 }

@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 @Data
 public class GroupModel implements Serializable {
@@ -15,8 +16,10 @@ public class GroupModel implements Serializable {
     private StudentModel student;
     
     @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private List<StudentModel> studentList;
     
     @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private List<TimetableModel> timetableList;
 }
