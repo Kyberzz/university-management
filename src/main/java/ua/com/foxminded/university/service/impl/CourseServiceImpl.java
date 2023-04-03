@@ -70,8 +70,7 @@ public class CourseServiceImpl implements CourseService {
     public List<CourseModel> getAll() throws ServiceException {
         try {
             List<CourseEntity> courseEntities = courseRepository.findAll();
-            List<CourseModel> list = modelMapper.map(courseEntities, TYPE);
-            return list;
+            return modelMapper.map(courseEntities, TYPE);
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
             throw new ServiceException("Getting all courses was failed.", e); 
         }
