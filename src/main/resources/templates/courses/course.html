@@ -81,8 +81,8 @@
      <tbody>
       <tr th:each="teacher,iterationStatus : ${course.teachers}">
        <th scope="row" th:text="${iterationStatus.count}">1</th>
-       <td th:text="${teacher.person?.firstName}">Dennis</td>
-       <td th:text="${teacher.person?.lastName}">Ritchie</td>
+       <td th:text="${teacher.user.person?.firstName}">Dennis</td>
+       <td th:text="${teacher.user.person?.lastName}">Ritchie</td>
        <td th:text="${teacher.id}">1</td>
       </tr>
      </tbody>
@@ -101,11 +101,14 @@
       </tr>
      </thead>
      <tbody>
-      <tr th:each="timetable,iterationStatus : ${timetables}">
+      <tr th:each="timetable,iterationStatus : ${course.timetables}">
        <th scope="row" th:text="${iterationStatus.count}">1</th>
-       <td th:text="${course.timetable.lessonOrder}">1th</td>
-       <td th:text="${course.timetable.dayOfWeek}">Monday</td>
-       <td th:text="${course.timetable.group.name}">lt-25</td>
+       <td th:text="${timetable.lessonOrder}">1th</td>
+       <td th:text="${timetable.dayOfWeek}">Monday</td>
+       <!-- 
+       <td th:text="${timetable.group.name}">lt-25</td>
+        -->
+       
       </tr>
      </tbody>
     </table>

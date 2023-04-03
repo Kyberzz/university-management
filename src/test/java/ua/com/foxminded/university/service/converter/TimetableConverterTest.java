@@ -7,18 +7,22 @@ import java.time.LocalTime;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.modelmapper.ModelMapper;
 import org.modelmapper.spi.MappingContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 import ua.com.foxminded.university.cache.PropertiesCache;
 import ua.com.foxminded.university.entity.TimetableEntity;
 import ua.com.foxminded.university.entitymother.TimetableEntityMother;
 import ua.com.foxminded.university.model.TimetableModel;
 
-@ExtendWith(MockitoExtension.class)
+@SpringBootTest
+@ActiveProfiles("test")
 class TimetableConverterTest {
 
     public static final String FIFTH_LESSON_END_TIME = "fifthLessonEndTime";
@@ -35,6 +39,12 @@ class TimetableConverterTest {
     public static final String END_TIME = "09:45";
     public static final String START_TIME = "08:00";
     
+    @Autowired
+    private ModelMapper modelMapper;
+    
+    @Autowired
+    @Qualifier("defaultLessonsPeriodCache")
+    private PropertiesCache defaultLessonsPeriodCache;
     
     @InjectMocks
     private TimetableConverter timetableConverter;
@@ -64,15 +74,29 @@ class TimetableConverterTest {
     }
     
     @Test
-    void toLessonPeriod() {
+    void toLessonPeriod_ShouldConvertEntityCorrectly() {
+        LocalTime expectedEndTime = LocalTime.parse(defaultLessonsPeriodCache
+                .getProperty(FIFTH_LESSON_END_TIME));
+        LocalTime expectedStartTime = LocalTime.parse(defaultLessonsPeriodCache
+                .getProperty(FIFTH_LESSON_START_TIME));
+        
+        TimetableModel model = modelMapper.map(entity, TimetableModel.class);
+        
+        assertEquals(entity.getDayOfWeek(), model.getDayOfWeek());
+        assertEquals(expectedStartTime, model.getLessonPeriod().getStartTime());
+        assertEquals(expectedEndTime, model.getLessonPeriod().getEndTime());
+    }
+    
+    @Test
+    void toLessonPeriod_ShouldConvertPropertiesCorrectly() {
+        LocalTime expectedStartTime = LocalTime.parse(START_TIME);
+        LocalTime expectedEndTime = LocalTime.parse(END_TIME);
         when(contextMock.getSource()).thenReturn(entity);
+        when(contextMock.getDestination()).thenReturn(new TimetableModel());
         
         TimetableConverter converter = new TimetableConverter(lessonsPeriodCacheMock, 
                                                               lessonsPeriodCacheMock);
         TimetableModel model = converter.convert(contextMock);
-        
-        LocalTime expectedStartTime = LocalTime.parse(START_TIME);
-        LocalTime expectedEndTime = LocalTime.parse(END_TIME);
         
         assertEquals(expectedStartTime, model.getLessonPeriod().getStartTime());
         assertEquals(expectedEndTime, model.getLessonPeriod().getEndTime());

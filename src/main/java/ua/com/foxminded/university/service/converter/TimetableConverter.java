@@ -4,6 +4,7 @@ import java.time.DayOfWeek;
 import java.time.LocalTime;
 
 import org.modelmapper.Converter;
+import org.modelmapper.ModelMapper;
 import org.modelmapper.spi.MappingContext;
 
 import lombok.RequiredArgsConstructor;
@@ -31,10 +32,11 @@ public class TimetableConverter implements Converter<TimetableEntity, TimetableM
     
     @Override
     public TimetableModel convert(MappingContext<TimetableEntity, TimetableModel> context) {
+        ModelMapper modelMapper = new ModelMapper();
         TimetableEntity source = context.getSource();
-        LessonPeriod lessonPeriod = toLessonPeriod(source.getLessonOrder(), 
-                                                   source.getDayOfWeek());
-        TimetableModel model = new TimetableModel();
+        TimetableModel model = modelMapper.map(source, TimetableModel.class);
+        LessonPeriod lessonPeriod = toLessonPeriod(model.getLessonOrder(), 
+                                                   model.getDayOfWeek());
         model.setLessonPeriod(lessonPeriod);
         return model;
     }

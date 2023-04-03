@@ -18,7 +18,7 @@ public class ServiceConfig {
     public static final String DEFAULT_LESSON_PERIOD_FILENAME = "default-lesson-period.properties";
     public static final String FRIDAY_LESSON_PERIOD_FILENAME = "friday-lesson-period.properties";
     
-    @Bean 
+    @Bean
     public PropertiesCache fridayLessonsPeriodCache() {
         return new PropertiesCacheImpl(FRIDAY_LESSON_PERIOD_FILENAME); 
     }
@@ -38,7 +38,7 @@ public class ServiceConfig {
                 defaultLessonsPeriodCache);
         TypeMap<TimetableEntity, TimetableModel> typeMap = modelMapper.createTypeMap(
                 TimetableEntity.class, TimetableModel.class);
-        typeMap.setPreConverter(converter);
+        typeMap.setConverter(converter);
         modelMapper.addConverter(converter);
         return modelMapper;
     }

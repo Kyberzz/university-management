@@ -1,13 +1,14 @@
-insert into university.users(email, password, enabled) values('a', '{noop}a', 'true');
+insert into university.users(first_name, last_name, email, password, enabled) 
+    values('admin', 'admin', 'a', '{noop}a', 'true');
 insert into university.authorities(authority, user_id) values('ROLE_ADMIN', 1);
 
 insert into university.users(first_name, last_name) values('Linus', 'Torvalds');
 insert into university.users(first_name, last_name) values('Dennis', 'Ritchie');
 insert into university.users(first_name, last_name) values('Isaac', 'Barrow');
 
-insert into university.teachers(user_id) values(1);
 insert into university.teachers(user_id) values(2);
 insert into university.teachers(user_id) values(3);
+insert into university.teachers(user_id) values(4);
 
 insert into university.courses(name) values('Programming');
 insert into university.courses(name) values('Mathematics');

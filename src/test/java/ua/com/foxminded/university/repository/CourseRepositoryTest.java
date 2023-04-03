@@ -2,6 +2,7 @@ package ua.com.foxminded.university.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.time.DayOfWeek;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -66,7 +67,10 @@ class CourseRepositoryTest {
     @Test
     void getEagerlyById_ShouldContainAllDependencies() {
         CourseEntity persistedCourse = courseRepository.getEagerlyById(course.getId());
+        DayOfWeek persistedDayOfWeek = persistedCourse.getTimetables()
+                                                      .iterator().next().getDayOfWeek();
         
+        assertEquals(timetable.getDayOfWeek(), persistedDayOfWeek);
         assertEquals(TIMETABLES_QUANTITY, persistedCourse.getTimetables().size());
         assertEquals(TEACHERS_QUANTITY, persistedCourse.getTeachers().size());
     }
