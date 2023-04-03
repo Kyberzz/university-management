@@ -54,6 +54,17 @@ public class CourseController extends DefaultController {
         return "redirect:/courses/" + courseId;
     }
     
+    @PostMapping(value = "/create")
+    public String create(@Valid @ModelAttribute CourseModel course, 
+                         BindingResult bindingResult) throws BindException, 
+    ServiceException {
+        if (bindingResult.hasErrors()) {
+            throw new BindException(bindingResult);
+        }
+        courseService.create(course);   
+        return "redirect:courses/list";
+    }
+    
     @GetMapping("/list")
     public String list(Model model) throws ServiceException {
         CourseModel course = new CourseModel();
@@ -63,14 +74,4 @@ public class CourseController extends DefaultController {
         return "courses/list";
     }
     
-    @PostMapping(value = "/create")
-    public String create(@Valid @ModelAttribute CourseModel course, 
-                         BindingResult bindingResult) throws BindException, 
-                                                             ServiceException {
-        if (bindingResult.hasErrors()) {
-            throw new BindException(bindingResult);
-        }
-        courseService.create(course);   
-        return "redirect:courses/list";
-    }
 }

@@ -36,7 +36,6 @@ import ua.com.foxminded.university.entitymother.UserEntityMother;
 import ua.com.foxminded.university.model.Authority;
 import ua.com.foxminded.university.model.CourseModel;
 import ua.com.foxminded.university.modelmother.CourseModelMother;
-import ua.com.foxminded.university.repository.CourseRepository;
 import ua.com.foxminded.university.repository.UserAuthorityRepository;
 import ua.com.foxminded.university.repository.UserRepository;
 
@@ -71,8 +70,9 @@ class CourseControllerIntegrationTest {
         registry.add("spring.datasource.password", postgres::getPassword);
     }
 
-    private CourseEntity course;
+    private CourseEntity courseEntity;
     private UserEntity authorizedUser;
+    private CourseModel courseModel;
     
     @BeforeTransaction
     void init() {
@@ -92,32 +92,55 @@ class CourseControllerIntegrationTest {
     
     @BeforeEach
     void setUp() {
-        course = CourseEntityMother.complete().build();
+        courseEntity = CourseEntityMother.complete().build();
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
-        entityManager.persist(course);
+        entityManager.persist(courseEntity);
         entityManager.getTransaction().commit();
         entityManager.close();
-    }
-    
-    @Test
-    @WithUserDetails(AUTHORIZED_EMAIL)
-    void create_ShouldAuthenticateCredentialsAndReternStatusIsOk() throws Exception {
-        CourseModel model = CourseModelMother.complete().build();
-        mockMvc.perform(post("/courses/create").flashAttr("course", model)
-                                               .with(csrf()))
-               .andExpect(authenticated().withRoles(Authority.ADMIN.toString()))
-               .andExpect(status().is3xxRedirection());
+        
+        courseModel = CourseModelMother.complete().build();
     }
     
     @Test
     @WithUserDetails(AUTHORIZED_EMAIL)
     void get_ShouldAuthenticateCredentialsAndReturnStatusIsOk() throws Exception {
-        mockMvc.perform(get("/courses/{id}", course.getId()))
+        mockMvc.perform(get("/courses/{id}", courseEntity.getId()))
                .andExpect(authenticated().withRoles(Authority.ADMIN.toString()))
                .andExpect(status().isOk());
     }
+    
+    @Test
+    @WithUserDetails(AUTHORIZED_EMAIL)
+    void delete_ShouldAuthenticateCredentialsAndRedirect() throws Exception {
+        String courseId = courseEntity.getId().toString();
+        
+        mockMvc.perform(post("/courses/delete").param("courseId", courseId)
+                                               .with(csrf()))
+               .andExpect(status().is3xxRedirection());
+    }
+    
+    @Test
+    @WithUserDetails(AUTHORIZED_EMAIL)
+    void update_ShouldAuthenticateCredentialsAndRedirect() throws Exception {
+        String courseId = String.valueOf(courseEntity.getId().toString());
+        
+        mockMvc.perform(post("/courses/update").param("courseId", courseId)
+                                               .flashAttr("courseModel", courseModel)
+                                               .with(csrf()))
+               .andExpect(authenticated().withRoles(Authority.ADMIN.toString()))
+               .andExpect(status().is3xxRedirection());
+    }
 
+    @Test
+    @WithUserDetails(AUTHORIZED_EMAIL)
+    void create_ShouldAuthenticateCredentialsAndReternStatusIsOk() throws Exception {
+        mockMvc.perform(post("/courses/create").flashAttr("courseModel", courseModel)
+                .with(csrf()))
+        .andExpect(authenticated().withRoles(Authority.ADMIN.toString()))
+        .andExpect(status().is3xxRedirection());
+    }
+    
     @Test
     @WithUserDetails(AUTHORIZED_EMAIL)
     void list_ShouldAuthenticateCredentialsAndReturnStatusIsOk() throws Exception {
