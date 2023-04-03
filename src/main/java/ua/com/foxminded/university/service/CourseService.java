@@ -5,5 +5,7 @@ import ua.com.foxminded.university.model.CourseModel;
 
 public interface CourseService extends GenericService<CourseModel> {
     
+    public CourseModel getTimetableAndTeachersByCourseId(int id) throws ServiceException;
+    
     public CourseModel getTimetableListByCourseId(int id) throws ServiceException;
 }

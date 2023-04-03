@@ -51,7 +51,7 @@ class UserControllerTest {
     }
     
     @Test
-    void authorize_ShouldReturnBadRequestResponseStatus() throws Exception {
+    void authorize_ShouldReturnBadRequestStatus() throws Exception {
         
         mockMvc.perform(post("/users/authorize").param("email", user.getEmail())
                                                 .param("password", user.getPassword())
@@ -105,7 +105,7 @@ class UserControllerTest {
     }
     
     @Test
-    void edit_ShouldReturnBadRequestResponseStatus() throws Exception {
+    void edit_ShouldReturnBadRequestStatus() throws Exception {
         user.setUserAuthority(userAuthorit);
         when(userServiceMock.getById(anyInt())).thenReturn(user);
         mockMvc.perform(post("/users/edit").param("userId", user.getId().toString())

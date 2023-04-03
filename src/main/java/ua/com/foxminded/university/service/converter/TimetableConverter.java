@@ -31,7 +31,6 @@ public class TimetableConverter implements Converter<TimetableEntity, TimetableM
     
     @Override
     public TimetableModel convert(MappingContext<TimetableEntity, TimetableModel> context) {
-        
         TimetableEntity source = context.getSource();
         LessonPeriod lessonPeriod = toLessonPeriod(source.getLessonOrder(), 
                                                    source.getDayOfWeek());
@@ -58,7 +57,6 @@ public class TimetableConverter implements Converter<TimetableEntity, TimetableM
     }
     
     private LessonPeriodRange selectLessonsPeriodRange(DayOfWeek dayOfWeek) {
-        
         if (dayOfWeek.equals(DayOfWeek.FRIDAY)) {
             return getLessonsPeriodRange(fridayLessonsPeriodCache);
         } else {

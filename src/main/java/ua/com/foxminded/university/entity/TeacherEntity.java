@@ -36,6 +36,7 @@ public class TeacherEntity implements Serializable {
     
     @ManyToMany
     @JoinTable(
+            schema = "university",
             name = "teacher_course", 
             joinColumns = @JoinColumn(name = "teacher_id", referencedColumnName="id"),
             inverseJoinColumns = @JoinColumn(name = "course_id", referencedColumnName = "id"))

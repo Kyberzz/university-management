@@ -7,7 +7,6 @@ import org.modelmapper.ConfigurationException;
 import org.modelmapper.MappingException;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
-import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,6 +26,16 @@ public class CourseServiceImpl implements CourseService {
 
     private final CourseRepository courseRepository;
     private final ModelMapper modelMapper;
+    
+    public CourseModel getTimetableAndTeachersByCourseId(int id) throws ServiceException {
+        try {
+            CourseEntity entity = courseRepository.getEagerlyById(id);
+            return modelMapper.map(entity, CourseModel.class);
+        } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
+            throw new ServiceException("Fetching the course with related "
+                    + "timetables and teachers fails", e);
+        }
+    }
     
     @Override
     public CourseModel getById(int id) throws ServiceException {
@@ -61,7 +70,6 @@ public class CourseServiceImpl implements CourseService {
     public List<CourseModel> getAll() throws ServiceException {
         try {
             List<CourseEntity> courseEntities = courseRepository.findAll();
-            modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
             return modelMapper.map(courseEntities, TYPE);
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
             throw new ServiceException("Getting all courses was failed.", e); 

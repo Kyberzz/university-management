@@ -29,7 +29,7 @@ public class CourseController extends DefaultController {
     
     @GetMapping("/{id}")
     public String get(@PathVariable int id, Model model) throws ServiceException {
-        CourseModel course = courseService.getById(id);
+        CourseModel course = courseService.getTimetableAndTeachersByCourseId(id);
         model.addAttribute("course", course);
         return "courses/course";
     }
@@ -64,13 +64,13 @@ public class CourseController extends DefaultController {
     }
     
     @PostMapping(value = "/create")
-    public String create(@Valid @ModelAttribute ("course") CourseModel course, 
+    public String create(@Valid @ModelAttribute CourseModel course, 
                          BindingResult bindingResult) throws BindException, 
                                                              ServiceException {
         if (bindingResult.hasErrors()) {
             throw new BindException(bindingResult);
         }
         courseService.create(course);   
-        return "courses/list";
+        return "redirect:courses/list";
     }
 }

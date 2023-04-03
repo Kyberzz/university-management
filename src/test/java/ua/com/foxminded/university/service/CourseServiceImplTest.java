@@ -26,16 +26,27 @@ import ua.com.foxminded.university.service.impl.CourseServiceImpl;
 @ExtendWith(MockitoExtension.class)
 class CourseServiceImplTest {
     
+    private static final int ID = 1;
+    
     @InjectMocks
     private CourseServiceImpl courseService;
     
     @Mock
     private CourseRepository courseRepositoryMock;
     
+    private CourseEntity entity;
+    
     @Mock
     private ModelMapper modelMapperMock;
     
     private static final Type TYPE = new TypeToken<List<CourseModel>>() {}.getType();
+    
+    @Test
+    void getTimetableAndTeachersByCourseId_ShouldExecuteCorrecCallsQuantity() 
+            throws ServiceException {
+        courseService.getTimetableAndTeachersByCourseId(ID);
+        verify(modelMapperMock, times(1)).map(entity, CourseModel.class);
+    }
 
     @Test
     void getAll_ShouldExecuteCorrectCallsQuantity() throws ServiceException {
