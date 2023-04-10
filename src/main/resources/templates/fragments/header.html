@@ -19,9 +19,9 @@
   <div class="justify-content-center"
    th:if ="!${#execInfo.processedTemplateName matches 'index|users/list|courses/course'}">
    <div class="container-fluid gap-2">
-    <button type="button" class="btn btn-success btn-lg"
+    <button type="button" class="btn btn-success btn-lg" id="createButton"
      data-bs-toggle="modal" data-bs-target="#add"
-     th:text="#{fragments.add}">Add</button>
+     th:text="#{fragments.add}">Create</button>
    </div>
   </div>
 

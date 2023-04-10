@@ -29,7 +29,7 @@ public class CourseServiceImpl implements CourseService {
     
     public CourseModel getTimetableAndTeachersByCourseId(int id) throws ServiceException {
         try {
-            CourseEntity entity = courseRepository.getEagerlyById(id);
+            CourseEntity entity = courseRepository.getCourseWithDependencies(id);
             return modelMapper.map(entity, CourseModel.class);
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
             throw new ServiceException("Fetching the course with related "
@@ -80,9 +80,9 @@ public class CourseServiceImpl implements CourseService {
     public void update(CourseModel courseModel) throws ServiceException {
         try {
             CourseEntity courseEntity = modelMapper.map(courseModel, CourseEntity.class);
-            courseRepository.save(courseEntity);
+            courseRepository.saveAndFlush(courseEntity);
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
-            throw new ServiceException("Updating all courses was failed", e);
+            throw new ServiceException("Updating the course was failed", e);
         }
     }
    

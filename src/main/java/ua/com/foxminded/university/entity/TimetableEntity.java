@@ -19,6 +19,7 @@ import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Entity
@@ -42,10 +43,12 @@ public class TimetableEntity implements Serializable {
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "group_id")
+    @EqualsAndHashCode.Exclude
     private GroupEntity group;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id")
+    @EqualsAndHashCode.Exclude
     private CourseEntity course;
     
     @Enumerated(EnumType.STRING)

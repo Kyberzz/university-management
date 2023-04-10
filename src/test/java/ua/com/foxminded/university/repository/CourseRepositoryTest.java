@@ -66,7 +66,7 @@ class CourseRepositoryTest {
     
     @Test
     void getEagerlyById_ShouldContainAllDependencies() {
-        CourseEntity persistedCourse = courseRepository.getEagerlyById(course.getId());
+        CourseEntity persistedCourse = courseRepository.getCourseWithDependencies(course.getId());
         DayOfWeek persistedDayOfWeek = persistedCourse.getTimetables()
                                                       .iterator().next().getDayOfWeek();
         

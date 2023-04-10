@@ -123,9 +123,7 @@ class CourseControllerIntegrationTest {
     @Test
     @WithUserDetails(AUTHORIZED_EMAIL)
     void update_ShouldAuthenticateCredentialsAndRedirect() throws Exception {
-        String courseId = String.valueOf(courseEntity.getId().toString());
-        
-        mockMvc.perform(post("/courses/update").param("courseId", courseId)
+        mockMvc.perform(post("/courses/update").param("courseId", courseEntity.getId().toString())
                                                .flashAttr("courseModel", courseModel)
                                                .with(csrf()))
                .andExpect(authenticated().withRoles(Authority.ADMIN.toString()))

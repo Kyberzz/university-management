@@ -30,6 +30,8 @@ public class CourseController extends DefaultController {
     @GetMapping("/{id}")
     public String get(@PathVariable int id, Model model) throws ServiceException {
         CourseModel course = courseService.getTimetableAndTeachersByCourseId(id);
+        CourseModel updatedCourse = new CourseModel();
+        model.addAttribute("updatedCourse", updatedCourse);
         model.addAttribute("course", course);
         return "courses/course";
     }
@@ -42,15 +44,16 @@ public class CourseController extends DefaultController {
     
     @PostMapping(value = "/update", params = "courseId")
     public String update(@RequestParam Integer courseId,
-                         @Valid @ModelAttribute CourseModel course, 
+                         @Valid @ModelAttribute CourseModel updatedCourse, 
                          BindingResult bindingResult) throws BindException, 
                                                              ServiceException {
         if (bindingResult.hasErrors()) {
             throw new BindException(bindingResult);
         }
-        CourseModel preservedCourse = courseService.getById(courseId);
-        preservedCourse.setDescription(course.getDescription());
-        preservedCourse.setName(course.getName());
+        CourseModel persistedCourse = courseService.getById(courseId);
+        persistedCourse.setDescription(updatedCourse.getDescription());
+        persistedCourse.setName(updatedCourse.getName());
+        courseService.update(persistedCourse);
         return "redirect:/courses/" + courseId;
     }
     
@@ -62,7 +65,7 @@ public class CourseController extends DefaultController {
             throw new BindException(bindingResult);
         }
         courseService.create(course);   
-        return "redirect:courses/list";
+        return "redirect:/courses/list";
     }
     
     @GetMapping("/list")
@@ -73,5 +76,4 @@ public class CourseController extends DefaultController {
         model.addAttribute("course", course);
         return "courses/list";
     }
-    
 }

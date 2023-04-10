@@ -63,7 +63,7 @@ class CourseServiceImplTest {
         InOrder inOrder = Mockito.inOrder(modelMapperMock, courseRepositoryMock);
         
         inOrder.verify(modelMapperMock, times(1)).map(model, CourseModel.class);
-        inOrder.verify(courseRepositoryMock, times(1)).save(entity);
+        inOrder.verify(courseRepositoryMock, times(1)).saveAndFlush(entity);
     }
     
     @Test

@@ -75,7 +75,7 @@ class CourseControllerTest {
                                                .flashAttr("courseModel", course))
                .andExpect(redirectedUrl("/courses/" + ID));
         
-        verify(courseServiceMock, times(1)).getById(anyInt());
+        verify(courseServiceMock, times(1)).update(isA(CourseModel.class));
     }
     @Test
     void create_ShouldReturnBadRequestStatus() throws Exception {
@@ -87,7 +87,7 @@ class CourseControllerTest {
     @Test
     void create_ShouldCreateCourseAndRedirectToListView() throws Exception {
         mockMvc.perform(post("/courses/create").flashAttr("courseModel", course))
-               .andExpect(redirectedUrl("courses/list"));
+               .andExpect(redirectedUrl("/courses/list"));
         
         verify(courseServiceMock, times(1)).create(isA(CourseModel.class));
     }
