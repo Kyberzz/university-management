@@ -3,6 +3,7 @@ package ua.com.foxminded.university.entity;
 
 import java.io.Serializable;
 import java.time.DayOfWeek;
+import java.time.LocalTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -36,9 +37,12 @@ public class TimetableEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     
-    @Enumerated(EnumType.STRING)
-    @Column(name = "lesson_order")
-    private LessonOrder lessonOrder;
+    @Column(name = "start_time")
+    private LocalTime startTime;
+    
+    @Column(name = "end_time")
+    private LocalTime endTime;
+    
     private String description;
     
     @ManyToOne(fetch = FetchType.LAZY)

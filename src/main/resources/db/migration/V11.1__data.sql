@@ -41,13 +41,13 @@ insert into university.students(user_id, group_id) values(9, 2);
 insert into university.students(user_id, group_id) values(10, 2);
 insert into university.students(user_id, group_id) values(11, 2);
 
-insert into university.timetables(lesson_order, week_day, group_id, course_id)
-    values('FIRST_LESSON', 'MONDAY', 1, 1);
-insert into university.timetables(lesson_order, week_day, group_id, course_id)
-    values('SECOND_LESSON', 'TUESDAY', 1, 2);
-insert into university.timetables(lesson_order, week_day, group_id, course_id)
-    values('THIRD_LESSON', 'FRIDAY', 1, 3);
-insert into university.timetables(lesson_order, week_day, group_id, course_id)
-    values('FIFTH_LESSON', 'TUESDAY', 2, 2);  
-insert into university.timetables(lesson_order, week_day, group_id, course_id)
-    values('FOURTH_LESSON', 'WEDNESDAY', 2, 3); 
+insert into university.timetables(start_time, end_time, week_day, group_id, course_id)
+    values('08:00', '09:45' ,'MONDAY', 1, 1);
+insert into university.timetables(start_time, end_time, week_day, group_id, course_id)
+    values('10:00', '11:45' , 'TUESDAY', 1, 2);
+insert into university.timetables(start_time, end_time, week_day, group_id, course_id)
+    values('12:30', '14:15', 'FRIDAY', 1, 3);
+insert into university.timetables(start_time, end_time, week_day, group_id, course_id)
+    values('14:30', '16:15', 'TUESDAY', 2, 2);  
+insert into university.timetables(start_time, end_time, week_day, group_id, course_id)
+    values('16:30', '18:15', 'WEDNESDAY', 2, 3); 
