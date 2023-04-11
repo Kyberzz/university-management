@@ -41,13 +41,25 @@ insert into university.students(user_id, group_id) values(9, 2);
 insert into university.students(user_id, group_id) values(10, 2);
 insert into university.students(user_id, group_id) values(11, 2);
 
-insert into university.timetables(start_time, end_time, week_day, group_id, course_id)
-    values('08:00', '09:45' ,'MONDAY', 1, 1);
-insert into university.timetables(start_time, end_time, week_day, group_id, course_id)
-    values('10:00', '11:45' , 'TUESDAY', 1, 2);
-insert into university.timetables(start_time, end_time, week_day, group_id, course_id)
-    values('12:30', '14:15', 'FRIDAY', 1, 3);
-insert into university.timetables(start_time, end_time, week_day, group_id, course_id)
-    values('14:30', '16:15', 'TUESDAY', 2, 2);  
-insert into university.timetables(start_time, end_time, week_day, group_id, course_id)
-    values('16:30', '18:15', 'WEDNESDAY', 2, 3); 
+insert into university.timetables(start_time, break_duration, week_day, group_id, course_id)
+    values('08:00', 15,'MONDAY', 1, 1);
+insert into university.timetables(start_time, break_duration, week_day, group_id, course_id)
+    values('10:00', 45, 'TUESDAY', 1, 2);
+insert into university.timetables(start_time, break_duration, week_day, group_id, course_id)
+    values('12:30', 15, 'FRIDAY', 1, 3);
+insert into university.timetables(start_time, break_duration, week_day, group_id, course_id)
+    values('14:30', 15, 'TUESDAY', 2, 2);  
+insert into university.timetables(start_time, break_duration, week_day, group_id, course_id)
+    values('16:30', 15, 'WEDNESDAY', 2, 3); 
+    
+insert into university.users(first_name, last_name, email, password, enabled)
+    values('staff', 'staff', 'staff', '{noop}a', 'true');
+insert into university.users(first_name, last_name, email, password, enabled) 
+    values('teacher', 'teacher', 'teacher', '{noop}a', 'true');
+insert into university.users(first_name, last_name, email, password, enabled) 
+    values('student', 'student', 'student', '{noop}a', 'true');
+    
+insert into university.authorities(authority, user_id) values('ROLE_STAFF', 2);
+insert into university.authorities(authority, user_id) values('ROLE_TEACHER', 3);
+insert into university.authorities(authority, user_id) values('ROLE_STUDENT', 4);
+    

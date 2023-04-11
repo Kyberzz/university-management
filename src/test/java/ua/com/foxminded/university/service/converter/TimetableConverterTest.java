@@ -11,9 +11,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.spi.MappingContext;
 
-import ua.com.foxminded.university.entity.LessonOrder;
 import ua.com.foxminded.university.entity.TimetableEntity;
 import ua.com.foxminded.university.entitymother.TimetableEntityMother;
+import ua.com.foxminded.university.model.LessonOrder;
 import ua.com.foxminded.university.model.TimetableModel;
 
 @ExtendWith(MockitoExtension.class)

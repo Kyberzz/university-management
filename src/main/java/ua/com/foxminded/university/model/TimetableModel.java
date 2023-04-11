@@ -2,11 +2,11 @@ package ua.com.foxminded.university.model;
 
 import java.io.Serializable;
 import java.time.DayOfWeek;
+import java.time.Duration;
 import java.time.LocalTime;
 
 import lombok.Data;
 import lombok.ToString;
-import ua.com.foxminded.university.entity.LessonOrder;
 
 @Data
 public class TimetableModel implements Serializable {
@@ -16,7 +16,7 @@ public class TimetableModel implements Serializable {
     private Integer id;
     private LessonOrder lessonOrder;
     private LocalTime startTime;
-    private LocalTime endTime;
+    private Duration breakDuration;
     private String description;
     private DayOfWeek dayOfWeek;
     

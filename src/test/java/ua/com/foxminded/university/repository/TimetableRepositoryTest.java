@@ -57,6 +57,7 @@ class TimetableRepositoryTest {
             throws RepositoryException {
         TimetableEntity receivedTimetable = timetableRepository.findCourseById(
                 timetable.getId());
+        
         assertEquals(course.getId(), receivedTimetable.getCourse().getId());
     }
         
