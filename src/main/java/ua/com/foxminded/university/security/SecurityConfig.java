@@ -53,11 +53,15 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(request -> request
-                .mvcMatchers("/", "/index", "/images/**").permitAll()
+                .mvcMatchers("/index*", "/images/**").permitAll()
                 .mvcMatchers("/timetables/**").hasAnyRole(ADMIN)
                 .mvcMatchers("/teachers/**").hasAnyRole(ADMIN)
                 .mvcMatchers("/students/**").hasAnyRole(ADMIN)
                 .mvcMatchers("/groups/**").hasAnyRole(ADMIN)
+                .mvcMatchers("/courses/list*").hasAnyRole(ADMIN, STAFF, STUDENT)
+                .mvcMatchers("/courses/create*").hasAnyRole(ADMIN, STAFF)
+                .mvcMatchers("/courses/update*").hasAnyRole(ADMIN, STAFF)
+                .mvcMatchers("/courses/get/*").hasAnyRole(ADMIN, STAFF)
                 .mvcMatchers("/courses/**").hasAnyRole(ADMIN)
                 .mvcMatchers("/users/**").hasAnyRole(ADMIN)
                 .anyRequest().authenticated())

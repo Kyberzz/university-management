@@ -1,6 +1,16 @@
 insert into university.users(first_name, last_name, email, password, enabled) 
     values('admin', 'admin', 'a', '{noop}a', 'true');
+insert into university.users(first_name, last_name, email, password, enabled)
+    values('staff', 'staff', 'staff', '{noop}a', 'true');
+insert into university.users(first_name, last_name, email, password, enabled) 
+    values('teacher', 'teacher', 'teacher', '{noop}a', 'true');
+insert into university.users(first_name, last_name, email, password, enabled) 
+    values('student', 'student', 'student', '{noop}a', 'true');
+    
 insert into university.authorities(authority, user_id) values('ROLE_ADMIN', 1);
+insert into university.authorities(authority, user_id) values('ROLE_STAFF', 2);
+insert into university.authorities(authority, user_id) values('ROLE_TEACHER', 3);
+insert into university.authorities(authority, user_id) values('ROLE_STUDENT', 4);
 
 insert into university.users(first_name, last_name) values('Linus', 'Torvalds');
 insert into university.users(first_name, last_name) values('Dennis', 'Ritchie');
@@ -52,14 +62,5 @@ insert into university.timetables(start_time, break_duration, week_day, group_id
 insert into university.timetables(start_time, break_duration, week_day, group_id, course_id)
     values('16:30', 15, 'WEDNESDAY', 2, 3); 
     
-insert into university.users(first_name, last_name, email, password, enabled)
-    values('staff', 'staff', 'staff', '{noop}a', 'true');
-insert into university.users(first_name, last_name, email, password, enabled) 
-    values('teacher', 'teacher', 'teacher', '{noop}a', 'true');
-insert into university.users(first_name, last_name, email, password, enabled) 
-    values('student', 'student', 'student', '{noop}a', 'true');
-    
-insert into university.authorities(authority, user_id) values('ROLE_STAFF', 2);
-insert into university.authorities(authority, user_id) values('ROLE_TEACHER', 3);
-insert into university.authorities(authority, user_id) values('ROLE_STUDENT', 4);
+
     

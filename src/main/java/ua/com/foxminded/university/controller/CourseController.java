@@ -60,7 +60,7 @@ public class CourseController extends DefaultController {
     @PostMapping(value = "/create")
     public String create(@Valid @ModelAttribute CourseModel course, 
                          BindingResult bindingResult) throws BindException, 
-    ServiceException {
+                                                             ServiceException {
         if (bindingResult.hasErrors()) {
             throw new BindException(bindingResult);
         }

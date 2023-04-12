@@ -21,7 +21,6 @@ public class UserModel implements Serializable {
     
     private Integer id;
     
-    @NotNull
     @Email
     private String email;
 
