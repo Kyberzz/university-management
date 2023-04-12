@@ -30,6 +30,6 @@ task 3.5:
 ## Staff flow (A user logged in with Staff role)
 
 task 3.5:
-- A user should be able to create/read/update all courses
++ A user should be able to create/read/update all courses
 - A user should be able to assign/reassign teacher to a course
 - A user should be able to assign/reassign groups to a course 
