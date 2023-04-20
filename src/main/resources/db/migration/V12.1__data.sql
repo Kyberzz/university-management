@@ -6,13 +6,16 @@ insert into university.users(first_name, last_name, email, password, enabled)
     values('teacher', 'teacher', 'teacher', '{noop}a', 'true');
 insert into university.users(first_name, last_name, email, password, enabled) 
     values('student', 'student', 'student', '{noop}a', 'true');
+insert into university.users(first_name, last_name, email, password) 
+    values('person', 'person', 'person', '{noop}a');
     
 insert into university.authorities(authority, user_id) values('ROLE_ADMIN', 1);
 insert into university.authorities(authority, user_id) values('ROLE_STAFF', 2);
 insert into university.authorities(authority, user_id) values('ROLE_TEACHER', 3);
 insert into university.authorities(authority, user_id) values('ROLE_STUDENT', 4);
 
-insert into university.users(first_name, last_name) values('Linus', 'Torvalds');
+insert into university.users(first_name, last_name, email) 
+    values('Linus', 'Torvalds', 'email@domain');
 insert into university.users(first_name, last_name) values('Dennis', 'Ritchie');
 insert into university.users(first_name, last_name) values('Isaac', 'Barrow');
 
@@ -42,14 +45,14 @@ insert into university.users(first_name, last_name) values('Margaret', 'Thatcher
 insert into university.users(first_name, last_name) values('Sansa', 'Stark');
 insert into university.users(first_name, last_name) values('Rhaenyra', 'Targaryen');
 
-insert into university.students(user_id, group_id) values(4, 1);
-insert into university.students(user_id, group_id) values(5, 1);
 insert into university.students(user_id, group_id) values(6, 1);
 insert into university.students(user_id, group_id) values(7, 1);
-insert into university.students(user_id, group_id) values(8, 2);
-insert into university.students(user_id, group_id) values(9, 2);
+insert into university.students(user_id, group_id) values(8, 1);
+insert into university.students(user_id, group_id) values(9, 1);
 insert into university.students(user_id, group_id) values(10, 2);
 insert into university.students(user_id, group_id) values(11, 2);
+insert into university.students(user_id, group_id) values(12, 2);
+insert into university.students(user_id, group_id) values(13, 2);
 
 insert into university.timetables(start_time, break_duration, week_day, group_id, course_id)
     values('08:00', 15,'MONDAY', 1, 1);

@@ -1,4 +1,4 @@
-package ua.com.foxminded.university.security;
+package ua.com.foxminded.university.config;
 
 import javax.sql.DataSource;
 
@@ -12,6 +12,7 @@ import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 import lombok.RequiredArgsConstructor;
+import ua.com.foxminded.university.model.Authority;
 
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -26,10 +27,10 @@ public class SecurityConfig {
     public static final String AUTHORITIES_BY_EMAIL_QUERY = "authoritiesByEmailQuery";
     public static final String DELETE_USER_SQL = "deleteUserSql";
     public static final String USERS_BY_EMAIL_QUERY = "usersByEmailQuery";
-    public static final String STUDENT = "STUDENT";
-    public static final String TEACHER = "TEACHER";
-    public static final String STAFF = "STAFF";
-    public static final String ADMIN = "ADMIN";
+    public static final String STUDENT = Authority.STUDENT.toString();
+    public static final String TEACHER = Authority.TEACHER.toString();
+    public static final String STAFF = Authority.STAFF.toString();
+    public static final String ADMIN = Authority.ADMIN.toString();
     
     private final Environment environment;
     
@@ -53,20 +54,24 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(request -> request
-                .mvcMatchers("/index*", "/images/**").permitAll()
-                .mvcMatchers("/timetables/**").hasAnyRole(ADMIN)
-                .mvcMatchers("/teachers/**").hasAnyRole(ADMIN)
-                .mvcMatchers("/students/**").hasAnyRole(ADMIN)
-                .mvcMatchers("/groups/**").hasAnyRole(ADMIN)
-                .mvcMatchers("/courses/list*").hasAnyRole(ADMIN, STAFF, STUDENT)
+                .mvcMatchers("/", "/index*", "/images/**").permitAll()
+                .mvcMatchers("/users/**").hasAnyRole(ADMIN)
+                .mvcMatchers("/courses/list*").hasAnyRole(ADMIN, STAFF, TEACHER, STUDENT)
+                .mvcMatchers("/courses/{id:\\d+}").hasAnyRole(ADMIN, STAFF, TEACHER)
                 .mvcMatchers("/courses/create*").hasAnyRole(ADMIN, STAFF)
                 .mvcMatchers("/courses/update*").hasAnyRole(ADMIN, STAFF)
-                .mvcMatchers("/courses/get/*").hasAnyRole(ADMIN, STAFF)
                 .mvcMatchers("/courses/**").hasAnyRole(ADMIN)
-                .mvcMatchers("/users/**").hasAnyRole(ADMIN)
-                .anyRequest().authenticated())
-            .formLogin(form -> form.loginPage("/login").permitAll())
-            .logout(logout -> logout.logoutUrl("/logout").logoutSuccessUrl("/"));
+//                .mvcMatchers("/timetables/**").hasAnyRole(ADMIN)
+//                .mvcMatchers("/teachers/**").hasAnyRole(ADMIN)
+                .mvcMatchers("/students/**").hasAnyRole(ADMIN)
+//                .mvcMatchers("/groups/**").hasAnyRole(ADMIN)
+                .anyRequest().authenticated()
+                )
+            .formLogin(form -> form.loginPage("/login")
+                                   .permitAll()
+                                   .defaultSuccessUrl("/", true))
+            .logout(logout -> logout.logoutUrl("/logout")
+                                    .logoutSuccessUrl("/index"));
         return http.build();
     }
 }

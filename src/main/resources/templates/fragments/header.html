@@ -26,9 +26,9 @@
   </div>
 
   <div th:if="${#execInfo.processedTemplateName} == index">
-   <form action="#" th:action="@{/greeting}"
+   <form action="#" th:action="@{/login}"
     sec:authorize="!isAuthenticated()">
-    <button class="btn btn-primary ms-auto me-2"
+    <button class="btn btn-primary ms-auto me-2" id="signInButton"
      th:text="#{header.SignIn}">Sign In</button>
    </form>
   </div>
@@ -43,9 +43,9 @@
    </div>
    <div class="row gx-2 me-2">
     <div class="col-7">
-     <form action="#" th:action="@{/users/list}"
+     <form action="#" th:action="@{/users/list}" method="get"
       sec:authorize="hasRole('ADMIN')">
-      <button class="btn btn-sm btn-primary"
+      <button class="btn btn-sm btn-primary" id="adminPanelButton"
        th:text="#{header.adminPanel}">Admin panel</button>
      </form>
     </div>

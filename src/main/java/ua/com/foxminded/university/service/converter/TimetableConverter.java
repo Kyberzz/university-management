@@ -7,6 +7,9 @@ import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.modelmapper.spi.MappingContext;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.stereotype.Component;
 
 import ua.com.foxminded.university.entity.TimetableEntity;
 import ua.com.foxminded.university.model.LessonOrder;
@@ -14,9 +17,13 @@ import ua.com.foxminded.university.model.TimetableModel;
 
 public class TimetableConverter implements Converter<TimetableEntity, TimetableModel> {
     
-    private static final LocalTime FIRST_LESSON_START_TIME = LocalTime.of(8, 0);
-    private static final int AVERAGE_LESSON_MINUTES_INTERVAL = 120;
-    private static final int ONE = 1;
+    @Value("${firstLessonStartTime}")
+    private String stringFirstLessonStartTime;
+    
+    @Value("${averageLessonMinutesInterval}")
+    private int averageLessonMinutesInterval;
+    
+    private LocalTime firstLessonStartTime = LocalTime.parse(stringFirstLessonStartTime);
     
     @Override
     public TimetableModel convert(MappingContext<TimetableEntity, TimetableModel> context) {
@@ -29,8 +36,8 @@ public class TimetableConverter implements Converter<TimetableEntity, TimetableM
     }
     
     private void toLessonOrder(TimetableModel model) {
-        Duration lessonsPeriod = Duration.between(FIRST_LESSON_START_TIME, model.getStartTime());
-        int lessonOrder = (int) lessonsPeriod.toMinutes() / AVERAGE_LESSON_MINUTES_INTERVAL + ONE;
+        Duration lessonsPeriod = Duration.between(firstLessonStartTime, model.getStartTime());
+        int lessonOrder = (int) lessonsPeriod.toMinutes() / averageLessonMinutesInterval + 1;
         model.setLessonOrder(LessonOrder.of(lessonOrder));
     }
 }

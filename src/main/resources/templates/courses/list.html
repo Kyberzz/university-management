@@ -35,19 +35,19 @@
     <div class="modal-body">
      <div class="container-fluid">
       <div class="row form-floating mb-3">
-       <input type="text" class="form-control" id="floatingInput"
-        placeholder="#" th:field="*{name}"> <label for="floatingInput"
+       <input type="text" class="form-control" id="createCourseNameInput"
+        placeholder="#" th:field="*{name}"> <label for="createCourseNameInput"
         th:text="|#{thead.courseName}:|">Course name:</label>
       </div>
       <div class="row from-floating mb-3">
-       <textarea class="form-control" th:field="*{description}"
+       <textarea id="createDescriptionInput" class="form-control" th:field="*{description}"
         th:placeholder="|#{thead.description}...|"></textarea>
       </div>
      </div>
     </div>
     <div class="modal-footer">
      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-     <button type="submit" class="btn btn-primary" id="create-submit"
+     <button type="submit" class="btn btn-primary" id="createSubmitButton"
       th:text="#{button.saveChange}">Save changes</button>
     </div>
    </form>
@@ -70,7 +70,7 @@
       </tr>
      </thead>
      <tbody>
-      <tr th:each="course,iterationStatus : ${courses}">
+      <tr th:each="course, iterationStatus : ${#lists.sort(courses, new ua.com.foxminded.university.comparator.CourseModelComparator())}">
        <th scope="row" th:text="${iterationStatus.count}">1</th>
        <td><a th:href="@{/courses/__${course.id}__}"
         th:text="${course.name}">Programming</a></td>
@@ -78,7 +78,7 @@
        <td th:text="${course.id}">1</td>
        <td class="text-start">
         <button type="button" class="btn btn-outline-danger btn-sm"
-         th:text="#{button.delete}" data-bs-toggle="modal" id="deleteButton"
+         th:text="#{button.delete}" data-bs-toggle="modal" id="deleteCourseButton"
          th:data-bs-target="|#delete${iterationStatus.index}|">Delete</button>
 
         <form class="modal fade" method="post"

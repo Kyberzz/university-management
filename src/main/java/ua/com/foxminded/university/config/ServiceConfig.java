@@ -6,6 +6,7 @@ import org.modelmapper.TypeMap;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 
 import ua.com.foxminded.university.entity.TimetableEntity;
 import ua.com.foxminded.university.model.TimetableModel;

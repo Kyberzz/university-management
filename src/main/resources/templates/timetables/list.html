@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="thymeleaf.org">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -53,7 +53,9 @@
       <tr>
        <th scope="col" th:text="#{thead.number}">#</th>
        <th scope="col" th:text="#{thead.startTime}">Start time</th>
+       <!-- 
        <th scope="col" th:text="#{thead.endTime}">End time</th>
+        -->
        <th scope="col" th:text="#{thead.dayOfWeek}">Day of week</th>
        <th scope="col" th:text="#{thead.description}">Description</th>
        <th scope="col" th:text="#{timetables.timetableId}">ID</th>
@@ -63,7 +65,9 @@
       <tr th:each="timetable,iterationStatus : ${timetables}">
        <th scope="row" th:text="${iterationStatus.count}">1</th>
        <td th:text="${timetable.startTime}">8:45</td>
+       <!-- 
        <td th:text="${timetable.endTime}">10:45</td>
+        -->
        <td th:text="${timetable.dayOfWeek}">Monday</td>
        <td th:text="${timetable.description}">some description</td>
        <td th:text="${timetable.id}">1</td>
