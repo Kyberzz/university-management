@@ -12,68 +12,85 @@
 </head>
 <body>
  <div th:replace="~{fragments/header::navigationBar}"></div>
- <div class="offcanvas offcanvas-top" tabindex="-1" id="add"
-  aria-labelledy="offcanvasTopLabel">
-  <div class="offcanvas-header">
-   <h5 class="offcanvas-title" th:text="#{timetables.addTimetable}">Add
-    a timetable</h5>
-   <button type="button" class="btn-close" data-bs-dismiss="offcanvas"
-    aria-label="close"></button>
-  </div>
-  <div class="offcanvas-body">My content</div>
- </div>
- <div class="offcanvas offcanvas-top" tabindex="-1" id="delete"
-  aria-labelledy="offcanvasTopLabel">
-  <div class="offcanvas-header">
-   <h5 class="offcanvas-title" th:text="#{timetables.deleteTimetable}">Delete
-    a timetable</h5>
-   <button type="button" class="btn-close" data-bs-dismiss="offcanvas"
-    aria-label="close"></button>
-  </div>
-  <div class="offcanvas-body">My content</div>
- </div>
- <div class="offcanvas offcanvas-top" tabindex="-1" id="edit"
-  aria-labelledy="offcanvasTopLabel">
-  <div class="offcanvas-header">
-   <h5 class="offcanvas-title" th:text="#{timetables.editTimetable}">Edit
-    a teacher</h5>
-   <button type="button" class="btn-close" data-bs-dismiss="offcanvas"
-    aria-label="close"></button>
-  </div>
-  <div class="offcanvas-body">My content</div>
- </div>
 
+ <nav class="ms-2" aria-label="breadcrumb" th:fragment="page-path">
+  <ol class="breadcrumb container-fluid">
+   <li class="breadcrumb-item"><a th:href="@{/}"
+    th:text="#{href.home}">Home</a></li>
+   <li class="breadcrumb-item active" aria-current="page"
+    th:text="#{href.courses.list}">Courses</li>
+  </ol>
+ </nav>
+
+ <br>
  <div class="container">
-  <div class="row justify-content-center">
-   <div class="col-10">
-    <p class="text-center fs-1 mt-5" th:text="#{timetables.tableName}">All
-     timetables of the university</p>
-    <table class="table">
+  <div class="col">
+   <div class="row">
+    <div class="col">
+     <form th:action="@{/timetables/back}" th:object="${timetableModel}"
+      th:method="post">
+      <input type="hidden" th:field="*{datestamp}"
+       th:value="${timetableModel.datestamp}">
+      <button type="submit" class="btn btn-primary"
+       th:text="#{timetables.previous}">Previous period</button>
+     </form>
+    </div>
+    <div class="col text-end">
+     <form th:action="@{/timetables/next}" th:object="${timetableModel}"
+      th:method="post">
+      <input type="hidden" th:field="*{datestamp}"
+       th:value="${timetableModel.datestamp}">
+      <button type="submit" class="btn btn-primary"
+       th:text="#{timetables.next}">Next period</button>
+     </form>
+    </div>
+   </div>
+   <br>
+  </div>
+ </div>
+ <div class="container">
+  <div class="col">
+   <div class="row">
+    <table class="table-bordered text-center">
      <thead>
       <tr>
-       <th scope="col" th:text="#{thead.number}">#</th>
-       <th scope="col" th:text="#{thead.startTime}">Start time</th>
-       <!-- 
-       <th scope="col" th:text="#{thead.endTime}">End time</th>
-        -->
-       <th scope="col" th:text="#{thead.dayOfWeek}">Day of week</th>
-       <th scope="col" th:text="#{thead.description}">Description</th>
-       <th scope="col" th:text="#{timetables.timetableId}">ID</th>
+       <th scope="col">#</th>
+       <th scope="col"
+        th:each="dayOfWeek : ${T(java.time.DayOfWeek).values()}"
+        th:text="${dayOfWeek}" class="fs-6">MONDAY</th>
       </tr>
      </thead>
      <tbody>
-      <tr th:each="timetable,iterationStatus : ${timetables}">
-       <th scope="row" th:text="${iterationStatus.count}">1</th>
-       <td th:text="${timetable.startTime}">8:45</td>
-       <!-- 
-       <td th:text="${timetable.endTime}">10:45</td>
-        -->
-       <td th:text="${timetable.dayOfWeek}">Monday</td>
-       <td th:text="${timetable.description}">some description</td>
-       <td th:text="${timetable.id}">1</td>
+      <tr th:each="weekTimetables, iterationStatus : ${monthTimetables}">
+       <th scope="row" style="width: 3%"
+        th:text="${iterationStatus.count}">1</th>
+       <td th:each="dayTimetables : ${weekTimetables}">
+        <div class="container">
+         <div class="col">
+          <div class="row">
+           <div th:text="${dayTimetables[0].datestamp}">2023-04-24</div>
+          </div>
+          <div class="row" th:if="${dayTimetables[0].id}">
+           <p>
+           <div>
+            <button type="button" class="btn btn-success btn-sm"
+             th:text="#{button.expand}">Expand</button>
+           </div>
+          </div>
+          <div class="row" th:if="${dayTimetables[0].id == null}">
+           <div th:text="#{courses.novalue}">No value</div>
+           <div class="mb-2">
+            <button type="button" class="btn btn-outline-success btn-sm"
+             th:text="#{fragments.add}">Create</button>
+           </div>
+          </div>
+         </div>
+        </div>
+       </td>
       </tr>
      </tbody>
     </table>
+
    </div>
   </div>
  </div>

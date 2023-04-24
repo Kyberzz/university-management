@@ -13,49 +13,52 @@
 <body>
  <nav class="navbar bg-body-tertiary sticky-top"
   th:fragment="navigationBar">
-  
-  <div class="ms-2" th:insert="~{fragments/logo::foxmindedLogo}"></div>
+  <div class="container-fluid">
 
-  <div class="justify-content-center"
-   th:if ="!${#execInfo.processedTemplateName matches 'index|users/list|courses/course'}">
-   <div class="container-fluid gap-2">
-    <button type="button" class="btn btn-success btn-lg" id="createButton"
-     data-bs-toggle="modal" data-bs-target="#add"
-     th:text="#{fragments.add}">Create</button>
-   </div>
-  </div>
+   <div class="ms-2" th:insert="~{fragments/logo::foxmindedLogo}"></div>
 
-  <div th:if="${#execInfo.processedTemplateName} == index">
-   <form action="#" th:action="@{/login}"
-    sec:authorize="!isAuthenticated()">
-    <button class="btn btn-primary ms-auto me-2" id="signInButton"
-     th:text="#{header.SignIn}">Sign In</button>
-   </form>
-  </div>
-  <div class="d-grid gap-2 text-end"
-   sec:authorize="isAuthenticated()">
-   <div class="row">
-    <div class="col me-2">
-     <span th:text="|#{header.authenticatedAs}: |">Authenticated
-      as:</span> <span class="fw-bold" sec:authentication="name">User
-      nick</span>
+   <div class="justify-content-center"
+    th:if="!${#execInfo.processedTemplateName matches 'index|users/list|courses/course|timetables/list'}">
+    <div class="container-fluid gap-2">
+     <button type="button" class="btn btn-success btn-lg"
+      id="createButton" data-bs-toggle="modal" data-bs-target="#add"
+      th:text="#{fragments.add}">Create</button>
     </div>
    </div>
-   <div class="row gx-2 me-2">
-    <div class="col-7">
-     <form action="#" th:action="@{/users/list}" method="get"
-      sec:authorize="hasRole('ADMIN')">
-      <button class="btn btn-sm btn-primary" id="adminPanelButton"
-       th:text="#{header.adminPanel}">Admin panel</button>
-     </form>
+
+   <div th:if="${#execInfo.processedTemplateName} == index">
+    <form action="#" th:action="@{/login}"
+     sec:authorize="!isAuthenticated()">
+     <button class="btn btn-primary ms-auto me-2" id="signInButton"
+      th:text="#{header.SignIn}">Sign In</button>
+    </form>
+   </div>
+   <div class="d-grid gap-2 text-end" sec:authorize="isAuthenticated()">
+    <div class="row">
+     <div class="col me-2">
+      <span th:text="|#{header.authenticatedAs}: |">Authenticated
+       as:</span> <span class="fw-bold" sec:authentication="name">User
+       nick</span>
+     </div>
     </div>
-    <div class="col-5">
-     <form action="#" th:action="@{/logout}" method="post">
-      <button class="btn btn-sm btn-secondary"
-       th:text="#{header.SignOut}">Sign Out</button>
-     </form>
+    <div class="row gx-2 me-2">
+     <div class="col-7">
+      <form action="#" th:action="@{/users/list}" method="get"
+       sec:authorize="hasRole('ADMIN')">
+       <button class="btn btn-sm btn-primary" id="adminPanelButton"
+        th:text="#{header.adminPanel}">Admin panel</button>
+      </form>
+     </div>
+     <div class="col-5">
+      <form action="#" th:action="@{/logout}" method="post">
+       <button class="btn btn-sm btn-secondary"
+        th:text="#{header.SignOut}">Sign Out</button>
+      </form>
+     </div>
     </div>
    </div>
+
+
   </div>
  </nav>
 

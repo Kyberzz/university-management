@@ -2,14 +2,12 @@
 package ua.com.foxminded.university.entity;
 
 import java.io.Serializable;
-import java.time.DayOfWeek;
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -56,7 +54,6 @@ public class TimetableEntity implements Serializable {
     @EqualsAndHashCode.Exclude
     private CourseEntity course;
     
-    @Enumerated(EnumType.STRING)
-    @Column(name = "week_day")
-    private DayOfWeek dayOfWeek;
+    @Column(name = "datestamp")
+    private LocalDate datestamp;
 }

@@ -2,6 +2,8 @@ package ua.com.foxminded.university.repository;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceUnit;
@@ -50,6 +52,13 @@ class TimetableRepositoryTest {
         entityManager.persist(timetable);
         entityManager.getTransaction().commit();
         entityManager.close();
+    }
+    
+    @Test
+    void findByDate_ShouldReturnTimetablesOfDay() {
+        List<TimetableEntity> timetables = timetableRepository.findByDatestamp(
+                timetable.getDatestamp());
+        assertEquals(timetable.getDatestamp(), timetables.iterator().next().getDatestamp());
     }
     
     @Test

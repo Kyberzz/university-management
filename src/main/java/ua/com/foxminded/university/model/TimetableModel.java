@@ -3,6 +3,7 @@ package ua.com.foxminded.university.model;
 import java.io.Serializable;
 import java.time.DayOfWeek;
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalTime;
 
 import lombok.Data;
@@ -16,6 +17,7 @@ public class TimetableModel implements Serializable {
     private Integer id;
     private LessonOrder lessonOrder;
     private LocalTime startTime;
+    private LocalDate datestamp;
     private Duration breakDuration;
     private String description;
     private DayOfWeek dayOfWeek;
