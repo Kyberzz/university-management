@@ -11,14 +11,14 @@
  crossorigin="anonymous">
 </head>
 <body>
- <div th:replace="~{fragments/header::navigationBar}"></div>
+ <div th:replace="~{fragments/header::navigationBar}">Navigation bar</div>
 
  <nav class="ms-2" aria-label="breadcrumb" th:fragment="page-path">
   <ol class="breadcrumb container-fluid">
    <li class="breadcrumb-item"><a th:href="@{/}"
     th:text="#{href.home}">Home</a></li>
    <li class="breadcrumb-item active" aria-current="page"
-    th:text="#{href.courses.list}">Courses</li>
+    th:text="#{href.month-timetable}">Month timetable</li>
   </ol>
  </nav>
 
@@ -61,23 +61,25 @@
       </tr>
      </thead>
      <tbody>
-      <tr th:each="weekTimetables, iterationStatus : ${monthTimetables}">
+      <tr th:each="weekTimetables, iterationStatus : ${monthTimetable}">
        <th scope="row" style="width: 3%"
         th:text="${iterationStatus.count}">1</th>
-       <td th:each="dayTimetables : ${weekTimetables}">
+       <td th:each="dayTimetable : ${weekTimetables}">
         <div class="container">
          <div class="col">
           <div class="row">
-           <div th:text="${dayTimetables[0].datestamp}">2023-04-24</div>
+           <div th:text="${dayTimetable[0].datestamp}">2023-04-24</div>
           </div>
-          <div class="row" th:if="${dayTimetables[0].id}">
+          <div class="row" th:if="${dayTimetable[0].id}">
            <p>
            <div>
-            <button type="button" class="btn btn-success btn-sm"
-             th:text="#{button.expand}">Expand</button>
+            <form th:action="@{/timetables/daytimetables/__${dayTimetable[0].datestamp}__}">
+             <button type="submit" class="btn btn-success btn-sm"
+              th:text="#{button.expand}">Expand</button>
+            </form>
            </div>
           </div>
-          <div class="row" th:if="${dayTimetables[0].id == null}">
+          <div class="row" th:if="${dayTimetable[0].id == null}">
            <div th:text="#{courses.novalue}">No value</div>
            <div class="mb-2">
             <button type="button" class="btn btn-outline-success btn-sm"

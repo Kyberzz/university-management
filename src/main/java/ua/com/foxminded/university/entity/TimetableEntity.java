@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -21,6 +22,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import ua.com.foxminded.university.converter.DurationConverter;
 
 @Entity
 @Table(name = "timetables", schema = "university")
@@ -40,6 +42,7 @@ public class TimetableEntity implements Serializable {
     private LocalTime startTime;
     
     @Column(name = "break_duration")
+    @Convert(converter = DurationConverter.class)
     private Duration breakDuration;
     
     private String description;

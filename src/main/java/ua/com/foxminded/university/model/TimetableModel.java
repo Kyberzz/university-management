@@ -1,7 +1,6 @@
 package ua.com.foxminded.university.model;
 
 import java.io.Serializable;
-import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -20,7 +19,6 @@ public class TimetableModel implements Serializable {
     private LocalDate datestamp;
     private Duration breakDuration;
     private String description;
-    private DayOfWeek dayOfWeek;
     
     @ToString.Exclude
     private CourseModel course;

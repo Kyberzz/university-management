@@ -57,13 +57,22 @@ insert into university.students(user_id, group_id) values(13, 2);
 insert into university.timetables(start_time, break_duration, datestamp, group_id, course_id)
     values('08:00', 15, '2023-04-20', 1, 1);
 insert into university.timetables(start_time, break_duration, datestamp, group_id, course_id)
-    values('10:00', 45, '2023-04-21', 1, 2);
+    values('09:45', 45, '2023-04-21', 1, 2);
 insert into university.timetables(start_time, break_duration, datestamp, group_id, course_id)
-    values('12:30', 15, '2023-04-24', 1, 3);
+    values('12:00', 15, '2023-04-24', 1, 3);
 insert into university.timetables(start_time, break_duration, datestamp, group_id, course_id)
-    values('14:30', 15, '2023-04-25', 2, 2);  
+    values('15:30', 15, '2023-04-26', 2, 3);
 insert into university.timetables(start_time, break_duration, datestamp, group_id, course_id)
-    values('16:30', 15, '2023-04-26', 2, 3); 
+    values('8:00', 15, '2023-04-25', 1, 1);
+insert into university.timetables(start_time, break_duration, datestamp, group_id, course_id)
+    values('9:45', 45, '2023-04-25', 1, 1);  
+insert into university.timetables(start_time, break_duration, datestamp, group_id, course_id)
+    values('9:45', 45, '2023-04-25', 2, 1);  
+insert into university.timetables(start_time, break_duration, datestamp, group_id, course_id)
+    values('13:45', 15, '2023-04-25', 2, 2);
+insert into university.timetables(start_time, break_duration, datestamp, group_id, course_id)
+    values('15:45', 15, '2023-04-25', 2, 2);  
+
     
 
     
