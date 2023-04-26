@@ -10,20 +10,30 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import ua.com.foxminded.university.service.CourseService;
+import ua.com.foxminded.university.service.GroupService;
 import ua.com.foxminded.university.service.TimetableService;
 
 @ExtendWith(SpringExtension.class)
 class TimetableControllerTest {
     
     @MockBean
-    private TimetableService timetableService;
+    private TimetableService timetableServiceMock;
+    
+    @MockBean
+    private CourseService courseServiceMock;
+    
+    @MockBean
+    private GroupService groupService;
     
     private MockMvc mockMvc;
     
     @BeforeEach
     void setup() {
-        mockMvc = MockMvcBuilders.standaloneSetup(new TimetableController(timetableService))
-                                 .build();
+        mockMvc = MockMvcBuilders.standaloneSetup(
+                new TimetableController(timetableServiceMock, 
+                                        courseServiceMock, 
+                                        groupService)).build();
     }
 
     @Test

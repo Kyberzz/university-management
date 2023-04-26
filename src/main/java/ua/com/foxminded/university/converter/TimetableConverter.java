@@ -31,8 +31,8 @@ public class TimetableConverter implements Converter<TimetableEntity, TimetableM
     private void toLessonOrder(TimetableModel model) {
         Duration lessonsPeriod = Duration.between(config.getFirstLessonStartTime(), 
                                                   model.getStartTime());
-        int lessonOrder = (int) lessonsPeriod.toMinutes() / 
-                config.getAverageLessonMinutesInterval() + 1;
-        model.setLessonOrder(LessonOrder.of(lessonOrder));
+        float lessonOrder = (float) lessonsPeriod.toMinutes() / 
+                config.getAverageLessonMinutesInterval() + 1f;
+        model.setLessonOrder(LessonOrder.of(Math.round(lessonOrder)));
     }
 }

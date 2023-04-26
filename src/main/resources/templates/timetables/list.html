@@ -11,7 +11,8 @@
  crossorigin="anonymous">
 </head>
 <body>
- <div th:replace="~{fragments/header::navigationBar}">Navigation bar</div>
+ <div th:replace="~{fragments/header::navigationBar}">Navigation
+  bar</div>
 
  <nav class="ms-2" aria-label="breadcrumb" th:fragment="page-path">
   <ol class="breadcrumb container-fluid">
@@ -73,7 +74,8 @@
           <div class="row" th:if="${dayTimetable[0].id}">
            <p>
            <div>
-            <form th:action="@{/timetables/daytimetables/__${dayTimetable[0].datestamp}__}">
+            <form
+             th:action="@{/timetables/daytimetables/__${dayTimetable[0].datestamp}__}">
              <button type="submit" class="btn btn-success btn-sm"
               th:text="#{button.expand}">Expand</button>
             </form>
@@ -81,9 +83,90 @@
           </div>
           <div class="row" th:if="${dayTimetable[0].id == null}">
            <div th:text="#{courses.novalue}">No value</div>
+
            <div class="mb-2">
             <button type="button" class="btn btn-outline-success btn-sm"
+             id="createButton" data-bs-toggle="modal"
+             th:data-bs-target="|#create${dayTimetable[0].datestamp}|"
              th:text="#{fragments.add}">Create</button>
+
+            <div class="modal fade"
+             th:id="|create${dayTimetable[0].datestamp}|" tabindex="-1"
+             aria-labelledby="addCourse" aria-hidden="true">
+             <div class="modal-dialog">
+              <form class="modal-content"
+               th:action="@{/timetables/create/timetable/__${dayTimetable[0].datestamp}__}"
+               th:object="${timetableModel}" method="post">
+               <div class="modal-header">
+                <h1 class="modal-title fs-5" id="createTimetable"
+                 th:text="|#{timetables.create} __${dayTimetable[0].datestamp}__|">Create
+                 timetable</h1>
+                <button type="button" class="btn-close"
+                 data-bs-dismiss="modal" aria-label="Close"></button>
+               </div>
+               <div class="modal-body">
+                <div class="container-fluid">
+                 <div class="row mt-2 text-end">
+                  <div class="col-5" th:text="|#{thead.start-time}: |">Start
+                   time:</div>
+                  <div class="col-7">
+                   <select class="form-select"
+                    aria-label="Lesson selection"
+                    th:field="*{startTime}">
+                    <option
+                     th:each="startTime : ${T(ua.com.foxminded.university.model.LessonStartTime).values()}"
+                     th:value="${startTime.representation}"
+                     th:text="${startTime.representation}">8:00</option>
+                   </select>
+                  </div>
+                 </div>
+                 <div class="row mt-2 text-end">
+                  <div class="col-5"
+                   th:text="|#{thead.break-duration}: |">Duration:</div>
+                  <div class="col-7">
+                   <select class="form-select"
+                    aria-label="Lesson selection"
+                    th:field="*{breakDuration}">
+                    <option
+                     th:each="breakDuration : ${T(ua.com.foxminded.university.model.LessonBreakDuration).values()}"
+                     th:value="${breakDuration.duration}"
+                     th:text="${breakDuration.duration.toMinutes()}">15:00</option>
+                   </select>
+                  </div>
+                 </div>
+                 <div class="row mt-2 text-end">
+                  <div class="col-5" th:text="|#{thead.lesson}: |">Lesson:</div>
+                  <div class="col-7">
+                   <select class="form-select"
+                    aria-label="Lesson selection"
+                    th:field="*{course.id}">
+                    <option th:each="course : ${courses}"
+                     th:value="${course.id}" th:text="${course.name}">Electrodynamics</option>
+                   </select>
+                  </div>
+                 </div>
+                 <div class="row mt-2 text-end">
+                  <div class="col-5" th:text="|#{thead.group}: |">Group:</div>
+                  <div class="col-7">
+                   <select class="form-select"
+                    aria-label="Group selection" th:field="*{group.id}">
+                    <option th:each="group : ${groups}"
+                     th:value="${group.id}" th:text="${group.name}">lk-74</option>
+                   </select>
+                  </div>
+                 </div>
+                </div>
+               </div>
+               <div class="modal-footer">
+                <button type="button" class="btn btn-secondary"
+                 data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary"
+                 id="createSubmitButton" th:text="#{button.saveChange}">Save
+                 changes</button>
+               </div>
+              </form>
+             </div>
+            </div>
            </div>
           </div>
          </div>

@@ -65,7 +65,7 @@ class TimetableServiceImplTest {
         TimetableModel model = new TimetableModel();
         model.setDescription("asdf");
         when(modelMapperMock.map(model, TimetableEntity.class)).thenReturn(entity);
-        timetableSerivice.updateTimetable(model);
+        timetableSerivice.update(model);
         
         InOrder inOrder = Mockito.inOrder(modelMapperMock, timetableRepositoryMock);
         

@@ -36,21 +36,80 @@ public class TimetableServiceImpl implements TimetableService {
     private final TimetableRepository timetableRepository;
     
     @Override
-    public List<List<List<TimetableModel>>> getMonthTimetables(LocalDate date) 
+    public void deleteById(Integer id) throws ServiceException {
+        try {
+            timetableRepository.deleteById(id);
+        } catch (IllegalArgumentException e) {
+            throw new ServiceException("Deleting timetable with id = " + id +"", e);
+        }
+    }
+
+    @Override
+    public void update(TimetableModel model) throws ServiceException {
+        try {
+            TimetableEntity entity = modelMapper.map(model, TimetableEntity.class);
+            TimetableEntity persistEntity = timetableRepository.findById(
+                    model.getId().intValue());
+            persistEntity.setBreakDuration(entity.getBreakDuration());
+            persistEntity.setCourse(entity.getCourse());
+            persistEntity.setDatestamp(entity.getDatestamp());
+            persistEntity.setDescription(entity.getDescription());
+            persistEntity.setGroup(entity.getGroup());
+            persistEntity.setStartTime(entity.getStartTime());
+            timetableRepository.saveAndFlush(persistEntity);
+        } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
+            throw new ServiceException("Updating timetable failes", e);
+        }
+    }
+    
+    @Override
+    public void create(TimetableModel model) throws ServiceException {
+        try {
+            TimetableEntity entity = modelMapper.map(model, TimetableEntity.class);
+            timetableRepository.saveAndFlush(entity);
+        } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
+            
+        }
+    }
+
+    @Override
+    public TimetableModel getById(int id) throws ServiceException {
+        try {
+            TimetableEntity entity = timetableRepository.findById(id);
+            return modelMapper.map(entity, TimetableModel.class);
+        } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
+            throw new ServiceException("Getting timetable by ID fails", e);
+        }
+    }
+    
+    @Override
+    public void moveBackDatestamp(TimetableModel timetable) {
+        LocalDate previousMonthDatestamp = timetable.getDatestamp().minusWeeks(3);
+        timetable.setDatestamp(previousMonthDatestamp);
+    }
+    
+    @Override
+    public void moveForwardDatestamp(TimetableModel timetable) {
+        LocalDate nextMonthDatestamp = timetable.getDatestamp().plusWeeks(3);
+        timetable.setDatestamp(nextMonthDatestamp);
+    }
+    
+    @Override
+    public List<List<List<TimetableModel>>> getMonthTimetable(LocalDate date) 
             throws ServiceException {
         
         List<List<List<TimetableModel>>> monthTimetables = new ArrayList<>();
         
         for(int i = 0; i < WEEKS_QUANTITY; i++) {
             LocalDate datestamp = date.plusWeeks(i);
-            List<List<TimetableModel>> weekTimetables = getWeekTimetables(datestamp);
+            List<List<TimetableModel>> weekTimetables = getWeekTimetable(datestamp);
             monthTimetables.add(weekTimetables);
         }
         return monthTimetables;
     }
     
     @Override
-    public List<List<TimetableModel>> getWeekTimetables(LocalDate date) 
+    public List<List<TimetableModel>> getWeekTimetable(LocalDate date) 
             throws ServiceException {
         
         LocalDate startDayOfWeek = findMondayOfWeek(date);
@@ -58,14 +117,14 @@ public class TimetableServiceImpl implements TimetableService {
         List<TimetableModel> dayTimetables;
         
         for (int i = 0; i < DayOfWeek.values().length; i++) {
-            dayTimetables = getDayTimetalbes(startDayOfWeek.plusDays(i));
+            dayTimetables = getDayTimetalbe(startDayOfWeek.plusDays(i));
             weekTimetables.add(dayTimetables);
         }
         return weekTimetables;
     }
     
     @Override
-    public List<TimetableModel> getDayTimetalbes(LocalDate date) throws ServiceException {
+    public List<TimetableModel> getDayTimetalbe(LocalDate date) throws ServiceException {
         try {
             List<TimetableEntity> entities = timetableRepository.findByDatestamp(date);
             List<TimetableModel> models =  modelMapper.map(entities, listType);
@@ -89,17 +148,6 @@ public class TimetableServiceImpl implements TimetableService {
             return modelMapper.map(timetableEntities, listType);
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
             throw new ServiceException("Getting all timetables was failed", e);
-        }
-    }
-    
-    @Override
-    public void updateTimetable(TimetableModel timetableModel) throws ServiceException {
-        try {
-            TimetableEntity timetableEntity = modelMapper.map(timetableModel, 
-                                                              TimetableEntity.class);
-            timetableRepository.save(timetableEntity);
-        } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
-            throw new ServiceException("Updating the timetable failed.", e);
         }
     }
     
