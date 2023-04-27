@@ -1,5 +1,6 @@
 package ua.com.foxminded.university.controller;
 
+import java.util.HashSet;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -18,24 +19,45 @@ import org.springframework.web.bind.annotation.RequestParam;
 import lombok.RequiredArgsConstructor;
 import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.CourseModel;
+import ua.com.foxminded.university.model.TeacherModel;
 import ua.com.foxminded.university.service.CourseService;
+import ua.com.foxminded.university.service.TeacherService;
 
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/courses")
 public class CourseController extends DefaultController {
     
+    public static final String UPDATED_COURSE_ATTRIBUTE = "updatedCourse";
+    public static final String COURSE_TEMPLATE = "course";
     public static final String COURSE_ATTRIBUTE = "course";
     public static final String COURSES_ATTRIBUTE = "courses";
     public static final String COURSES_PATH = "/courses/";
     
+    private final TeacherService teacherService;
     private final CourseService courseService;
     
+    @PostMapping("/{courseId}/assign_teacher")
+    public String addTeacherToCourse(@PathVariable int courseId, 
+                                     @ModelAttribute CourseModel updatedCourse) 
+                                             throws ServiceException {
+        updatedCourse.setId(courseId);
+        updatedCourse.setTeachers(new HashSet<>());
+        updatedCourse.getTeachers().add(updatedCourse.getTeacher());
+        courseService.addTeacherToCourse(updatedCourse);
+        return new StringBuilder().append(REDIRECT_KEY_WORD)
+                                  .append(COURSES_PATH)
+                                  .append(courseId).toString();
+    }
+    
     @GetMapping("/{id}")
-    public String get(@PathVariable int id, Model model) throws ServiceException {
+    public String getById(@PathVariable int id, Model model) throws ServiceException {
         CourseModel course = courseService.getTimetableAndTeachersByCourseId(id);
         CourseModel updatedCourse = new CourseModel();
-        model.addAttribute("updatedCourse", updatedCourse);
+        List<TeacherModel> allTeachers = teacherService.getAll();
+        
+        model.addAttribute("allTeachers", allTeachers);
+        model.addAttribute(UPDATED_COURSE_ATTRIBUTE, updatedCourse);
         model.addAttribute(COURSE_ATTRIBUTE, course);
         return "courses/course";
     }

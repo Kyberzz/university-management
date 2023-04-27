@@ -5,12 +5,14 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceUnit;
 import javax.transaction.Transactional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
@@ -25,10 +27,8 @@ import ua.com.foxminded.university.model.CourseModel;
 import ua.com.foxminded.university.model.TeacherModel;
 import ua.com.foxminded.university.modelmother.CourseModelMother;
 import ua.com.foxminded.university.repository.CourseRepository;
-import ua.com.foxminded.university.repository.TeacherRepository;
 
 @SpringBootTest
-@DataJpaTest
 @ActiveProfiles("test")
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 @Transactional
@@ -36,11 +36,11 @@ class CourseServiceIntegrationTest {
     
     public static final int COURSE_QUANTITY = 2;
     
-    @Autowired
-    private CourseService courseService;
+    @PersistenceUnit
+    private EntityManagerFactory entityManagerFactory;
     
     @Autowired
-    private TeacherRepository teacherRepository;
+    private CourseService courseService;
     
     @Autowired
     private CourseRepository courseRepository;
@@ -52,13 +52,17 @@ class CourseServiceIntegrationTest {
     
     @BeforeEach
     void setUp() {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        entityManager.getTransaction().begin();
         teacherEntity_1 = TeacherEntityMother.complete().build();
         teacherEntity_2 = TeacherEntityMother.complete().build();
-        teacherRepository.saveAndFlush(teacherEntity_1);
-        teacherRepository.saveAndFlush(teacherEntity_2);
+        entityManager.persist(teacherEntity_1);
+        entityManager.persist(teacherEntity_2);
         
         courseEntity = CourseEntityMother.complete().build();
-        courseRepository.saveAndFlush(courseEntity);
+        entityManager.persist(courseEntity);
+        entityManager.getTransaction().commit();
+        entityManager.close();
         
         courseModel = CourseModelMother.complete().build();
     }

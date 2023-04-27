@@ -27,7 +27,7 @@ public class TeacherServiceImpl implements TeacherService {
     private final TeacherRepository teacherRepository; 
     
     @Override
-    public List<TeacherModel> getAllTeachers() throws ServiceException {
+    public List<TeacherModel> getAll() throws ServiceException {
         try {
             List<TeacherEntity> teacherEntities = teacherRepository.findAll();
             Type listType = new TypeToken<List<TeacherModel>>() {}.getType();

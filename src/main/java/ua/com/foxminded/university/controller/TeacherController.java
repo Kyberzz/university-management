@@ -19,7 +19,7 @@ public class TeacherController extends DefaultController {
 
     @RequestMapping(value = "/teachers/list")
     public String getAllTeachers(Model model) throws ServiceException {
-        List<TeacherModel> teachers = teacherService.getAllTeachers();
+        List<TeacherModel> teachers = teacherService.getAll();
         model.addAttribute("teachers", teachers);
         return "teachers/list";
     }

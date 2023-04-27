@@ -20,12 +20,16 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import ua.com.foxminded.university.model.CourseModel;
 import ua.com.foxminded.university.modelmother.CourseModelMother;
 import ua.com.foxminded.university.service.CourseService;
+import ua.com.foxminded.university.service.TeacherService;
 
 @ExtendWith(SpringExtension.class)
 class CourseControllerTest {
     
     private static final String BAD_CONTENT = "bad content";
     private static final int ID = 1;
+    
+    @MockBean
+    private TeacherService teacherServiceMock;
     
     @MockBean
     private CourseService courseServiceMock;
@@ -36,8 +40,8 @@ class CourseControllerTest {
     
     @BeforeEach
     void init() {
-        mockMvc = MockMvcBuilders.standaloneSetup(new CourseController(courseServiceMock))
-                                 .build();
+        mockMvc = MockMvcBuilders.standaloneSetup(new CourseController(
+                teacherServiceMock, courseServiceMock)).build();
         course = CourseModelMother.complete().build();
     }
     

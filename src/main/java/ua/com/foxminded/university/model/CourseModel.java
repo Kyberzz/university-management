@@ -27,6 +27,7 @@ public class CourseModel implements Serializable {
     
     @EqualsAndHashCode.Exclude
     private Set<TeacherModel> teachers;
+    private TeacherModel teacher;
     
     @EqualsAndHashCode.Exclude
     private Set<TimetableModel> timetables;
