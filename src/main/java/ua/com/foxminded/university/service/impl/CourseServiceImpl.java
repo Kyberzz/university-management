@@ -33,7 +33,18 @@ public class CourseServiceImpl implements CourseService {
     private final ModelMapper modelMapper;
     
     @Override
-    public void addTeacherToCourse(CourseModel courseModel) throws ServiceException {
+    public void deassignTeacherToCourse(CourseModel courseModel) throws ServiceException {
+        try {
+            removeCourseFromTeacher(courseModel);
+            CourseEntity courseEntity = removeTeacherFromCourse(courseModel);
+            courseRepository.saveAndFlush(courseEntity);
+        } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
+            throw new ServiceException("Deassigning teacher to a course fails", e);
+        }
+    }
+    
+    @Override
+    public void assignTeacherToCourse(CourseModel courseModel) throws ServiceException {
         try {
             CourseEntity courseEntity = courseRepository.findById(
                     courseModel.getId().intValue());
@@ -127,5 +138,30 @@ public class CourseServiceImpl implements CourseService {
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
             throw new ServiceException("Getting timetable list of the course id was failed", e);
         }
+    }
+    
+    private CourseEntity removeTeacherFromCourse(CourseModel courseModel) {
+        CourseEntity courseEntity = courseRepository.findById(
+                courseModel.getId().intValue());
+        
+        courseEntity.getTeachers().stream().forEach(persistedTeacher -> {
+            courseModel.getTeachers().stream().forEach(deletedTeacher -> {
+               if (deletedTeacher.getId() == persistedTeacher.getId()) {
+                   courseEntity.getTeachers().remove(persistedTeacher);
+               }
+            });
+        });
+        return courseEntity;
+    }
+    
+    private void removeCourseFromTeacher(CourseModel courseModel) {
+        courseModel.getTeachers().stream().forEach(teacher -> {
+            TeacherEntity teacherEntity = teacherRepository.findById(
+                    teacher.getId().intValue());
+            teacherEntity.getCourses().stream()
+                         .filter(course -> course.getId() == courseModel.getId())
+                         .map(course -> teacherEntity.getCourses().remove(course));
+            teacherRepository.saveAndFlush(teacherEntity);
+        });
     }
 }
