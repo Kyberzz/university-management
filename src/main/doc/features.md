@@ -41,7 +41,7 @@ task 3.6
 task 3.5:
 + + A user should be able to create/read/update all courses
 - A user should be able to assign/reassign teacher to a course
-- A user should be able to assign/reassign groups to a course 
++ - A user should be able to assign/reassign groups to a course 
 
 task 3.6
 - User 'A' should be able to Create/Read/Update group information.

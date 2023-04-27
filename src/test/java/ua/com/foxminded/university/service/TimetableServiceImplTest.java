@@ -61,7 +61,7 @@ class TimetableServiceImplTest {
     }
     
     @Test
-    void updateTimetable_ShouldExecuteCorrectCallsQuantity() throws ServiceException {
+    void update_ShouldExecuteCorrectCallsQuantity() throws ServiceException {
         TimetableModel model = new TimetableModel();
         model.setDescription("asdf");
         when(modelMapperMock.map(model, TimetableEntity.class)).thenReturn(entity);

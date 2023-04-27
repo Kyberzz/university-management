@@ -2,6 +2,8 @@ package ua.com.foxminded.university.service.impl;
 
 import java.lang.reflect.Type;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.modelmapper.ConfigurationException;
 import org.modelmapper.MappingException;
@@ -12,9 +14,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import ua.com.foxminded.university.entity.CourseEntity;
+import ua.com.foxminded.university.entity.TeacherEntity;
 import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.CourseModel;
 import ua.com.foxminded.university.repository.CourseRepository;
+import ua.com.foxminded.university.repository.TeacherRepository;
 import ua.com.foxminded.university.service.CourseService;
 
 @Service
@@ -25,8 +29,33 @@ public class CourseServiceImpl implements CourseService {
     private static final Type TYPE = new TypeToken<List<CourseModel>>() {}.getType();
 
     private final CourseRepository courseRepository;
+    private final TeacherRepository teacherRepository;
     private final ModelMapper modelMapper;
     
+    @Override
+    public void addTeacherToCourse(CourseModel courseModel) throws ServiceException {
+        try {
+            CourseEntity courseEntity = courseRepository.findById(
+                    courseModel.getId().intValue());
+            
+            Set<TeacherEntity> teachers = courseModel.getTeachers().stream()
+                    .map(teacher -> {
+                        TeacherEntity teacherEntity = teacherRepository.findById(
+                                teacher.getId().intValue());
+                        teacherEntity.getCourses().add(courseEntity);
+                        return teacherEntity;
+                    })
+                    .collect(Collectors.toSet());
+            teacherRepository.saveAllAndFlush(teachers);
+            
+            courseEntity.getTeachers().addAll(teachers);
+            courseRepository.saveAndFlush(courseEntity);
+        } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
+            throw new ServiceException("Adding teacher to a course fails", e);
+        }
+    }
+    
+    @Override
     public CourseModel getTimetableAndTeachersByCourseId(int id) throws ServiceException {
         try {
             CourseEntity entity = courseRepository.getCourseWithDependencies(id);
@@ -84,8 +113,6 @@ public class CourseServiceImpl implements CourseService {
                                                            .intValue());
             persistedEntity.setDescription(entity.getDescription());
             persistedEntity.setName(entity.getName());
-            persistedEntity.setTeachers(entity.getTeachers());
-            persistedEntity.setTimetables(entity.getTimetables());
             courseRepository.saveAndFlush(persistedEntity);
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
             throw new ServiceException("Updating the course was failed", e);

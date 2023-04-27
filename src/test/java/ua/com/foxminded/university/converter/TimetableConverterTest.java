@@ -1,4 +1,4 @@
-package ua.com.foxminded.university.service.converter;
+package ua.com.foxminded.university.converter;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
@@ -14,7 +14,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.spi.MappingContext;
 
 import ua.com.foxminded.university.config.TimetableConverterConfig;
-import ua.com.foxminded.university.converter.TimetableConverter;
 import ua.com.foxminded.university.entity.TimetableEntity;
 import ua.com.foxminded.university.entitymother.TimetableEntityMother;
 import ua.com.foxminded.university.model.LessonOrder;
