@@ -77,10 +77,16 @@ public class CourseServiceImpl implements CourseService {
     }
     
     @Override
-    public void update(CourseModel courseModel) throws ServiceException {
+    public void update(CourseModel model) throws ServiceException {
         try {
-            CourseEntity courseEntity = modelMapper.map(courseModel, CourseEntity.class);
-            courseRepository.saveAndFlush(courseEntity);
+            CourseEntity entity = modelMapper.map(model, CourseEntity.class);
+            CourseEntity persistedEntity = courseRepository.findById(entity.getId()
+                                                           .intValue());
+            persistedEntity.setDescription(entity.getDescription());
+            persistedEntity.setName(entity.getName());
+            persistedEntity.setTeachers(entity.getTeachers());
+            persistedEntity.setTimetables(entity.getTimetables());
+            courseRepository.saveAndFlush(persistedEntity);
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
             throw new ServiceException("Updating the course was failed", e);
         }

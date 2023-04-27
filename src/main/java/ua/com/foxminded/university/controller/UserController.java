@@ -24,21 +24,27 @@ import ua.com.foxminded.university.service.UserService;
 @RequiredArgsConstructor
 public class UserController extends DefaultController {
     
+    public static final String USERS_PATH = "/users/";
+    
     private final UserService userService;
 
     @PostMapping(value = "/delete", params = "email")
     public String delete(@RequestParam String email) throws ServiceException {
         userService.deleteByEmail(email);
-        return "redirect:/users/list";
+        
+        return new StringBuilder().append(REDIRECT_KEY_WORD)
+                                  .append(USERS_PATH)
+                                  .append(LIST_TEMPLATE).toString();
     }
     
     @PostMapping(value = "/edit", params = {"userId"})
-    public String edit(@RequestParam("userId") Integer userId, 
+    public String update(@RequestParam("userId") Integer userId, 
                        @Valid @ModelAttribute UserModel userModel, 
                        BindingResult bindingResult) throws ServiceException, BindException {
         if (bindingResult.hasErrors()) {
             throw new BindException(bindingResult);
         }
+        
         UserModel persistedUser = userService.getById(userId);
         persistedUser.setEnabled(userModel.getEnabled());
         persistedUser.setUserAuthority(userModel.getUserAuthority());

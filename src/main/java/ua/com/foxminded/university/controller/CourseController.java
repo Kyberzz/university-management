@@ -25,6 +25,10 @@ import ua.com.foxminded.university.service.CourseService;
 @RequestMapping("/courses")
 public class CourseController extends DefaultController {
     
+    public static final String COURSE_ATTRIBUTE = "course";
+    public static final String COURSES_ATTRIBUTE = "courses";
+    public static final String COURSES_PATH = "/courses/";
+    
     private final CourseService courseService;
     
     @GetMapping("/{id}")
@@ -32,14 +36,16 @@ public class CourseController extends DefaultController {
         CourseModel course = courseService.getTimetableAndTeachersByCourseId(id);
         CourseModel updatedCourse = new CourseModel();
         model.addAttribute("updatedCourse", updatedCourse);
-        model.addAttribute("course", course);
+        model.addAttribute(COURSE_ATTRIBUTE, course);
         return "courses/course";
     }
     
     @PostMapping(value = "/delete", params = "courseId")
     public String delete(@RequestParam Integer courseId) throws ServiceException {
         courseService.deleteById(courseId);
-        return "redirect:/courses/list";
+        return new StringBuilder().append(REDIRECT_KEY_WORD)
+                                  .append(COURSES_PATH)
+                                  .append(LIST_TEMPLATE).toString();
     }
     
     @PostMapping(value = "/update", params = "courseId")
@@ -50,11 +56,11 @@ public class CourseController extends DefaultController {
         if (bindingResult.hasErrors()) {
             throw new BindException(bindingResult);
         }
-        CourseModel persistedCourse = courseService.getById(courseId);
-        persistedCourse.setDescription(updatedCourse.getDescription());
-        persistedCourse.setName(updatedCourse.getName());
-        courseService.update(persistedCourse);
-        return "redirect:/courses/" + courseId;
+        updatedCourse.setId(courseId);
+        courseService.update(updatedCourse);
+        return new StringBuilder().append(REDIRECT_KEY_WORD)
+                                  .append(COURSES_PATH)
+                                  .append(courseId).toString();
     }
     
     @PostMapping(value = "/create")
@@ -65,15 +71,17 @@ public class CourseController extends DefaultController {
             throw new BindException(bindingResult);
         }
         courseService.create(course);   
-        return "redirect:/courses/list";
+        return new StringBuilder().append(REDIRECT_KEY_WORD)
+                                  .append(COURSES_PATH)
+                                  .append(LIST_TEMPLATE).toString();
     }
     
     @GetMapping("/list")
     public String list(Model model) throws ServiceException {
         CourseModel course = new CourseModel();
         List<CourseModel> courses = courseService.getAll();
-        model.addAttribute("courses", courses);
-        model.addAttribute("course", course);
+        model.addAttribute(COURSES_ATTRIBUTE, courses);
+        model.addAttribute(COURSE_ATTRIBUTE, course);
         return "courses/list";
     }
 }

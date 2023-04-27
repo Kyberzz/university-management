@@ -111,7 +111,7 @@ public class UserServiceImpl implements UserService {
     
     @Override
     public void update(UserModel model) throws ServiceException {
-        try {   
+        try {
             PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
             UserDetails user = User.builder().username(model.getEmail())
                                              .password(model.getPassword())

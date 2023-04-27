@@ -30,7 +30,6 @@ public class TimetableController extends DefaultController {
     public static final String COURSES_ATTRIBUTE = "courses";
     public static final String GROUPS_ATTRIBUTE = "groups";
     public static final String DAY_TIMETABLES_PATH = "/timetables/daytimetables/";
-    public static final String REDIRECT_KEY_WORD = "redirect:";
     public static final String LIST_TEMPLATE = "timetables/list";
     public static final String TIMETABLE_ATTRIBUTE = "timetableModel";
     public static final String DAY_TIMETABLE_ATTRIBUTE = "dayTimetable";

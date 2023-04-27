@@ -109,7 +109,7 @@
       <tr th:each="timetable,iterationStatus : ${course.timetables}">
        <th scope="row" th:text="${iterationStatus.count}">1</th>
        <td th:text="${timetable.lessonOrder?.representation}">1th</td>
-       <td th:text="${timetable.dayOfWeek}">Monday</td>
+       <td th:text="${timetable.datestamp?.dayOfWeek}">Monday</td>
        <td th:text="${timetable.group?.name}">lt-25</td>
 
       </tr>
