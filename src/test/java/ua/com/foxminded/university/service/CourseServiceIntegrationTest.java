@@ -57,13 +57,14 @@ class CourseServiceIntegrationTest {
         courseEntity = CourseEntityMother.complete().teachers(new HashSet<>()).build();
         teacherEntity_1 = TeacherEntityMother.complete().build();
         teacherEntity_2 = TeacherEntityMother.complete().courses(new HashSet<>()).build();
-        teacherEntity_2.getCourses().add(courseEntity);
         
         entityManager.persist(teacherEntity_1);
         entityManager.persist(teacherEntity_2);
-        
+
+        teacherEntity_2.getCourses().add(courseEntity);
         courseEntity.getTeachers().add(teacherEntity_2);
         entityManager.persist(courseEntity);
+
         entityManager.getTransaction().commit();
         entityManager.close();
         

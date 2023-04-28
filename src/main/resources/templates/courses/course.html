@@ -89,6 +89,7 @@
         <th scope="col" th:text="#{thead.firstName}">First name</th>
         <th scope="col" th:text="#{thead.lastName}">Last name</th>
         <th scope="col" th:text="#{teachers.teacherId}">ID</th>
+        <th scope="col"></th>
        </tr>
       </thead>
       <tbody>
@@ -97,6 +98,46 @@
         <td th:text="${teacher.user.person?.firstName}">Dennis</td>
         <td th:text="${teacher.user.person?.lastName}">Ritchie</td>
         <td th:text="${teacher.id}">1</td>
+        <td>
+         <button type="button" class="btn btn-outline-secondary btn-sm"
+          data-bs-toggle="modal" id="deleteTeacherButton"
+          th:text="#{button.deassign}"
+          th:data-bs-target="|#deassign${teacher.id}|">Deassing</button>
+
+         <form class="modal fade" method="post"
+          th:id="|deassign${teacher.id}|"
+          th:action="@{/courses/__${course.id}__/deassign_teacher}"
+          data-bs-backdrop="static" data-bs-keyboard="false"
+          tabindex="-1" aria-labelledby="staticBackdropLabel"
+          aria-hidden="true">
+          <div class="modal-dialog">
+           <div class="modal-content">
+            <div class="modal-header">
+             <h1 class="modal-title fs-5" id="sataticBackdropLabel"></h1>
+             <button type="button" class="btn-close"
+              data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+             <div class="container-fluid">
+              <div>
+               <input type="hidden" name="teacherId" th:value="${teacher.id}">
+              </div>
+              <div th:text="#{courses.deassign-course}">Deassign
+               teacher to a course</div>
+             </div>
+            </div>
+            <div class="modal-footer">
+             <button type="button" class="btn btn-secondary"
+              data-bs-dismiss="modal" th:text="#{button.close}">Close</button>
+             <button type="submit" class="btn btn-primary"
+              id="confirmDeletingButton"
+              th:text="#{button.confirm-deassign}">Confirm</button>
+            </div>
+           </div>
+          </div>
+         </form>
+
+        </td>
        </tr>
       </tbody>
      </table>
@@ -124,7 +165,6 @@
         <div class="modal-body">
          <div class="container-fluid">
           <div class="row">
-           
            <div class="col">
             <select class="form-select" aria-label="Lesson selection"
              th:field="*{teacher.id}">
@@ -134,10 +174,7 @@
               Ritchie</option>
             </select>
            </div>
-           
           </div>
-          
-
          </div>
         </div>
         <div class="modal-footer">
@@ -147,8 +184,6 @@
           id="createSubmitButton" th:text="#{button.saveChange}">Save
           changes</button>
         </div>
-
-
        </form>
       </div>
      </div>

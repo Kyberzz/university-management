@@ -37,10 +37,19 @@ public class CourseController extends DefaultController {
     private final TeacherService teacherService;
     private final CourseService courseService;
     
-//    @PostMapping("/{courseId}/deassign_teacher")
-//    public String deassignTeacherFromCourse(CourseModel model) throws ServiceException {
-//        
-//    }
+    @PostMapping(value = "/{courseId}/deassign_teacher", params = "teacherId")
+    public String deassignTeacherToCourse(@PathVariable int courseId, 
+            @RequestParam int teacherId) throws ServiceException {
+        TeacherModel teacher = TeacherModel.builder().id(teacherId).build();
+        CourseModel course = CourseModel.builder()
+                                        .id(courseId)
+                                        .teachers(new HashSet<>()).build();
+        course.getTeachers().add(teacher);
+        courseService.deassignTeacherToCourse(course);
+        return new StringBuilder().append(REDIRECT_KEY_WORD)
+                                  .append(COURSES_PATH)
+                                  .append(courseId).toString();
+    }
     
     @PostMapping("/{courseId}/assign_teacher")
     public String addTeacherToCourse(@PathVariable int courseId, 

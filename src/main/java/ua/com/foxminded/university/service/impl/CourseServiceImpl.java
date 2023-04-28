@@ -35,9 +35,18 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public void deassignTeacherToCourse(CourseModel courseModel) throws ServiceException {
         try {
-            removeCourseFromTeacher(courseModel);
-            CourseEntity courseEntity = removeTeacherFromCourse(courseModel);
-            courseRepository.saveAndFlush(courseEntity);
+            Set<TeacherEntity> teacherEntities = courseModel.getTeachers().stream()
+                    .map(teacher -> {
+                        return teacherRepository.findById(teacher.getId().intValue());
+                    }).collect(Collectors.toSet());
+            teacherEntities.stream().forEach(teacher -> {
+                Set<CourseEntity> courses = teacher.getCourses().stream()
+                       .filter(course -> !course.getId().equals(courseModel.getId()))
+                       .collect(Collectors.toSet());
+                teacher.setCourses(courses);
+            });
+            
+            teacherRepository.saveAllAndFlush(teacherEntities);
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
             throw new ServiceException("Deassigning teacher to a course fails", e);
         }
@@ -57,10 +66,8 @@ public class CourseServiceImpl implements CourseService {
                         return teacherEntity;
                     })
                     .collect(Collectors.toSet());
-            teacherRepository.saveAllAndFlush(teachers);
             
-            courseEntity.getTeachers().addAll(teachers);
-            courseRepository.saveAndFlush(courseEntity);
+            teacherRepository.saveAllAndFlush(teachers);
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
             throw new ServiceException("Adding teacher to a course fails", e);
         }
@@ -138,30 +145,5 @@ public class CourseServiceImpl implements CourseService {
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
             throw new ServiceException("Getting timetable list of the course id was failed", e);
         }
-    }
-    
-    private CourseEntity removeTeacherFromCourse(CourseModel courseModel) {
-        CourseEntity courseEntity = courseRepository.findById(
-                courseModel.getId().intValue());
-        
-        courseEntity.getTeachers().stream().forEach(persistedTeacher -> {
-            courseModel.getTeachers().stream().forEach(deletedTeacher -> {
-               if (deletedTeacher.getId() == persistedTeacher.getId()) {
-                   courseEntity.getTeachers().remove(persistedTeacher);
-               }
-            });
-        });
-        return courseEntity;
-    }
-    
-    private void removeCourseFromTeacher(CourseModel courseModel) {
-        courseModel.getTeachers().stream().forEach(teacher -> {
-            TeacherEntity teacherEntity = teacherRepository.findById(
-                    teacher.getId().intValue());
-            teacherEntity.getCourses().stream()
-                         .filter(course -> course.getId() == courseModel.getId())
-                         .map(course -> teacherEntity.getCourses().remove(course));
-            teacherRepository.saveAndFlush(teacherEntity);
-        });
     }
 }

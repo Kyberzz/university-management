@@ -26,5 +26,5 @@ public class TeacherModel implements Serializable {
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private UserModel user;
-    private List<CourseModel> courseList;
+    private List<CourseModel> courses;
 }
