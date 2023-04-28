@@ -32,7 +32,7 @@ import ua.com.foxminded.university.repository.CourseRepository;
 @ActiveProfiles("test")
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 @Transactional
-class CourseServiceIntegrationTest {
+class CourseServiceIntegrationImplTest {
     public static final int ZERO_SET_SIZE = 0;
     public static final int COURSE_QUANTITY = 2;
     
