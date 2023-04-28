@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import ua.com.foxminded.university.model.CourseModel;
+import ua.com.foxminded.university.model.TeacherModel;
 import ua.com.foxminded.university.modelmother.CourseModelMother;
 import ua.com.foxminded.university.service.CourseService;
 import ua.com.foxminded.university.service.TeacherService;
@@ -46,14 +47,36 @@ class CourseControllerTest {
     }
     
     @Test
-    void get_ShouldRenderCourseView() throws Exception {
+    void deassignTeacherToCourse() throws Exception {
+        mockMvc.perform(post("/courses/{courseId}/deassign_teacher", ID)
+                .param("teacherId", String.valueOf(ID)))
+                    .andDo(print())
+                    .andExpect(redirectedUrl("/courses/" + ID));
+        
+        verify(courseServiceMock).deassignTeacherToCourse(isA(CourseModel.class));
+    }
+    
+    @Test
+    void assignTeacherToCourse_ShouldRedirectToCourseView() throws Exception {
+        course.setTeacher(new TeacherModel());
+        
+        mockMvc.perform(post("/courses/{courseId}/assign_teacher", ID)
+                .flashAttr("updatedCourse", course))
+                   .andDo(print())
+                   .andExpect(redirectedUrl("/courses/" + ID));
+        
+        verify(courseServiceMock).assignTeacherToCourse(isA(CourseModel.class));
+    }
+    
+    @Test
+    void getById_ShouldRenderCourseView() throws Exception {
         when(courseServiceMock.getTimetableAndTeachersByCourseId(anyInt())).thenReturn(course);
         
         mockMvc.perform(get("/courses/{id}", ID))
-        .andDo(print())
-        .andExpect(status().isOk())
-        .andExpect(model().attributeExists("course"))
-        .andExpect(view().name("courses/course"));
+               .andDo(print())
+               .andExpect(status().isOk())
+               .andExpect(model().attributeExists("course"))
+               .andExpect(view().name("courses/course"));
     }
     
     @Test

@@ -39,7 +39,8 @@ public class CourseController extends DefaultController {
     
     @PostMapping(value = "/{courseId}/deassign_teacher", params = "teacherId")
     public String deassignTeacherToCourse(@PathVariable int courseId, 
-            @RequestParam int teacherId) throws ServiceException {
+                                          @RequestParam int teacherId) 
+                                                  throws ServiceException {
         TeacherModel teacher = TeacherModel.builder().id(teacherId).build();
         CourseModel course = CourseModel.builder()
                                         .id(courseId)
@@ -52,9 +53,9 @@ public class CourseController extends DefaultController {
     }
     
     @PostMapping("/{courseId}/assign_teacher")
-    public String addTeacherToCourse(@PathVariable int courseId, 
-                                     @ModelAttribute CourseModel updatedCourse) 
-                                             throws ServiceException {
+    public String assignTeacherToCourse(@PathVariable int courseId, 
+                                        @ModelAttribute CourseModel updatedCourse) 
+                                                throws ServiceException {
         updatedCourse.setId(courseId);
         updatedCourse.setTeachers(new HashSet<>());
         updatedCourse.getTeachers().add(updatedCourse.getTeacher());
