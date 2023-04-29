@@ -38,8 +38,7 @@ public class CourseController extends DefaultController {
     
     @PostMapping(value = "/{courseId}/deassign-teacher", params = "teacherId")
     public String deassignTeacherToCourse(@PathVariable int courseId, 
-                                          @RequestParam int teacherId) 
-                                                  throws ServiceException {
+                                          @RequestParam int teacherId) {
         courseService.deassignTeacherToCourse(teacherId, courseId);
         return new StringBuilder().append(REDIRECT_KEY_WORD)
                                   .append(COURSES_PATH)
@@ -48,8 +47,7 @@ public class CourseController extends DefaultController {
     
     @PostMapping(value = "/{courseId}/assign-teacher", params = "teacherId")
     public String assignTeacherToCourse(@PathVariable int courseId, 
-                                        @RequestParam int teacherId) 
-                                                throws ServiceException {
+                                        @RequestParam int teacherId) {
         courseService.assignTeacherToCourse(teacherId, courseId);
         return new StringBuilder().append(REDIRECT_KEY_WORD)
                                   .append(COURSES_PATH)

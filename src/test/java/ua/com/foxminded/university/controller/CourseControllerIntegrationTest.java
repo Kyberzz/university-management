@@ -36,7 +36,6 @@ import ua.com.foxminded.university.entitymother.CourseEntityMother;
 import ua.com.foxminded.university.entitymother.UserEntityMother;
 import ua.com.foxminded.university.model.Authority;
 import ua.com.foxminded.university.model.CourseModel;
-import ua.com.foxminded.university.model.TeacherModel;
 import ua.com.foxminded.university.modelmother.CourseModelMother;
 import ua.com.foxminded.university.repository.UserAuthorityRepository;
 import ua.com.foxminded.university.repository.UserRepository;
@@ -48,7 +47,8 @@ import ua.com.foxminded.university.repository.UserRepository;
 @Transactional
 class CourseControllerIntegrationTest {
     
-    public static final int ID = 1;
+    public static final int COURSE_ID = 1;
+    public static final int TEACHER_ID = 1;
     public static final String AUTHORIZED_EMAIL = "authorized@email";
     
     @Autowired
@@ -107,11 +107,20 @@ class CourseControllerIntegrationTest {
     
     @Test
     @WithUserDetails(AUTHORIZED_EMAIL)
-    void assignTeacherToCourse() throws Exception {
-        TeacherModel teacherModel = TeacherModel.builder().id(ID).build();
-        courseModel.setTeacher(teacherModel);
-        mockMvc.perform(post("/{courseId}/assign-teacher", courseModel.getId())
-                .flashAttr("updatedCourse", courseModel)
+    void deassignTeacherToCourse_ShouldAuthenticateCredentialsAndRedirect() throws Exception {
+        mockMvc.perform(post("/courses/{courseId}/deassign-teacher", COURSE_ID)
+                    .param("teacherId", String.valueOf(TEACHER_ID))
+                    .with(csrf()))
+        .andDo(print())
+        .andExpect(authenticated().withRoles(Authority.ADMIN.toString()))
+        .andExpect(status().is3xxRedirection());
+    }
+    
+    @Test
+    @WithUserDetails(AUTHORIZED_EMAIL)
+    void assignTeacherToCourse_ShouldAuthenticateCredentialsAndRedirect() throws Exception {
+        mockMvc.perform(post("/courses/{courseId}/assign-teacher", COURSE_ID)
+                .param("teacherId", String.valueOf(TEACHER_ID))
                 .with(csrf()))
                     .andDo(print())
                     .andExpect(authenticated().withRoles(Authority.ADMIN.toString()))

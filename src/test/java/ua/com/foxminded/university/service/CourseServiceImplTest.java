@@ -69,6 +69,8 @@ class CourseServiceImplTest {
     @Test
     void deassignTeacherToCourse_ShouldExecuteCorrectCallsQuantity() throws ServiceException {
         when(courseRepositoryMock.findById(anyInt())).thenReturn(courseEntity);
+        when(teacherRepositoryMock.findById(anyInt())).thenReturn(teacherEntity);
+        
         courseService.deassignTeacherToCourse(TEACHER_ID, COURSE_ID);
         
         verify(courseRepositoryMock).saveAndFlush(isA(CourseEntity.class));
