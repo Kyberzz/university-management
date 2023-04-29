@@ -1,6 +1,7 @@
 package ua.com.foxminded.university.service;
 
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -9,7 +10,6 @@ import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,7 +29,6 @@ import ua.com.foxminded.university.entitymother.CourseEntityMother;
 import ua.com.foxminded.university.entitymother.TeacherEntityMother;
 import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.CourseModel;
-import ua.com.foxminded.university.model.TeacherModel;
 import ua.com.foxminded.university.modelmother.CourseModelMother;
 import ua.com.foxminded.university.repository.CourseRepository;
 import ua.com.foxminded.university.repository.TeacherRepository;
@@ -40,6 +39,9 @@ class CourseServiceImplTest {
     
     private static final Type TYPE = new TypeToken<List<CourseModel>>() {}.getType();
     private static final int ID = 1;
+    private static final int TEACHER_ID = 1;
+    private static final int COURSE_ID = 1;
+    
     
     @InjectMocks
     private CourseServiceImpl courseService;
@@ -60,48 +62,25 @@ class CourseServiceImplTest {
     @BeforeEach
     void setUp() {
         courseModel = CourseModelMother.complete().build();
-        courseEntity = CourseEntityMother.complete().build();
-        teacherEntity = TeacherEntityMother.complete().build();
+        courseEntity = CourseEntityMother.complete().teachers(new HashSet<>()).build();
+        teacherEntity = TeacherEntityMother.complete().courses(new HashSet<>()).build();
     }
     
     @Test
     void deassignTeacherToCourse_ShouldExecuteCorrectCallsQuantity() throws ServiceException {
-        courseModel.setId(ID);
-        courseModel.setTeachers(new HashSet<>());
-        TeacherModel teacherModel = TeacherModel.builder().id(ID).build();
-        courseModel.getTeachers().add(teacherModel);
-        teacherEntity.setCourses(new HashSet<>());
-        courseEntity.setId(ID);
-        teacherEntity.getCourses().add(courseEntity);
+        when(courseRepositoryMock.findById(anyInt())).thenReturn(courseEntity);
+        courseService.deassignTeacherToCourse(TEACHER_ID, COURSE_ID);
         
-        when(teacherRepositoryMock.findById(anyInt())).thenReturn(teacherEntity);
-        courseService.deassignTeacherToCourse(courseModel);
-        verify(teacherRepositoryMock, times(1)).saveAllAndFlush(
-                ArgumentMatchers.<TeacherEntity>anySet());
+        verify(courseRepositoryMock).saveAndFlush(isA(CourseEntity.class));
     }
     
     @Test
     void assignTeacherToCourse_ShouldExecuteCorrectCallsQuantity() throws ServiceException {
-        teacherEntity.setCourses(new HashSet<>());
-        courseEntity.setTeachers(new HashSet<>());
-        courseEntity.getTeachers().add(teacherEntity);
-        courseModel.setId(ID);
-        
-        Set<TeacherModel> teachers = new HashSet<>();
-        TeacherModel teacher = TeacherModel.builder().id(ID).build();
-        teachers.add(teacher);
-       
-        courseModel.setTeachers(teachers);
         when(courseRepositoryMock.findById(anyInt())).thenReturn(courseEntity);
         when(teacherRepositoryMock.findById(anyInt())).thenReturn(teacherEntity);
+        courseService.assignTeacherToCourse(TEACHER_ID, COURSE_ID);
         
-        courseService.assignTeacherToCourse(courseModel);
-        
-        InOrder inOrder = Mockito.inOrder(courseRepositoryMock, teacherRepositoryMock);
-        inOrder.verify(courseRepositoryMock, times(1)).findById(anyInt());
-        inOrder.verify(teacherRepositoryMock, times(1)).findById(anyInt());
-        inOrder.verify(teacherRepositoryMock, times(1)).saveAllAndFlush(
-                ArgumentMatchers.<TeacherEntity>anySet());
+        verify(courseRepositoryMock).saveAndFlush(isA(CourseEntity.class));
     }
     
     @Test

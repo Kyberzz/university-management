@@ -25,7 +25,7 @@
   aria-hidden="true">
   <div class="modal-dialog">
    <form class="modal-content" th:action="@{/courses/create}"
-    th:object="${course}" method="post">
+    th:object="${courseModel}" method="post">
     <div class="modal-header">
      <h1 class="modal-title fs-5" id="addCourse" th:text="#{courses.addCourse}">Add
       a course</h1>

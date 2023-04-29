@@ -2,8 +2,9 @@ package ua.com.foxminded.university.service.impl;
 
 import java.lang.reflect.Type;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
+
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceUnit;
 
 import org.modelmapper.ConfigurationException;
 import org.modelmapper.MappingException;
@@ -32,47 +33,26 @@ public class CourseServiceImpl implements CourseService {
     private final TeacherRepository teacherRepository;
     private final ModelMapper modelMapper;
     
+    @PersistenceUnit
+    private  EntityManagerFactory entityManagerFactory;
+    
     @Override
-    public void deassignTeacherToCourse(CourseModel courseModel) throws ServiceException {
-        try {
-            Set<TeacherEntity> teacherEntities = courseModel.getTeachers().stream()
-                    .map(teacher -> {
-                        return teacherRepository.findById(teacher.getId().intValue());
-                    }).collect(Collectors.toSet());
-            teacherEntities.stream().forEach(teacher -> {
-                Set<CourseEntity> courses = teacher.getCourses().stream()
-                       .filter(course -> !course.getId().equals(courseModel.getId()))
-                       .collect(Collectors.toSet());
-                teacher.setCourses(courses);
-            });
-            
-            teacherRepository.saveAllAndFlush(teacherEntities);
-        } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
-            throw new ServiceException("Deassigning teacher to a course fails", e);
-        }
+    public void deassignTeacherToCourse(int teacherId, int courseId) {
+        
+            CourseEntity course = courseRepository.findById(courseId);
+            TeacherEntity teacher = teacherRepository.findById(teacherId);
+            course.removeTeacher(teacher);
+            courseRepository.saveAndFlush(course);
     }
     
     @Override
-    public void assignTeacherToCourse(CourseModel courseModel) throws ServiceException {
-        try {
-            CourseEntity courseEntity = courseRepository.findById(
-                    courseModel.getId().intValue());
-            
-            Set<TeacherEntity> teachers = courseModel.getTeachers().stream()
-                    .map(teacher -> {
-                        TeacherEntity teacherEntity = teacherRepository.findById(
-                                teacher.getId().intValue());
-                        teacherEntity.getCourses().add(courseEntity);
-                        return teacherEntity;
-                    })
-                    .collect(Collectors.toSet());
-            
-            teacherRepository.saveAllAndFlush(teachers);
-        } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
-            throw new ServiceException("Adding teacher to a course fails", e);
-        }
+    public void assignTeacherToCourse(int teacherId, int courseId) {
+        TeacherEntity teacher = teacherRepository.findById(teacherId);
+        CourseEntity course = courseRepository.findById(courseId);
+        course.addTeacher(teacher);
+        courseRepository.saveAndFlush(course);
     }
-    
+
     @Override
     public CourseModel getTimetableAndTeachersByCourseId(int id) throws ServiceException {
         try {

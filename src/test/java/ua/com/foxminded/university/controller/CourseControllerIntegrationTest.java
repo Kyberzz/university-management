@@ -4,6 +4,7 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import javax.persistence.EntityManager;
@@ -35,6 +36,7 @@ import ua.com.foxminded.university.entitymother.CourseEntityMother;
 import ua.com.foxminded.university.entitymother.UserEntityMother;
 import ua.com.foxminded.university.model.Authority;
 import ua.com.foxminded.university.model.CourseModel;
+import ua.com.foxminded.university.model.TeacherModel;
 import ua.com.foxminded.university.modelmother.CourseModelMother;
 import ua.com.foxminded.university.repository.UserAuthorityRepository;
 import ua.com.foxminded.university.repository.UserRepository;
@@ -46,6 +48,7 @@ import ua.com.foxminded.university.repository.UserRepository;
 @Transactional
 class CourseControllerIntegrationTest {
     
+    public static final int ID = 1;
     public static final String AUTHORIZED_EMAIL = "authorized@email";
     
     @Autowired
@@ -104,7 +107,20 @@ class CourseControllerIntegrationTest {
     
     @Test
     @WithUserDetails(AUTHORIZED_EMAIL)
-    void get_ShouldAuthenticateCredentialsAndReturnStatusIsOk() throws Exception {
+    void assignTeacherToCourse() throws Exception {
+        TeacherModel teacherModel = TeacherModel.builder().id(ID).build();
+        courseModel.setTeacher(teacherModel);
+        mockMvc.perform(post("/{courseId}/assign-teacher", courseModel.getId())
+                .flashAttr("updatedCourse", courseModel)
+                .with(csrf()))
+                    .andDo(print())
+                    .andExpect(authenticated().withRoles(Authority.ADMIN.toString()))
+                    .andExpect(status().is3xxRedirection());
+    }
+    
+    @Test
+    @WithUserDetails(AUTHORIZED_EMAIL)
+    void getById_ShouldAuthenticateCredentialsAndReturnStatusIsOk() throws Exception {
         mockMvc.perform(get("/courses/{id}", courseEntity.getId()))
                .andExpect(authenticated().withRoles(Authority.ADMIN.toString()))
                .andExpect(status().isOk());

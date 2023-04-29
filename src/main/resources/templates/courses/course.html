@@ -20,7 +20,7 @@
    <li class="breadcrumb-item"><a th:href="@{/courses/list}"
     th:text="#{href.courses}">Courses</a></li>
    <li class="breadcrumb-item active" aria-current="page"
-    th:text="${course.id}">1</li>
+    th:text="${courseModel.id}">1</li>
   </ol>
  </nav>
 
@@ -33,15 +33,15 @@
      <div class="row">
       <div class="col-5 fs-6 fw-bold text-end"
        th:text="|#{thead.courseId}: |">Course Id:</div>
-      <div class="col-7 fs-6" th:text="${course.id}">1</div>
+      <div class="col-7 fs-6" th:text="${courseModel.id}">1</div>
       <span> <input type="hidden" name=courseId
-       th:value="${course.id}">
+       th:value="${courseModel.id}">
       </span>
      </div>
      <div class="row">
       <div class="col-5 fs-6 fw-bold text-end"
        th:text="|#{thead.name}: |">Name:</div>
-      <div class="col-7 fs-6" th:text="${course.name}">lt-74</div>
+      <div class="col-7 fs-6" th:text="${courseModel.name}">lt-74</div>
      </div>
      <div class="row">
       <div class="col-5 fs-6 fw-bold text-end"
@@ -55,10 +55,10 @@
      <div class="row">
       <div class="col-5 fs-6 fw-bold text-end"
        th:text="|#{thead.description}: |">Description:</div>
-      <div class="col-7" th:if="${course.description == null}"
+      <div class="col-7" th:if="${courseModel.description == null}"
        th:text="#{courses.noDescription}">No Description</div>
-      <div class="col-7" th:if="${course.description != null}"
-       th:text="${course.description}">Some description</div>
+      <div class="col-7" th:if="${courseModel.description != null}"
+       th:text="${courseModel.description}">Some description</div>
      </div>
      <div class="row">
       <div class="col-5 fs-6 fw-bold text-end"
@@ -93,7 +93,7 @@
        </tr>
       </thead>
       <tbody>
-       <tr th:each="teacher,iterationStatus : ${course.teachers}">
+       <tr th:each="teacher,iterationStatus : ${courseModel.teachers}">
         <th scope="row" th:text="${iterationStatus.count}">1</th>
         <td th:text="${teacher.user.person?.firstName}">Dennis</td>
         <td th:text="${teacher.user.person?.lastName}">Ritchie</td>
@@ -106,7 +106,7 @@
 
          <form class="modal fade" method="post"
           th:id="|deassign${teacher.id}|"
-          th:action="@{/courses/__${course.id}__/deassign_teacher}"
+          th:action="@{/courses/__${courseModel.id}__/deassign-teacher}"
           data-bs-backdrop="static" data-bs-keyboard="false"
           tabindex="-1" aria-labelledby="staticBackdropLabel"
           aria-hidden="true">
@@ -120,7 +120,8 @@
             <div class="modal-body">
              <div class="container-fluid">
               <div>
-               <input type="hidden" name="teacherId" th:value="${teacher.id}">
+               <input type="hidden" name="teacherId"
+                th:value="${teacher.id}">
               </div>
               <div th:text="#{courses.deassign-course}">Deassign
                teacher to a course</div>
@@ -153,8 +154,7 @@
       aria-labelledby="addCourse" aria-hidden="true">
       <div class="modal-dialog">
        <form class="modal-content"
-        th:action="@{/courses/__${course.id}__/assign_teacher}"
-        th:object="${updatedCourse}" method="post">
+        th:action="@{/courses/__${courseModel.id}__/assign-teacher}" method="post">
         <div class="modal-header">
          <h1 class="modal-title fs-5"
           th:text="#{courses.assign-teacher}">Assign a teacher to
@@ -167,7 +167,7 @@
           <div class="row">
            <div class="col">
             <select class="form-select" aria-label="Lesson selection"
-             th:field="*{teacher.id}">
+             name="teacherId">
              <option th:each="teacher : ${allTeachers}"
               th:value="${teacher.id}"
               th:text="|${teacher.user.person.firstName} ${teacher.user.person.lastName}|">Dennis
@@ -202,7 +202,7 @@
       </tr>
      </thead>
      <tbody>
-      <tr th:each="timetable,iterationStatus : ${course.timetables}">
+      <tr th:each="timetable,iterationStatus : ${courseModel.timetables}">
        <th scope="row" th:text="${iterationStatus.count}">1</th>
        <td th:text="${timetable.lessonOrder?.representation}">1th</td>
        <td th:text="${timetable.datestamp?.dayOfWeek}">Monday</td>

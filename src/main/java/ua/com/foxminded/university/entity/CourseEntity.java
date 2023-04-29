@@ -40,4 +40,14 @@ public class CourseEntity implements Serializable {
     @OneToMany(mappedBy = "course")
     @EqualsAndHashCode.Exclude
     private Set<TimetableEntity> timetables;
+    
+    public void addTeacher(TeacherEntity teacher) {
+        this.teachers.add(teacher);
+        teacher.getCourses().add(this);
+    }
+    
+    public void removeTeacher(TeacherEntity teacher) {
+        this.teachers.remove(teacher);
+        teacher.getCourses().remove(this);
+    }
 }

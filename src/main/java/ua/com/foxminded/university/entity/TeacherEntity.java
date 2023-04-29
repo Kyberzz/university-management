@@ -47,4 +47,14 @@ public class TeacherEntity implements Serializable {
     @JoinColumn(name = "user_id")
     @EqualsAndHashCode.Exclude
     private UserEntity user;
+    
+    public void addCourse(CourseEntity course) {
+        this.courses.add(course);
+        course.getTeachers().add(this);
+    }
+    
+    public void removeCourse(CourseEntity course) {
+        this.courses.remove(course);
+        course.getTeachers().remove(this);
+    }
 }

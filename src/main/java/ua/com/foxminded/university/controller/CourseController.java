@@ -1,6 +1,5 @@
 package ua.com.foxminded.university.controller;
 
-import java.util.HashSet;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -30,36 +29,28 @@ public class CourseController extends DefaultController {
     
     public static final String UPDATED_COURSE_ATTRIBUTE = "updatedCourse";
     public static final String COURSE_TEMPLATE = "course";
-    public static final String COURSE_ATTRIBUTE = "course";
+    public static final String COURSE_MODEL_ATTRIBUTE = "courseModel";
     public static final String COURSES_ATTRIBUTE = "courses";
     public static final String COURSES_PATH = "/courses/";
     
     private final TeacherService teacherService;
     private final CourseService courseService;
     
-    @PostMapping(value = "/{courseId}/deassign_teacher", params = "teacherId")
+    @PostMapping(value = "/{courseId}/deassign-teacher", params = "teacherId")
     public String deassignTeacherToCourse(@PathVariable int courseId, 
                                           @RequestParam int teacherId) 
                                                   throws ServiceException {
-        TeacherModel teacher = TeacherModel.builder().id(teacherId).build();
-        CourseModel course = CourseModel.builder()
-                                        .id(courseId)
-                                        .teachers(new HashSet<>()).build();
-        course.getTeachers().add(teacher);
-        courseService.deassignTeacherToCourse(course);
+        courseService.deassignTeacherToCourse(teacherId, courseId);
         return new StringBuilder().append(REDIRECT_KEY_WORD)
                                   .append(COURSES_PATH)
                                   .append(courseId).toString();
     }
     
-    @PostMapping("/{courseId}/assign_teacher")
+    @PostMapping(value = "/{courseId}/assign-teacher", params = "teacherId")
     public String assignTeacherToCourse(@PathVariable int courseId, 
-                                        @ModelAttribute CourseModel updatedCourse) 
+                                        @RequestParam int teacherId) 
                                                 throws ServiceException {
-        updatedCourse.setId(courseId);
-        updatedCourse.setTeachers(new HashSet<>());
-        updatedCourse.getTeachers().add(updatedCourse.getTeacher());
-        courseService.assignTeacherToCourse(updatedCourse);
+        courseService.assignTeacherToCourse(teacherId, courseId);
         return new StringBuilder().append(REDIRECT_KEY_WORD)
                                   .append(COURSES_PATH)
                                   .append(courseId).toString();
@@ -67,13 +58,13 @@ public class CourseController extends DefaultController {
     
     @GetMapping("/{id}")
     public String getById(@PathVariable int id, Model model) throws ServiceException {
-        CourseModel course = courseService.getTimetableAndTeachersByCourseId(id);
+        CourseModel courseModel = courseService.getTimetableAndTeachersByCourseId(id);
         CourseModel updatedCourse = new CourseModel();
         List<TeacherModel> allTeachers = teacherService.getAll();
         
         model.addAttribute("allTeachers", allTeachers);
         model.addAttribute(UPDATED_COURSE_ATTRIBUTE, updatedCourse);
-        model.addAttribute(COURSE_ATTRIBUTE, course);
+        model.addAttribute(COURSE_MODEL_ATTRIBUTE, courseModel);
         return "courses/course";
     }
     
@@ -101,13 +92,13 @@ public class CourseController extends DefaultController {
     }
     
     @PostMapping(value = "/create")
-    public String create(@Valid @ModelAttribute CourseModel course, 
+    public String create(@Valid @ModelAttribute CourseModel courseModel, 
                          BindingResult bindingResult) throws BindException, 
                                                              ServiceException {
         if (bindingResult.hasErrors()) {
             throw new BindException(bindingResult);
         }
-        courseService.create(course);   
+        courseService.create(courseModel);   
         return new StringBuilder().append(REDIRECT_KEY_WORD)
                                   .append(COURSES_PATH)
                                   .append(LIST_TEMPLATE).toString();
@@ -118,7 +109,7 @@ public class CourseController extends DefaultController {
         CourseModel course = new CourseModel();
         List<CourseModel> courses = courseService.getAll();
         model.addAttribute(COURSES_ATTRIBUTE, courses);
-        model.addAttribute(COURSE_ATTRIBUTE, course);
+        model.addAttribute(COURSE_MODEL_ATTRIBUTE, course);
         return "courses/list";
     }
 }

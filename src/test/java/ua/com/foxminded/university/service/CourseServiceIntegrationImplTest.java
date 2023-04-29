@@ -3,7 +3,6 @@ package ua.com.foxminded.university.service;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.HashSet;
-import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -23,9 +22,6 @@ import ua.com.foxminded.university.entity.TeacherEntity;
 import ua.com.foxminded.university.entitymother.CourseEntityMother;
 import ua.com.foxminded.university.entitymother.TeacherEntityMother;
 import ua.com.foxminded.university.exception.ServiceException;
-import ua.com.foxminded.university.model.CourseModel;
-import ua.com.foxminded.university.model.TeacherModel;
-import ua.com.foxminded.university.modelmother.CourseModelMother;
 import ua.com.foxminded.university.repository.CourseRepository;
 
 @SpringBootTest
@@ -48,7 +44,6 @@ class CourseServiceIntegrationImplTest {
     private TeacherEntity teacherEntity_1;
     private TeacherEntity teacherEntity_2;
     private CourseEntity courseEntity;
-    private CourseModel courseModel;
     
     @BeforeEach
     void setUp() {
@@ -67,40 +62,24 @@ class CourseServiceIntegrationImplTest {
 
         entityManager.getTransaction().commit();
         entityManager.close();
-        
-        courseModel = CourseModelMother.complete().build();
     }
     
     @Test
     void deassignTeacherToCourse_ShouldDeleteDependencies() throws ServiceException {
-        TeacherModel teacherModel = TeacherModel.builder()
-                .id(teacherEntity_2.getId()).build();
-        CourseModel courseModel = CourseModelMother.complete()
-                .id(courseEntity.getId().intValue())
-                .teachers(new HashSet<>()).build();
-        courseModel.getTeachers().add(teacherModel);
-        
-        courseService.deassignTeacherToCourse(courseModel);
+        courseService.deassignTeacherToCourse(teacherEntity_2.getId(), courseEntity.getId());
 
         CourseEntity persistedCourse = courseRepository.findById(
-                courseModel.getId().intValue());
+                courseEntity.getId().intValue());
         assertEquals(ZERO_SET_SIZE, persistedCourse.getTeachers().size());
     }
     
     @Test
     void assignTeacherToCourse_ShouldCreateDependencies() throws ServiceException {
-        TeacherModel teacherModel = TeacherModel.builder()
-                                                .id(teacherEntity_1.getId()).build();
-        
-        Set<TeacherModel> teachers = new HashSet<>();
-        teachers.add(teacherModel);
-        courseModel.setTeachers(teachers);
-        courseModel.setId(courseEntity.getId());
-        
-        courseService.assignTeacherToCourse(courseModel);
+        courseService.assignTeacherToCourse(teacherEntity_1.getId().intValue(), 
+                                            courseEntity.getId().intValue());
         
         CourseEntity persistedCourse = courseRepository.findById(
-                courseModel.getId().intValue());
+                courseEntity.getId().intValue());
         
         assertEquals(COURSE_QUANTITY, persistedCourse.getTeachers().size());
     }

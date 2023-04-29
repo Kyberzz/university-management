@@ -18,7 +18,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import ua.com.foxminded.university.model.CourseModel;
-import ua.com.foxminded.university.model.TeacherModel;
 import ua.com.foxminded.university.modelmother.CourseModelMother;
 import ua.com.foxminded.university.service.CourseService;
 import ua.com.foxminded.university.service.TeacherService;
@@ -27,7 +26,8 @@ import ua.com.foxminded.university.service.TeacherService;
 class CourseControllerTest {
     
     private static final String BAD_CONTENT = "bad content";
-    private static final int ID = 1;
+    private static final int TEACHER_ID = 1;
+    private static final int COURSE_ID = 1;
     
     @MockBean
     private TeacherService teacherServiceMock;
@@ -48,31 +48,30 @@ class CourseControllerTest {
     
     @Test
     void deassignTeacherToCourse() throws Exception {
-        mockMvc.perform(post("/courses/{courseId}/deassign_teacher", ID)
-                .param("teacherId", String.valueOf(ID)))
-                    .andDo(print())
-                    .andExpect(redirectedUrl("/courses/" + ID));
+        mockMvc.perform(post("/courses/{courseId}/deassign-teacher", 
+                             COURSE_ID).param("teacherId", String.valueOf(TEACHER_ID)))
+               .andDo(print())
+               .andExpect(redirectedUrl("/courses/" + COURSE_ID));
         
-        verify(courseServiceMock).deassignTeacherToCourse(isA(CourseModel.class));
+        verify(courseServiceMock).deassignTeacherToCourse(TEACHER_ID, COURSE_ID);
     }
     
     @Test
     void assignTeacherToCourse_ShouldRedirectToCourseView() throws Exception {
-        course.setTeacher(new TeacherModel());
         
-        mockMvc.perform(post("/courses/{courseId}/assign_teacher", ID)
-                .flashAttr("updatedCourse", course))
-                   .andDo(print())
-                   .andExpect(redirectedUrl("/courses/" + ID));
+        mockMvc.perform(post("/courses/{courseId}/assign-teacher", COURSE_ID).param(
+                    "teacherId", String.valueOf(TEACHER_ID)))
+               .andDo(print())
+               .andExpect(redirectedUrl("/courses/" + COURSE_ID));
         
-        verify(courseServiceMock).assignTeacherToCourse(isA(CourseModel.class));
+        verify(courseServiceMock).assignTeacherToCourse(COURSE_ID, TEACHER_ID);
     }
     
     @Test
     void getById_ShouldRenderCourseView() throws Exception {
         when(courseServiceMock.getTimetableAndTeachersByCourseId(anyInt())).thenReturn(course);
         
-        mockMvc.perform(get("/courses/{id}", ID))
+        mockMvc.perform(get("/courses/{id}", COURSE_ID))
                .andDo(print())
                .andExpect(status().isOk())
                .andExpect(model().attributeExists("course"))
@@ -81,14 +80,14 @@ class CourseControllerTest {
     
     @Test
     void delete_ShouldDeleteCourseAndRedirectToListView() throws Exception {
-        mockMvc.perform(post("/courses/delete").param("courseId", String.valueOf(ID)))
+        mockMvc.perform(post("/courses/delete").param("courseId", String.valueOf(COURSE_ID)))
                .andExpect(redirectedUrl("/courses/list"));
         verify(courseServiceMock, times(1)).deleteById(anyInt());
     }
     
     @Test
     void update_ShouldReturnBadRequestStatus() throws Exception {
-        mockMvc.perform(post("/courses/update").param("courseId", String.valueOf(ID))
+        mockMvc.perform(post("/courses/update").param("courseId", String.valueOf(COURSE_ID))
                                                .content(BAD_CONTENT))
                .andExpect(status().is4xxClientError())
                .andExpect(view().name("error"));
@@ -98,9 +97,9 @@ class CourseControllerTest {
     void update_ShouldUpdateCourseAndRedirectToCourseView() throws Exception {
         when(courseServiceMock.getById(anyInt())).thenReturn(course);
         
-        mockMvc.perform(post("/courses/update").param("courseId", String.valueOf(ID))
+        mockMvc.perform(post("/courses/update").param("courseId", String.valueOf(COURSE_ID))
                                                .flashAttr("courseModel", course))
-               .andExpect(redirectedUrl("/courses/" + ID));
+               .andExpect(redirectedUrl("/courses/" + COURSE_ID));
         
         verify(courseServiceMock, times(1)).update(isA(CourseModel.class));
     }
