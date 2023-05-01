@@ -99,7 +99,7 @@ public class TimetableController extends DefaultController {
         timetableModel.getCourse().setTeachers(new HashSet<>());
         timetableModel.getCourse().getTeachers().add(new TeacherModel());
         List<CourseModel> courses = courseService.getAll();
-        List<GroupModel> groups = groupService.getAllGroups();
+        List<GroupModel> groups = groupService.getAll();
         
         model.addAttribute(GROUPS_ATTRIBUTE, groups);
         model.addAttribute(COURSES_ATTRIBUTE, courses);
@@ -138,7 +138,7 @@ public class TimetableController extends DefaultController {
         TimetableModel timetableModel = new TimetableModel();
         timetableModel.setDatestamp(currentDate);
         List<CourseModel> courses = courseService.getAll();
-        List<GroupModel> groups = groupService.getAllGroups();
+        List<GroupModel> groups = groupService.getAll();
         
         model.addAttribute(GROUPS_ATTRIBUTE, groups);
         model.addAttribute(COURSES_ATTRIBUTE, courses);

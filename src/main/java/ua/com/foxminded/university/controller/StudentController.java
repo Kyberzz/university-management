@@ -40,7 +40,7 @@ public class StudentController extends DefaultController {
     @RequestMapping("/list")
     public String getAllStudents(Model model) throws ServiceException {
         List<StudentModel> students = studentService.getAll();
-        List<GroupModel> groups = groupService.getAllGroups();
+        List<GroupModel> groups = groupService.getAll();
         StudentModel student = new StudentModel();
         model.addAttribute("studentModel", student);
         model.addAttribute("students", students);

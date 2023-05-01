@@ -19,6 +19,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @Table(name = "teachers", schema = "university")
@@ -41,11 +42,11 @@ public class TeacherEntity implements Serializable {
             joinColumns = @JoinColumn(name = "teacher_id", referencedColumnName="id"),
             inverseJoinColumns = @JoinColumn(name = "course_id", referencedColumnName = "id"))
     @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private Set<CourseEntity> courses;
     
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
-    @EqualsAndHashCode.Exclude
     private UserEntity user;
     
     public void addCourse(CourseEntity course) {

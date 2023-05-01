@@ -45,14 +45,14 @@ insert into university.users(first_name, last_name) values('Margaret', 'Thatcher
 insert into university.users(first_name, last_name) values('Sansa', 'Stark');
 insert into university.users(first_name, last_name) values('Rhaenyra', 'Targaryen');
 
-insert into university.students(user_id, group_id) values(6, 1);
-insert into university.students(user_id, group_id) values(7, 1);
-insert into university.students(user_id, group_id) values(8, 1);
 insert into university.students(user_id, group_id) values(9, 1);
-insert into university.students(user_id, group_id) values(10, 2);
-insert into university.students(user_id, group_id) values(11, 2);
-insert into university.students(user_id, group_id) values(12, 2);
+insert into university.students(user_id, group_id) values(10, 1);
+insert into university.students(user_id, group_id) values(11, 1);
+insert into university.students(user_id, group_id) values(12, 1);
 insert into university.students(user_id, group_id) values(13, 2);
+insert into university.students(user_id, group_id) values(14, 2);
+insert into university.students(user_id, group_id) values(15, 2);
+insert into university.students(user_id, group_id) values(16, 2);
 
 insert into university.timetables(start_time, break_duration, datestamp, group_id, course_id)
     values('08:00', 15, '2023-04-20', 1, 1);

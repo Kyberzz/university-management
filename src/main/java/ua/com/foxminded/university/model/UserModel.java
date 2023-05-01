@@ -9,16 +9,18 @@ import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-@Data
+
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Data
 public class UserModel implements Serializable {
     
     private static final long serialVersionUID = 1L;
-    
+
     private Integer id;
     
     @Email
@@ -27,12 +29,20 @@ public class UserModel implements Serializable {
     @NotNull
     private Boolean enabled;
     private String password;
+    
     private PersonModel person;
     
     @NotNull
+    @EqualsAndHashCode.Exclude
     private UserAuthorityModel userAuthority;
+    
+    @EqualsAndHashCode.Exclude
     private TeacherModel teacher;
+    
+    @EqualsAndHashCode.Exclude
     private StudentModel student;
+    
+    @EqualsAndHashCode.Exclude
     private StaffModel staff;
     
     

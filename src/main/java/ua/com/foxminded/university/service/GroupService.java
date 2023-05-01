@@ -1,15 +1,14 @@
 package ua.com.foxminded.university.service;
 
-import java.util.List;
 
 import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.GroupModel;
 
-public interface GroupService {
+public interface GroupService extends GenericService<GroupModel> {
+    
+    public GroupModel getGroupRelationsById(int id) throws ServiceException;
 
-    public List<GroupModel> getAllGroups() throws ServiceException;
+    public GroupModel getStudentsByGroupId(int id) throws ServiceException;
 
-    public GroupModel getStudentListByGroupId(int id) throws ServiceException;
-
-    public GroupModel getTimetableListByGroupId(int id) throws ServiceException;
+    public GroupModel getTimetablesByGroupId(int id) throws ServiceException;
 }

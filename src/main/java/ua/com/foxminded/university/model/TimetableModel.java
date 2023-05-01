@@ -6,7 +6,6 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 import lombok.Data;
-import lombok.ToString;
 
 @Data
 public class TimetableModel implements Serializable {
@@ -20,7 +19,6 @@ public class TimetableModel implements Serializable {
     private Duration breakDuration;
     private String description;
     
-    @ToString.Exclude
     private CourseModel course;
     private GroupModel group;
 }

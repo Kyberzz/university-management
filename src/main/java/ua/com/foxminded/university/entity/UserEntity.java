@@ -15,11 +15,12 @@ import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Data
 @Table(name = "users", schema = "university")
+@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -38,15 +39,19 @@ public class UserEntity implements Serializable {
     private PersonEntity person;
     
     @OneToOne(mappedBy = "user")
+    @EqualsAndHashCode.Exclude
     private TeacherEntity teacher;
     
     @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
+    @EqualsAndHashCode.Exclude
     private StudentEntity student;
     
     @OneToOne(mappedBy = "user")
+    @EqualsAndHashCode.Exclude
     private StaffEntity staff;
     
     @OneToOne(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE, 
               orphanRemoval = true)
+    @EqualsAndHashCode.Exclude
     private UserAuthorityEntity userAuthority;
 }

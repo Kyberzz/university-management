@@ -8,6 +8,14 @@ public class TimetableModelComparator implements Comparator<TimetableModel> {
 
     @Override
     public int compare(TimetableModel one, TimetableModel another) {
-        return one.getStartTime().compareTo(another.getStartTime());
+        if (compareByDate(one, another) == 0 ) {
+            return one.getStartTime().compareTo(another.getStartTime());
+        } else {
+            return compareByDate(one, another);
+        }
+    }
+    
+    private int compareByDate(TimetableModel one, TimetableModel another) {
+        return one.getDatestamp().compareTo(another.getDatestamp());
     }
 }

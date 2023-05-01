@@ -16,6 +16,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @Table(name = "courses", schema = "university")
@@ -35,10 +36,12 @@ public class CourseEntity implements Serializable {
     
     @ManyToMany(mappedBy = "courses")
     @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private Set<TeacherEntity> teachers;
     
     @OneToMany(mappedBy = "course")
     @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private Set<TimetableEntity> timetables;
     
     public void addTeacher(TeacherEntity teacher) {

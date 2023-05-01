@@ -19,7 +19,7 @@
    <form class="modal-content" th:action="@{/students/add}"
     th:object="${studentModel}" method="post">
     <div class="modal-header">
-     <h1 class="modal-title fs-5" id="addStudent"
+     <h1 class="modal-title fs-6" id="addStudent"
       th:text="#{students.addStudent}">Add a student</h1>
      <button type="button" class="btn-close" data-bs-dismiss="modal"
       aria-label="Close"></button>
@@ -65,7 +65,7 @@
  <div class="container">
   <div class="row justify-content-center">
    <div class="col-10">
-    <p class="text-center fs-1 mt-5" th:text="#{students.tableName}">All
+    <p class="text-center fs-4 mt-4" th:text="#{students.tableName}">All
      students of the university</p>
     <table class="table">
      <thead>

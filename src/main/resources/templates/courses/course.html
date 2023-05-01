@@ -154,7 +154,8 @@
       aria-labelledby="addCourse" aria-hidden="true">
       <div class="modal-dialog">
        <form class="modal-content"
-        th:action="@{/courses/__${courseModel.id}__/assign-teacher}" method="post">
+        th:action="@{/courses/__${courseModel.id}__/assign-teacher}"
+        method="post">
         <div class="modal-header">
          <h1 class="modal-title fs-5"
           th:text="#{courses.assign-teacher}">Assign a teacher to
@@ -202,7 +203,8 @@
       </tr>
      </thead>
      <tbody>
-      <tr th:each="timetable,iterationStatus : ${courseModel.timetables}">
+      <tr
+       th:each="timetable,iterationStatus : ${courseModel.timetables}">
        <th scope="row" th:text="${iterationStatus.count}">1</th>
        <td th:text="${timetable.lessonOrder?.representation}">1th</td>
        <td th:text="${timetable.datestamp?.dayOfWeek}">Monday</td>

@@ -18,7 +18,7 @@
    <div class="ms-2" th:insert="~{fragments/logo::foxmindedLogo}"></div>
 
    <div class="justify-content-center"
-    th:if="!${#execInfo.processedTemplateName matches 'index|users/list|courses/course|timetables/list'}">
+    th:if="${#execInfo.processedTemplateName matches 'courses/list|timetables/day-timetable|groups/list|students/list|teachers/list'}">
     <div class="container-fluid gap-2">
      <button type="button" class="btn btn-success btn-lg"
       id="createButton" data-bs-toggle="modal" data-bs-target="#add"

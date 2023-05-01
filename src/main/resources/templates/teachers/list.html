@@ -60,8 +60,8 @@
      <tbody>
       <tr th:each="teacher,iterationStatus : ${teachers}">
        <th scope="row" th:text="${iterationStatus.count}">1</th>
-       <td th:text="${teacher.firstName}">Dennis</td>
-       <td th:text="${teacher.lastName}">Ritchie</td>
+       <td th:text="${teacher.user.person.firstName}">Dennis</td>
+       <td th:text="${teacher.user.person.lastName}">Ritchie</td>
        <td th:text="${teacher.id}">1</td>
       </tr>
      </tbody>

@@ -61,17 +61,25 @@ class GroupRepositoryTest {
         entityManager.getTransaction().commit();
         entityManager.close();
     }
+    
+    @Test
+    void getGroupRelationsById_ShouldReturnGroupWithItsAllRelations() {
+        GroupEntity receivedGroup = groupRepository.getGroupRelationsById(
+                group.getId().intValue());
+        assertEquals(STUDENTS_QUANTITY, receivedGroup.getStudents().size());
+        assertEquals(TIMETALBES_QUANTITY, receivedGroup.getTimetables().size());
+    }
 
     @Test
     void findTimetableListById_ShouldReturnTimetalbesOwnedByGroup() throws RepositoryException {
-        GroupEntity receivedGroup = groupRepository.findTimetableListById(group.getId());
-        assertEquals(TIMETALBES_QUANTITY, receivedGroup.getTimetableList().size());
+        GroupEntity receivedGroup = groupRepository.findTimetablesById(group.getId());
+        assertEquals(TIMETALBES_QUANTITY, receivedGroup.getTimetables().size());
     }
 
     @Test
     void findStudentListById_ShouldReturnStudentsOwnedByGroupWithId() 
             throws RepositoryException {
-        GroupEntity receivedGroup = groupRepository.findStudentListById(group.getId()
+        GroupEntity receivedGroup = groupRepository.findStudentsById(group.getId()
                                                                              .intValue());
         assertEquals(STUDENTS_QUANTITY, receivedGroup.getStudents().size());
     }

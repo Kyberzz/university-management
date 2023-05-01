@@ -20,7 +20,6 @@ import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import ua.com.foxminded.university.converter.DurationConverter;
 
@@ -44,19 +43,15 @@ public class TimetableEntity implements Serializable {
     @Column(name = "break_duration")
     @Convert(converter = DurationConverter.class)
     private Duration breakDuration;
-    
+    private LocalDate datestamp;
     private String description;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "group_id")
-    @EqualsAndHashCode.Exclude
     private GroupEntity group;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id")
-    @EqualsAndHashCode.Exclude
     private CourseEntity course;
     
-    @Column(name = "datestamp")
-    private LocalDate datestamp;
 }

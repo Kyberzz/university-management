@@ -7,16 +7,15 @@ import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.ToString;
 
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
+@Data
 public class CourseModel implements Serializable {
     
     private static final long serialVersionUID = 1L;
@@ -28,8 +27,10 @@ public class CourseModel implements Serializable {
     private String description;
     
     @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private Set<TeacherModel> teachers;
     
     @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private Set<TimetableModel> timetables;
 }
