@@ -15,8 +15,5 @@ public interface TimetableService extends GenericService<TimetableModel> {
     public List<List<List<TimetableModel>>> getMonthTimetable(LocalDate date) 
             throws ServiceException;
     
-    public List<List<TimetableModel>> getWeekTimetable(LocalDate date) 
-            throws ServiceException;
-    
     public List<TimetableModel> getDayTimetalbe(LocalDate date) throws ServiceException;
 }

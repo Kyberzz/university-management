@@ -1,5 +1,8 @@
 package ua.com.foxminded.university.controller;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -37,10 +40,13 @@ class TimetableControllerTest {
     }
 
     @Test
-    void shouldRenderTimetablesList() throws Exception {
+    void list_ShouldRenderListTemplate() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/timetables/list"))
-               .andExpect(MockMvcResultMatchers.status().isOk())
-               .andExpect(MockMvcResultMatchers.model().attributeExists("timetables"))
-               .andExpect(MockMvcResultMatchers.view().name("timetables/list"));
+               .andExpect(status().isOk())
+               .andExpect(model().attributeExists(TimetableController.GROUPS_ATTRIBUTE))
+               .andExpect(model().attributeExists(TimetableController.COURSES_ATTRIBUTE))
+               .andExpect(model().attributeExists(TimetableController.MONTH_TIMETABLE_ATTRIBUTE))
+               .andExpect(model().attributeExists(TimetableController.TIMETABLE_MODEL_ATTRIBUTE))
+               .andExpect(MockMvcResultMatchers.view().name(TimetableController.LIST_TEMPLATE));
     }
 }

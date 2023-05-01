@@ -10,6 +10,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Data
 @Builder
@@ -32,17 +33,20 @@ public class UserModel implements Serializable {
     
     @NotNull
     @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private UserAuthorityModel userAuthority;
     
     @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private TeacherModel teacher;
     
     @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private StudentModel student;
     
     @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private StaffModel staff;
-    
     
     public boolean hasStaff() {
         return staff != null;

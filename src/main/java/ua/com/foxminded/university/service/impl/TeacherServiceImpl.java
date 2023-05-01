@@ -28,22 +28,22 @@ public class TeacherServiceImpl implements TeacherService {
     @Override
     public List<TeacherModel> getAll() throws ServiceException {
         try {
-            List<TeacherEntity> teacherEntities = teacherRepository.findAll();
+            List<TeacherEntity> entities = teacherRepository.findAll();
             Type listType = new TypeToken<List<TeacherModel>>() {}.getType();
             ModelMapper modelMapper = new ModelMapper();
             modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-            return modelMapper.map(teacherEntities, listType);
+            return modelMapper.map(entities, listType);
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
             throw new ServiceException("Getting all teachers was failed", e);
         }
     }
     
     @Override
-    public TeacherModel getCourseListByTeacherId(int id) throws ServiceException {
+    public TeacherModel getCoursesByTeacherId(int id) throws ServiceException {
         try {
-            TeacherEntity teacherEntity = teacherRepository.findCoursesById(id);
+            TeacherEntity entity = teacherRepository.findCoursesById(id);
             ModelMapper modelMapper = new ModelMapper();
-            return modelMapper.map(teacherEntity, TeacherModel.class);
+            return modelMapper.map(entity, TeacherModel.class);
         } catch (IllegalArgumentException | ConfigurationException | 
                  MappingException e) {
             throw new ServiceException("Getting the courses list by the teacher id failed.", e);

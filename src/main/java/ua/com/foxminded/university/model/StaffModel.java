@@ -10,8 +10,5 @@ public class StaffModel implements Serializable {
     private static final long serialVersionUID = 1L;
     
     private Integer id;
-    private String firstName;
-    private String lastName;
-    private String position;
-    private UserAuthorityModel credentials;
+    private UserModel user;
 }

@@ -31,7 +31,7 @@ public class TimetableController extends DefaultController {
     public static final String GROUPS_ATTRIBUTE = "groups";
     public static final String DAY_TIMETABLES_PATH = "/timetables/daytimetables/";
     public static final String LIST_TEMPLATE = "timetables/list";
-    public static final String TIMETABLE_ATTRIBUTE = "timetableModel";
+    public static final String TIMETABLE_MODEL_ATTRIBUTE = "timetableModel";
     public static final String DAY_TIMETABLE_ATTRIBUTE = "dayTimetable";
     public static final String MONTH_TIMETABLE_ATTRIBUTE = "monthTimetable";
     
@@ -84,7 +84,7 @@ public class TimetableController extends DefaultController {
         TimetableModel timetableModel = new TimetableModel();
         timetableModel.setDatestamp(date);
         model.addAttribute(MONTH_TIMETABLE_ATTRIBUTE, monthTimetables);
-        model.addAttribute(TIMETABLE_ATTRIBUTE, timetableModel);
+        model.addAttribute(TIMETABLE_MODEL_ATTRIBUTE, timetableModel);
         return LIST_TEMPLATE;
     }
     
@@ -104,7 +104,7 @@ public class TimetableController extends DefaultController {
         model.addAttribute(GROUPS_ATTRIBUTE, groups);
         model.addAttribute(COURSES_ATTRIBUTE, courses);
         model.addAttribute(DAY_TIMETABLE_ATTRIBUTE, dayTimetable);
-        model.addAttribute(TIMETABLE_ATTRIBUTE, timetableModel);
+        model.addAttribute(TIMETABLE_MODEL_ATTRIBUTE, timetableModel);
         return "timetables/day-timetable";
     }
     
@@ -143,7 +143,7 @@ public class TimetableController extends DefaultController {
         model.addAttribute(GROUPS_ATTRIBUTE, groups);
         model.addAttribute(COURSES_ATTRIBUTE, courses);
         model.addAttribute(MONTH_TIMETABLE_ATTRIBUTE, monthTimetable);
-        model.addAttribute(TIMETABLE_ATTRIBUTE, timetableModel);
+        model.addAttribute(TIMETABLE_MODEL_ATTRIBUTE, timetableModel);
         return LIST_TEMPLATE;
     }
 }

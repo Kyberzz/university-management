@@ -25,12 +25,13 @@ import ua.com.foxminded.university.service.TimetableService;
 @RequiredArgsConstructor
 public class TimetableServiceImpl implements TimetableService {
     
+    public static final int OFFSET_WEEKS_QUANTITY = 3;
     public static final int WEEKS_QUANTITY = 4;
     public static final int END_WEEK_DAY_NUMBER = 7;
     public static final int START_WEEK_DAY_NUMBER = 0;
     public static final int ONE_DAY = 1;
-
-    private Type listType = new TypeToken<List<TimetableModel>>() {}.getType();
+    public static final Type TIMETABEL_MODEL_LIST_TYPE = 
+            new TypeToken<List<TimetableModel>>() {}.getType();
     
     private final ModelMapper modelMapper;
     private final TimetableRepository timetableRepository;
@@ -68,7 +69,7 @@ public class TimetableServiceImpl implements TimetableService {
             TimetableEntity entity = modelMapper.map(model, TimetableEntity.class);
             timetableRepository.saveAndFlush(entity);
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
-            
+            throw new ServiceException("Creating a timetable fails", e);
         }
     }
 
@@ -84,13 +85,15 @@ public class TimetableServiceImpl implements TimetableService {
     
     @Override
     public void moveBackDatestamp(TimetableModel timetable) {
-        LocalDate previousMonthDatestamp = timetable.getDatestamp().minusWeeks(3);
+        LocalDate previousMonthDatestamp = timetable.getDatestamp()
+                                                    .minusWeeks(OFFSET_WEEKS_QUANTITY);
         timetable.setDatestamp(previousMonthDatestamp);
     }
     
     @Override
     public void moveForwardDatestamp(TimetableModel timetable) {
-        LocalDate nextMonthDatestamp = timetable.getDatestamp().plusWeeks(3);
+        LocalDate nextMonthDatestamp = timetable.getDatestamp()
+                                                .plusWeeks(OFFSET_WEEKS_QUANTITY);
         timetable.setDatestamp(nextMonthDatestamp);
     }
     
@@ -98,36 +101,22 @@ public class TimetableServiceImpl implements TimetableService {
     public List<List<List<TimetableModel>>> getMonthTimetable(LocalDate date) 
             throws ServiceException {
         
-        List<List<List<TimetableModel>>> monthTimetables = new ArrayList<>();
+        List<List<List<TimetableModel>>> monthTimetable = new ArrayList<>();
         
         for(int i = 0; i < WEEKS_QUANTITY; i++) {
             LocalDate datestamp = date.plusWeeks(i);
             List<List<TimetableModel>> weekTimetables = getWeekTimetable(datestamp);
-            monthTimetables.add(weekTimetables);
+            monthTimetable.add(weekTimetables);
         }
-        return monthTimetables;
+        return monthTimetable;
     }
     
-    @Override
-    public List<List<TimetableModel>> getWeekTimetable(LocalDate date) 
-            throws ServiceException {
-        
-        LocalDate startDayOfWeek = findMondayOfWeek(date);
-        List<List<TimetableModel>> weekTimetables = new ArrayList<>();
-        List<TimetableModel> dayTimetables;
-        
-        for (int i = 0; i < DayOfWeek.values().length; i++) {
-            dayTimetables = getDayTimetalbe(startDayOfWeek.plusDays(i));
-            weekTimetables.add(dayTimetables);
-        }
-        return weekTimetables;
-    }
     
     @Override
     public List<TimetableModel> getDayTimetalbe(LocalDate date) throws ServiceException {
         try {
             List<TimetableEntity> entities = timetableRepository.findByDatestamp(date);
-            List<TimetableModel> models =  modelMapper.map(entities, listType);
+            List<TimetableModel> models =  modelMapper.map(entities, TIMETABEL_MODEL_LIST_TYPE);
 
             if (models.isEmpty()) {
                 models = new ArrayList<>();
@@ -145,10 +134,24 @@ public class TimetableServiceImpl implements TimetableService {
     public List<TimetableModel> getAll() throws ServiceException {
         try {
             List<TimetableEntity> timetableEntities = timetableRepository.findAll();
-            return modelMapper.map(timetableEntities, listType);
+            return modelMapper.map(timetableEntities, TIMETABEL_MODEL_LIST_TYPE);
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
             throw new ServiceException("Getting all timetables was failed", e);
         }
+    }
+    
+    private List<List<TimetableModel>> getWeekTimetable(LocalDate date) 
+            throws ServiceException {
+        
+        LocalDate startDayOfWeek = findMondayOfWeek(date);
+        List<List<TimetableModel>> weekTimetables = new ArrayList<>();
+        List<TimetableModel> dayTimetables;
+        
+        for (int i = 0; i < DayOfWeek.values().length; i++) {
+            dayTimetables = getDayTimetalbe(startDayOfWeek.plusDays(i));
+            weekTimetables.add(dayTimetables);
+        }
+        return weekTimetables;
     }
     
     private LocalDate findMondayOfWeek(LocalDate date) {

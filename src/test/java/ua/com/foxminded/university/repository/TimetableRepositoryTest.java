@@ -54,7 +54,7 @@ class TimetableRepositoryTest {
     }
     
     @Test
-    void findByDate_ShouldReturnTimetablesOfDay() {
+    void findByDatestamp_ShouldReturnTimetablesOfDay() {
         List<TimetableEntity> timetables = timetableRepository.findByDatestamp(
                 timetable.getDatestamp());
         assertEquals(timetable.getDatestamp(), timetables.iterator().next().getDatestamp());
