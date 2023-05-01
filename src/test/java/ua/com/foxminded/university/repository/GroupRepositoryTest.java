@@ -20,7 +20,6 @@ import ua.com.foxminded.university.entitymother.GroupEntityMother;
 import ua.com.foxminded.university.entitymother.StudentEntityMother;
 import ua.com.foxminded.university.entitymother.TimetableEntityMother;
 import ua.com.foxminded.university.entitymother.UserEntityMother;
-import ua.com.foxminded.university.exception.RepositoryException;
 
 @DataJpaTest
 @ActiveProfiles("test")
@@ -71,21 +70,20 @@ class GroupRepositoryTest {
     }
 
     @Test
-    void findTimetableListById_ShouldReturnTimetalbesOwnedByGroup() throws RepositoryException {
+    void findTimetableListById_ShouldReturnTimetalbesOwnedByGroup() {
         GroupEntity receivedGroup = groupRepository.findTimetablesById(group.getId());
         assertEquals(TIMETALBES_QUANTITY, receivedGroup.getTimetables().size());
     }
 
     @Test
-    void findStudentListById_ShouldReturnStudentsOwnedByGroupWithId() 
-            throws RepositoryException {
+    void findStudentListById_ShouldReturnStudentsOwnedByGroupWithId() {
         GroupEntity receivedGroup = groupRepository.findStudentsById(group.getId()
                                                                              .intValue());
         assertEquals(STUDENTS_QUANTITY, receivedGroup.getStudents().size());
     }
     
     @Test
-    void findById_ShouldRetrunGroupWithId() throws RepositoryException {
+    void findById_ShouldRetrunGroupWithId() {
         GroupEntity receivedGroup = groupRepository.findById(group.getId().intValue());
         assertEquals(group.getId(), receivedGroup.getId());
     }

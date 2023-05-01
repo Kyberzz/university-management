@@ -32,13 +32,11 @@ public class GroupEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String name;
-    
 
     @OneToMany(mappedBy = "group")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private Set<TimetableEntity> timetables;
-    
   
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "group")
     @EqualsAndHashCode.Exclude

@@ -20,8 +20,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Data
 @Table(name = "authorities", schema = "university")
+@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

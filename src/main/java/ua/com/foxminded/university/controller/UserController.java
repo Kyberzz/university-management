@@ -39,17 +39,19 @@ public class UserController extends DefaultController {
     
     @PostMapping(value = "/edit", params = {"userId"})
     public String update(@RequestParam("userId") Integer userId, 
-                       @Valid @ModelAttribute UserModel userModel, 
-                       BindingResult bindingResult) throws ServiceException, BindException {
+                         @Valid @ModelAttribute UserModel userModel, 
+                         BindingResult bindingResult) throws ServiceException, 
+                                                             BindException {
         if (bindingResult.hasErrors()) {
             throw new BindException(bindingResult);
         }
-        
         UserModel persistedUser = userService.getById(userId);
         persistedUser.setEnabled(userModel.getEnabled());
         persistedUser.setUserAuthority(userModel.getUserAuthority());
         userService.update(persistedUser);
-        return "redirect:/users/list";
+        return new StringBuilder().append(REDIRECT_KEY_WORD)
+                                  .append(USERS_PATH)
+                                  .append(LIST_TEMPLATE).toString();
     }
 
     @GetMapping("/list")
@@ -85,6 +87,8 @@ public class UserController extends DefaultController {
         
         userModel.setPassword(password);
         userService.update(userModel);
-        return "redirect:/users/list";
+        return new StringBuilder().append(REDIRECT_KEY_WORD)
+                                  .append(USERS_PATH)
+                                  .append(LIST_TEMPLATE).toString();
     }
 }

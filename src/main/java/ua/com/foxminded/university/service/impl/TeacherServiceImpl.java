@@ -18,7 +18,6 @@ import ua.com.foxminded.university.model.TeacherModel;
 import ua.com.foxminded.university.repository.TeacherRepository;
 import ua.com.foxminded.university.service.TeacherService;
 
-
 @Service
 @Transactional
 @RequiredArgsConstructor

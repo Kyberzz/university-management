@@ -3,7 +3,6 @@ package ua.com.foxminded.university.controller;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -13,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import ua.com.foxminded.university.exception.ServiceException;
 
 @Slf4j
-@EnableMethodSecurity
 public class DefaultController {
     
     public static final String LIST_TEMPLATE = "list";

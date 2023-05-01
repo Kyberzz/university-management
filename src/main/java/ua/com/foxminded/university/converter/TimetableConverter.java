@@ -24,15 +24,15 @@ public class TimetableConverter implements Converter<TimetableEntity, TimetableM
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         TimetableEntity source = context.getSource();
         TimetableModel model = modelMapper.map(source, TimetableModel.class);
-        toLessonOrder(model);
-        return model;
+        return toLessonOrder(model);
     }
     
-    private void toLessonOrder(TimetableModel model) {
+    private TimetableModel toLessonOrder(TimetableModel model) {
         Duration lessonsPeriod = Duration.between(config.getFirstLessonStartTime(), 
                                                   model.getStartTime());
         float lessonOrder = (float) lessonsPeriod.toMinutes() / 
                 config.getAverageLessonMinutesInterval() + 1f;
         model.setLessonOrder(LessonOrder.of(Math.round(lessonOrder)));
+        return model;
     }
 }

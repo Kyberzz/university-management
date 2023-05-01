@@ -79,7 +79,7 @@ class StudentControllerIntegrationTest {
     
     @Test
     @WithUserDetails(AUTHORIZED_EMAIL)
-    void getAll_shouldAuthenticateCredentialsAndReturnStatusIsOk() throws Exception {
+    void list_ShouldAuthenticateCredentialsAndReturnStatusIsOk() throws Exception {
         mockMvc.perform(get("/students/list"))
                .andExpect(authenticated().withRoles(Authority.ADMIN.toString()))
                .andExpect(status().isOk());

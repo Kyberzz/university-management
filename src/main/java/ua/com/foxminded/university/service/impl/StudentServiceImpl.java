@@ -12,10 +12,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import ua.com.foxminded.university.entity.GroupEntity;
 import ua.com.foxminded.university.entity.StudentEntity;
+import ua.com.foxminded.university.entity.UserEntity;
 import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.StudentModel;
+import ua.com.foxminded.university.repository.GroupRepository;
 import ua.com.foxminded.university.repository.StudentRepository;
+import ua.com.foxminded.university.repository.UserRepository;
 import ua.com.foxminded.university.service.StudentService;
 
 @Service
@@ -27,13 +31,15 @@ public class StudentServiceImpl implements StudentService {
     
     private final ModelMapper modelMapper;
     private final StudentRepository studentRepository;
+    private final GroupRepository groupRepository;
+    private final UserRepository userRepository;
     
     @Override
     public void deleteById(Integer id) throws ServiceException {
         try {
             studentRepository.deleteById(id);
         } catch (IllegalArgumentException e) {
-            throw new ServiceException("Deleting student failed", e);
+            throw new ServiceException("Deleting a student fails", e);
         }
     }
     
@@ -41,9 +47,27 @@ public class StudentServiceImpl implements StudentService {
     public void update(StudentModel studentModel) throws ServiceException {
         try {
             StudentEntity studentEntity = modelMapper.map(studentModel, StudentEntity.class);
-            studentRepository.save(studentEntity);
+            StudentEntity persistedStudent = studentRepository.findById(studentEntity.getId());
+            
+            if (studentModel.hasGroup()) {
+                GroupEntity persistedGroup = groupRepository.findById(
+                        studentModel.getGroup().getId().intValue());
+                persistedStudent.setGroup(persistedGroup);
+            } else {
+                persistedStudent.setGroup(null);
+            }
+            
+            UserEntity persistedUser = userRepository.findById(
+                    persistedStudent.getUser().getId().intValue());
+            persistedUser.getPerson().setFirstName(
+                    studentModel.getUser().getPerson().getFirstName());
+            persistedUser.getPerson().setLastName(
+                    studentModel.getUser().getPerson().getLastName());
+            persistedUser.setEmail(studentModel.getUser().getEmail());
+            persistedStudent.setUser(persistedUser);
+            studentRepository.saveAndFlush(persistedStudent);
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
-            throw new ServiceException("The student was not added to the database", e);
+            throw new ServiceException("The student data was not updated", e);
         }
     }
     
@@ -54,7 +78,7 @@ public class StudentServiceImpl implements StudentService {
             StudentEntity studentEntity = studentRepository.findById(id);
             return modelMapper.map(studentEntity, StudentModel.class);
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
-            throw new ServiceException("Getting a student by its id failed.", e);
+            throw new ServiceException("Getting a student by its id fails", e);
         }
     }
     
@@ -64,9 +88,8 @@ public class StudentServiceImpl implements StudentService {
             List<StudentEntity> studentEntities = studentRepository.findAll();
             modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
             return modelMapper.map(studentEntities, LIST_TYPE);
-        } catch (IllegalArgumentException | ConfigurationException | 
-                 MappingException e) {
-            throw new ServiceException("Getting all students was failed", e);
+        } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
+            throw new ServiceException("Getting all students fails", e);
         }
     }
     
@@ -75,9 +98,8 @@ public class StudentServiceImpl implements StudentService {
         try {
             StudentEntity entity = modelMapper.map(model, StudentEntity.class);
             studentRepository.saveAndFlush(entity);
-        } catch (IllegalArgumentException | ConfigurationException | 
-                 MappingException e) {
-            throw new ServiceException("Udating the student data failed.", e);
+        } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
+            throw new ServiceException("Creating a student fails", e);
         }
     }
 }

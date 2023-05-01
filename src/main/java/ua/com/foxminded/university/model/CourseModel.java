@@ -12,10 +12,10 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
 public class CourseModel implements Serializable {
     
     private static final long serialVersionUID = 1L;

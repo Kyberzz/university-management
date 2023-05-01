@@ -51,13 +51,10 @@ class SecurityUserPersistenceTest {
     @Autowired
     private UserRepository userRepository;
     
-    
     private PasswordEncoder encoder = PasswordEncoderFactories
             .createDelegatingPasswordEncoder();
     private UserEntity user;
     private UserAuthorityEntity userAuthority;
-    
-    
     
     @BeforeEach
     void init() {

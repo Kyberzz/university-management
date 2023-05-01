@@ -65,7 +65,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public void create(UserModel model) throws ServiceException {
         try {
-            PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+            PasswordEncoder encoder = PasswordEncoderFactories
+                    .createDelegatingPasswordEncoder();
             String authority = String.valueOf(model.getUserAuthority().getAuthority());
             UserDetails user = User.builder().username(model.getEmail())
                                              .password(model.getPassword())
@@ -112,7 +113,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public void update(UserModel model) throws ServiceException {
         try {
-            PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+            PasswordEncoder encoder = PasswordEncoderFactories
+                    .createDelegatingPasswordEncoder();
             UserDetails user = User.builder().username(model.getEmail())
                                              .password(model.getPassword())
                                              .passwordEncoder(encoder::encode)
@@ -126,4 +128,3 @@ public class UserServiceImpl implements UserService {
         }
     }
 }
-

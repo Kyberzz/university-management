@@ -37,11 +37,10 @@ import ua.com.foxminded.university.service.impl.CourseServiceImpl;
 @ExtendWith(MockitoExtension.class)
 class CourseServiceImplTest {
     
-    private static final Type TYPE = new TypeToken<List<CourseModel>>() {}.getType();
     private static final int ID = 1;
     private static final int TEACHER_ID = 1;
     private static final int COURSE_ID = 1;
-    
+    private static final Type TYPE = new TypeToken<List<CourseModel>>() {}.getType();
     
     @InjectMocks
     private CourseServiceImpl courseService;
@@ -70,9 +69,7 @@ class CourseServiceImplTest {
     void deassignTeacherToCourse_ShouldExecuteCorrectCallsQuantity() throws ServiceException {
         when(courseRepositoryMock.findById(anyInt())).thenReturn(courseEntity);
         when(teacherRepositoryMock.findById(anyInt())).thenReturn(teacherEntity);
-        
         courseService.deassignTeacherToCourse(TEACHER_ID, COURSE_ID);
-        
         verify(courseRepositoryMock).saveAndFlush(isA(CourseEntity.class));
     }
     
@@ -81,14 +78,14 @@ class CourseServiceImplTest {
         when(courseRepositoryMock.findById(anyInt())).thenReturn(courseEntity);
         when(teacherRepositoryMock.findById(anyInt())).thenReturn(teacherEntity);
         courseService.assignTeacherToCourse(TEACHER_ID, COURSE_ID);
-        
         verify(courseRepositoryMock).saveAndFlush(isA(CourseEntity.class));
     }
     
     @Test
     void getTimetableAndTeachersByCourseId_ShouldExecuteCorrecCallsQuantity() 
             throws ServiceException {
-        when(courseRepositoryMock.getCourseWithDependencies(anyInt())).thenReturn(courseEntity);
+        when(courseRepositoryMock.getCourseWithDependencies(anyInt()))
+            .thenReturn(courseEntity);
         courseService.getTimetableAndTeachersByCourseId(ID);
         verify(modelMapperMock, times(1)).map(courseEntity, CourseModel.class);
     }
@@ -96,7 +93,6 @@ class CourseServiceImplTest {
     void update_ShouldExcecuteCorrectCallsQuantity() throws ServiceException {
         courseService.update(courseModel);
         InOrder inOrder = Mockito.inOrder(modelMapperMock, courseRepositoryMock);
-        
         inOrder.verify(modelMapperMock, times(1)).map(courseModel, CourseModel.class);
         inOrder.verify(courseRepositoryMock, times(1)).saveAndFlush(courseEntity);
     }
@@ -106,7 +102,6 @@ class CourseServiceImplTest {
         CourseEntity course = CourseEntityMother.complete().build();
         List<CourseEntity> courses = Arrays.asList(course);
         when(courseRepositoryMock.findAll()).thenReturn(courses);
-        
         courseService.getAll();
         verify(modelMapperMock, times(1)).map(courses, TYPE);
     }

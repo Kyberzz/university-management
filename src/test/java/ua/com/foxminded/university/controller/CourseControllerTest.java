@@ -48,8 +48,8 @@ class CourseControllerTest {
     
     @Test
     void deassignTeacherToCourse() throws Exception {
-        mockMvc.perform(post("/courses/{courseId}/deassign-teacher", 
-                             COURSE_ID).param("teacherId", String.valueOf(TEACHER_ID)))
+        mockMvc.perform(post("/courses/{courseId}/deassign-teacher", COURSE_ID).param(
+                    "teacherId", String.valueOf(TEACHER_ID)))
                .andDo(print())
                .andExpect(redirectedUrl("/courses/" + COURSE_ID));
         

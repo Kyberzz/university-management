@@ -88,7 +88,7 @@ public class TimetableController extends DefaultController {
         return LIST_TEMPLATE;
     }
     
-    @GetMapping("/daytimetables/{datestamp}")
+    @GetMapping("/day-timetables/{datestamp}")
     public String getDayTimetable(@PathVariable String datestamp,
                                   Model model) throws ServiceException {
         LocalDate localDate = LocalDate.parse(datestamp);

@@ -53,5 +53,4 @@ public class TimetableEntity implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id")
     private CourseEntity course;
-    
 }

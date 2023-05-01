@@ -27,9 +27,8 @@ class StudentControllerTest {
     
     @BeforeEach
     void setup() {
-        mockMvc = MockMvcBuilders.standaloneSetup(new StudentController(studentServiceMock, 
-                                                                        groupServiceMock))
-                                 .build();
+        mockMvc = MockMvcBuilders.standaloneSetup(new StudentController(
+                studentServiceMock, groupServiceMock)).build();
     }
     
     @Test

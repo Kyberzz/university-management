@@ -84,11 +84,12 @@
        <td th:text="${group.id}">1</td>
        <td>
         <button type="button" class="btn btn-sm btn-outline-danger"
-         data-bs-toggle="modal" th:data-bs-target="|#deleteGroup${group.id}|">
-         Delete</button>
+         data-bs-toggle="modal"
+         th:data-bs-target="|#deleteGroup${group.id}|">Delete</button>
 
-        <form class="modal fade" th:id="|deleteGroup${group.id}|" tabindex="-1"
-         aria-labelledby="exampleModalLabel" aria-hidden="true"
+        <form class="modal fade" th:id="|deleteGroup${group.id}|"
+         tabindex="-1" aria-labelledby="exampleModalLabel"
+         aria-hidden="true"
          th:action="@{/groups/__${group.id}__/delete}" method="post">
          <div class="modal-dialog">
           <div class="modal-content">
@@ -120,8 +121,6 @@
   </div>
 
  </div>
-
-
 
  <script
   src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"

@@ -50,6 +50,9 @@ class CourseControllerIntegrationTest {
     public static final int COURSE_ID = 1;
     public static final int TEACHER_ID = 1;
     public static final String AUTHORIZED_EMAIL = "authorized@email";
+
+    @Container
+    public static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:14");
     
     @Autowired
     private MockMvc mockMvc;
@@ -63,8 +66,9 @@ class CourseControllerIntegrationTest {
     @PersistenceUnit
     private EntityManagerFactory entityManagerFactory;
 
-    @Container
-    public static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:14");
+    private CourseEntity courseEntity;
+    private UserEntity authorizedUser;
+    private CourseModel courseModel;
     
     @DynamicPropertySource
     public static void configureProperties(DynamicPropertyRegistry registry) {
@@ -72,10 +76,6 @@ class CourseControllerIntegrationTest {
         registry.add("spring.datasource.username", postgres::getUsername);
         registry.add("spring.datasource.password", postgres::getPassword);
     }
-
-    private CourseEntity courseEntity;
-    private UserEntity authorizedUser;
-    private CourseModel courseModel;
     
     @BeforeTransaction
     void init() {
@@ -159,7 +159,7 @@ class CourseControllerIntegrationTest {
     @WithUserDetails(AUTHORIZED_EMAIL)
     void create_ShouldAuthenticateCredentialsAndReternStatusIsOk() throws Exception {
         mockMvc.perform(post("/courses/create").flashAttr("courseModel", courseModel)
-                .with(csrf()))
+                                               .with(csrf()))
         .andExpect(authenticated().withRoles(Authority.ADMIN.toString()))
         .andExpect(status().is3xxRedirection());
     }
