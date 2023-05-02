@@ -29,7 +29,7 @@ import ua.com.foxminded.university.service.UserService;
 @ExtendWith(SpringExtension.class)
 class UserControllerTest {
     
-    public static final int ID = 1;
+    public static final int USER_ID = 1;
     public static final String BAD_CONTENT = "some string";
     public static final String NON_CONFIRM_PASSWORD = "pasF";
     
@@ -46,7 +46,7 @@ class UserControllerTest {
                                  .build();
         userAuthorit = UserAuthorityModel.builder()
                                          .authority(Authority.ADMIN).build();
-        user = UserModelMother.complete().id(ID)
+        user = UserModelMother.complete().id(USER_ID)
                                          .userAuthority(userAuthorit).build();
     }
     
@@ -100,8 +100,8 @@ class UserControllerTest {
                .andExpect(model().attributeExists("allUsers"))
                .andExpect(view().name("users/list"));
         
-        verify(userServiceMock, times(1)).getAll();
-        verify(userServiceMock, times(1)).getNotAuthorizedUsers();
+        verify(userServiceMock).getAll();
+        verify(userServiceMock).getNotAuthorizedUsers();
     }
     
     @Test
@@ -123,8 +123,8 @@ class UserControllerTest {
                .andExpect(redirectedUrl("/users/list"));
         
         InOrder inOrder = Mockito.inOrder(userServiceMock);
-        inOrder.verify(userServiceMock, times(1)).getById(anyInt());
-        inOrder.verify(userServiceMock, times(1)).update(isA(UserModel.class));
+        inOrder.verify(userServiceMock).getById(anyInt());
+        inOrder.verify(userServiceMock).update(isA(UserModel.class));
     }
     
     @Test
@@ -132,6 +132,6 @@ class UserControllerTest {
         mockMvc.perform(post("/users/delete").param("email", user.getEmail()))
                .andExpect(redirectedUrl("/users/list"));
         
-        verify(userServiceMock, times(1)).deleteByEmail(user.getEmail());
+        verify(userServiceMock).deleteByEmail(user.getEmail());
     }
 }

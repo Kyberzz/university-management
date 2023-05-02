@@ -27,7 +27,8 @@ import ua.com.foxminded.university.service.StudentService;
 @RequiredArgsConstructor
 public class StudentServiceImpl implements StudentService {
     
-    private static final Type LIST_TYPE = new TypeToken<List<StudentModel>>() {}.getType();
+    private static final Type STUDENT_MODEL_LIST_TYPE = 
+            new TypeToken<List<StudentModel>>() {}.getType();
     
     private final ModelMapper modelMapper;
     private final StudentRepository studentRepository;
@@ -87,7 +88,7 @@ public class StudentServiceImpl implements StudentService {
         try {
             List<StudentEntity> studentEntities = studentRepository.findAll();
             modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-            return modelMapper.map(studentEntities, LIST_TYPE);
+            return modelMapper.map(studentEntities, STUDENT_MODEL_LIST_TYPE);
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
             throw new ServiceException("Getting all students fails", e);
         }

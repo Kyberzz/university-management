@@ -23,16 +23,17 @@ import ua.com.foxminded.university.service.TeacherService;
 @RequiredArgsConstructor
 public class TeacherServiceImpl implements TeacherService {
     
+    public static final Type TEACHER_MODEL_LIST_TYPE = 
+            new TypeToken<List<TeacherModel>>() {}.getType();
     private final TeacherRepository teacherRepository; 
     
     @Override
     public List<TeacherModel> getAll() throws ServiceException {
         try {
             List<TeacherEntity> entities = teacherRepository.findAll();
-            Type listType = new TypeToken<List<TeacherModel>>() {}.getType();
             ModelMapper modelMapper = new ModelMapper();
             modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-            return modelMapper.map(entities, listType);
+            return modelMapper.map(entities, TEACHER_MODEL_LIST_TYPE);
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
             throw new ServiceException("Getting all teachers was failed", e);
         }

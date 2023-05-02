@@ -27,7 +27,8 @@ import ua.com.foxminded.university.service.CourseService;
 @RequiredArgsConstructor
 public class CourseServiceImpl implements CourseService {
     
-    private static final Type TYPE = new TypeToken<List<CourseModel>>() {}.getType();
+    private static final Type COURSE_MODEL_LIST_TYPE = 
+            new TypeToken<List<CourseModel>>() {}.getType();
 
     private final CourseRepository courseRepository;
     private final TeacherRepository teacherRepository;
@@ -97,7 +98,7 @@ public class CourseServiceImpl implements CourseService {
     public List<CourseModel> getAll() throws ServiceException {
         try {
             List<CourseEntity> courseEntities = courseRepository.findAll();
-            return modelMapper.map(courseEntities, TYPE);
+            return modelMapper.map(courseEntities, COURSE_MODEL_LIST_TYPE);
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
             throw new ServiceException("Getting all courses was failed.", e); 
         }

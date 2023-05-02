@@ -23,7 +23,8 @@ import ua.com.foxminded.university.service.GroupService;
 @RequiredArgsConstructor
 public class GroupServiceImpl implements GroupService {
     
-    private static final Type LIST_TYPE = new TypeToken<List<GroupModel>>() {}.getType();
+    private static final Type GROUP_MODEL_LIST_TYPE = 
+            new TypeToken<List<GroupModel>>() {}.getType();
     
     private final ModelMapper modelMapper;
     private final GroupRepository groupRepository;
@@ -82,7 +83,7 @@ public class GroupServiceImpl implements GroupService {
     public List<GroupModel> getAll() throws ServiceException {
         try {
             List<GroupEntity> groupEntities = groupRepository.findAll();
-            return modelMapper.map(groupEntities, LIST_TYPE);
+            return modelMapper.map(groupEntities, GROUP_MODEL_LIST_TYPE);
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
             throw new ServiceException("Getting all groups was failed", e);
         }

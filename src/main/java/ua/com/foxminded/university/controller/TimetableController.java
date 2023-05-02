@@ -27,10 +27,11 @@ import ua.com.foxminded.university.service.TimetableService;
 @RequestMapping("/timetables")
 public class TimetableController extends DefaultController {
     
+    public static final String DAY_TIMETABLE_TEMPLATE = "timetables/day-timetable";
     public static final String COURSES_ATTRIBUTE = "courses";
     public static final String GROUPS_ATTRIBUTE = "groups";
     public static final String DAY_TIMETABLES_PATH = "/timetables/daytimetables/";
-    public static final String LIST_TEMPLATE = "timetables/list";
+    public static final String TIMETABLES_LIST_TEMPLATE = "timetables/list";
     public static final String TIMETABLE_MODEL_ATTRIBUTE = "timetableModel";
     public static final String DAY_TIMETABLE_ATTRIBUTE = "dayTimetable";
     public static final String MONTH_TIMETABLE_ATTRIBUTE = "monthTimetable";
@@ -85,7 +86,7 @@ public class TimetableController extends DefaultController {
         timetableModel.setDatestamp(date);
         model.addAttribute(MONTH_TIMETABLE_ATTRIBUTE, monthTimetables);
         model.addAttribute(TIMETABLE_MODEL_ATTRIBUTE, timetableModel);
-        return LIST_TEMPLATE;
+        return TIMETABLES_LIST_TEMPLATE;
     }
     
     @GetMapping("/day-timetables/{datestamp}")
@@ -105,7 +106,7 @@ public class TimetableController extends DefaultController {
         model.addAttribute(COURSES_ATTRIBUTE, courses);
         model.addAttribute(DAY_TIMETABLE_ATTRIBUTE, dayTimetable);
         model.addAttribute(TIMETABLE_MODEL_ATTRIBUTE, timetableModel);
-        return "timetables/day-timetable";
+        return DAY_TIMETABLE_TEMPLATE;
     }
     
     @PostMapping(value = "/back")
@@ -116,7 +117,7 @@ public class TimetableController extends DefaultController {
                 .getMonthTimetable(timetableModel.getDatestamp());
         model.addAttribute(MONTH_TIMETABLE_ATTRIBUTE, monthTimetable);
         model.addAttribute(timetableModel);
-        return LIST_TEMPLATE;
+        return TIMETABLES_LIST_TEMPLATE;
     }
     
     @PostMapping(value = "/next")
@@ -127,7 +128,7 @@ public class TimetableController extends DefaultController {
                 .getMonthTimetable(timetableModel.getDatestamp());
         model.addAttribute(MONTH_TIMETABLE_ATTRIBUTE, monthTimtable);
         model.addAttribute(timetableModel);
-        return LIST_TEMPLATE;
+        return TIMETABLES_LIST_TEMPLATE;
     }
     
     @GetMapping(value = "/list")
@@ -144,6 +145,6 @@ public class TimetableController extends DefaultController {
         model.addAttribute(COURSES_ATTRIBUTE, courses);
         model.addAttribute(MONTH_TIMETABLE_ATTRIBUTE, monthTimetable);
         model.addAttribute(TIMETABLE_MODEL_ATTRIBUTE, timetableModel);
-        return LIST_TEMPLATE;
+        return TIMETABLES_LIST_TEMPLATE;
     }
 }

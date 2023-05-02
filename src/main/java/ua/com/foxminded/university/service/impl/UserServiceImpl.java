@@ -29,7 +29,8 @@ import ua.com.foxminded.university.service.UserService;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     
-    public static final Type TYPE = new TypeToken<List<UserModel>>() {}.getType();
+    public static final Type USER_MODEL_LIST_TYPE = 
+            new TypeToken<List<UserModel>>() {}.getType();
     
     private final UserRepository userRepository;
     private final UserDetailsManager userDetailsManager;
@@ -84,7 +85,7 @@ public class UserServiceImpl implements UserService {
     public List<UserModel> getNotAuthorizedUsers() throws ServiceException {
         try {
             List<UserEntity> entities = userRepository.findByUserAuthorityIsNull();
-            return modelMapper.map(entities, TYPE);
+            return modelMapper.map(entities, USER_MODEL_LIST_TYPE);
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
             throw new ServiceException("Getting not authrized users fails.", e);
         }
@@ -104,7 +105,7 @@ public class UserServiceImpl implements UserService {
     public List<UserModel> getAll() throws ServiceException {
         try {
             List<UserEntity> entities = userRepository.findAll();
-            return modelMapper.map(entities, TYPE);
+            return modelMapper.map(entities, USER_MODEL_LIST_TYPE);
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
             throw new ServiceException("Getting all students fails", e);
         }
