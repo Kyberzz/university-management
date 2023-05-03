@@ -28,10 +28,9 @@
   <div class="col">
    <div class="row">
     <div class="col">
-     <form th:action="@{/timetables/back}" th:object="${timetableModel}"
-      th:method="post">
-      <input type="hidden" th:field="*{datestamp}"
-       th:value="${timetableModel.datestamp}">
+     <form
+      th:action="@{/timetables/__${timetableModel.datestamp}__/back}"
+      th:method="get">
       <button type="submit" class="btn btn-primary"
        th:text="#{timetables.previous}">Previous period</button>
      </form>

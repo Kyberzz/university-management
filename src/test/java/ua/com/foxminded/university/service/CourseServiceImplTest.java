@@ -84,7 +84,7 @@ class CourseServiceImplTest {
     @Test
     void getTimetableAndTeachersByCourseId_ShouldExecuteCorrecCallsQuantity() 
             throws ServiceException {
-        when(courseRepositoryMock.getCourseWithDependencies(anyInt()))
+        when(courseRepositoryMock.getCourseRelationsById(anyInt()))
             .thenReturn(courseEntity);
         courseService.getTimetableAndTeachersByCourseId(ID);
         verify(modelMapperMock, times(1)).map(courseEntity, CourseModel.class);

@@ -11,7 +11,7 @@ public interface CourseRepository extends JpaRepository<CourseEntity, Integer> {
     @Query("select c from CourseEntity c left join fetch c.teachers "
                                       + "left join fetch c.timetables "
                                       + "where c.id = ?1")
-    public CourseEntity getCourseWithDependencies(int id);
+    public CourseEntity getCourseRelationsById(int id);
     
     public CourseEntity findTimetablesById(Integer id);
 

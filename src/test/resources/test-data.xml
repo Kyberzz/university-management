@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+	<GROUPS id='101' 
+	    	name="st-78" />
+	<USERS id='101'
+		   email="emai@com" 
+		   password='1234' 
+		   enabled='true'
+		   first_name="Alex" 
+		   last_name="Parker" />
+	<STUDENTS group_id='101' 
+			  user_id='101' />
+	<TIMETABLES group_id='101' 
+				start_time='08:00:00'
+				break_duration='15' 
+				datestamp='2023-05-03' />
+</dataset>

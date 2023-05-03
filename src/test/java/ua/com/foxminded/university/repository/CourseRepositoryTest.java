@@ -65,8 +65,8 @@ class CourseRepositoryTest {
     }
     
     @Test
-    void getEagerlyById_ShouldContainAllDependencies() {
-        CourseEntity persistedCourse = courseRepository.getCourseWithDependencies(course.getId());
+    void getCourseRelationsById_ShouldContainAllDependencies() {
+        CourseEntity persistedCourse = courseRepository.getCourseRelationsById(course.getId());
         LocalDate persistedDate = persistedCourse.getTimetables()
                                                  .iterator().next().getDatestamp();
         

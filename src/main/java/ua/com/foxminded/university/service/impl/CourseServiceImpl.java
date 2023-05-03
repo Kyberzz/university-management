@@ -57,7 +57,7 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public CourseModel getTimetableAndTeachersByCourseId(int id) throws ServiceException {
         try {
-            CourseEntity entity = courseRepository.getCourseWithDependencies(id);
+            CourseEntity entity = courseRepository.getCourseRelationsById(id);
             return modelMapper.map(entity, CourseModel.class);
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
             throw new ServiceException("Fetching the course with related "

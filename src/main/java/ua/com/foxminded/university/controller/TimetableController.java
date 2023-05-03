@@ -76,7 +76,7 @@ public class TimetableController extends DefaultController {
                                   .toString();
     }
     
-    @GetMapping("/monthtimetables/{datestamp}")
+    @GetMapping("/month-timetables/{datestamp}")
     public String getMonthTimetable(@PathVariable String datestamp, 
                                     Model model) throws ServiceException{
         LocalDate date = LocalDate.parse(datestamp);
@@ -109,9 +109,10 @@ public class TimetableController extends DefaultController {
         return DAY_TIMETABLE_TEMPLATE;
     }
     
-    @PostMapping(value = "/back")
-    public String back(@ModelAttribute TimetableModel timetableModel, 
+    @GetMapping(value = "/{date}/back")
+    public String back(@PathVariable String date, 
                        Model model) throws ServiceException {
+        
         timetableService.moveBackDatestamp(timetableModel);
         List<List<List<TimetableModel>>> monthTimetable = timetableService
                 .getMonthTimetable(timetableModel.getDatestamp());

@@ -36,6 +36,8 @@ public class TimetableServiceImpl implements TimetableService {
     private final ModelMapper modelMapper;
     private final TimetableRepository timetableRepository;
     
+    
+    
     @Override
     public void deleteById(Integer id) throws ServiceException {
         try {
