@@ -125,7 +125,7 @@
        th:each="timetable, iterationStatus : ${#lists.sort(dayTimetable , new ua.com.foxminded.university.comparator.TimetableModelComparator())}">
        <td th:text="|${timetable.lessonOrder?.representation}#{tr.order-suffix}|">1</td>
        <td th:text="${timetable.startTime}">8:00</td>
-       <td th:text="${timetable.breakDuration.toMinutes()}">15</td>
+       <td th:text="${timetable.breakDuration?.toMinutes()}">15</td>
        <td></td>
        <td th:text="${timetable.group?.name}">kr-85</td>
        <td th:text="${timetable.course?.name}">Programming</td>

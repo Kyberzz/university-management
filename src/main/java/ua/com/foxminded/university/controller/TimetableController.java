@@ -54,10 +54,10 @@ public class TimetableController extends DefaultController {
                                   .append("?").toString();
     }
     
-    @PostMapping("/delete/{id}")
+    @PostMapping("/delete/{timetableId}")
     public String delete(@ModelAttribute TimetableModel timetableModel, 
-                         @PathVariable int id) throws ServiceException {
-        timetableService.deleteById(id);
+                         @PathVariable int timetableId) throws ServiceException {
+        timetableService.deleteById(timetableId);
         return new StringBuilder().append(REDIRECT_KEY_WORD)
                                   .append(DAY_TIMETABLES_PATH)
                                   .append(timetableModel.getDatestamp())
@@ -77,10 +77,10 @@ public class TimetableController extends DefaultController {
                                   .toString();
     }
     
-    @GetMapping("/day-timetables/{datestamp}")
-    public String getDayTimetable(@PathVariable String datestamp,
+    @GetMapping("/day-timetables/{date}")
+    public String getDayTimetable(@PathVariable String date,
                                   Model model) throws ServiceException {
-        LocalDate localDate = LocalDate.parse(datestamp);
+        LocalDate localDate = LocalDate.parse(date);
         List<TimetableModel> dayTimetable = timetableService.getDayTimetalbe(localDate);
         TimetableModel timetableModel = new TimetableModel();
         timetableModel.setDatestamp(localDate);

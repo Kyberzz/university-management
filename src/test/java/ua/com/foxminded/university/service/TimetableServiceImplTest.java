@@ -1,5 +1,6 @@
 package ua.com.foxminded.university.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.isA;
@@ -58,6 +59,22 @@ class TimetableServiceImplTest {
         model = TimetableModelMother.complete().build();
         entities = Arrays.asList(entity);
         models = Arrays.asList(model);
+    }
+    
+    @Test
+    void moveBack_ShouldMoveBackDatestamp() {
+        LocalDate localDate = LocalDate.now();
+        LocalDate expectedResult = localDate.minusWeeks(
+                TimetableServiceImpl.OFFSET_WEEKS_QUANTITY);
+        assertEquals(expectedResult, timetableSerivice.moveBack(localDate));
+    }
+    
+    @Test
+    void moveForward_ShouldMoveForwardDatestamp() {
+        LocalDate localDate = LocalDate.now();
+        LocalDate expectedResult = localDate.plusWeeks(
+                TimetableServiceImpl.OFFSET_WEEKS_QUANTITY);
+        assertEquals(expectedResult, timetableSerivice.moveForward(localDate));
     }
     
     @Test
