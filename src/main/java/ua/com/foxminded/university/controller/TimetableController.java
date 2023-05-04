@@ -109,24 +109,29 @@ public class TimetableController extends DefaultController {
         return DAY_TIMETABLE_TEMPLATE;
     }
     
-    @GetMapping(value = "/{date}/back")
-    public String back(@PathVariable String date, 
+    @PostMapping(value = "/{date}/back")
+    public String back(@PathVariable String date,
+                       @ModelAttribute TimetableModel timetableModel,
                        Model model) throws ServiceException {
-        
-        timetableService.moveBackDatestamp(timetableModel);
+        LocalDate localDate = LocalDate.parse(date);
         List<List<List<TimetableModel>>> monthTimetable = timetableService
-                .getMonthTimetable(timetableModel.getDatestamp());
+                .getPreviousPeriod(localDate);
+        timetableModel.setDatestamp(localDate);
+        
         model.addAttribute(MONTH_TIMETABLE_ATTRIBUTE, monthTimetable);
         model.addAttribute(timetableModel);
         return TIMETABLES_LIST_TEMPLATE;
     }
     
-    @PostMapping(value = "/next")
-    public String next(@ModelAttribute TimetableModel timetableModel, 
+    @PostMapping(value = "/{date}/next")
+    public String next(@PathVariable String date,
+                       @ModelAttribute TimetableModel timetableModel, 
                        Model model) throws ServiceException {
-        timetableService.moveForwardDatestamp(timetableModel);
+        LocalDate localDate = LocalDate.parse(date);
         List<List<List<TimetableModel>>> monthTimtable = timetableService
-                .getMonthTimetable(timetableModel.getDatestamp());
+                .getNextPeriod(localDate);
+        timetableModel.setDatestamp(localDate);
+        
         model.addAttribute(MONTH_TIMETABLE_ATTRIBUTE, monthTimtable);
         model.addAttribute(timetableModel);
         return TIMETABLES_LIST_TEMPLATE;

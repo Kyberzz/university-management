@@ -36,7 +36,19 @@ public class TimetableServiceImpl implements TimetableService {
     private final ModelMapper modelMapper;
     private final TimetableRepository timetableRepository;
     
-    
+    @Override
+    public List<List<List<TimetableModel>>> getNextPeriod(LocalDate date) 
+            throws ServiceException {
+        LocalDate nextMonthDatestamp = date.plusWeeks(OFFSET_WEEKS_QUANTITY);
+        return getMonthTimetable(nextMonthDatestamp);
+    }
+
+    @Override
+    public List<List<List<TimetableModel>>> getPreviousPeriod(LocalDate date) 
+            throws ServiceException {
+        LocalDate previousMonthDatestamp = date.minusWeeks(OFFSET_WEEKS_QUANTITY);
+        return getMonthTimetable(previousMonthDatestamp);
+    }
     
     @Override
     public void deleteById(Integer id) throws ServiceException {
@@ -83,20 +95,6 @@ public class TimetableServiceImpl implements TimetableService {
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
             throw new ServiceException("Getting timetable by ID fails", e);
         }
-    }
-    
-    @Override
-    public void moveBackDatestamp(TimetableModel timetable) {
-        LocalDate previousMonthDatestamp = timetable.getDatestamp()
-                                                    .minusWeeks(OFFSET_WEEKS_QUANTITY);
-        timetable.setDatestamp(previousMonthDatestamp);
-    }
-    
-    @Override
-    public void moveForwardDatestamp(TimetableModel timetable) {
-        LocalDate nextMonthDatestamp = timetable.getDatestamp()
-                                                .plusWeeks(OFFSET_WEEKS_QUANTITY);
-        timetable.setDatestamp(nextMonthDatestamp);
     }
     
     @Override
