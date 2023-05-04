@@ -28,21 +28,28 @@ public class GroupController extends DefaultController {
     @PostMapping("/{groupId}/delete")
     public String delete(@PathVariable int groupId) throws ServiceException {
         groupService.deleteById(groupId);
-        return new StringBuilder().append(REDIRECT_KEY_WORD).append(GROUPS_PATH).append(LIST_TEMPLATE).toString();
+        return new StringBuilder().append(REDIRECT_KEY_WORD)
+                                  .append(GROUPS_PATH)
+                                  .append(LIST_TEMPLATE).toString();
     }
 
     @PostMapping(value = "/create", params = "name")
     public String create(@RequestParam String name) throws ServiceException {
         GroupModel group = GroupModel.builder().name(name).build();
         groupService.create(group);
-        return new StringBuilder().append(REDIRECT_KEY_WORD).append(GROUPS_PATH).append(LIST_TEMPLATE).toString();
+        return new StringBuilder().append(REDIRECT_KEY_WORD)
+                                  .append(GROUPS_PATH)
+                                  .append(LIST_TEMPLATE).toString();
     }
 
     @PostMapping(value = "/{groupId}/update", params = "name")
-    public String update(@PathVariable int groupId, @RequestParam String name) throws ServiceException {
+    public String update(@PathVariable int groupId, @RequestParam String name) 
+            throws ServiceException {
         GroupModel group = GroupModel.builder().id(groupId).name(name).build();
         groupService.update(group);
-        return new StringBuilder().append(REDIRECT_KEY_WORD).append(GROUPS_PATH).append(groupId).toString();
+        return new StringBuilder().append(REDIRECT_KEY_WORD)
+                                  .append(GROUPS_PATH)
+                                  .append(groupId).toString();
     }
 
     @GetMapping("/{groupId}")

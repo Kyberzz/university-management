@@ -95,7 +95,7 @@ public class GroupServiceImpl implements GroupService {
             GroupEntity groupEntity = groupRepository.findStudentsById(id);
             return modelMapper.map(groupEntity, GroupModel.class);
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
-            throw new ServiceException("Getting students list of the group failed.", e);
+            throw new ServiceException("Getting students list of the group failed", e);
         }
     }
     
@@ -105,7 +105,7 @@ public class GroupServiceImpl implements GroupService {
             GroupEntity groupEntity = groupRepository.findTimetablesById(id);
             return modelMapper.map(groupEntity, GroupModel.class);
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
-            throw new ServiceException("Getting timebales list of the group failed.", e);
+            throw new ServiceException("Getting timebales list of the group failed", e);
         }
     }
 }
