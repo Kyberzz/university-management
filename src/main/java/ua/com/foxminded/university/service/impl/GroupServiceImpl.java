@@ -22,7 +22,7 @@ import ua.com.foxminded.university.service.GroupService;
 @RequiredArgsConstructor
 public class GroupServiceImpl implements GroupService {
     
-    private static final Type GROUP_MODEL_LIST_TYPE = 
+    public static final Type GROUP_MODEL_LIST_TYPE = 
             new TypeToken<List<GroupModel>>() {}.getType();
     
     private final ModelMapper modelMapper;
@@ -63,6 +63,7 @@ public class GroupServiceImpl implements GroupService {
             GroupEntity entity = modelMapper.map(model, GroupEntity.class);
             GroupEntity persistedEntity = groupRepository.findById(entity.getId().intValue());
             persistedEntity.setName(entity.getName());
+            groupRepository.saveAndFlush(persistedEntity);
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
             throw new ServiceException("Udating a group fails", e);
         }
