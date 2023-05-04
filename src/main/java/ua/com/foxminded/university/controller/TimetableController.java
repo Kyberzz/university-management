@@ -31,7 +31,7 @@ public class TimetableController extends DefaultController {
     public static final String DAY_TIMETABLE_TEMPLATE = "timetables/day-timetable";
     public static final String COURSES_ATTRIBUTE = "courses";
     public static final String GROUPS_ATTRIBUTE = "groups";
-    public static final String DAY_TIMETABLES_PATH = "/timetables/daytimetables/";
+    public static final String DAY_TIMETABLES_PATH = "/timetables/day-timetables/";
     public static final String TIMETABLES_LIST_TEMPLATE = "timetables/list";
     public static final String TIMETABLE_MODEL_ATTRIBUTE = "timetableModel";
     public static final String DAY_TIMETABLE_ATTRIBUTE = "dayTimetable";
@@ -77,19 +77,6 @@ public class TimetableController extends DefaultController {
                                   .toString();
     }
     
-    @GetMapping("/month-timetables/{datestamp}")
-    public String getMonthTimetable(@PathVariable String datestamp, 
-                                    Model model) throws ServiceException{
-        LocalDate date = LocalDate.parse(datestamp);
-        List<List<List<TimetableModel>>> monthTimetables = timetableService
-                .getMonthTimetable(date);
-        TimetableModel timetableModel = new TimetableModel();
-        timetableModel.setDatestamp(date);
-        model.addAttribute(MONTH_TIMETABLE_ATTRIBUTE, monthTimetables);
-        model.addAttribute(TIMETABLE_MODEL_ATTRIBUTE, timetableModel);
-        return TIMETABLES_LIST_TEMPLATE;
-    }
-    
     @GetMapping("/day-timetables/{datestamp}")
     public String getDayTimetable(@PathVariable String datestamp,
                                   Model model) throws ServiceException {
@@ -123,7 +110,7 @@ public class TimetableController extends DefaultController {
     }
     
     @GetMapping(value = "/{date}/next")
-    public String next(@PathVariable String date) throws ServiceException {
+    public String next(@PathVariable String date) {
         LocalDate localDate = LocalDate.parse(date);
         LocalDate datestamp = timetableService.moveForward(localDate);
         return new StringBuilder().append(REDIRECT_KEY_WORD)
