@@ -27,6 +27,7 @@ import ua.com.foxminded.university.service.TimetableService;
 @RequestMapping("/timetables")
 public class TimetableController extends DefaultController {
     
+    public static final String TIMETABLES_PATH = "/timetables/";
     public static final String DAY_TIMETABLE_TEMPLATE = "timetables/day-timetable";
     public static final String COURSES_ATTRIBUTE = "courses";
     public static final String GROUPS_ATTRIBUTE = "groups";
@@ -109,48 +110,46 @@ public class TimetableController extends DefaultController {
         return DAY_TIMETABLE_TEMPLATE;
     }
     
-    @PostMapping(value = "/{date}/back")
-    public String back(@PathVariable String date,
-                       @ModelAttribute TimetableModel timetableModel,
-                       Model model) throws ServiceException {
+    @GetMapping(value = "/{date}/back")
+    public String back(@PathVariable String date) {
         LocalDate localDate = LocalDate.parse(date);
-        List<List<List<TimetableModel>>> monthTimetable = timetableService
-                .getPreviousPeriod(localDate);
-        timetableModel.setDatestamp(localDate);
-        
-        model.addAttribute(MONTH_TIMETABLE_ATTRIBUTE, monthTimetable);
-        model.addAttribute(timetableModel);
-        return TIMETABLES_LIST_TEMPLATE;
+        LocalDate datestamp = timetableService.moveBack(localDate);
+        return new StringBuilder().append(REDIRECT_KEY_WORD)
+                                  .append(TIMETABLES_PATH)
+                                  .append(datestamp)
+                                  .append(SLASH)
+                                  .append(LIST_TEMPLATE)
+                                  .append("?").toString();
     }
     
-    @PostMapping(value = "/{date}/next")
-    public String next(@PathVariable String date,
-                       @ModelAttribute TimetableModel timetableModel, 
-                       Model model) throws ServiceException {
+    @GetMapping(value = "/{date}/next")
+    public String next(@PathVariable String date) throws ServiceException {
         LocalDate localDate = LocalDate.parse(date);
-        List<List<List<TimetableModel>>> monthTimtable = timetableService
-                .getNextPeriod(localDate);
-        timetableModel.setDatestamp(localDate);
-        
-        model.addAttribute(MONTH_TIMETABLE_ATTRIBUTE, monthTimtable);
-        model.addAttribute(timetableModel);
-        return TIMETABLES_LIST_TEMPLATE;
+        LocalDate datestamp = timetableService.moveForward(localDate);
+        return new StringBuilder().append(REDIRECT_KEY_WORD)
+                                  .append(TIMETABLES_PATH)
+                                  .append(datestamp)
+                                  .append(SLASH)
+                                  .append(LIST_TEMPLATE)
+                                  .append("?").toString();
     }
     
-    @GetMapping(value = "/list")
-    public String list(Model model) throws ServiceException {
-        LocalDate currentDate = LocalDate.now();
+    @GetMapping(value = "/{date}/list")
+    public String list(@PathVariable String date,
+                       Model model) throws ServiceException {
+        LocalDate datestamp = LocalDate.parse(date);
         List<List<List<TimetableModel>>> monthTimetable = timetableService
-                .getMonthTimetable(currentDate);
-        TimetableModel timetableModel = new TimetableModel();
-        timetableModel.setDatestamp(currentDate);
+                .getMonthTimetable(datestamp);
+        TimetableModel timetableModel = TimetableModel.builder()
+                                                      .datestamp(datestamp).build();
+        timetableModel.setDatestamp(datestamp);
         List<CourseModel> courses = courseService.getAll();
         List<GroupModel> groups = groupService.getAll();
         
+        model.addAttribute(TIMETABLE_MODEL_ATTRIBUTE, timetableModel);
         model.addAttribute(GROUPS_ATTRIBUTE, groups);
         model.addAttribute(COURSES_ATTRIBUTE, courses);
         model.addAttribute(MONTH_TIMETABLE_ATTRIBUTE, monthTimetable);
-        model.addAttribute(TIMETABLE_MODEL_ATTRIBUTE, timetableModel);
         return TIMETABLES_LIST_TEMPLATE;
     }
 }

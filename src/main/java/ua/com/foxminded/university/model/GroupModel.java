@@ -22,6 +22,7 @@ public class GroupModel implements Serializable {
     private String name;
     
     @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private StudentModel student;
     
     @EqualsAndHashCode.Exclude

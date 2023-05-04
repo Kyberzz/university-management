@@ -40,7 +40,7 @@
            th:formaction="@{/courses/list}"
            th:text="#{index.menu.courses}">Courses</button>
           <button class="btn btn-success"
-           th:formaction="@{/timetables/list}"
+           th:formaction="@{/timetables/__${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}__/list}"
            th:text="#{index.menu.timetables}">Timetables</button>
          </div>
         </div>

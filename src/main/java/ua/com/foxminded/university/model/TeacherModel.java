@@ -19,6 +19,8 @@ public class TeacherModel implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private Integer id;
+    
+    @ToString.Exclude
     private UserModel user;
     
     @EqualsAndHashCode.Exclude

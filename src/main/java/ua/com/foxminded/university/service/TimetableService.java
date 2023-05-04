@@ -8,10 +8,9 @@ import ua.com.foxminded.university.model.TimetableModel;
 
 public interface TimetableService extends GenericService<TimetableModel> {
     
-    public List<List<List<TimetableModel>>> getNextPeriod(LocalDate date) throws ServiceException;
+    public LocalDate moveForward(LocalDate date);
     
-    public List<List<List<TimetableModel>>> getPreviousPeriod(LocalDate date) 
-            throws ServiceException;;
+    public LocalDate moveBack(LocalDate date);
     
     public List<List<List<TimetableModel>>> getMonthTimetable(LocalDate date) 
             throws ServiceException;

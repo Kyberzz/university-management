@@ -5,6 +5,7 @@ import java.io.Serializable;
 import javax.validation.constraints.NotNull;
 
 import lombok.Data;
+import lombok.ToString;
 
 @Data
 public class StudentModel implements Serializable {
@@ -14,7 +15,10 @@ public class StudentModel implements Serializable {
     private int id;
     
     @NotNull
+    @ToString.Exclude
     private UserModel user;
+    
+    @ToString.Exclude
     private GroupModel group;
     
     public boolean hasUser() {

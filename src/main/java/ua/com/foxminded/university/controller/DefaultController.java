@@ -14,6 +14,7 @@ import ua.com.foxminded.university.exception.ServiceException;
 @Slf4j
 public class DefaultController {
     
+    public static final String SLASH = "/";
     public static final String LIST_TEMPLATE = "list";
     public static final String REDIRECT_KEY_WORD = "redirect:";
     

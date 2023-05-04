@@ -37,17 +37,13 @@ public class TimetableServiceImpl implements TimetableService {
     private final TimetableRepository timetableRepository;
     
     @Override
-    public List<List<List<TimetableModel>>> getNextPeriod(LocalDate date) 
-            throws ServiceException {
-        LocalDate nextMonthDatestamp = date.plusWeeks(OFFSET_WEEKS_QUANTITY);
-        return getMonthTimetable(nextMonthDatestamp);
+    public LocalDate moveForward(LocalDate date) {
+        return date.plusWeeks(OFFSET_WEEKS_QUANTITY);
     }
 
     @Override
-    public List<List<List<TimetableModel>>> getPreviousPeriod(LocalDate date) 
-            throws ServiceException {
-        LocalDate previousMonthDatestamp = date.minusWeeks(OFFSET_WEEKS_QUANTITY);
-        return getMonthTimetable(previousMonthDatestamp);
+    public LocalDate moveBack(LocalDate date) {
+        return date.minusWeeks(OFFSET_WEEKS_QUANTITY);
     }
     
     @Override

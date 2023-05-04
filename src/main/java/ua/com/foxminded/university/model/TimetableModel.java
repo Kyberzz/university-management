@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Data
 @Builder
@@ -25,6 +26,9 @@ public class TimetableModel implements Serializable {
     private Duration breakDuration;
     private String description;
     
+    @ToString.Exclude
     private CourseModel course;
+    
+    @ToString.Exclude
     private GroupModel group;
 }
