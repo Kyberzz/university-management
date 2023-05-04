@@ -11,5 +11,4 @@ public class PersonModelMother {
         return PersonModel.builder().firstName(FIRST_NAME)
                                     .lastName(LAST_NAME);
     }
-
 }

@@ -23,5 +23,4 @@ public class TimetableModelMother {
                                        .lessonOrder(LessonOrder.FIRST_LESSON)
                                        .startTime(LOCAL_TIME);
     }
-
 }

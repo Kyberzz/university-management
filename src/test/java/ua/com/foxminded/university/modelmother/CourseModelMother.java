@@ -11,5 +11,4 @@ public class CourseModelMother {
         return CourseModel.builder().name(NAME)
                                     .description(DESCRIPTION);
     }
-
 }

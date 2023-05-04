@@ -3,7 +3,6 @@ package ua.com.foxminded.university.service.impl;
 import java.lang.reflect.Type;
 import java.util.List;
 
-
 import org.modelmapper.ConfigurationException;
 import org.modelmapper.MappingException;
 import org.modelmapper.ModelMapper;

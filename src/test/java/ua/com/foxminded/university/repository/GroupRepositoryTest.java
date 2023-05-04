@@ -2,16 +2,8 @@ package ua.com.foxminded.university.repository;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
-
-import javax.sql.DataSource;
 import javax.transaction.Transactional;
-import javax.transaction.Transactional.TxType;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -40,17 +32,6 @@ class GroupRepositoryTest {
     
     @Autowired
     private GroupRepository groupRepository;
-    
-    @Autowired
-    private DataSource dataSource;
-    
-//    @AfterEach
-//    void reset() throws SQLException {
-//        Connection connecton = dataSource.getConnection();
-//        Statement statement = connecton.createStatement();
-//        statement.executeUpdate("drop all objects");
-//        statement.executeUpdate("create schema university");
-//    }
     
     @Test
     void getGroupRelationsById_ShouldReturnGroupWithItsAllRelations() {
