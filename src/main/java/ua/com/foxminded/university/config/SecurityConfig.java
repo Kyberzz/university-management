@@ -60,7 +60,6 @@ public class SecurityConfig {
                 .mvcMatchers("/groups/list*").hasAnyRole(ADMIN, STAFF, TEACHER, STUDENT)
                 .mvcMatchers("/groups/**").hasAnyRole(ADMIN)
                 .mvcMatchers("/students/**").hasAnyRole(ADMIN)
-//                .mvcMatchers("/**").hasAnyAuthority(ADMIN)
                 .anyRequest().authenticated()
                 )
             .formLogin(form -> form.loginPage("/login")
