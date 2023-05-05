@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://thymeleaf.org">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -11,60 +11,115 @@
  crossorigin="anonymous">
 </head>
 <body>
- <div th:replace="~{fragments/header::navigationBar}"></div>
- <div class="offcanvas offcanvas-top" tabindex="-1" id="add"
-  aria-labelledy="offcanvasTopLabel">
-  <div class="offcanvas-header">
-   <h5 class="offcanvas-title" th:text="#{groups.addGroup}">Add a
-    group</h5>
-   <button type="button" class="btn-close" data-bs-dismiss="offcanvas"
-    aria-label="close"></button>
+
+ <div th:replace="~{fragments/header::navigationBar}">NavBar</div>
+
+ <div class="modal fade" id="add" tabindex="-1"
+  aria-labelledby="addCourse" aria-hidden="true">
+  <div class="modal-dialog">
+   <form class="modal-content" th:action="@{/groups/create}"
+    method="post">
+    <div class="modal-header">
+     <h1 class="modal-title fs-5" id="addCourse"
+      th:text="#{groups.create}">Create a group</h1>
+     <button type="button" class="btn-close" data-bs-dismiss="modal"
+      aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+     <div class="container-fluid">
+
+      <div class="row form-floating mb-3">
+       <input type="text" class="form-control"
+        id="createCourseNameInput" placeholder="#" name="name">
+       <label for="createCourseNameInput"
+        th:text="|#{thead.groupName}:|">Group name:</label>
+      </div>
+
+     </div>
+    </div>
+    <div class="modal-footer">
+     <button type="button" class="btn btn-secondary"
+      data-bs-dismiss="modal">Close</button>
+     <button type="submit" class="btn btn-primary"
+      id="createSubmitButton" th:text="#{button.saveChange}">Save
+      changes</button>
+    </div>
+   </form>
   </div>
-  <div class="offcanvas-body">My content</div>
  </div>
- <div class="offcanvas offcanvas-top" tabindex="-1" id="delete"
-  aria-labelledy="offcanvasTopLabel">
-  <div class="offcanvas-header">
-   <h5 class="offcanvas-title" th:text="#{groups.deleteGroup}">Delete
-    student</h5>
-   <button type="button" class="btn-close" data-bs-dismiss="offcanvas"
-    aria-label="close"></button>
-  </div>
-  <div class="offcanvas-body">My content</div>
- </div>
- <div class="offcanvas offcanvas-top" tabindex="-1" id="edit"
-  aria-labelledy="offcanvasTopLabel">
-  <div class="offcanvas-header">
-   <h5 class="offcanvas-title" th:text="#{groups.editGroup}">Edit a
-    group</h5>
-   <button type="button" class="btn-close" data-bs-dismiss="offcanvas"
-    aria-label="close"></button>
-  </div>
-  <div class="offcanvas-body">My content</div>
- </div>
+
+ <nav class="ms-2" aria-label="breadcrumb" th:fragment="page-path">
+  <ol class="breadcrumb container-fluid">
+   <li class="breadcrumb-item"><a th:href="@{/}"
+    th:text="#{href.home}">Home</a></li>
+   <li class="breadcrumb-item active" aria-current="page"
+    th:text="#{index.menu.groups}">Groups</li>
+  </ol>
+ </nav>
+
  <div class="container">
-  <div class="row justify-content-center">
-   <div class="col-10">
-    <p class="text-center fs-1 mt-5" th:text="#{groups.tableName}">All
-     groups of the university</p>
-    <table class="table">
+
+  <div class="col">
+   <p class="text-center fs-4" th:text="#{groups.tableName}">All
+    groups of the university</p>
+  </div>
+
+  <div class="col">
+
+   <div class="row text-center justify-content-center">
+    <table style="width: 40%" class="table">
      <thead>
       <tr>
        <th scope="col" th:text="#{thead.number}">#</th>
        <th scope="col" th:text="#{thead.groupName}">Group name</th>
        <th scope="col" th:text="#{thead.groupId}">Group ID</th>
+       <th></th>
       </tr>
      </thead>
      <tbody>
       <tr th:each="group,iterationStatus : ${groups}">
        <th scope="row" th:text="${iterationStatus.count}">1</th>
-       <td th:text="${group.name}">kt-93</td>
+       <td><a th:text="${group.name}"
+        th:href="@{/groups/__${group.id}__}">kt-93</a></td>
        <td th:text="${group.id}">1</td>
+       <td>
+        <button type="button" class="btn btn-sm btn-outline-danger"
+         data-bs-toggle="modal"
+         th:data-bs-target="|#deleteGroup${group.id}|">Delete</button>
+
+        <form class="modal fade" th:id="|deleteGroup${group.id}|"
+         tabindex="-1" aria-labelledby="exampleModalLabel"
+         aria-hidden="true"
+         th:action="@{/groups/__${group.id}__/delete}" method="post">
+         <div class="modal-dialog">
+          <div class="modal-content">
+           <div class="modal-header">
+            <h1 class="modal-title fs-5"></h1>
+            <button type="button" class="btn-close"
+             data-bs-dismiss="modal" aria-label="Close"></button>
+           </div>
+           <div class="modal-body">
+            <p th:text="#{message.confirm-delete}">Are you sure to
+             delete the data?</p>
+           </div>
+           <div class="modal-footer">
+            <button type="button" class="btn btn-secondary"
+             data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary"
+             th:text="#{button.confirm}">Confirm</button>
+           </div>
+          </div>
+         </div>
+        </form>
+
+       </td>
       </tr>
      </tbody>
     </table>
    </div>
+
   </div>
+
  </div>
 
  <script

@@ -2,12 +2,13 @@
 package ua.com.foxminded.university.entity;
 
 import java.io.Serializable;
-import java.time.DayOfWeek;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -20,6 +21,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ua.com.foxminded.university.converter.DurationConverter;
 
 @Entity
 @Table(name = "timetables", schema = "university")
@@ -35,9 +37,13 @@ public class TimetableEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     
-    @Enumerated(EnumType.STRING)
-    @Column(name = "lesson_order")
-    private LessonOrder lessonOrder;
+    @Column(name = "start_time")
+    private LocalTime startTime;
+    
+    @Column(name = "break_duration")
+    @Convert(converter = DurationConverter.class)
+    private Duration breakDuration;
+    private LocalDate datestamp;
     private String description;
     
     @ManyToOne(fetch = FetchType.LAZY)
@@ -47,8 +53,4 @@ public class TimetableEntity implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id")
     private CourseEntity course;
-    
-    @Enumerated(EnumType.STRING)
-    @Column(name = "week_day")
-    private DayOfWeek dayOfWeek;
 }

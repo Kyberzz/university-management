@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import ua.com.foxminded.university.entity.RoleAuthority;
 
 @Data
@@ -20,6 +21,8 @@ public class UserAuthorityModel implements Serializable {
    
     private Integer id;
     private RoleAuthority roleAuthority;
+    
+    @ToString.Exclude
     private UserModel user;
     
     @NotNull

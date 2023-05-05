@@ -13,7 +13,11 @@ import ua.com.foxminded.university.exception.ServiceException;
 
 @Slf4j
 public class DefaultController {
-  
+    
+    public static final String SLASH = "/";
+    public static final String LIST_TEMPLATE = "list";
+    public static final String REDIRECT_KEY_WORD = "redirect:";
+    
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(ServiceException.class)
     public ModelAndView serviceExceptionHandler(HttpServletRequest request, ServiceException e) {

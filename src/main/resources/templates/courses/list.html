@@ -12,43 +12,42 @@
 </head>
 <body>
  <div th:replace="~{fragments/header::navigationBar}"></div>
- 
+
  <nav class="ms-2" aria-label="breadcrumb" th:fragment="page-path">
   <ol class="breadcrumb container-fluid">
    <li class="breadcrumb-item"><a th:href="@{/}" th:text="#{href.home}">Home</a></li>
-   <li class="breadcrumb-item active" aria-current="page" th:text="#{href.courses}">Courses</li>
+   <li class="breadcrumb-item active" aria-current="page"
+    th:text="#{href.courses}">Courses</li>
   </ol>
  </nav>
 
- <div class="modal fade" id="add" tabindex="-1"
-  aria-labelledby="addCourse" aria-hidden="true">
+ <div class="modal fade" id="add" tabindex="-1" aria-labelledby="addCourse"
+  aria-hidden="true">
   <div class="modal-dialog">
    <form class="modal-content" th:action="@{/courses/create}"
-    th:object="${course}" method="post">
+    th:object="${courseModel}" method="post">
     <div class="modal-header">
-     <h1 class="modal-title fs-5" id="addCourse"
-      th:text="#{courses.addCourse}">Add a course</h1>
+     <h1 class="modal-title fs-5" id="addCourse" th:text="#{courses.addCourse}">Add
+      a course</h1>
      <button type="button" class="btn-close" data-bs-dismiss="modal"
       aria-label="Close"></button>
     </div>
     <div class="modal-body">
      <div class="container-fluid">
       <div class="row form-floating mb-3">
-       <input type="text" class="form-control" id="floatingInput"
-        placeholder="#" th:field="*{name}"> <label
-        for="floatingInput" th:text="|#{thead.courseName}:|">Course
-        name:</label>
+       <input type="text" class="form-control" id="createCourseNameInput"
+        placeholder="#" th:field="*{name}"> <label for="createCourseNameInput"
+        th:text="|#{thead.courseName}:|">Course name:</label>
       </div>
       <div class="row from-floating mb-3">
-       <textarea class="form-control" th:field="*{description}"
+       <textarea id="createDescriptionInput" class="form-control" th:field="*{description}"
         th:placeholder="|#{thead.description}...|"></textarea>
       </div>
      </div>
     </div>
     <div class="modal-footer">
-     <button type="button" class="btn btn-secondary"
-      data-bs-dismiss="modal">Close</button>
-     <button type="submit" class="btn btn-primary"
+     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+     <button type="submit" class="btn btn-primary" id="createSubmitButton"
       th:text="#{button.saveChange}">Save changes</button>
     </div>
    </form>
@@ -58,8 +57,8 @@
  <div class="container">
   <div class="row justify-content-md-center">
    <div class="col-10">
-    <p class="text-center fs-4" th:text="#{courses.tableName}">All
-     courses of the university</p>
+    <p class="text-center fs-4" th:text="#{courses.tableName}">All courses
+     of the university</p>
     <table class="table">
      <thead>
       <tr>
@@ -71,7 +70,7 @@
       </tr>
      </thead>
      <tbody>
-      <tr th:each="course,iterationStatus : ${courses}">
+      <tr th:each="course, iterationStatus : ${#lists.sort(courses, new ua.com.foxminded.university.comparator.CourseModelComparator())}">
        <th scope="row" th:text="${iterationStatus.count}">1</th>
        <td><a th:href="@{/courses/__${course.id}__}"
         th:text="${course.name}">Programming</a></td>
@@ -79,28 +78,29 @@
        <td th:text="${course.id}">1</td>
        <td class="text-start">
         <button type="button" class="btn btn-outline-danger btn-sm"
-         th:text="#{button.delete}" data-bs-toggle="modal"
+         th:text="#{button.delete}" data-bs-toggle="modal" id="deleteCourseButton"
          th:data-bs-target="|#delete${iterationStatus.index}|">Delete</button>
 
         <form class="modal fade" method="post"
-         th:id="|delete${iterationStatus.index}|"
-         th:action="@{/couses/delete}" data-bs-backdrop="static"
-         data-bs-keyboard="false" tabindex="-1"
+         th:id="|delete${iterationStatus.index}|" th:action="@{/courses/delete}"
+         data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
          aria-labelledby="staticBackdropLabel" aria-hidden="true">
          <div class="modal-dialog">
           <div class="modal-content">
            <div class="modal-header">
             <h1 class="modal-title fs-5" id="sataticBackdropLabel"
              th:text="#{courses.deleteCourse}">Delete the course</h1>
-            <button type="button" class="btn-close"
-             data-bs-dismiss="modal" aria-label="Close"></button>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"
+             aria-label="Close"></button>
            </div>
            <div class="modal-body">
             <div class="container-fluid">
              <div class="row text-start mt-2">
-              <div class="col-5" th:text="|#{thead.courseId}:|">Course
-               ID:</div>
+              <div class="col-5" th:text="|#{thead.courseId}:|">Course ID:</div>
               <div class="col-7" th:text="${course.id}">1</div>
+              <span> <input type="hidden" name="courseId"
+               th:value="${course.id}">
+              </span>
              </div>
              <div class="row text-start mt-2">
               <div class="col-5" th:text="|#{thead.courseName}:|">Course
@@ -113,7 +113,8 @@
             <button type="button" class="btn btn-secondary"
              data-bs-dismiss="modal" th:text="#{button.close}">Close</button>
             <button type="submit" class="btn btn-primary"
-             th:text="#{button.confirm}">Confirm deleting</button>
+             id="confirmDeletingButton" th:text="#{button.confirm}">Confirm
+             deleting</button>
            </div>
           </div>
          </div>

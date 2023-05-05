@@ -36,11 +36,11 @@
           <button class="btn btn-success"
            th:formaction="@{/groups/list}"
            th:text="#{index.menu.groups}">Groups</button>
-          <button class="btn btn-success"
+          <button id="coursesButton" class="btn btn-success"
            th:formaction="@{/courses/list}"
            th:text="#{index.menu.courses}">Courses</button>
           <button class="btn btn-success"
-           th:formaction="@{/timetables/list}"
+           th:formaction="@{/timetables/__${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}__/list}"
            th:text="#{index.menu.timetables}">Timetables</button>
          </div>
         </div>

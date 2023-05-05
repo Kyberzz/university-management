@@ -1,7 +1,7 @@
 package ua.com.foxminded.university.entity;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -14,7 +14,9 @@ import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @Table(name = "groups", schema = "university")
@@ -30,10 +32,14 @@ public class GroupEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String name;
-    
+
     @OneToMany(mappedBy = "group")
-    private List<TimetableEntity> timetableList;
-    
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private Set<TimetableEntity> timetables;
+  
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "group")
-    private List<StudentEntity> students;
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private Set<StudentEntity> students;
 }

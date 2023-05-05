@@ -1,0 +1,480 @@
+Retrieving logs for app university-management in org f215d016trial / space dev as 477163@gmail.com...
+
+   2023-04-03T20:57:56.94+0300 [API/24] OUT Added process: "web"
+   2023-04-03T20:57:56.95+0300 [API/24] OUT Created app with guid dfe5fc91-3df5-4f06-99fa-fa416bddc46a
+   2023-04-03T20:57:56.96+0300 [API/24] OUT Applied manifest to app with guid dfe5fc91-3df5-4f06-99fa-fa416bddc46a (---
+   2023-04-03T20:57:56.96+0300 [API/24] OUT applications:
+   2023-04-03T20:57:56.96+0300 [API/24] OUT - name: university-management
+   2023-04-03T20:57:56.96+0300 [API/24] OUT path: D:\repository\university-management\target\university-management-0.0.1-SNAPSHOT.war
+   2023-04-03T20:57:56.96+0300 [API/24] OUT default-route: true
+   2023-04-03T20:57:56.96+0300 [API/24] OUT buildpacks:
+   2023-04-03T20:57:56.96+0300 [API/24] OUT - java_buildpack
+   2023-04-03T20:57:56.96+0300 [API/24] OUT services:
+   2023-04-03T20:57:56.96+0300 [API/24] OUT - postres
+   2023-04-03T20:57:56.96+0300 [API/24] OUT )
+   2023-04-03T20:57:57.13+0300 [API/2] OUT Updated app with guid dfe5fc91-3df5-4f06-99fa-fa416bddc46a ({"lifecycle"=>{"data"=>{"buildpacks"=>["java_buildpack"]}}})
+   2023-04-03T20:57:57.19+0300 [API/2] OUT Updated app with guid dfe5fc91-3df5-4f06-99fa-fa416bddc46a ({"environment_variables"=>"[PRIVATE DATA HIDDEN]"})
+   2023-04-03T20:58:12.48+0300 [API/25] OUT Uploading app package for app with guid dfe5fc91-3df5-4f06-99fa-fa416bddc46a
+   2023-04-03T20:58:29.08+0300 [API/29] OUT Creating build for app with guid dfe5fc91-3df5-4f06-99fa-fa416bddc46a
+   2023-04-03T20:58:30.01+0300 [STG/0] OUT Downloading java_buildpack...
+   2023-04-03T20:58:30.08+0300 [STG/0] OUT Downloaded java_buildpack
+   2023-04-03T20:58:30.08+0300 [STG/0] OUT Cell d89356d5-8b8d-4fb9-b939-143db8dad6d7 creating container for instance 861c35cc-224a-4625-9559-be6ebef9edf5
+   2023-04-03T20:58:30.37+0300 [STG/0] OUT Security group rules were updated
+   2023-04-03T20:58:30.38+0300 [STG/0] OUT Cell d89356d5-8b8d-4fb9-b939-143db8dad6d7 successfully created container for instance 861c35cc-224a-4625-9559-be6ebef9edf5
+   2023-04-03T20:58:30.71+0300 [STG/0] OUT Downloading app package...
+   2023-04-03T20:58:31.99+0300 [STG/0] OUT Downloaded app package (43.2M)
+   2023-04-03T20:58:33.05+0300 [STG/0] OUT [1m[31m----->[0m[22m [1m[34mJava Buildpack[0m[22m [34mv4.54[0m [34m(offline)[0m | https://github.com/cloudfoundry/java-buildpack.git#6ed11611
+   2023-04-03T20:58:33.10+0300 [STG/0] OUT [1m[31m----->[0m[22m Downloading [1m[34mJvmkill Agent[0m[22m [34m1.17.0_RELEASE[0m from https://java-buildpack.cloudfoundry.org/jvmkill/jammy/x86_64/jvmkill-1.17.0-RELEASE.so [3m[32m(found in cache)[0m[23m
+   2023-04-03T20:58:33.10+0300 [STG/0] OUT [1m[31m----->[0m[22m Downloading [1m[34mOpen Jdk JRE[0m[22m [34m1.8.0_362[0m from https://java-buildpack.cloudfoundry.org/openjdk/jammy/x86_64/bellsoft-jre8u362%2B9-linux-amd64.tar.gz [3m[32m(found in cache)[0m[23m
+   2023-04-03T20:58:33.94+0300 [STG/0] OUT Expanding Open Jdk JRE to .java-buildpack/open_jdk_jre [3m[32m(0.8s)[0m[23m
+   2023-04-03T20:58:33.94+0300 [STG/0] OUT JVM DNS caching disabled in lieu of BOSH DNS caching
+   2023-04-03T20:58:33.94+0300 [STG/0] OUT [1m[31m----->[0m[22m Downloading [1m[34mOpen JDK Like Memory Calculator[0m[22m [34m3.13.0_RELEASE[0m from https://java-buildpack.cloudfoundry.org/memory-calculator/jammy/x86_64/memory-calculator-3.13.0-RELEASE.tar.gz [3m[32m(found in cache)[0m[23m
+   2023-04-03T20:58:34.78+0300 [STG/0] OUT Loaded Classes: 19075, Threads: 250
+   2023-04-03T20:58:34.79+0300 [STG/0] OUT [1m[31m----->[0m[22m Downloading [1m[34mClient Certificate Mapper[0m[22m [34m1.11.0_RELEASE[0m from https://java-buildpack.cloudfoundry.org/client-certificate-mapper/client-certificate-mapper-1.11.0-RELEASE.jar [3m[32m(found in cache)[0m[23m
+   2023-04-03T20:58:34.79+0300 [STG/0] OUT [1m[31m----->[0m[22m Downloading [1m[34mContainer Customizer[0m[22m [34m2.6.0_RELEASE[0m from https://java-buildpack.cloudfoundry.org/container-customizer/container-customizer-2.6.0-RELEASE.jar [3m[32m(found in cache)[0m[23m
+   2023-04-03T20:58:34.79+0300 [STG/0] OUT [1m[31m----->[0m[22m Downloading [1m[34mContainer Security Provider[0m[22m [34m1.19.0_RELEASE[0m from https://java-buildpack.cloudfoundry.org/container-security-provider/container-security-provider-1.19.0-RELEASE.jar [3m[32m(found in cache)[0m[23m
+   2023-04-03T20:58:43.95+0300 [STG/0] OUT Exit status 0
+   2023-04-03T20:58:43.95+0300 [STG/0] OUT Uploading droplet, build artifacts cache...
+   2023-04-03T20:58:43.95+0300 [STG/0] OUT Uploading droplet...
+   2023-04-03T20:58:43.95+0300 [STG/0] OUT Uploading build artifacts cache...
+   2023-04-03T20:58:43.98+0300 [STG/0] OUT Uploaded build artifacts cache (130B)
+   2023-04-03T20:58:44.90+0300 [API/7] OUT Creating droplet for app with guid dfe5fc91-3df5-4f06-99fa-fa416bddc46a
+   2023-04-03T20:58:47.09+0300 [STG/0] OUT Uploaded droplet (86.3M)
+   2023-04-03T20:58:47.11+0300 [STG/0] OUT Uploading complete
+   2023-04-03T20:58:47.54+0300 [STG/0] OUT Cell d89356d5-8b8d-4fb9-b939-143db8dad6d7 stopping instance 861c35cc-224a-4625-9559-be6ebef9edf5
+   2023-04-03T20:58:47.54+0300 [STG/0] OUT Cell d89356d5-8b8d-4fb9-b939-143db8dad6d7 destroying container for instance 861c35cc-224a-4625-9559-be6ebef9edf5
+   2023-04-03T20:58:48.38+0300 [STG/0] OUT Cell d89356d5-8b8d-4fb9-b939-143db8dad6d7 successfully destroyed container for instance 861c35cc-224a-4625-9559-be6ebef9edf5
+   2023-04-03T20:58:49.17+0300 [API/26] OUT Updated app with guid dfe5fc91-3df5-4f06-99fa-fa416bddc46a ({:droplet_guid=>"ed1518d1-753e-4515-ae64-22b02a1a5d0a"})
+   2023-04-03T20:58:49.18+0300 [API/26] OUT Added process: "task"
+   2023-04-03T20:58:49.36+0300 [API/5] OUT Creating revision for app with guid dfe5fc91-3df5-4f06-99fa-fa416bddc46a
+   2023-04-03T20:58:49.58+0300 [API/5] OUT Restarted app with guid dfe5fc91-3df5-4f06-99fa-fa416bddc46a
+   2023-04-03T20:58:49.59+0300 [CELL/0] OUT Cell d89356d5-8b8d-4fb9-b939-143db8dad6d7 creating container for instance 91d807ac-b422-494f-7bc2-da57
+   2023-04-03T20:58:49.88+0300 [CELL/0] OUT Security group rules were updated
+   2023-04-03T20:58:49.89+0300 [CELL/0] OUT Cell d89356d5-8b8d-4fb9-b939-143db8dad6d7 successfully created container for instance 91d807ac-b422-494f-7bc2-da57
+   2023-04-03T20:58:50.04+0300 [CELL/0] OUT Downloading droplet...
+   2023-04-03T20:58:52.82+0300 [CELL/0] OUT Downloaded droplet (86.3M)
+   2023-04-03T20:58:52.82+0300 [CELL/0] OUT Starting health monitoring of container
+   2023-04-03T20:58:52.91+0300 [APP/PROC/WEB/0] OUT JVM Memory Configuration: -Xmx412511K -Xss1M -XX:ReservedCodeCacheSize=240M -XX:MaxDirectMemorySize=10M -XX:MaxMetaspaceSize=124064K
+   2023-04-03T20:58:54.89+0300 [APP/PROC/WEB/0] OUT .   ____          _            __ _ _
+   2023-04-03T20:58:54.89+0300 [APP/PROC/WEB/0] OUT /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+   2023-04-03T20:58:54.89+0300 [APP/PROC/WEB/0] OUT ( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+   2023-04-03T20:58:54.89+0300 [APP/PROC/WEB/0] OUT \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+   2023-04-03T20:58:54.89+0300 [APP/PROC/WEB/0] OUT '  |____| .__|_| |_|_| |_\__, | / / / /
+   2023-04-03T20:58:54.89+0300 [APP/PROC/WEB/0] OUT =========|_|==============|___/=/_/_/_/
+   2023-04-03T20:58:54.90+0300 [APP/PROC/WEB/0] OUT :: Spring Boot ::                (v2.7.8)
+   2023-04-03T20:58:55.11+0300 [APP/PROC/WEB/0] OUT 2023-04-03 17:58:55.111  INFO 7 --- [           main] u.c.f.university.UniversityManagement    : Starting UniversityManagement v0.0.1-SNAPSHOT using Java 1.8.0_362 on 91d807ac-b422-494f-7bc2-da57 with PID 7 (/home/vcap/app/WEB-INF/classes started by vcap in /home/vcap/app)
+   2023-04-03T20:58:55.11+0300 [APP/PROC/WEB/0] OUT 2023-04-03 17:58:55.113  INFO 7 --- [           main] u.c.f.university.UniversityManagement    : The following 1 profile is active: "prod"
+   2023-04-03T20:58:55.30+0300 [APP/PROC/WEB/0] OUT 2023-04-03 17:58:55.307  INFO 7 --- [           main] s.b.CfDataSourceEnvironmentPostProcessor : Setting spring.datasource properties from bound service [postres]
+   2023-04-03T20:58:58.20+0300 [APP/PROC/WEB/0] OUT 2023-04-03 17:58:58.208  INFO 7 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+   2023-04-03T20:58:58.50+0300 [APP/PROC/WEB/0] OUT 2023-04-03 17:58:58.503  INFO 7 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 286 ms. Found 7 JPA repository interfaces.
+   2023-04-03T20:59:02.90+0300 [APP/PROC/WEB/0] OUT 2023-04-03 17:59:02.909  INFO 7 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+   2023-04-03T20:59:03.00+0300 [APP/PROC/WEB/0] OUT 2023-04-03 17:59:03.000  INFO 7 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+   2023-04-03T20:59:03.00+0300 [APP/PROC/WEB/0] OUT 2023-04-03 17:59:03.000  INFO 7 --- [           main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.71]
+   2023-04-03T20:59:03.11+0300 [APP/PROC/WEB/0] OUT 2023-04-03 17:59:03.106 ERROR 7 --- [           main] o.a.c.w.AbstractFileResourceSet          : Resource for web application [] at path [/WEB-INF/lib/container_customizer-2.6.0_RELEASE.jar] was not loaded as the canonical path [/.java-buildpack/container_customizer/container_customizer-2.6.0_RELEASE.jar] did not match. Use of symlinks is one possible cause.
+   2023-04-03T20:59:03.11+0300 [APP/PROC/WEB/0] OUT 2023-04-03 17:59:03.113 ERROR 7 --- [           main] o.a.c.w.AbstractFileResourceSet          : Resource for web application [] at path [/WEB-INF/lib/client_certificate_mapper-1.11.0_RELEASE.jar] was not loaded as the canonical path [/.java-buildpack/client_certificate_mapper/client_certificate_mapper-1.11.0_RELEASE.jar] did not match. Use of symlinks is one possible cause.
+   2023-04-03T20:59:03.40+0300 [APP/PROC/WEB/0] OUT 2023-04-03 17:59:03.406 ERROR 7 --- [           main] o.a.c.w.AbstractFileResourceSet          : Resource for web application [] at path [/WEB-INF/lib/container_customizer-2.6.0_RELEASE.jar] was not loaded as the canonical path [/.java-buildpack/container_customizer/container_customizer-2.6.0_RELEASE.jar] did not match. Use of symlinks is one possible cause.
+   2023-04-03T20:59:03.40+0300 [APP/PROC/WEB/0] OUT 2023-04-03 17:59:03.406 ERROR 7 --- [           main] o.a.c.w.AbstractFileResourceSet          : Resource for web application [] at path [/WEB-INF/lib/client_certificate_mapper-1.11.0_RELEASE.jar] was not loaded as the canonical path [/.java-buildpack/client_certificate_mapper/client_certificate_mapper-1.11.0_RELEASE.jar] did not match. Use of symlinks is one possible cause.
+   2023-04-03T20:59:03.79+0300 [APP/PROC/WEB/0] OUT 2023-04-03 17:59:03.798  INFO 7 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+   2023-04-03T20:59:03.79+0300 [APP/PROC/WEB/0] OUT 2023-04-03 17:59:03.798  INFO 7 --- [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 8489 ms
+   2023-04-03T20:59:05.70+0300 [APP/PROC/WEB/0] OUT 2023-04-03 17:59:05.701  INFO 7 --- [           main] o.f.c.internal.license.VersionPrinter    : Flyway Community Edition 8.5.13 by Redgate
+   2023-04-03T20:59:05.70+0300 [APP/PROC/WEB/0] OUT 2023-04-03 17:59:05.701  INFO 7 --- [           main] o.f.c.internal.license.VersionPrinter    : See what's new here: https://flywaydb.org/documentation/learnmore/releaseNotes#8.5.13
+   2023-04-03T20:59:05.70+0300 [APP/PROC/WEB/0] OUT 2023-04-03 17:59:05.701  INFO 7 --- [           main] o.f.c.internal.license.VersionPrinter    :
+   2023-04-03T20:59:05.80+0300 [APP/PROC/WEB/0] OUT 2023-04-03 17:59:05.803  INFO 7 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+   2023-04-03T20:59:07.60+0300 [APP/PROC/WEB/0] OUT 2023-04-03 17:59:07.603  INFO 7 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+   2023-04-03T20:59:07.62+0300 [APP/PROC/WEB/0] OUT 2023-04-03 17:59:07.621  INFO 7 --- [           main] o.f.c.i.database.base.BaseDatabaseType   : Database: jdbc:postgresql://postgres-84fee189-7163-459b-b15e-fad663f19e8f.cqryblsdrbcs.us-east-1.rds.amazonaws.com:4967/qPvPQAAnYWNi (PostgreSQL 12.11)
+   2023-04-03T20:59:07.71+0300 [APP/PROC/WEB/0] OUT 2023-04-03 17:59:07.712  WARN 7 --- [           main] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'flywayInitializer' defined in class path resource [org/springframework/boot/autoconfigure/flyway/FlywayAutoConfiguration$FlywayConfiguration.class]: Invocation of init method failed; nested exception is org.flywaydb.core.api.exception.FlywayValidateException: Validate failed: Migrations have failed validation
+   2023-04-03T20:59:07.71+0300 [APP/PROC/WEB/0] OUT Migration checksum mismatch for migration version 4
+   2023-04-03T20:59:07.71+0300 [APP/PROC/WEB/0] OUT -> Applied to database : -436094689
+   2023-04-03T20:59:07.71+0300 [APP/PROC/WEB/0] OUT -> Resolved locally    : 458358316
+   2023-04-03T20:59:07.71+0300 [APP/PROC/WEB/0] OUT Either revert the changes to the migration, or run repair to update the schema history.
+   2023-04-03T20:59:07.71+0300 [APP/PROC/WEB/0] OUT Migration checksum mismatch for migration version 5
+   2023-04-03T20:59:07.71+0300 [APP/PROC/WEB/0] OUT -> Applied to database : 458358316
+   2023-04-03T20:59:07.71+0300 [APP/PROC/WEB/0] OUT -> Resolved locally    : -151950773
+   2023-04-03T20:59:07.71+0300 [APP/PROC/WEB/0] OUT Either revert the changes to the migration, or run repair to update the schema history.
+   2023-04-03T20:59:07.71+0300 [APP/PROC/WEB/0] OUT Migration checksum mismatch for migration version 6
+   2023-04-03T20:59:07.71+0300 [APP/PROC/WEB/0] OUT -> Applied to database : 739299147
+   2023-04-03T20:59:07.71+0300 [APP/PROC/WEB/0] OUT -> Resolved locally    : -1558823934
+   2023-04-03T20:59:07.71+0300 [APP/PROC/WEB/0] OUT Either revert the changes to the migration, or run repair to update the schema history.
+   2023-04-03T20:59:07.71+0300 [APP/PROC/WEB/0] OUT Migration checksum mismatch for migration version 7
+   2023-04-03T20:59:07.71+0300 [APP/PROC/WEB/0] OUT -> Applied to database : -1831584080
+   2023-04-03T20:59:07.71+0300 [APP/PROC/WEB/0] OUT -> Resolved locally    : 1549030048
+   2023-04-03T20:59:07.71+0300 [APP/PROC/WEB/0] OUT Either revert the changes to the migration, or run repair to update the schema history.
+   2023-04-03T20:59:07.71+0300 [APP/PROC/WEB/0] OUT Need more flexibility with validation rules? Learn more: https://rd.gt/3AbJUZE
+   2023-04-03T20:59:07.71+0300 [APP/PROC/WEB/0] OUT 2023-04-03 17:59:07.712  INFO 7 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+   2023-04-03T20:59:07.73+0300 [APP/PROC/WEB/0] OUT 2023-04-03 17:59:07.735  INFO 7 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+   2023-04-03T20:59:07.73+0300 [APP/PROC/WEB/0] OUT 2023-04-03 17:59:07.737  INFO 7 --- [           main] o.apache.catalina.core.StandardService   : Stopping service [Tomcat]
+   2023-04-03T20:59:07.80+0300 [APP/PROC/WEB/0] OUT 2023-04-03 17:59:07.807  INFO 7 --- [           main] ConditionEvaluationReportLoggingListener :
+   2023-04-03T20:59:07.80+0300 [APP/PROC/WEB/0] OUT Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
+   2023-04-03T20:59:07.83+0300 [APP/PROC/WEB/0] OUT 2023-04-03 17:59:07.830 ERROR 7 --- [           main] o.s.boot.SpringApplication               : Application run failed
+   2023-04-03T20:59:07.83+0300 [APP/PROC/WEB/0] OUT org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'flywayInitializer' defined in class path resource [org/springframework/boot/autoconfigure/flyway/FlywayAutoConfiguration$FlywayConfiguration.class]: Invocation of init method failed; nested exception is org.flywaydb.core.api.exception.FlywayValidateException: Validate failed: Migrations have failed validation
+   2023-04-03T20:59:07.83+0300 [APP/PROC/WEB/0] OUT Migration checksum mismatch for migration version 4
+   2023-04-03T20:59:07.83+0300 [APP/PROC/WEB/0] OUT -> Applied to database : -436094689
+   2023-04-03T20:59:07.83+0300 [APP/PROC/WEB/0] OUT -> Resolved locally    : 458358316
+   2023-04-03T20:59:07.83+0300 [APP/PROC/WEB/0] OUT Either revert the changes to the migration, or run repair to update the schema history.
+   2023-04-03T20:59:07.83+0300 [APP/PROC/WEB/0] OUT Migration checksum mismatch for migration version 5
+   2023-04-03T20:59:07.83+0300 [APP/PROC/WEB/0] OUT -> Applied to database : 458358316
+   2023-04-03T20:59:07.83+0300 [APP/PROC/WEB/0] OUT -> Resolved locally    : -151950773
+   2023-04-03T20:59:07.83+0300 [APP/PROC/WEB/0] OUT Either revert the changes to the migration, or run repair to update the schema history.
+   2023-04-03T20:59:07.83+0300 [APP/PROC/WEB/0] OUT Migration checksum mismatch for migration version 6
+   2023-04-03T20:59:07.83+0300 [APP/PROC/WEB/0] OUT -> Applied to database : 739299147
+   2023-04-03T20:59:07.83+0300 [APP/PROC/WEB/0] OUT -> Resolved locally    : -1558823934
+   2023-04-03T20:59:07.83+0300 [APP/PROC/WEB/0] OUT Either revert the changes to the migration, or run repair to update the schema history.
+   2023-04-03T20:59:07.83+0300 [APP/PROC/WEB/0] OUT Migration checksum mismatch for migration version 7
+   2023-04-03T20:59:07.83+0300 [APP/PROC/WEB/0] OUT -> Applied to database : -1831584080
+   2023-04-03T20:59:07.83+0300 [APP/PROC/WEB/0] OUT -> Resolved locally    : 1549030048
+   2023-04-03T20:59:07.83+0300 [APP/PROC/WEB/0] OUT Either revert the changes to the migration, or run repair to update the schema history.
+   2023-04-03T20:59:07.83+0300 [APP/PROC/WEB/0] OUT Need more flexibility with validation rules? Learn more: https://rd.gt/3AbJUZE
+   2023-04-03T20:59:07.83+0300 [APP/PROC/WEB/0] OUT at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1804) ~[spring-beans-5.3.25.jar:5.3.25]
+   2023-04-03T20:59:07.83+0300 [APP/PROC/WEB/0] OUT at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:620) ~[spring-beans-5.3.25.jar:5.3.25]
+   2023-04-03T20:59:07.83+0300 [APP/PROC/WEB/0] OUT at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:542) ~[spring-beans-5.3.25.jar:5.3.25]
+   2023-04-03T20:59:07.83+0300 [APP/PROC/WEB/0] OUT at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:335) ~[spring-beans-5.3.25.jar:5.3.25]
+   2023-04-03T20:59:07.83+0300 [APP/PROC/WEB/0] OUT at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234) ~[spring-beans-5.3.25.jar:5.3.25]
+   2023-04-03T20:59:07.83+0300 [APP/PROC/WEB/0] OUT at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:333) ~[spring-beans-5.3.25.jar:5.3.25]
+   2023-04-03T20:59:07.83+0300 [APP/PROC/WEB/0] OUT at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:208) ~[spring-beans-5.3.25.jar:5.3.25]
+   2023-04-03T20:59:07.83+0300 [APP/PROC/WEB/0] OUT at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:322) ~[spring-beans-5.3.25.jar:5.3.25]
+   2023-04-03T20:59:07.83+0300 [APP/PROC/WEB/0] OUT at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:208) ~[spring-beans-5.3.25.jar:5.3.25]
+   2023-04-03T20:59:07.83+0300 [APP/PROC/WEB/0] OUT at org.springframework.context.support.AbstractApplicationContext.getBean(AbstractApplicationContext.java:1154) ~[spring-context-5.3.25.jar:5.3.25]
+   2023-04-03T20:59:07.83+0300 [APP/PROC/WEB/0] OUT at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:908) ~[spring-context-5.3.25.jar:5.3.25]
+   2023-04-03T20:59:07.83+0300 [APP/PROC/WEB/0] OUT at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:583) ~[spring-context-5.3.25.jar:5.3.25]
+   2023-04-03T20:59:07.83+0300 [APP/PROC/WEB/0] OUT at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:147) ~[spring-boot-2.7.8.jar:2.7.8]
+   2023-04-03T20:59:07.83+0300 [APP/PROC/WEB/0] OUT at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:731) ~[spring-boot-2.7.8.jar:2.7.8]
+   2023-04-03T20:59:07.83+0300 [APP/PROC/WEB/0] OUT at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:408) ~[spring-boot-2.7.8.jar:2.7.8]
+   2023-04-03T20:59:07.83+0300 [APP/PROC/WEB/0] OUT at org.springframework.boot.SpringApplication.run(SpringApplication.java:307) ~[spring-boot-2.7.8.jar:2.7.8]
+   2023-04-03T20:59:07.83+0300 [APP/PROC/WEB/0] OUT at ua.com.foxminded.university.UniversityManagement.main(UniversityManagement.java:15) [classes/:0.0.1-SNAPSHOT]
+   2023-04-03T20:59:07.83+0300 [APP/PROC/WEB/0] OUT at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:1.8.0_362]
+   2023-04-03T20:59:07.83+0300 [APP/PROC/WEB/0] OUT at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[na:1.8.0_362]
+   2023-04-03T20:59:07.83+0300 [APP/PROC/WEB/0] OUT at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:1.8.0_362]
+   2023-04-03T20:59:07.83+0300 [APP/PROC/WEB/0] OUT at java.lang.reflect.Method.invoke(Method.java:498) ~[na:1.8.0_362]
+   2023-04-03T20:59:07.83+0300 [APP/PROC/WEB/0] OUT at org.springframework.boot.loader.MainMethodRunner.run(MainMethodRunner.java:49) [app/:na]
+   2023-04-03T20:59:07.83+0300 [APP/PROC/WEB/0] OUT at org.springframework.boot.loader.Launcher.launch(Launcher.java:108) [app/:na]
+   2023-04-03T20:59:07.83+0300 [APP/PROC/WEB/0] OUT at org.springframework.boot.loader.Launcher.launch(Launcher.java:58) [app/:na]
+   2023-04-03T20:59:07.83+0300 [APP/PROC/WEB/0] OUT at org.springframework.boot.loader.WarLauncher.main(WarLauncher.java:59) [app/:na]
+   2023-04-03T20:59:07.83+0300 [APP/PROC/WEB/0] OUT Caused by: org.flywaydb.core.api.exception.FlywayValidateException: Validate failed: Migrations have failed validation
+   2023-04-03T20:59:07.83+0300 [APP/PROC/WEB/0] OUT Migration checksum mismatch for migration version 4
+   2023-04-03T20:59:07.83+0300 [APP/PROC/WEB/0] OUT -> Applied to database : -436094689
+   2023-04-03T20:59:07.83+0300 [APP/PROC/WEB/0] OUT -> Resolved locally    : 458358316
+   2023-04-03T20:59:07.83+0300 [APP/PROC/WEB/0] OUT Either revert the changes to the migration, or run repair to update the schema history.
+   2023-04-03T20:59:07.83+0300 [APP/PROC/WEB/0] OUT Migration checksum mismatch for migration version 5
+   2023-04-03T20:59:07.83+0300 [APP/PROC/WEB/0] OUT -> Applied to database : 458358316
+   2023-04-03T20:59:07.83+0300 [APP/PROC/WEB/0] OUT -> Resolved locally    : -151950773
+   2023-04-03T20:59:07.83+0300 [APP/PROC/WEB/0] OUT Either revert the changes to the migration, or run repair to update the schema history.
+   2023-04-03T20:59:07.83+0300 [APP/PROC/WEB/0] OUT Migration checksum mismatch for migration version 6
+   2023-04-03T20:59:07.83+0300 [APP/PROC/WEB/0] OUT -> Applied to database : 739299147
+   2023-04-03T20:59:07.83+0300 [APP/PROC/WEB/0] OUT -> Resolved locally    : -1558823934
+   2023-04-03T20:59:07.83+0300 [APP/PROC/WEB/0] OUT Either revert the changes to the migration, or run repair to update the schema history.
+   2023-04-03T20:59:07.83+0300 [APP/PROC/WEB/0] OUT Migration checksum mismatch for migration version 7
+   2023-04-03T20:59:07.83+0300 [APP/PROC/WEB/0] OUT -> Applied to database : -1831584080
+   2023-04-03T20:59:07.83+0300 [APP/PROC/WEB/0] OUT -> Resolved locally    : 1549030048
+   2023-04-03T20:59:07.83+0300 [APP/PROC/WEB/0] OUT Either revert the changes to the migration, or run repair to update the schema history.
+   2023-04-03T20:59:07.83+0300 [APP/PROC/WEB/0] OUT Need more flexibility with validation rules? Learn more: https://rd.gt/3AbJUZE
+   2023-04-03T20:59:07.83+0300 [APP/PROC/WEB/0] OUT at org.flywaydb.core.Flyway$1.execute(Flyway.java:130) ~[flyway-core-8.5.13.jar:na]
+   2023-04-03T20:59:07.83+0300 [APP/PROC/WEB/0] OUT at org.flywaydb.core.Flyway$1.execute(Flyway.java:124) ~[flyway-core-8.5.13.jar:na]
+   2023-04-03T20:59:07.83+0300 [APP/PROC/WEB/0] OUT at org.flywaydb.core.FlywayExecutor.execute(FlywayExecutor.java:205) ~[flyway-core-8.5.13.jar:na]
+   2023-04-03T20:59:07.83+0300 [APP/PROC/WEB/0] OUT at org.flywaydb.core.Flyway.migrate(Flyway.java:124) ~[flyway-core-8.5.13.jar:na]
+   2023-04-03T20:59:07.83+0300 [APP/PROC/WEB/0] OUT at org.springframework.boot.autoconfigure.flyway.FlywayMigrationInitializer.afterPropertiesSet(FlywayMigrationInitializer.java:66) ~[spring-boot-autoconfigure-2.7.8.jar:2.7.8]
+   2023-04-03T20:59:07.83+0300 [APP/PROC/WEB/0] OUT at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1863) ~[spring-beans-5.3.25.jar:5.3.25]
+   2023-04-03T20:59:07.83+0300 [APP/PROC/WEB/0] OUT at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1800) ~[spring-beans-5.3.25.jar:5.3.25]
+   2023-04-03T20:59:07.83+0300 [APP/PROC/WEB/0] OUT ... 24 common frames omitted
+   2023-04-03T20:59:07.91+0300 [APP/PROC/WEB/0] OUT Exit status 1
+   2023-04-03T20:59:13.52+0300 [CELL/0] OUT Cell d89356d5-8b8d-4fb9-b939-143db8dad6d7 stopping instance 91d807ac-b422-494f-7bc2-da57
+   2023-04-03T20:59:13.52+0300 [CELL/0] OUT Cell d89356d5-8b8d-4fb9-b939-143db8dad6d7 destroying container for instance 91d807ac-b422-494f-7bc2-da57
+   2023-04-03T20:59:13.53+0300 [API/8] OUT Process has crashed with type: "web"
+   2023-04-03T20:59:13.54+0300 [API/8] OUT App instance exited with guid dfe5fc91-3df5-4f06-99fa-fa416bddc46a payload: {"instance"=>"91d807ac-b422-494f-7bc2-da57", "index"=>0, "cell_id"=>"d89356d5-8b8d-4fb9-b939-143db8dad6d7", "reason"=>"CRASHED", "exit_description"=>"APP/PROC/WEB: Exited with status 1", "crash_count"=>1, "crash_timestamp"=>1680544753515174118, "version"=>"3d2bef69-b6e3-4275-9f1c-f04c7488ac5d"}
+   2023-04-03T20:59:13.59+0300 [PROXY/0] OUT Exit status 137
+   2023-04-03T20:59:13.62+0300 [CELL/0] OUT Cell dd09aa96-af4b-44ce-9a39-e8709217f6a8 creating container for instance cd6b570d-b919-4d0a-79ae-474f
+   2023-04-03T20:59:13.95+0300 [CELL/0] OUT Security group rules were updated
+   2023-04-03T20:59:13.96+0300 [CELL/0] OUT Cell dd09aa96-af4b-44ce-9a39-e8709217f6a8 successfully created container for instance cd6b570d-b919-4d0a-79ae-474f
+   2023-04-03T20:59:14.17+0300 [CELL/0] OUT Downloading droplet...
+   2023-04-03T20:59:14.27+0300 [CELL/0] OUT Cell d89356d5-8b8d-4fb9-b939-143db8dad6d7 successfully destroyed container for instance 91d807ac-b422-494f-7bc2-da57
+   2023-04-03T20:59:16.88+0300 [CELL/0] OUT Downloaded droplet (86.3M)
+   2023-04-03T20:59:16.88+0300 [CELL/0] OUT Starting health monitoring of container
+   2023-04-03T20:59:16.99+0300 [APP/PROC/WEB/0] OUT JVM Memory Configuration: -Xmx412511K -Xss1M -XX:ReservedCodeCacheSize=240M -XX:MaxDirectMemorySize=10M -XX:MaxMetaspaceSize=124064K
+   2023-04-03T20:59:18.93+0300 [APP/PROC/WEB/0] OUT .   ____          _            __ _ _
+   2023-04-03T20:59:18.93+0300 [APP/PROC/WEB/0] OUT /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+   2023-04-03T20:59:18.93+0300 [APP/PROC/WEB/0] OUT ( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+   2023-04-03T20:59:18.93+0300 [APP/PROC/WEB/0] OUT \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+   2023-04-03T20:59:18.93+0300 [APP/PROC/WEB/0] OUT '  |____| .__|_| |_|_| |_\__, | / / / /
+   2023-04-03T20:59:18.93+0300 [APP/PROC/WEB/0] OUT =========|_|==============|___/=/_/_/_/
+   2023-04-03T20:59:18.93+0300 [APP/PROC/WEB/0] OUT :: Spring Boot ::                (v2.7.8)
+   2023-04-03T20:59:19.22+0300 [APP/PROC/WEB/0] OUT 2023-04-03 17:59:19.222  INFO 7 --- [           main] u.c.f.university.UniversityManagement    : Starting UniversityManagement v0.0.1-SNAPSHOT using Java 1.8.0_362 on cd6b570d-b919-4d0a-79ae-474f with PID 7 (/home/vcap/app/WEB-INF/classes started by vcap in /home/vcap/app)
+   2023-04-03T20:59:19.22+0300 [APP/PROC/WEB/0] OUT 2023-04-03 17:59:19.224  INFO 7 --- [           main] u.c.f.university.UniversityManagement    : The following 1 profile is active: "prod"
+   2023-04-03T20:59:19.41+0300 [APP/PROC/WEB/0] OUT 2023-04-03 17:59:19.419  INFO 7 --- [           main] s.b.CfDataSourceEnvironmentPostProcessor : Setting spring.datasource properties from bound service [postres]
+   2023-04-03T20:59:22.32+0300 [APP/PROC/WEB/0] OUT 2023-04-03 17:59:22.320  INFO 7 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+   2023-04-03T20:59:22.61+0300 [APP/PROC/WEB/0] OUT 2023-04-03 17:59:22.610  INFO 7 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 281 ms. Found 7 JPA repository interfaces.
+   2023-04-03T20:59:27.40+0300 [APP/PROC/WEB/0] OUT 2023-04-03 17:59:27.409  INFO 7 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+   2023-04-03T20:59:27.51+0300 [APP/PROC/WEB/0] OUT 2023-04-03 17:59:27.512  INFO 7 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+   2023-04-03T20:59:27.51+0300 [APP/PROC/WEB/0] OUT 2023-04-03 17:59:27.512  INFO 7 --- [           main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.71]
+   2023-04-03T20:59:27.61+0300 [APP/PROC/WEB/0] OUT 2023-04-03 17:59:27.617 ERROR 7 --- [           main] o.a.c.w.AbstractFileResourceSet          : Resource for web application [] at path [/WEB-INF/lib/container_customizer-2.6.0_RELEASE.jar] was not loaded as the canonical path [/.java-buildpack/container_customizer/container_customizer-2.6.0_RELEASE.jar] did not match. Use of symlinks is one possible cause.
+   2023-04-03T20:59:27.61+0300 [APP/PROC/WEB/0] OUT 2023-04-03 17:59:27.618 ERROR 7 --- [           main] o.a.c.w.AbstractFileResourceSet          : Resource for web application [] at path [/WEB-INF/lib/client_certificate_mapper-1.11.0_RELEASE.jar] was not loaded as the canonical path [/.java-buildpack/client_certificate_mapper/client_certificate_mapper-1.11.0_RELEASE.jar] did not match. Use of symlinks is one possible cause.
+   2023-04-03T20:59:28.01+0300 [APP/PROC/WEB/0] OUT 2023-04-03 17:59:28.018 ERROR 7 --- [           main] o.a.c.w.AbstractFileResourceSet          : Resource for web application [] at path [/WEB-INF/lib/container_customizer-2.6.0_RELEASE.jar] was not loaded as the canonical path [/.java-buildpack/container_customizer/container_customizer-2.6.0_RELEASE.jar] did not match. Use of symlinks is one possible cause.
+   2023-04-03T20:59:28.01+0300 [APP/PROC/WEB/0] OUT 2023-04-03 17:59:28.018 ERROR 7 --- [           main] o.a.c.w.AbstractFileResourceSet          : Resource for web application [] at path [/WEB-INF/lib/client_certificate_mapper-1.11.0_RELEASE.jar] was not loaded as the canonical path [/.java-buildpack/client_certificate_mapper/client_certificate_mapper-1.11.0_RELEASE.jar] did not match. Use of symlinks is one possible cause.
+   2023-04-03T20:59:28.41+0300 [APP/PROC/WEB/0] OUT 2023-04-03 17:59:28.414  INFO 7 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+   2023-04-03T20:59:28.41+0300 [APP/PROC/WEB/0] OUT 2023-04-03 17:59:28.414  INFO 7 --- [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 8994 ms
+   2023-04-03T20:59:30.51+0300 [APP/PROC/WEB/0] OUT 2023-04-03 17:59:30.514  INFO 7 --- [           main] o.f.c.internal.license.VersionPrinter    : Flyway Community Edition 8.5.13 by Redgate
+   2023-04-03T20:59:30.51+0300 [APP/PROC/WEB/0] OUT 2023-04-03 17:59:30.514  INFO 7 --- [           main] o.f.c.internal.license.VersionPrinter    : See what's new here: https://flywaydb.org/documentation/learnmore/releaseNotes#8.5.13
+   2023-04-03T20:59:30.51+0300 [APP/PROC/WEB/0] OUT 2023-04-03 17:59:30.514  INFO 7 --- [           main] o.f.c.internal.license.VersionPrinter    :
+   2023-04-03T20:59:30.70+0300 [APP/PROC/WEB/0] OUT 2023-04-03 17:59:30.708  INFO 7 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+   2023-04-03T20:59:32.25+0300 [APP/PROC/WEB/0] OUT 2023-04-03 17:59:32.252  INFO 7 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+   2023-04-03T20:59:32.32+0300 [APP/PROC/WEB/0] OUT 2023-04-03 17:59:32.322  INFO 7 --- [           main] o.f.c.i.database.base.BaseDatabaseType   : Database: jdbc:postgresql://postgres-84fee189-7163-459b-b15e-fad663f19e8f.cqryblsdrbcs.us-east-1.rds.amazonaws.com:4967/qPvPQAAnYWNi (PostgreSQL 12.11)
+   2023-04-03T20:59:32.51+0300 [APP/PROC/WEB/0] OUT 2023-04-03 17:59:32.519  WARN 7 --- [           main] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'flywayInitializer' defined in class path resource [org/springframework/boot/autoconfigure/flyway/FlywayAutoConfiguration$FlywayConfiguration.class]: Invocation of init method failed; nested exception is org.flywaydb.core.api.exception.FlywayValidateException: Validate failed: Migrations have failed validation
+   2023-04-03T20:59:32.51+0300 [APP/PROC/WEB/0] OUT Migration checksum mismatch for migration version 4
+   2023-04-03T20:59:32.51+0300 [APP/PROC/WEB/0] OUT -> Applied to database : -436094689
+   2023-04-03T20:59:32.51+0300 [APP/PROC/WEB/0] OUT -> Resolved locally    : 458358316
+   2023-04-03T20:59:32.51+0300 [APP/PROC/WEB/0] OUT Either revert the changes to the migration, or run repair to update the schema history.
+   2023-04-03T20:59:32.51+0300 [APP/PROC/WEB/0] OUT Migration checksum mismatch for migration version 5
+   2023-04-03T20:59:32.51+0300 [APP/PROC/WEB/0] OUT -> Applied to database : 458358316
+   2023-04-03T20:59:32.51+0300 [APP/PROC/WEB/0] OUT -> Resolved locally    : -151950773
+   2023-04-03T20:59:32.51+0300 [APP/PROC/WEB/0] OUT Either revert the changes to the migration, or run repair to update the schema history.
+   2023-04-03T20:59:32.51+0300 [APP/PROC/WEB/0] OUT Migration checksum mismatch for migration version 6
+   2023-04-03T20:59:32.51+0300 [APP/PROC/WEB/0] OUT -> Applied to database : 739299147
+   2023-04-03T20:59:32.51+0300 [APP/PROC/WEB/0] OUT -> Resolved locally    : -1558823934
+   2023-04-03T20:59:32.51+0300 [APP/PROC/WEB/0] OUT Either revert the changes to the migration, or run repair to update the schema history.
+   2023-04-03T20:59:32.51+0300 [APP/PROC/WEB/0] OUT Migration checksum mismatch for migration version 7
+   2023-04-03T20:59:32.51+0300 [APP/PROC/WEB/0] OUT -> Applied to database : -1831584080
+   2023-04-03T20:59:32.51+0300 [APP/PROC/WEB/0] OUT -> Resolved locally    : 1549030048
+   2023-04-03T20:59:32.51+0300 [APP/PROC/WEB/0] OUT Either revert the changes to the migration, or run repair to update the schema history.
+   2023-04-03T20:59:32.51+0300 [APP/PROC/WEB/0] OUT Need more flexibility with validation rules? Learn more: https://rd.gt/3AbJUZE
+   2023-04-03T20:59:32.51+0300 [APP/PROC/WEB/0] OUT 2023-04-03 17:59:32.519  INFO 7 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+   2023-04-03T20:59:32.61+0300 [APP/PROC/WEB/0] OUT 2023-04-03 17:59:32.618  INFO 7 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+   2023-04-03T20:59:32.62+0300 [APP/PROC/WEB/0] OUT 2023-04-03 17:59:32.621  INFO 7 --- [           main] o.apache.catalina.core.StandardService   : Stopping service [Tomcat]
+   2023-04-03T20:59:32.63+0300 [APP/PROC/WEB/0] OUT 2023-04-03 17:59:32.635  INFO 7 --- [           main] ConditionEvaluationReportLoggingListener :
+   2023-04-03T20:59:32.63+0300 [APP/PROC/WEB/0] OUT Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
+   2023-04-03T20:59:32.71+0300 [APP/PROC/WEB/0] OUT 2023-04-03 17:59:32.710 ERROR 7 --- [           main] o.s.boot.SpringApplication               : Application run failed
+   2023-04-03T20:59:32.71+0300 [APP/PROC/WEB/0] OUT org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'flywayInitializer' defined in class path resource [org/springframework/boot/autoconfigure/flyway/FlywayAutoConfiguration$FlywayConfiguration.class]: Invocation of init method failed; nested exception is org.flywaydb.core.api.exception.FlywayValidateException: Validate failed: Migrations have failed validation
+   2023-04-03T20:59:32.71+0300 [APP/PROC/WEB/0] OUT Migration checksum mismatch for migration version 4
+   2023-04-03T20:59:32.71+0300 [APP/PROC/WEB/0] OUT -> Applied to database : -436094689
+   2023-04-03T20:59:32.71+0300 [APP/PROC/WEB/0] OUT -> Resolved locally    : 458358316
+   2023-04-03T20:59:32.71+0300 [APP/PROC/WEB/0] OUT Either revert the changes to the migration, or run repair to update the schema history.
+   2023-04-03T20:59:32.71+0300 [APP/PROC/WEB/0] OUT Migration checksum mismatch for migration version 5
+   2023-04-03T20:59:32.71+0300 [APP/PROC/WEB/0] OUT -> Applied to database : 458358316
+   2023-04-03T20:59:32.71+0300 [APP/PROC/WEB/0] OUT -> Resolved locally    : -151950773
+   2023-04-03T20:59:32.71+0300 [APP/PROC/WEB/0] OUT Either revert the changes to the migration, or run repair to update the schema history.
+   2023-04-03T20:59:32.71+0300 [APP/PROC/WEB/0] OUT Migration checksum mismatch for migration version 6
+   2023-04-03T20:59:32.71+0300 [APP/PROC/WEB/0] OUT -> Applied to database : 739299147
+   2023-04-03T20:59:32.71+0300 [APP/PROC/WEB/0] OUT -> Resolved locally    : -1558823934
+   2023-04-03T20:59:32.71+0300 [APP/PROC/WEB/0] OUT Either revert the changes to the migration, or run repair to update the schema history.
+   2023-04-03T20:59:32.71+0300 [APP/PROC/WEB/0] OUT Migration checksum mismatch for migration version 7
+   2023-04-03T20:59:32.71+0300 [APP/PROC/WEB/0] OUT -> Applied to database : -1831584080
+   2023-04-03T20:59:32.71+0300 [APP/PROC/WEB/0] OUT -> Resolved locally    : 1549030048
+   2023-04-03T20:59:32.71+0300 [APP/PROC/WEB/0] OUT Either revert the changes to the migration, or run repair to update the schema history.
+   2023-04-03T20:59:32.71+0300 [APP/PROC/WEB/0] OUT Need more flexibility with validation rules? Learn more: https://rd.gt/3AbJUZE
+   2023-04-03T20:59:32.71+0300 [APP/PROC/WEB/0] OUT at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1804) ~[spring-beans-5.3.25.jar:5.3.25]
+   2023-04-03T20:59:32.71+0300 [APP/PROC/WEB/0] OUT at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:620) ~[spring-beans-5.3.25.jar:5.3.25]
+   2023-04-03T20:59:32.71+0300 [APP/PROC/WEB/0] OUT at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:542) ~[spring-beans-5.3.25.jar:5.3.25]
+   2023-04-03T20:59:32.71+0300 [APP/PROC/WEB/0] OUT at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:335) ~[spring-beans-5.3.25.jar:5.3.25]
+   2023-04-03T20:59:32.71+0300 [APP/PROC/WEB/0] OUT at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234) ~[spring-beans-5.3.25.jar:5.3.25]
+   2023-04-03T20:59:32.71+0300 [APP/PROC/WEB/0] OUT at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:333) ~[spring-beans-5.3.25.jar:5.3.25]
+   2023-04-03T20:59:32.71+0300 [APP/PROC/WEB/0] OUT at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:208) ~[spring-beans-5.3.25.jar:5.3.25]
+   2023-04-03T20:59:32.71+0300 [APP/PROC/WEB/0] OUT at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:322) ~[spring-beans-5.3.25.jar:5.3.25]
+   2023-04-03T20:59:32.71+0300 [APP/PROC/WEB/0] OUT at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:208) ~[spring-beans-5.3.25.jar:5.3.25]
+   2023-04-03T20:59:32.71+0300 [APP/PROC/WEB/0] OUT at org.springframework.context.support.AbstractApplicationContext.getBean(AbstractApplicationContext.java:1154) ~[spring-context-5.3.25.jar:5.3.25]
+   2023-04-03T20:59:32.71+0300 [APP/PROC/WEB/0] OUT at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:908) ~[spring-context-5.3.25.jar:5.3.25]
+   2023-04-03T20:59:32.71+0300 [APP/PROC/WEB/0] OUT at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:583) ~[spring-context-5.3.25.jar:5.3.25]
+   2023-04-03T20:59:32.71+0300 [APP/PROC/WEB/0] OUT at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:147) ~[spring-boot-2.7.8.jar:2.7.8]
+   2023-04-03T20:59:32.71+0300 [APP/PROC/WEB/0] OUT at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:731) ~[spring-boot-2.7.8.jar:2.7.8]
+   2023-04-03T20:59:32.71+0300 [APP/PROC/WEB/0] OUT at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:408) ~[spring-boot-2.7.8.jar:2.7.8]
+   2023-04-03T20:59:32.71+0300 [APP/PROC/WEB/0] OUT at org.springframework.boot.SpringApplication.run(SpringApplication.java:307) ~[spring-boot-2.7.8.jar:2.7.8]
+   2023-04-03T20:59:32.71+0300 [APP/PROC/WEB/0] OUT at ua.com.foxminded.university.UniversityManagement.main(UniversityManagement.java:15) [classes/:0.0.1-SNAPSHOT]
+   2023-04-03T20:59:32.71+0300 [APP/PROC/WEB/0] OUT at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:1.8.0_362]
+   2023-04-03T20:59:32.71+0300 [APP/PROC/WEB/0] OUT at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[na:1.8.0_362]
+   2023-04-03T20:59:32.71+0300 [APP/PROC/WEB/0] OUT at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:1.8.0_362]
+   2023-04-03T20:59:32.71+0300 [APP/PROC/WEB/0] OUT at java.lang.reflect.Method.invoke(Method.java:498) ~[na:1.8.0_362]
+   2023-04-03T20:59:32.71+0300 [APP/PROC/WEB/0] OUT at org.springframework.boot.loader.MainMethodRunner.run(MainMethodRunner.java:49) [app/:na]
+   2023-04-03T20:59:32.71+0300 [APP/PROC/WEB/0] OUT at org.springframework.boot.loader.Launcher.launch(Launcher.java:108) [app/:na]
+   2023-04-03T20:59:32.71+0300 [APP/PROC/WEB/0] OUT at org.springframework.boot.loader.Launcher.launch(Launcher.java:58) [app/:na]
+   2023-04-03T20:59:32.71+0300 [APP/PROC/WEB/0] OUT at org.springframework.boot.loader.WarLauncher.main(WarLauncher.java:59) [app/:na]
+   2023-04-03T20:59:32.71+0300 [APP/PROC/WEB/0] OUT Caused by: org.flywaydb.core.api.exception.FlywayValidateException: Validate failed: Migrations have failed validation
+   2023-04-03T20:59:32.71+0300 [APP/PROC/WEB/0] OUT Migration checksum mismatch for migration version 4
+   2023-04-03T20:59:32.71+0300 [APP/PROC/WEB/0] OUT -> Applied to database : -436094689
+   2023-04-03T20:59:32.71+0300 [APP/PROC/WEB/0] OUT -> Resolved locally    : 458358316
+   2023-04-03T20:59:32.71+0300 [APP/PROC/WEB/0] OUT Either revert the changes to the migration, or run repair to update the schema history.
+   2023-04-03T20:59:32.71+0300 [APP/PROC/WEB/0] OUT Migration checksum mismatch for migration version 5
+   2023-04-03T20:59:32.71+0300 [APP/PROC/WEB/0] OUT -> Applied to database : 458358316
+   2023-04-03T20:59:32.71+0300 [APP/PROC/WEB/0] OUT -> Resolved locally    : -151950773
+   2023-04-03T20:59:32.71+0300 [APP/PROC/WEB/0] OUT Either revert the changes to the migration, or run repair to update the schema history.
+   2023-04-03T20:59:32.71+0300 [APP/PROC/WEB/0] OUT Migration checksum mismatch for migration version 6
+   2023-04-03T20:59:32.71+0300 [APP/PROC/WEB/0] OUT -> Applied to database : 739299147
+   2023-04-03T20:59:32.71+0300 [APP/PROC/WEB/0] OUT -> Resolved locally    : -1558823934
+   2023-04-03T20:59:32.71+0300 [APP/PROC/WEB/0] OUT Either revert the changes to the migration, or run repair to update the schema history.
+   2023-04-03T20:59:32.71+0300 [APP/PROC/WEB/0] OUT Migration checksum mismatch for migration version 7
+   2023-04-03T20:59:32.71+0300 [APP/PROC/WEB/0] OUT -> Applied to database : -1831584080
+   2023-04-03T20:59:32.71+0300 [APP/PROC/WEB/0] OUT -> Resolved locally    : 1549030048
+   2023-04-03T20:59:32.71+0300 [APP/PROC/WEB/0] OUT Either revert the changes to the migration, or run repair to update the schema history.
+   2023-04-03T20:59:32.71+0300 [APP/PROC/WEB/0] OUT Need more flexibility with validation rules? Learn more: https://rd.gt/3AbJUZE
+   2023-04-03T20:59:32.71+0300 [APP/PROC/WEB/0] OUT at org.flywaydb.core.Flyway$1.execute(Flyway.java:130) ~[flyway-core-8.5.13.jar:na]
+   2023-04-03T20:59:32.71+0300 [APP/PROC/WEB/0] OUT at org.flywaydb.core.Flyway$1.execute(Flyway.java:124) ~[flyway-core-8.5.13.jar:na]
+   2023-04-03T20:59:32.71+0300 [APP/PROC/WEB/0] OUT at org.flywaydb.core.FlywayExecutor.execute(FlywayExecutor.java:205) ~[flyway-core-8.5.13.jar:na]
+   2023-04-03T20:59:32.71+0300 [APP/PROC/WEB/0] OUT at org.flywaydb.core.Flyway.migrate(Flyway.java:124) ~[flyway-core-8.5.13.jar:na]
+   2023-04-03T20:59:32.71+0300 [APP/PROC/WEB/0] OUT at org.springframework.boot.autoconfigure.flyway.FlywayMigrationInitializer.afterPropertiesSet(FlywayMigrationInitializer.java:66) ~[spring-boot-autoconfigure-2.7.8.jar:2.7.8]
+   2023-04-03T20:59:32.71+0300 [APP/PROC/WEB/0] OUT at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1863) ~[spring-beans-5.3.25.jar:5.3.25]
+   2023-04-03T20:59:32.71+0300 [APP/PROC/WEB/0] OUT at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1800) ~[spring-beans-5.3.25.jar:5.3.25]
+   2023-04-03T20:59:32.71+0300 [APP/PROC/WEB/0] OUT ... 24 common frames omitted
+   2023-04-03T20:59:32.74+0300 [APP/PROC/WEB/0] OUT Exit status 1
+   2023-04-03T20:59:38.56+0300 [CELL/0] OUT Cell dd09aa96-af4b-44ce-9a39-e8709217f6a8 stopping instance cd6b570d-b919-4d0a-79ae-474f
+   2023-04-03T20:59:38.56+0300 [CELL/0] OUT Cell dd09aa96-af4b-44ce-9a39-e8709217f6a8 destroying container for instance cd6b570d-b919-4d0a-79ae-474f
+   2023-04-03T20:59:38.57+0300 [API/20] OUT Process has crashed with type: "web"
+   2023-04-03T20:59:38.58+0300 [API/20] OUT App instance exited with guid dfe5fc91-3df5-4f06-99fa-fa416bddc46a payload: {"instance"=>"cd6b570d-b919-4d0a-79ae-474f", "index"=>0, "cell_id"=>"dd09aa96-af4b-44ce-9a39-e8709217f6a8", "reason"=>"CRASHED", "exit_description"=>"APP/PROC/WEB: Exited with status 1", "crash_count"=>2, "crash_timestamp"=>1680544778553760990, "version"=>"3d2bef69-b6e3-4275-9f1c-f04c7488ac5d"}
+   2023-04-03T20:59:38.64+0300 [PROXY/0] OUT Exit status 137
+   2023-04-03T20:59:38.75+0300 [CELL/0] OUT Cell d89356d5-8b8d-4fb9-b939-143db8dad6d7 creating container for instance 92e63cf8-60fb-4d01-707a-e5ff
+   2023-04-03T20:59:39.07+0300 [CELL/0] OUT Security group rules were updated
+   2023-04-03T20:59:39.08+0300 [CELL/0] OUT Cell d89356d5-8b8d-4fb9-b939-143db8dad6d7 successfully created container for instance 92e63cf8-60fb-4d01-707a-e5ff
+   2023-04-03T20:59:39.57+0300 [CELL/0] OUT Cell dd09aa96-af4b-44ce-9a39-e8709217f6a8 successfully destroyed container for instance cd6b570d-b919-4d0a-79ae-474f
+   2023-04-03T20:59:39.85+0300 [CELL/0] OUT Downloading droplet...
+   2023-04-03T20:59:40.21+0300 [CELL/0] OUT Downloaded droplet
+   2023-04-03T20:59:40.21+0300 [CELL/0] OUT Starting health monitoring of container
+   2023-04-03T20:59:40.30+0300 [APP/PROC/WEB/0] OUT JVM Memory Configuration: -Xmx412511K -Xss1M -XX:ReservedCodeCacheSize=240M -XX:MaxDirectMemorySize=10M -XX:MaxMetaspaceSize=124064K
+   2023-04-03T20:59:42.13+0300 [APP/PROC/WEB/0] OUT .   ____          _            __ _ _
+   2023-04-03T20:59:42.13+0300 [APP/PROC/WEB/0] OUT /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+   2023-04-03T20:59:42.13+0300 [APP/PROC/WEB/0] OUT ( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+   2023-04-03T20:59:42.13+0300 [APP/PROC/WEB/0] OUT \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+   2023-04-03T20:59:42.13+0300 [APP/PROC/WEB/0] OUT '  |____| .__|_| |_|_| |_\__, | / / / /
+   2023-04-03T20:59:42.13+0300 [APP/PROC/WEB/0] OUT =========|_|==============|___/=/_/_/_/
+   2023-04-03T20:59:42.13+0300 [APP/PROC/WEB/0] OUT :: Spring Boot ::                (v2.7.8)
+   2023-04-03T20:59:42.41+0300 [APP/PROC/WEB/0] OUT 2023-04-03 17:59:42.412  INFO 7 --- [           main] u.c.f.university.UniversityManagement    : Starting UniversityManagement v0.0.1-SNAPSHOT using Java 1.8.0_362 on 92e63cf8-60fb-4d01-707a-e5ff with PID 7 (/home/vcap/app/WEB-INF/classes started by vcap in /home/vcap/app)
+   2023-04-03T20:59:42.41+0300 [APP/PROC/WEB/0] OUT 2023-04-03 17:59:42.414  INFO 7 --- [           main] u.c.f.university.UniversityManagement    : The following 1 profile is active: "prod"
+   2023-04-03T20:59:42.60+0300 [APP/PROC/WEB/0] OUT 2023-04-03 17:59:42.601  INFO 7 --- [           main] s.b.CfDataSourceEnvironmentPostProcessor : Setting spring.datasource properties from bound service [postres]
+   2023-04-03T20:59:45.41+0300 [APP/PROC/WEB/0] OUT 2023-04-03 17:59:45.410  INFO 7 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+   2023-04-03T20:59:45.62+0300 [APP/PROC/WEB/0] OUT 2023-04-03 17:59:45.621  INFO 7 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 203 ms. Found 7 JPA repository interfaces.
+   2023-04-03T20:59:50.30+0300 [APP/PROC/WEB/0] OUT 2023-04-03 17:59:50.308  INFO 7 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+   2023-04-03T20:59:50.40+0300 [APP/PROC/WEB/0] OUT 2023-04-03 17:59:50.400  INFO 7 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+   2023-04-03T20:59:50.40+0300 [APP/PROC/WEB/0] OUT 2023-04-03 17:59:50.401  INFO 7 --- [           main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.71]
+   2023-04-03T20:59:50.50+0300 [APP/PROC/WEB/0] OUT 2023-04-03 17:59:50.503 ERROR 7 --- [           main] o.a.c.w.AbstractFileResourceSet          : Resource for web application [] at path [/WEB-INF/lib/container_customizer-2.6.0_RELEASE.jar] was not loaded as the canonical path [/.java-buildpack/container_customizer/container_customizer-2.6.0_RELEASE.jar] did not match. Use of symlinks is one possible cause.
+   2023-04-03T20:59:50.50+0300 [APP/PROC/WEB/0] OUT 2023-04-03 17:59:50.504 ERROR 7 --- [           main] o.a.c.w.AbstractFileResourceSet          : Resource for web application [] at path [/WEB-INF/lib/client_certificate_mapper-1.11.0_RELEASE.jar] was not loaded as the canonical path [/.java-buildpack/client_certificate_mapper/client_certificate_mapper-1.11.0_RELEASE.jar] did not match. Use of symlinks is one possible cause.
+   2023-04-03T20:59:50.90+0300 [APP/PROC/WEB/0] OUT 2023-04-03 17:59:50.903 ERROR 7 --- [           main] o.a.c.w.AbstractFileResourceSet          : Resource for web application [] at path [/WEB-INF/lib/container_customizer-2.6.0_RELEASE.jar] was not loaded as the canonical path [/.java-buildpack/container_customizer/container_customizer-2.6.0_RELEASE.jar] did not match. Use of symlinks is one possible cause.
+   2023-04-03T20:59:50.90+0300 [APP/PROC/WEB/0] OUT 2023-04-03 17:59:50.904 ERROR 7 --- [           main] o.a.c.w.AbstractFileResourceSet          : Resource for web application [] at path [/WEB-INF/lib/client_certificate_mapper-1.11.0_RELEASE.jar] was not loaded as the canonical path [/.java-buildpack/client_certificate_mapper/client_certificate_mapper-1.11.0_RELEASE.jar] did not match. Use of symlinks is one possible cause.
+   2023-04-03T20:59:51.21+0300 [APP/PROC/WEB/0] OUT 2023-04-03 17:59:51.210  INFO 7 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+   2023-04-03T20:59:51.21+0300 [APP/PROC/WEB/0] OUT 2023-04-03 17:59:51.210  INFO 7 --- [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 8608 ms
+   2023-04-03T20:59:52.70+0300 [APP/PROC/WEB/0] OUT 2023-04-03 17:59:52.703  INFO 7 --- [           main] o.f.c.internal.license.VersionPrinter    : Flyway Community Edition 8.5.13 by Redgate
+   2023-04-03T20:59:52.70+0300 [APP/PROC/WEB/0] OUT 2023-04-03 17:59:52.703  INFO 7 --- [           main] o.f.c.internal.license.VersionPrinter    : See what's new here: https://flywaydb.org/documentation/learnmore/releaseNotes#8.5.13
+   2023-04-03T20:59:52.70+0300 [APP/PROC/WEB/0] OUT 2023-04-03 17:59:52.703  INFO 7 --- [           main] o.f.c.internal.license.VersionPrinter    :
+   2023-04-03T20:59:52.71+0300 [APP/PROC/WEB/0] OUT 2023-04-03 17:59:52.715  INFO 7 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+   2023-04-03T20:59:54.10+0300 [APP/PROC/WEB/0] OUT 2023-04-03 17:59:54.103  INFO 7 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+   2023-04-03T20:59:54.12+0300 [APP/PROC/WEB/0] OUT 2023-04-03 17:59:54.122  INFO 7 --- [           main] o.f.c.i.database.base.BaseDatabaseType   : Database: jdbc:postgresql://postgres-84fee189-7163-459b-b15e-fad663f19e8f.cqryblsdrbcs.us-east-1.rds.amazonaws.com:4967/qPvPQAAnYWNi (PostgreSQL 12.11)
+   2023-04-03T20:59:54.51+0300 [APP/PROC/WEB/0] OUT 2023-04-03 17:59:54.511  WARN 7 --- [           main] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'flywayInitializer' defined in class path resource [org/springframework/boot/autoconfigure/flyway/FlywayAutoConfiguration$FlywayConfiguration.class]: Invocation of init method failed; nested exception is org.flywaydb.core.api.exception.FlywayValidateException: Validate failed: Migrations have failed validation
+   2023-04-03T20:59:54.51+0300 [APP/PROC/WEB/0] OUT Migration checksum mismatch for migration version 4
+   2023-04-03T20:59:54.51+0300 [APP/PROC/WEB/0] OUT -> Applied to database : -436094689
+   2023-04-03T20:59:54.51+0300 [APP/PROC/WEB/0] OUT -> Resolved locally    : 458358316
+   2023-04-03T20:59:54.51+0300 [APP/PROC/WEB/0] OUT Either revert the changes to the migration, or run repair to update the schema history.
+   2023-04-03T20:59:54.51+0300 [APP/PROC/WEB/0] OUT Migration checksum mismatch for migration version 5
+   2023-04-03T20:59:54.51+0300 [APP/PROC/WEB/0] OUT -> Applied to database : 458358316
+   2023-04-03T20:59:54.51+0300 [APP/PROC/WEB/0] OUT -> Resolved locally    : -151950773
+   2023-04-03T20:59:54.51+0300 [APP/PROC/WEB/0] OUT Either revert the changes to the migration, or run repair to update the schema history.
+   2023-04-03T20:59:54.51+0300 [APP/PROC/WEB/0] OUT Migration checksum mismatch for migration version 6
+   2023-04-03T20:59:54.51+0300 [APP/PROC/WEB/0] OUT -> Applied to database : 739299147
+   2023-04-03T20:59:54.51+0300 [APP/PROC/WEB/0] OUT -> Resolved locally    : -1558823934
+   2023-04-03T20:59:54.51+0300 [APP/PROC/WEB/0] OUT Either revert the changes to the migration, or run repair to update the schema history.
+   2023-04-03T20:59:54.51+0300 [APP/PROC/WEB/0] OUT Migration checksum mismatch for migration version 7
+   2023-04-03T20:59:54.51+0300 [APP/PROC/WEB/0] OUT -> Applied to database : -1831584080
+   2023-04-03T20:59:54.51+0300 [APP/PROC/WEB/0] OUT -> Resolved locally    : 1549030048
+   2023-04-03T20:59:54.51+0300 [APP/PROC/WEB/0] OUT Either revert the changes to the migration, or run repair to update the schema history.
+   2023-04-03T20:59:54.51+0300 [APP/PROC/WEB/0] OUT Need more flexibility with validation rules? Learn more: https://rd.gt/3AbJUZE
+   2023-04-03T20:59:54.51+0300 [APP/PROC/WEB/0] OUT 2023-04-03 17:59:54.511  INFO 7 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+   2023-04-03T20:59:54.61+0300 [APP/PROC/WEB/0] OUT 2023-04-03 17:59:54.617  INFO 7 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+   2023-04-03T20:59:54.70+0300 [APP/PROC/WEB/0] OUT 2023-04-03 17:59:54.699  INFO 7 --- [           main] o.apache.catalina.core.StandardService   : Stopping service [Tomcat]
+   2023-04-03T20:59:54.71+0300 [APP/PROC/WEB/0] OUT 2023-04-03 17:59:54.714  INFO 7 --- [           main] ConditionEvaluationReportLoggingListener :
+   2023-04-03T20:59:54.71+0300 [APP/PROC/WEB/0] OUT Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
+   2023-04-03T20:59:54.73+0300 [APP/PROC/WEB/0] OUT 2023-04-03 17:59:54.733 ERROR 7 --- [           main] o.s.boot.SpringApplication               : Application run failed
+   2023-04-03T20:59:54.73+0300 [APP/PROC/WEB/0] OUT org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'flywayInitializer' defined in class path resource [org/springframework/boot/autoconfigure/flyway/FlywayAutoConfiguration$FlywayConfiguration.class]: Invocation of init method failed; nested exception is org.flywaydb.core.api.exception.FlywayValidateException: Validate failed: Migrations have failed validation
+   2023-04-03T20:59:54.73+0300 [APP/PROC/WEB/0] OUT Migration checksum mismatch for migration version 4
+   2023-04-03T20:59:54.73+0300 [APP/PROC/WEB/0] OUT -> Applied to database : -436094689
+   2023-04-03T20:59:54.73+0300 [APP/PROC/WEB/0] OUT -> Resolved locally    : 458358316
+   2023-04-03T20:59:54.73+0300 [APP/PROC/WEB/0] OUT Either revert the changes to the migration, or run repair to update the schema history.
+   2023-04-03T20:59:54.73+0300 [APP/PROC/WEB/0] OUT Migration checksum mismatch for migration version 5
+   2023-04-03T20:59:54.73+0300 [APP/PROC/WEB/0] OUT -> Applied to database : 458358316
+   2023-04-03T20:59:54.73+0300 [APP/PROC/WEB/0] OUT -> Resolved locally    : -151950773
+   2023-04-03T20:59:54.73+0300 [APP/PROC/WEB/0] OUT Either revert the changes to the migration, or run repair to update the schema history.
+   2023-04-03T20:59:54.73+0300 [APP/PROC/WEB/0] OUT Migration checksum mismatch for migration version 6
+   2023-04-03T20:59:54.73+0300 [APP/PROC/WEB/0] OUT -> Applied to database : 739299147
+   2023-04-03T20:59:54.73+0300 [APP/PROC/WEB/0] OUT -> Resolved locally    : -1558823934
+   2023-04-03T20:59:54.73+0300 [APP/PROC/WEB/0] OUT Either revert the changes to the migration, or run repair to update the schema history.
+   2023-04-03T20:59:54.73+0300 [APP/PROC/WEB/0] OUT Migration checksum mismatch for migration version 7
+   2023-04-03T20:59:54.73+0300 [APP/PROC/WEB/0] OUT -> Applied to database : -1831584080
+   2023-04-03T20:59:54.73+0300 [APP/PROC/WEB/0] OUT -> Resolved locally    : 1549030048
+   2023-04-03T20:59:54.73+0300 [APP/PROC/WEB/0] OUT Either revert the changes to the migration, or run repair to update the schema history.
+   2023-04-03T20:59:54.73+0300 [APP/PROC/WEB/0] OUT Need more flexibility with validation rules? Learn more: https://rd.gt/3AbJUZE
+   2023-04-03T20:59:54.73+0300 [APP/PROC/WEB/0] OUT at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1804) ~[spring-beans-5.3.25.jar:5.3.25]
+   2023-04-03T20:59:54.73+0300 [APP/PROC/WEB/0] OUT at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:620) ~[spring-beans-5.3.25.jar:5.3.25]
+   2023-04-03T20:59:54.73+0300 [APP/PROC/WEB/0] OUT at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:542) ~[spring-beans-5.3.25.jar:5.3.25]
+   2023-04-03T20:59:54.73+0300 [APP/PROC/WEB/0] OUT at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:335) ~[spring-beans-5.3.25.jar:5.3.25]
+   2023-04-03T20:59:54.73+0300 [APP/PROC/WEB/0] OUT at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234) ~[spring-beans-5.3.25.jar:5.3.25]
+   2023-04-03T20:59:54.73+0300 [APP/PROC/WEB/0] OUT at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:333) ~[spring-beans-5.3.25.jar:5.3.25]
+   2023-04-03T20:59:54.73+0300 [APP/PROC/WEB/0] OUT at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:208) ~[spring-beans-5.3.25.jar:5.3.25]
+   2023-04-03T20:59:54.73+0300 [APP/PROC/WEB/0] OUT at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:322) ~[spring-beans-5.3.25.jar:5.3.25]
+   2023-04-03T20:59:54.73+0300 [APP/PROC/WEB/0] OUT at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:208) ~[spring-beans-5.3.25.jar:5.3.25]
+   2023-04-03T20:59:54.73+0300 [APP/PROC/WEB/0] OUT at org.springframework.context.support.AbstractApplicationContext.getBean(AbstractApplicationContext.java:1154) ~[spring-context-5.3.25.jar:5.3.25]
+   2023-04-03T20:59:54.73+0300 [APP/PROC/WEB/0] OUT at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:908) ~[spring-context-5.3.25.jar:5.3.25]
+   2023-04-03T20:59:54.73+0300 [APP/PROC/WEB/0] OUT at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:583) ~[spring-context-5.3.25.jar:5.3.25]
+   2023-04-03T20:59:54.73+0300 [APP/PROC/WEB/0] OUT at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:147) ~[spring-boot-2.7.8.jar:2.7.8]
+   2023-04-03T20:59:54.73+0300 [APP/PROC/WEB/0] OUT at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:731) ~[spring-boot-2.7.8.jar:2.7.8]
+   2023-04-03T20:59:54.73+0300 [APP/PROC/WEB/0] OUT at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:408) ~[spring-boot-2.7.8.jar:2.7.8]
+   2023-04-03T20:59:54.73+0300 [APP/PROC/WEB/0] OUT at org.springframework.boot.SpringApplication.run(SpringApplication.java:307) ~[spring-boot-2.7.8.jar:2.7.8]
+   2023-04-03T20:59:54.73+0300 [APP/PROC/WEB/0] OUT at ua.com.foxminded.university.UniversityManagement.main(UniversityManagement.java:15) [classes/:0.0.1-SNAPSHOT]
+   2023-04-03T20:59:54.73+0300 [APP/PROC/WEB/0] OUT at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:1.8.0_362]
+   2023-04-03T20:59:54.73+0300 [APP/PROC/WEB/0] OUT at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[na:1.8.0_362]
+   2023-04-03T20:59:54.73+0300 [APP/PROC/WEB/0] OUT at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:1.8.0_362]
+   2023-04-03T20:59:54.73+0300 [APP/PROC/WEB/0] OUT at java.lang.reflect.Method.invoke(Method.java:498) ~[na:1.8.0_362]
+   2023-04-03T20:59:54.73+0300 [APP/PROC/WEB/0] OUT at org.springframework.boot.loader.MainMethodRunner.run(MainMethodRunner.java:49) [app/:na]
+   2023-04-03T20:59:54.73+0300 [APP/PROC/WEB/0] OUT at org.springframework.boot.loader.Launcher.launch(Launcher.java:108) [app/:na]
+   2023-04-03T20:59:54.73+0300 [APP/PROC/WEB/0] OUT at org.springframework.boot.loader.Launcher.launch(Launcher.java:58) [app/:na]
+   2023-04-03T20:59:54.73+0300 [APP/PROC/WEB/0] OUT at org.springframework.boot.loader.WarLauncher.main(WarLauncher.java:59) [app/:na]
+   2023-04-03T20:59:54.73+0300 [APP/PROC/WEB/0] OUT Caused by: org.flywaydb.core.api.exception.FlywayValidateException: Validate failed: Migrations have failed validation
+   2023-04-03T20:59:54.73+0300 [APP/PROC/WEB/0] OUT Migration checksum mismatch for migration version 4
+   2023-04-03T20:59:54.73+0300 [APP/PROC/WEB/0] OUT -> Applied to database : -436094689
+   2023-04-03T20:59:54.73+0300 [APP/PROC/WEB/0] OUT -> Resolved locally    : 458358316
+   2023-04-03T20:59:54.73+0300 [APP/PROC/WEB/0] OUT Either revert the changes to the migration, or run repair to update the schema history.
+   2023-04-03T20:59:54.73+0300 [APP/PROC/WEB/0] OUT Migration checksum mismatch for migration version 5
+   2023-04-03T20:59:54.73+0300 [APP/PROC/WEB/0] OUT -> Applied to database : 458358316
+   2023-04-03T20:59:54.73+0300 [APP/PROC/WEB/0] OUT -> Resolved locally    : -151950773
+   2023-04-03T20:59:54.73+0300 [APP/PROC/WEB/0] OUT Either revert the changes to the migration, or run repair to update the schema history.
+   2023-04-03T20:59:54.73+0300 [APP/PROC/WEB/0] OUT Migration checksum mismatch for migration version 6
+   2023-04-03T20:59:54.73+0300 [APP/PROC/WEB/0] OUT -> Applied to database : 739299147
+   2023-04-03T20:59:54.73+0300 [APP/PROC/WEB/0] OUT -> Resolved locally    : -1558823934
+   2023-04-03T20:59:54.73+0300 [APP/PROC/WEB/0] OUT Either revert the changes to the migration, or run repair to update the schema history.
+   2023-04-03T20:59:54.73+0300 [APP/PROC/WEB/0] OUT Migration checksum mismatch for migration version 7
+   2023-04-03T20:59:54.73+0300 [APP/PROC/WEB/0] OUT -> Applied to database : -1831584080
+   2023-04-03T20:59:54.73+0300 [APP/PROC/WEB/0] OUT -> Resolved locally    : 1549030048
+   2023-04-03T20:59:54.73+0300 [APP/PROC/WEB/0] OUT Either revert the changes to the migration, or run repair to update the schema history.
+   2023-04-03T20:59:54.73+0300 [APP/PROC/WEB/0] OUT Need more flexibility with validation rules? Learn more: https://rd.gt/3AbJUZE
+   2023-04-03T20:59:54.73+0300 [APP/PROC/WEB/0] OUT at org.flywaydb.core.Flyway$1.execute(Flyway.java:130) ~[flyway-core-8.5.13.jar:na]
+   2023-04-03T20:59:54.73+0300 [APP/PROC/WEB/0] OUT at org.flywaydb.core.Flyway$1.execute(Flyway.java:124) ~[flyway-core-8.5.13.jar:na]
+   2023-04-03T20:59:54.73+0300 [APP/PROC/WEB/0] OUT at org.flywaydb.core.FlywayExecutor.execute(FlywayExecutor.java:205) ~[flyway-core-8.5.13.jar:na]
+   2023-04-03T20:59:54.73+0300 [APP/PROC/WEB/0] OUT at org.flywaydb.core.Flyway.migrate(Flyway.java:124) ~[flyway-core-8.5.13.jar:na]
+   2023-04-03T20:59:54.73+0300 [APP/PROC/WEB/0] OUT at org.springframework.boot.autoconfigure.flyway.FlywayMigrationInitializer.afterPropertiesSet(FlywayMigrationInitializer.java:66) ~[spring-boot-autoconfigure-2.7.8.jar:2.7.8]
+   2023-04-03T20:59:54.73+0300 [APP/PROC/WEB/0] OUT at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1863) ~[spring-beans-5.3.25.jar:5.3.25]
+   2023-04-03T20:59:54.73+0300 [APP/PROC/WEB/0] OUT at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1800) ~[spring-beans-5.3.25.jar:5.3.25]
+   2023-04-03T20:59:54.73+0300 [APP/PROC/WEB/0] OUT ... 24 common frames omitted
+   2023-04-03T20:59:54.83+0300 [APP/PROC/WEB/0] OUT Exit status 1
+   2023-04-03T21:00:00.32+0300 [CELL/0] OUT Cell d89356d5-8b8d-4fb9-b939-143db8dad6d7 stopping instance 92e63cf8-60fb-4d01-707a-e5ff
+   2023-04-03T21:00:00.32+0300 [CELL/0] OUT Cell d89356d5-8b8d-4fb9-b939-143db8dad6d7 destroying container for instance 92e63cf8-60fb-4d01-707a-e5ff
+   2023-04-03T21:00:00.34+0300 [API/0] OUT Process has crashed with type: "web"
+   2023-04-03T21:00:00.35+0300 [API/0] OUT App instance exited with guid dfe5fc91-3df5-4f06-99fa-fa416bddc46a payload: {"instance"=>"92e63cf8-60fb-4d01-707a-e5ff", "index"=>0, "cell_id"=>"d89356d5-8b8d-4fb9-b939-143db8dad6d7", "reason"=>"CRASHED", "exit_description"=>"APP/PROC/WEB: Exited with status 1", "crash_count"=>3, "crash_timestamp"=>1680544800320619790, "version"=>"3d2bef69-b6e3-4275-9f1c-f04c7488ac5d"}
+   2023-04-03T21:00:00.38+0300 [PROXY/0] OUT Exit status 137
+   2023-04-03T21:00:01.31+0300 [CELL/0] OUT Cell d89356d5-8b8d-4fb9-b939-143db8dad6d7 successfully destroyed container for instance 92e63cf8-60fb-4d01-707a-e5ff
+   2023-04-03T21:00:46.66+0300 [CELL/0] OUT Cell d89356d5-8b8d-4fb9-b939-143db8dad6d7 creating container for instance c06418cd-9d2b-45a8-673b-616d
+   2023-04-03T21:00:46.97+0300 [CELL/0] OUT Security group rules were updated
+   2023-04-03T21:00:46.98+0300 [CELL/0] OUT Cell d89356d5-8b8d-4fb9-b939-143db8dad6d7 successfully created container for instance c06418cd-9d2b-45a8-673b-616d
+   2023-04-03T21:00:47.19+0300 [CELL/0] OUT Downloading droplet...
+   2023-04-03T21:00:47.52+0300 [CELL/0] OUT Downloaded droplet
+   2023-04-03T21:00:47.52+0300 [CELL/0] OUT Starting health monitoring of container
+   2023-04-03T21:00:47.61+0300 [APP/PROC/WEB/0] OUT JVM Memory Configuration: -Xmx412511K -Xss1M -XX:ReservedCodeCacheSize=240M -XX:MaxDirectMemorySize=10M -XX:MaxMetaspaceSize=124064K
+   2023-04-03T21:00:49.60+0300 [APP/PROC/WEB/0] OUT .   ____          _            __ _ _
+   2023-04-03T21:00:49.60+0300 [APP/PROC/WEB/0] OUT /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+   2023-04-03T21:00:49.60+0300 [APP/PROC/WEB/0] OUT ( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+   2023-04-03T21:00:49.60+0300 [APP/PROC/WEB/0] OUT \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+   2023-04-03T21:00:49.60+0300 [APP/PROC/WEB/0] OUT '  |____| .__|_| |_|_| |_\__, | / / / /
+   2023-04-03T21:00:49.60+0300 [APP/PROC/WEB/0] OUT =========|_|==============|___/=/_/_/_/
+   2023-04-03T21:00:49.60+0300 [APP/PROC/WEB/0] OUT :: Spring Boot ::                (v2.7.8)
+   2023-04-03T21:00:49.81+0300 [APP/PROC/WEB/0] OUT 2023-04-03 18:00:49.816  INFO 7 --- [           main] u.c.f.university.UniversityManagement    : Starting UniversityManagement v0.0.1-SNAPSHOT using Java 1.8.0_362 on c06418cd-9d2b-45a8-673b-616d with PID 7 (/home/vcap/app/WEB-INF/classes started by vcap in /home/vcap/app)
+   2023-04-03T21:00:49.81+0300 [APP/PROC/WEB/0] OUT 2023-04-03 18:00:49.818  INFO 7 --- [           main] u.c.f.university.UniversityManagement    : The following 1 profile is active: "prod"
+   2023-04-03T21:00:50.10+0300 [APP/PROC/WEB/0] OUT 2023-04-03 18:00:50.106  INFO 7 --- [           main] s.b.CfDataSourceEnvironmentPostProcessor : Setting spring.datasource properties from bound service [postres]
+   2023-04-03T21:00:52.80+0300 [APP/PROC/WEB/0] OUT 2023-04-03 18:00:52.803  INFO 7 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+   2023-04-03T21:00:53.01+0300 [APP/PROC/WEB/0] OUT 2023-04-03 18:00:53.016  INFO 7 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 205 ms. Found 7 JPA repository interfaces.
+   2023-04-03T21:00:57.30+0300 [APP/PROC/WEB/0] OUT 2023-04-03 18:00:57.301  INFO 7 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+   2023-04-03T21:00:57.40+0300 [APP/PROC/WEB/0] OUT 2023-04-03 18:00:57.400  INFO 7 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+   2023-04-03T21:00:57.40+0300 [APP/PROC/WEB/0] OUT 2023-04-03 18:00:57.400  INFO 7 --- [           main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.71]
+   2023-04-03T21:00:57.50+0300 [APP/PROC/WEB/0] OUT 2023-04-03 18:00:57.503 ERROR 7 --- [           main] o.a.c.w.AbstractFileResourceSet          : Resource for web application [] at path [/WEB-INF/lib/container_customizer-2.6.0_RELEASE.jar] was not loaded as the canonical path [/.java-buildpack/container_customizer/container_customizer-2.6.0_RELEASE.jar] did not match. Use of symlinks is one possible cause.
+   2023-04-03T21:00:57.50+0300 [APP/PROC/WEB/0] OUT 2023-04-03 18:00:57.503 ERROR 7 --- [           main] o.a.c.w.AbstractFileResourceSet          : Resource for web application [] at path [/WEB-INF/lib/client_certificate_mapper-1.11.0_RELEASE.jar] was not loaded as the canonical path [/.java-buildpack/client_certificate_mapper/client_certificate_mapper-1.11.0_RELEASE.jar] did not match. Use of symlinks is one possible cause.
+   2023-04-03T21:00:57.90+0300 [APP/PROC/WEB/0] OUT 2023-04-03 18:00:57.908 ERROR 7 --- [           main] o.a.c.w.AbstractFileResourceSet          : Resource for web application [] at path [/WEB-INF/lib/container_customizer-2.6.0_RELEASE.jar] was not loaded as the canonical path [/.java-buildpack/container_customizer/container_customizer-2.6.0_RELEASE.jar] did not match. Use of symlinks is one possible cause.
+   2023-04-03T21:00:57.90+0300 [APP/PROC/WEB/0] OUT 2023-04-03 18:00:57.909 ERROR 7 --- [           main] o.a.c.w.AbstractFileResourceSet          : Resource for web application [] at path [/WEB-INF/lib/client_certificate_mapper-1.11.0_RELEASE.jar] was not loaded as the canonical path [/.java-buildpack/client_certificate_mapper/client_certificate_mapper-1.11.0_RELEASE.jar] did not match. Use of symlinks is one possible cause.
+   2023-04-03T21:00:58.21+0300 [APP/PROC/WEB/0] OUT 2023-04-03 18:00:58.210  INFO 7 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+   2023-04-03T21:00:58.21+0300 [APP/PROC/WEB/0] OUT 2023-04-03 18:00:58.211  INFO 7 --- [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 8103 ms

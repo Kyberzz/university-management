@@ -8,6 +8,7 @@ spring:
   thymeleaf:
     enabled: true
     cache: false
+    enable-spring-el-compiler: true
 ---
 spring:
   config:
@@ -32,20 +33,17 @@ spring:
     password: 1234
   jpa:
     show_sql: false
-  sql:
-    init:
-      mode: always
   flyway:
     enabled: true
 logging:
   level:
     root: warn
-#    org.springframework.web: debug
-#    org.springframework.security: trace
+    org.springframework.web: debug
+    org.springframework.security: trace
 #    org.hibernate: error
 #    org.hibernate.sql: debug
 #    org.hibernate.type.descriptor.sql.BasicBinder: trace
-#    org.flywaydb: debug 
+    org.flywaydb: info 
 ---
 spring:
   config:
@@ -57,8 +55,8 @@ spring:
   datasource:
     name: test
     driverClassName: org.h2.Driver
-#    url: jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;
-    url: jdbc:h2:mem:test;DB_CLOSE_ON_EXIT=FALSE;
+    url: jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;
+#    url: jdbc:h2:mem:test;DB_CLOSE_ON_EXIT=FALSE;
     username: sa
     password:
   sql:
@@ -69,6 +67,8 @@ spring:
     show-sql: false
     database-platform: H2
     generate-ddl: true
+    hibernate:
+      ddl-auto: create-drop
 logging:
   level:
     root: warn

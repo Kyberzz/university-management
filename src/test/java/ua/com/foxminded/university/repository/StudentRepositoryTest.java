@@ -20,7 +20,6 @@ import ua.com.foxminded.university.entity.UserEntity;
 import ua.com.foxminded.university.entitymother.GroupEntityMother;
 import ua.com.foxminded.university.entitymother.StudentEntityMother;
 import ua.com.foxminded.university.entitymother.UserEntityMother;
-import ua.com.foxminded.university.exception.RepositoryException;
 
 @DataJpaTest
 @ActiveProfiles("test")
@@ -60,13 +59,13 @@ class StudentRepositoryTest {
     }
     
     @Test
-    void findGroupById_ShouldRetrunGroupByStudentId() throws RepositoryException {
+    void findGroupById_ShouldRetrunGroupByStudentId() {
         StudentEntity persistedStudent = studentRepository.findGroupById(student.getId());
         assertEquals(group.getId(), persistedStudent.getGroup().getId());
     }
     
     @Test
-    void findById_ShouldReturnStudentObjectWithId() throws RepositoryException {
+    void findById_ShouldReturnStudentObjectWithId() {
         StudentEntity persistedStudent = studentRepository.findById(student.getId());
         assertEquals(student.getId(), persistedStudent.getId());
     }

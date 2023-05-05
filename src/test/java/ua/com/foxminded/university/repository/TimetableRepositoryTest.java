@@ -2,6 +2,8 @@ package ua.com.foxminded.university.repository;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceUnit;
@@ -18,7 +20,6 @@ import ua.com.foxminded.university.entity.TimetableEntity;
 import ua.com.foxminded.university.entitymother.CourseEntityMother;
 import ua.com.foxminded.university.entitymother.GroupEntityMother;
 import ua.com.foxminded.university.entitymother.TimetableEntityMother;
-import ua.com.foxminded.university.exception.RepositoryException;
 
 @DataJpaTest
 @ActiveProfiles("test")
@@ -53,23 +54,28 @@ class TimetableRepositoryTest {
     }
     
     @Test
-    void findCourseById_ShouldReturnCourseOwnedByTimetableWithId() 
-            throws RepositoryException {
+    void findByDatestamp_ShouldReturnTimetablesOfDay() {
+        List<TimetableEntity> timetables = timetableRepository.findByDatestamp(
+                timetable.getDatestamp());
+        assertEquals(timetable.getDatestamp(), timetables.iterator().next().getDatestamp());
+    }
+    
+    @Test
+    void findCourseById_ShouldReturnCourseOwnedByTimetableWithId() {
         TimetableEntity receivedTimetable = timetableRepository.findCourseById(
                 timetable.getId());
         assertEquals(course.getId(), receivedTimetable.getCourse().getId());
     }
         
     @Test
-    void findGroupById_ShouldReturnGroupOwnedByTimetableWithId() 
-            throws RepositoryException {
+    void findGroupById_ShouldReturnGroupOwnedByTimetableWithId() {
         TimetableEntity receivedTimetable = timetableRepository.findGroupById(
                 timetable.getId());
         assertEquals(group.getId(), receivedTimetable.getGroup().getId());
     }
     
     @Test
-    void findById_ShouldReturnTimetableEntityWithId() throws RepositoryException {
+    void findById_ShouldReturnTimetableEntityWithId() {
         TimetableEntity receivedTimetable = timetableRepository.findById(
                 timetable.getId().intValue());
         assertEquals(timetable.getId(), receivedTimetable.getId());

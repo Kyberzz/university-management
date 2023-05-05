@@ -7,7 +7,7 @@ import ua.com.foxminded.university.model.TeacherModel;
 
 public interface TeacherService {
 
-    public List<TeacherModel> getAllTeachers() throws ServiceException;
+    public List<TeacherModel> getAll() throws ServiceException;
 
-    public TeacherModel getCourseListByTeacherId(int id) throws ServiceException;
+    public TeacherModel getCoursesByTeacherId(int id) throws ServiceException;
 }

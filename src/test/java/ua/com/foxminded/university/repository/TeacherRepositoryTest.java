@@ -22,7 +22,6 @@ import ua.com.foxminded.university.entity.CourseEntity;
 import ua.com.foxminded.university.entity.TeacherEntity;
 import ua.com.foxminded.university.entitymother.CourseEntityMother;
 import ua.com.foxminded.university.entitymother.TeacherEntityMother;
-import ua.com.foxminded.university.exception.RepositoryException;
 
 @DataJpaTest
 @ActiveProfiles("test")
@@ -60,14 +59,13 @@ class TeacherRepositoryTest {
     }
     
     @Test
-    void findCoursesById_ShouldReturnCoursesOwnedByTeacherWithId() 
-            throws RepositoryException {
+    void findCoursesById_ShouldReturnCoursesOwnedByTeacherWithId() {
         TeacherEntity receivedTeacher = teacherRepository.findById(teacher.getId().intValue());
         assertEquals(COURSES_QUANTITY, receivedTeacher.getCourses().size());
     }
     
     @Test
-    void findById_ShouldReturnTeacherEntityWithId() throws RepositoryException {
+    void findById_ShouldReturnTeacherEntityWithId() {
         TeacherEntity receivedTeacher = teacherRepository.findById(teacher.getId().intValue());
         assertEquals(teacher.getId(), receivedTeacher.getId());
     }

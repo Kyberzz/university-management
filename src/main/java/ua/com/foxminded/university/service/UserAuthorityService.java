@@ -5,5 +5,6 @@ import ua.com.foxminded.university.model.UserAuthorityModel;
 
 public interface UserAuthorityService {
     
-    public UserAuthorityModel saveUserAuthority(UserAuthorityModel user) throws ServiceException;
+    public UserAuthorityModel saveUserAuthority(UserAuthorityModel user) 
+            throws ServiceException;
 }

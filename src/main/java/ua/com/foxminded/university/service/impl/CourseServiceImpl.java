@@ -3,19 +3,23 @@ package ua.com.foxminded.university.service.impl;
 import java.lang.reflect.Type;
 import java.util.List;
 
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceUnit;
+
 import org.modelmapper.ConfigurationException;
 import org.modelmapper.MappingException;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
-import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import ua.com.foxminded.university.entity.CourseEntity;
+import ua.com.foxminded.university.entity.TeacherEntity;
 import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.CourseModel;
 import ua.com.foxminded.university.repository.CourseRepository;
+import ua.com.foxminded.university.repository.TeacherRepository;
 import ua.com.foxminded.university.service.CourseService;
 
 @Service
@@ -23,10 +27,43 @@ import ua.com.foxminded.university.service.CourseService;
 @RequiredArgsConstructor
 public class CourseServiceImpl implements CourseService {
     
-    private static final Type TYPE = new TypeToken<List<CourseModel>>() {}.getType();
+    private static final Type COURSE_MODEL_LIST_TYPE = 
+            new TypeToken<List<CourseModel>>() {}.getType();
 
     private final CourseRepository courseRepository;
+    private final TeacherRepository teacherRepository;
     private final ModelMapper modelMapper;
+    
+    @PersistenceUnit
+    private  EntityManagerFactory entityManagerFactory;
+    
+    @Override
+    public void deassignTeacherToCourse(int teacherId, int courseId) {
+        
+            CourseEntity course = courseRepository.findById(courseId);
+            TeacherEntity teacher = teacherRepository.findById(teacherId);
+            course.removeTeacher(teacher);
+            courseRepository.saveAndFlush(course);
+    }
+    
+    @Override
+    public void assignTeacherToCourse(int teacherId, int courseId) {
+        TeacherEntity teacher = teacherRepository.findById(teacherId);
+        CourseEntity course = courseRepository.findById(courseId);
+        course.addTeacher(teacher);
+        courseRepository.saveAndFlush(course);
+    }
+
+    @Override
+    public CourseModel getTimetableAndTeachersByCourseId(int id) throws ServiceException {
+        try {
+            CourseEntity entity = courseRepository.getCourseRelationsById(id);
+            return modelMapper.map(entity, CourseModel.class);
+        } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
+            throw new ServiceException("Fetching the course with related "
+                    + "timetables and teachers fails", e);
+        }
+    }
     
     @Override
     public CourseModel getById(int id) throws ServiceException {
@@ -61,20 +98,23 @@ public class CourseServiceImpl implements CourseService {
     public List<CourseModel> getAll() throws ServiceException {
         try {
             List<CourseEntity> courseEntities = courseRepository.findAll();
-            modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-            return modelMapper.map(courseEntities, TYPE);
+            return modelMapper.map(courseEntities, COURSE_MODEL_LIST_TYPE);
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
             throw new ServiceException("Getting all courses was failed.", e); 
         }
     }
     
     @Override
-    public void update(CourseModel courseModel) throws ServiceException {
+    public void update(CourseModel model) throws ServiceException {
         try {
-            CourseEntity courseEntity = modelMapper.map(courseModel, CourseEntity.class);
-            courseRepository.save(courseEntity);
+            CourseEntity entity = modelMapper.map(model, CourseEntity.class);
+            CourseEntity persistedEntity = courseRepository.findById(entity.getId()
+                                                           .intValue());
+            persistedEntity.setDescription(entity.getDescription());
+            persistedEntity.setName(entity.getName());
+            courseRepository.saveAndFlush(persistedEntity);
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
-            throw new ServiceException("Updating all courses was failed", e);
+            throw new ServiceException("Updating the course was failed", e);
         }
     }
    

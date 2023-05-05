@@ -8,7 +8,8 @@ import lombok.RequiredArgsConstructor;
 public enum Authority {
     ADMIN("Admin"), 
     STAFF("Staff"), 
-    STUDENT("Student");
+    STUDENT("Student"),
+    TEACHER("Teacher");
     
     private final String representation;
 }

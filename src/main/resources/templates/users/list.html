@@ -16,14 +16,15 @@
  <nav class="ms-2" aria-label="breadcrumb" th:fragment="page-path">
   <ol class="breadcrumb container-fluid">
    <li class="breadcrumb-item"><a th:href="@{/}" th:text="#{href.home}">Home</a></li>
-   <li class="breadcrumb-item active" aria-current="page" th:text="#{users.pageName}">1</li>
+   <li class="breadcrumb-item active" aria-current="page"
+    th:text="#{users.pageName}">1</li>
   </ol>
  </nav>
 
  <div class="container">
   <div class="row">
-   <p class="text-center fs-4" th:text="#{users.tableName}">All
-    users of the university</p>
+   <p class="text-center fs-4" th:text="#{users.tableName}">All users of the
+    university</p>
   </div>
   <div class="row justify-content-center">
    <div class="col-10">
@@ -36,13 +37,15 @@
        <th scope="col" th:text="#{thead.email}">Email</th>
        <th scope="col" th:text="#{thead.authority}">Authority</th>
        <th scope="col" th:text="#{thead.active}">Enabled</th>
+       <th scope="col" th:text="#{thead.userId}">User ID</th>
        <th></th>
        <th></th>
        <th></th>
       </tr>
      </thead>
      <tbody>
-      <tr th:each="user,iterationStatus : ${allUsers}">
+      <tr
+       th:each="user, iterationStatus : ${#lists.sort(allUsers, new ua.com.foxminded.university.comparator.UserModelComparator())}">
        <th scope="row" th:text="${iterationStatus.count}">1</th>
        <td th:text="${user.person?.firstName}">Linus</td>
        <td th:text="${user.person?.lastName}">Torvalds</td>
@@ -52,8 +55,10 @@
         Administrator</td>
        <td
         th:text="${user.enabled != null} ? (${user.enabled} ? #{users.enableStatus} : #{users.disableStatus}) : '---'">true</td>
+       <td th:text="${user.id}">1</td>
        <td class="text-end">
-        <button type="button" class="btn btn-outline-success btn-sm"
+        <button th:id="|authorizeButton${user.id}|" type="button"
+         class="btn btn-outline-success btn-sm"
          th:text="#{users.authorize}" data-bs-toggle="modal"
          th:data-bs-target="|#authorize${iterationStatus.index}|">Authorize</button>
 
@@ -69,7 +74,7 @@
             <h1 class="modal-title fs-5" id="staticBackdropLabel"
              th:text="${user.email != null} ? #{users.addTitle} : #{users.noDataAuthorize}">Authorize
              a user</h1>
-            <button type="button" class="btn-close"
+            <button id="closeEditMenu" type="button" class="btn-close"
              data-bs-dismiss="modal" aria-label="Close"></button>
            </div>
            <div class="modal-body">
@@ -77,15 +82,15 @@
              <div class="row">
               <div class="col-6" th:text="|#{thead.email}: |">Email:</div>
               <div class="col-6"
-               th:text="${user.email !=null} ? ${user.email} : '---'">
-              </div>
+               th:text="${user.email !=null} ? ${user.email} : '---'"></div>
              </div>
              <div class="row mt-2">
               <div class="col-6" th:text="|#{users.authority}: |">Authority</div>
               <div class="col-6" th:if="${user.email == null}">---</div>
               <div class="col-6" th:if="${user.email != null}">
                <select th:field="*{userAuthority.authority}"
-                class="form-select" id="floatingSelect"
+                class="form-select"
+                th:id="|authorizedAuthority${user.id}|"
                 aria-label="Defalt select example">
                 <option
                  th:each="authority : ${T(ua.com.foxminded.university.model.Authority).values()}"
@@ -100,7 +105,8 @@
               <div class="col" th:if="${user.email == null}">---</div>
               <div class="col" th:if="${user.email != null}">
                <select th:field="*{enabled}" class="form-select"
-                id="floatingSelect" aria-label="Default select example">
+                th:id="|authorizedActiveStatus${user.id}|"
+                aria-label="Default select example">
                 <option th:value='true' th:text="#{users.enableStatus}"></option>
                 <option th:value='false'
                  th:text="#{users.disableStatus}"></option>
@@ -113,7 +119,7 @@
               <div class="col-6" th:if="${user.email == null}">---</div>
               <div class="col-6" th:if="${user.email != null}">
                <input type="password" class="form-control"
-                id="floatingInput" name="password" />
+                th:id="|password${user.id}|" name="password" />
               </div>
              </div>
              <div class="row mt-2">
@@ -122,7 +128,8 @@
               <div class="col-6" th:if="${user.email == null}">---</div>
               <div class="col-6" th:if="${user.email != null}">
                <input type="password" class="form-control"
-                id="floatingInput" name="passwordConfirm" />
+                th:id="|confirmPassword${user.id}|"
+                name="passwordConfirm" />
               </div>
              </div>
             </div>
@@ -130,7 +137,8 @@
            <div class="modal-footer">
             <button type="button" class="btn btn-secondary"
              data-bs-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-primary" name="email"
+            <button th:id="|authorizeButtonOfAuthorizedMenu${user.id}|"
+             type="submit" class="btn btn-primary" name="email"
              th:value="${user.email}" th:text="#{users.authorize}">Authorize</button>
            </div>
           </div>
@@ -140,9 +148,10 @@
        <td class="text-center">
         <button type="button" class="btn btn-outline-success btn-sm"
          th:text="#{button.edit}" data-bs-toggle="modal"
-         th:data-bs-target="|#edit${iterationStatus.index}|">Edit</button>
+         th:id="|editButton${user.id}|"
+         th:data-bs-target="|#edit${user.id}|">Edit</button>
 
-        <form class="modal fade" th:id="|edit${iterationStatus.index}|"
+        <form class="modal fade" th:id="|edit${user.id}|"
          th:action="@{/users/edit}" method="post"
          th:object="${userModel}" data-bs-backdrop="static"
          data-bs-keyboard="false" tabindex="-1"
@@ -179,7 +188,7 @@
                th:text="${user.userAuthority != null} ? ${user.userAuthority.roleAuthority.representation} : '---'">Admin</div>
               <div class="col-5" th:if="${user.email != null}">
                <select th:field="*{userAuthority.authority}"
-                class="form-select" id="floatingSelect"
+                class="form-select" th:id="|selectAuthority${user.id}|"
                 aria-label="Defalt select example">
                 <option
                  th:each="authority : ${T(ua.com.foxminded.university.model.Authority).values()}"
@@ -189,8 +198,8 @@
               </div>
              </div>
              <div class="row text-start mt-2">
-              <div class="col-3" th:text="|#{thead.active}: |">
-               Active status:</div>
+              <div class="col-3" th:text="|#{thead.active}: |">Active
+               status:</div>
               <div class="col-4"
                th:text="${user.enabled != null} ? (${user.enabled} ? #{users.enableStatus} : #{users.disableStatus}) : '---'">Enabled</div>
               <div class="col-5" th:if="${user.email != null}">
@@ -206,9 +215,9 @@
            <div class="modal-footer">
             <button type="button" class="btn btn-secondary"
              data-bs-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-primary" name="userId"
-             th:value="${user.id}" th:text="#{button.saveChange}">Save
-             the change</button>
+            <button th:id="|saveChanges${user.id}|" type="submit"
+             class="btn btn-primary" name="userId" th:value="${user.id}"
+             th:text="#{button.saveChange}">Save the change</button>
            </div>
           </div>
          </div>
@@ -222,10 +231,9 @@
 
         <form class="modal fade" method="post"
          th:id="|delete${iterationStatus.index}|"
-         th:action="@{/users/delete}" 
-         data-bs-backdrop="static" data-bs-keyboard="false"
-         tabindex="-1" aria-labelledby="staticBackdropLabel"
-         aria-hidden="true">
+         th:action="@{/users/delete}" data-bs-backdrop="static"
+         data-bs-keyboard="false" tabindex="-1"
+         aria-labelledby="staticBackdropLabel" aria-hidden="true">
          <div class="modal-dialog">
           <div class="modal-content">
            <div class="modal-header">
@@ -245,8 +253,8 @@
                th:text="${user.userAuthority != null} ? ${user.userAuthority.roleAuthority.representation} : '---'">Admin</div>
              </div>
              <div class="row text-start mt-2">
-              <div class="col-3" th:text="|#{thead.active}: |">
-               Active status:</div>
+              <div class="col-3" th:text="|#{thead.active}: |">Active
+               status:</div>
               <div class="col-9"
                th:text="${user.enabled != null} ? (${user.enabled} ? #{users.enableStatus} : #{users.disableStatus}) : '---'">Enabled</div>
              </div>
