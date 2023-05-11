@@ -72,8 +72,7 @@ public class StudentController extends DefaultController {
     }
     
     @PostMapping("/delete")
-    public String deleteStudent(@RequestParam int studentId)
-            throws ServiceException {
+    public String delete(@RequestParam int studentId) throws ServiceException {
         studentService.deleteById(studentId);
         return new StringBuilder().append(REDIRECT_KEY_WORD)
                                   .append(STUDENTS_PATH)
