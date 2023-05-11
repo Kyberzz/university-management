@@ -1,7 +1,13 @@
 package ua.com.foxminded.university.service.impl;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.modelmapper.ConfigurationException;
 import org.modelmapper.MappingException;
@@ -12,9 +18,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import ua.com.foxminded.university.entity.GroupEntity;
+import ua.com.foxminded.university.entity.StudentEntity;
 import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.GroupModel;
+import ua.com.foxminded.university.model.StudentModel;
 import ua.com.foxminded.university.repository.GroupRepository;
+import ua.com.foxminded.university.repository.StudentRepository;
 import ua.com.foxminded.university.service.GroupService;
 
 @Service
@@ -27,6 +36,33 @@ public class GroupServiceImpl implements GroupService {
     
     private final ModelMapper modelMapper;
     private final GroupRepository groupRepository;
+    private final StudentRepository studentRepository;
+    
+    @Override
+    public void deassignStudent(int studentId) {
+        StudentEntity student = studentRepository.findById(studentId);
+        student.setGroup(null);
+        studentRepository.saveAndFlush(student);
+    }
+    
+    @Override
+    public void sortStudentsByLastName(GroupModel group) {
+        List<StudentModel> list = new ArrayList<>(group.getStudents());
+        Collections.sort(list, Comparator.comparing(
+                student -> student.getUser().getPerson().getLastName()));
+        Set<StudentModel> set = new LinkedHashSet<>(list);
+        group.setStudents(set);
+    }
+    
+    @Override
+    public void assignStudents(int groupId, int[] studentIds) {
+        Arrays.stream(studentIds).forEach(studentId -> {
+            StudentEntity student = studentRepository.findById(studentId);
+            student.setGroup(new GroupEntity());
+            student.getGroup().setId(groupId);
+            studentRepository.saveAndFlush(student);
+        });
+    }
     
     @Override
     public GroupModel getGroupRelationsById(int id) throws ServiceException {

@@ -43,7 +43,7 @@ class TimetableConverterTest {
     
     @Test
     void toLessonPeriod_ShouldConvertPropertiesCorrectly() {
-        when(config.getAverageLessonMinutesInterval())
+        when(config.getLessonMinutesDuration())
             .thenReturn(AVERAGE_LESSON_MINUTES_INTERVAL);
         when(config.getFirstLessonStartTime())
             .thenReturn(LocalTime.parse(FIRST_LESSON_START_TIME));

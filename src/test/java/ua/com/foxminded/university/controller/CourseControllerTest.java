@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static ua.com.foxminded.university.controller.DefaultControllerTest.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,7 +26,6 @@ import ua.com.foxminded.university.service.TeacherService;
 @ExtendWith(SpringExtension.class)
 class CourseControllerTest {
     
-    private static final String BAD_CONTENT = "bad content";
     private static final int TEACHER_ID = 1;
     private static final int COURSE_ID = 1;
     
@@ -92,7 +92,7 @@ class CourseControllerTest {
         mockMvc.perform(post("/courses/update").param("courseId", String.valueOf(COURSE_ID))
                                                .content(BAD_CONTENT))
                .andExpect(status().is4xxClientError())
-               .andExpect(view().name("error"));
+               .andExpect(view().name(ERROR_VIEW));
     }
     
     @Test

@@ -35,13 +35,13 @@
            th:text="#{index.menu.students}">Students</button>
           <button class="btn btn-success"
            th:formaction="@{/groups/list}"
-           th:text="#{index.menu.groups}">Groups</button>
+           th:text="#{index.menu.groups}" id="groupsButton">Groups</button>
           <button id="coursesButton" class="btn btn-success"
            th:formaction="@{/courses/list}"
            th:text="#{index.menu.courses}">Courses</button>
           <button class="btn btn-success"
            th:formaction="@{/timetables/__${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}__/list}"
-           th:text="#{index.menu.timetables}">Timetables</button>
+           th:text="#{index.menu.timetables}" id="timetablesButton">Timetables</button>
          </div>
         </div>
        </div>

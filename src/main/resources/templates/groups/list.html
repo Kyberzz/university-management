@@ -77,13 +77,13 @@
       </tr>
      </thead>
      <tbody>
-      <tr th:each="group,iterationStatus : ${groups}">
+      <tr th:each="group, iterationStatus : ${#lists.sort(groups, new ua.com.foxminded.university.comparator.GroupModelComparator())}">
        <th scope="row" th:text="${iterationStatus.count}">1</th>
        <td><a th:text="${group.name}"
         th:href="@{/groups/__${group.id}__}">kt-93</a></td>
        <td th:text="${group.id}">1</td>
        <td>
-        <button type="button" class="btn btn-sm btn-outline-danger"
+        <button id="deleteButton" type="button" class="btn btn-sm btn-outline-danger"
          data-bs-toggle="modal"
          th:data-bs-target="|#deleteGroup${group.id}|">Delete</button>
 
@@ -106,7 +106,7 @@
             <button type="button" class="btn btn-secondary"
              data-bs-dismiss="modal">Close</button>
             <button type="submit" class="btn btn-primary"
-             th:text="#{button.confirm}">Confirm</button>
+             th:text="#{button.confirm}" id="confirmDeleting">Confirm</button>
            </div>
           </div>
          </div>

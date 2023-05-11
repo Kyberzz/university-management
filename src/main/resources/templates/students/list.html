@@ -12,11 +12,19 @@
 </head>
 <body>
  <div th:replace="~{fragments/header::navigationBar}"></div>
+ 
+ <nav class="ms-2" aria-label="breadcrumb" th:fragment="page-path">
+  <ol class="breadcrumb container-fluid">
+   <li class="breadcrumb-item"><a th:href="@{/}" th:text="#{href.home}">Home</a></li>
+   <li class="breadcrumb-item active" aria-current="page"
+    th:text="#{students.page-name}">1</li>
+  </ol>
+ </nav>
 
  <div class="modal fade" id="add" tabindex="-1"
   aria-labelledby="addStudent" aria-hidden="true">
   <div class="modal-dialog">
-   <form class="modal-content" th:action="@{/students/add}"
+   <form class="modal-content" th:action="@{/students/create}"
     th:object="${studentModel}" method="post">
     <div class="modal-header">
      <h1 class="modal-title fs-6" id="addStudent"
@@ -81,7 +89,7 @@
       </tr>
      </thead>
      <tbody>
-      <tr th:each="student,iterationStatus : ${#lists.sort(students, new ua.com.foxminded.university.comparator.StudentModelComparator())}">
+      <tr th:each="student,iterationStatus : ${students}">
        <th scope="row" th:text="${iterationStatus.count}">1</th>
        <td th:text="${student.user.person.firstName}">John</td>
        <td th:text="${student.user.person.lastName}">Snow</td>
@@ -202,7 +210,7 @@
                <div class="col-4" th:text="|#{thead.studentId}: |">ID
                 number: 7</div>
                <div class="col" th:text="${student.id}">7</div>
-               <input type="hidden" name="deleteStudentId"
+               <input type="hidden" name="studentId"
                 th:value="${__${student.id}__}">
               </div>
               <div class="row">

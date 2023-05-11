@@ -13,5 +13,6 @@ import lombok.Setter;
 public class TimetableConverterConfig {
     
     private LocalTime firstLessonStartTime;
-    private int averageLessonMinutesInterval;
+    private int lessonMinutesDuration;
+    private int averageLessonsMinutesInterval;
 }

@@ -75,13 +75,12 @@
             <form
              th:action="@{/timetables/day-timetables/__${dayTimetable[0].datestamp}__}">
              <button type="submit" class="btn btn-success btn-sm"
-              th:text="#{button.expand}">Expand</button>
+              th:text="#{button.expand}" id="expandButton">Expand</button>
             </form>
            </div>
           </div>
           <div class="row" th:if="${dayTimetable[0].id == null}">
            <div th:text="#{courses.novalue}">No value</div>
-
            <div class="mb-2">
             <button type="button" class="btn btn-outline-success btn-sm"
              id="createButton" data-bs-toggle="modal"
@@ -137,7 +136,7 @@
                   <div class="col-7">
                    <select class="form-select"
                     aria-label="Lesson selection"
-                    th:field="*{course.id}">
+                    th:field="*{course.id}" id="lessonSelection">
                     <option th:each="course : ${courses}"
                      th:value="${course.id}" th:text="${course.name}">Electrodynamics</option>
                    </select>
@@ -147,7 +146,7 @@
                   <div class="col-5" th:text="|#{thead.group}: |">Group:</div>
                   <div class="col-7">
                    <select class="form-select"
-                    aria-label="Group selection" th:field="*{group.id}">
+                    aria-label="Group selection" th:field="*{group.id}" id="groupSelection">
                     <option th:each="group : ${groups}"
                      th:value="${group.id}" th:text="${group.name}">lk-74</option>
                    </select>

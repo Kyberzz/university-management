@@ -1,13 +1,14 @@
 package ua.com.foxminded.university.service.impl;
 
 import java.lang.reflect.Type;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.modelmapper.ConfigurationException;
 import org.modelmapper.MappingException;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
-import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,13 +28,20 @@ import ua.com.foxminded.university.service.StudentService;
 @RequiredArgsConstructor
 public class StudentServiceImpl implements StudentService {
     
-    private static final Type STUDENT_MODEL_LIST_TYPE = 
+    public static final Type STUDENT_MODEL_LIST_TYPE = 
             new TypeToken<List<StudentModel>>() {}.getType();
     
     private final ModelMapper modelMapper;
     private final StudentRepository studentRepository;
     private final GroupRepository groupRepository;
     private final UserRepository userRepository;
+    
+    @Override 
+    public void sortByLastName(List<StudentModel> students) {
+        Collections.sort(students, Comparator.comparing(student -> student.getUser()
+                                                                          .getPerson()
+                                                                          .getLastName()));
+    }
     
     @Override
     public void deleteById(Integer id) throws ServiceException {
@@ -51,8 +59,8 @@ public class StudentServiceImpl implements StudentService {
             StudentEntity persistedStudent = studentRepository.findById(studentEntity.getId());
             
             if (studentModel.hasGroup()) {
-                GroupEntity persistedGroup = groupRepository.findById(
-                        studentModel.getGroup().getId().intValue());
+                int groupId = studentModel.getGroup().getId();
+                GroupEntity persistedGroup = groupRepository.findById(groupId);
                 persistedStudent.setGroup(persistedGroup);
             } else {
                 persistedStudent.setGroup(null);
@@ -60,10 +68,10 @@ public class StudentServiceImpl implements StudentService {
             
             UserEntity persistedUser = userRepository.findById(
                     persistedStudent.getUser().getId().intValue());
-            persistedUser.getPerson().setFirstName(
-                    studentModel.getUser().getPerson().getFirstName());
-            persistedUser.getPerson().setLastName(
-                    studentModel.getUser().getPerson().getLastName());
+            String firstName = studentModel.getUser().getPerson().getFirstName();
+            persistedUser.getPerson().setFirstName(firstName);
+            String lastName = studentModel.getUser().getPerson().getLastName();
+            persistedUser.getPerson().setLastName(lastName);
             persistedUser.setEmail(studentModel.getUser().getEmail());
             persistedStudent.setUser(persistedUser);
             studentRepository.saveAndFlush(persistedStudent);
@@ -75,7 +83,6 @@ public class StudentServiceImpl implements StudentService {
     @Override 
     public StudentModel getById(int id) throws ServiceException {
         try {
-            modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
             StudentEntity studentEntity = studentRepository.findById(id);
             return modelMapper.map(studentEntity, StudentModel.class);
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
@@ -87,7 +94,6 @@ public class StudentServiceImpl implements StudentService {
     public List<StudentModel> getAll() throws ServiceException {
         try {
             List<StudentEntity> studentEntities = studentRepository.findAll();
-            modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
             return modelMapper.map(studentEntities, STUDENT_MODEL_LIST_TYPE);
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
             throw new ServiceException("Getting all students fails", e);
