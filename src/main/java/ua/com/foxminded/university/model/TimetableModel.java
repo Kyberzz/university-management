@@ -22,6 +22,7 @@ public class TimetableModel implements Serializable {
     private Integer id;
     private LessonOrder lessonOrder;
     private LocalTime startTime;
+    private LocalTime endTime;
     private LocalDate datestamp;
     private Duration breakDuration;
     private String description;

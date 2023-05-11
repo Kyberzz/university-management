@@ -30,7 +30,7 @@ public class StudentController extends DefaultController {
     
     private final StudentService studentService;
     private final GroupService groupService;
-
+    
     @PostMapping("/create")
     public String create(@Valid @ModelAttribute StudentModel studentModel, 
                          BindingResult bindingResult) throws ServiceException, 
@@ -71,12 +71,12 @@ public class StudentController extends DefaultController {
                                   .append(LIST_TEMPLATE).toString();
     }
     
-    @PostMapping(value ="/delete", params = "deleteStudentId")
-    public String deleteStudent(@RequestParam("deleteStudentId") int studentId)
+    @PostMapping("/delete")
+    public String deleteStudent(@RequestParam int studentId)
             throws ServiceException {
         studentService.deleteById(studentId);
         return new StringBuilder().append(REDIRECT_KEY_WORD)
-                .append(STUDENTS_PATH)
-                .append(LIST_TEMPLATE).toString();
+                                  .append(STUDENTS_PATH)
+                                  .append(LIST_TEMPLATE).toString();
     }
 }

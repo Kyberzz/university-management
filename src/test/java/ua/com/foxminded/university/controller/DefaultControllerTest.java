@@ -29,7 +29,9 @@ import ua.com.foxminded.university.entitymother.UserEntityMother;
 @Testcontainers
 @Transactional
 class DefaultControllerTest {
-   
+    
+    public static final String ERROR_VIEW = "error";
+    public static final String BAD_CONTENT = "bad content";
     public static final String AUTHORIZED_EMAIL = "authorized@email";
     
     @Container

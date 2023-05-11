@@ -20,6 +20,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import ua.com.foxminded.university.model.GroupModel;
 import ua.com.foxminded.university.modelmother.GroupModelMother;
 import ua.com.foxminded.university.service.GroupService;
+import ua.com.foxminded.university.service.StudentService;
 
 @ExtendWith(SpringExtension.class)
 class GroupControllerTest {
@@ -29,13 +30,16 @@ class GroupControllerTest {
     @MockBean
     private GroupService groupServiceMock;
     
+    @MockBean
+    private StudentService studentServiceMock;
+    
     private MockMvc mockMvc;
     private GroupModel groupModel;
     
     @BeforeEach
     void setup() {
-        mockMvc = MockMvcBuilders.standaloneSetup(new GroupController(groupServiceMock))
-                                 .build();
+        mockMvc = MockMvcBuilders.standaloneSetup(new GroupController(
+                groupServiceMock, studentServiceMock)).build();
         groupModel = GroupModelMother.complete().build();
     }
     

@@ -1,6 +1,7 @@
 package ua.com.foxminded.university.converter;
 
 import java.time.Duration;
+import java.time.LocalTime;
 
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
@@ -20,18 +21,26 @@ public class TimetableConverter implements Converter<TimetableEntity, TimetableM
     
     @Override
     public TimetableModel convert(MappingContext<TimetableEntity, TimetableModel> context) {
+        TimetableEntity source = context.getSource();
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-        TimetableEntity source = context.getSource();
         TimetableModel model = modelMapper.map(source, TimetableModel.class);
-        return toLessonOrder(model);
+        TimetableModel modelWithLseeonOrder =  addLessonOrder(model);
+        return addEndTime(modelWithLseeonOrder);
     }
     
-    private TimetableModel toLessonOrder(TimetableModel model) {
+    private TimetableModel addEndTime(TimetableModel model) {
+        Duration lessonMinutes = Duration.ofMinutes(config.getLessonMinutesDuration());
+        LocalTime endTime = model.getStartTime().plus(lessonMinutes);
+        model.setEndTime(endTime);
+        return model;
+    }
+    
+    private TimetableModel addLessonOrder(TimetableModel model) {
         Duration lessonsPeriod = Duration.between(config.getFirstLessonStartTime(), 
                                                   model.getStartTime());
         float lessonOrder = (float) lessonsPeriod.toMinutes() / 
-                config.getAverageLessonMinutesInterval() + 1f;
+                config.getAverageLessonsMinutesInterval() + 1f;
         model.setLessonOrder(LessonOrder.of(Math.round(lessonOrder)));
         return model;
     }

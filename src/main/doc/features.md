@@ -14,7 +14,11 @@ task 3.5:
 + + A user should be able to create/read/update/delete courses
 
 task 3.6
-+ - User 'A' can Create/Read/Update/Delete group information
++ + User 'A' can Create/Read/Update/Delete group information
+
+task 3.7
++ - - User 'A' can assign/ reassign Students to Group
++ - - User 'B' should be able to list all students in a group (read access)
 
 ## Student flow
 
@@ -22,7 +26,10 @@ task 3.5:
 + + A user should be able list all courses and have only the read access
 
 task 3.6
-+ - User 'A' should be able to list all groups information (read access).
++ + User 'A' should be able to list all groups information (read access)
+
+task 3.7
+- - - User 'B' should be able to list all students in a group (read access)
 
 ## Teacher flow
 
@@ -34,14 +41,21 @@ task 3.5:
 + + A user should be able list all courses and have only the read access
 
 task 3.6
-+ - User 'A' should be able to list all groups information (read access).
++ + User 'A' should be able to list all groups information (read access)
+
+task 3.7
+- - - User 'B' should be able to list all students in a group (read access)
 
 ## Staff flow
 
 task 3.5:
 + + A user should be able to create/read/update all courses
-+ - A user should be able to assign/reassign teacher to a course
-+ - A user should be able to assign/reassign groups to a course 
++ + A user should be able to assign/reassign teacher to a course
++ + A user should be able to assign/reassign groups to a course 
 
 task 3.6
-+ - User 'A' should be able to Create/Read/Update group information.
++ + User 'A' should be able to Create/Read/Update group information
+
+task 3.7
+- - - User 'A' can assign/ reassign Students to Group
+- - - User 'B' should be able to list all students in a group (read access)

@@ -27,7 +27,7 @@
       th:text="#{fragments.add}">Create</button>
     </div>
    </div>
-   
+
    <div class="col-2 text-end">
     <div th:if="${#execInfo.processedTemplateName} == index">
      <form action="#" th:action="@{/login}"
@@ -37,29 +37,29 @@
      </form>
     </div>
 
-    <div class="d-grid gap-2 text-end" sec:authorize="isAuthenticated()">
-     <div class="row">
+    <div class="d-grid gap-2" sec:authorize="isAuthenticated()">
+     <div class="row text-end">
       <div class="col me-3">
        <span th:text="|#{header.authenticatedAs}: |">Authenticated
         as:</span> <span class="fw-bold" sec:authentication="name">User
         nick</span>
       </div>
      </div>
-     <div class="row gx-2 me-2">
-      <div class="col-8">
-       <form action="#" th:action="@{/users/list}" method="get"
-        sec:authorize="hasRole('ADMIN')">
-        <button class="btn btn-sm btn-primary" id="adminPanelButton"
-         th:text="#{header.adminPanel}">Admin panel</button>
-       </form>
-      </div>
-      <div class="col-4">
-       <form action="#" th:action="@{/logout}" method="post">
-        <button class="btn btn-sm btn-secondary"
-         th:text="#{header.SignOut}">Sign Out</button>
-       </form>
-      </div>
+     
+     <div class="row gx-2 me-2 justify-content-end">
+      <form class="col text-end" action="#" th:action="@{/users/list}"
+       method="get" sec:authorize="hasRole('ADMIN')">
+       <button class="btn btn-sm btn-primary d-inline"
+        id="adminPanelButton" th:text="#{header.adminPanel}">Admin
+        panel</button>
+      </form>
+      <form class="col-auto text-end" action="#" th:action="@{/logout}"
+       method="post">
+       <button class="btn btn-sm btn-secondary d-inline"
+        th:text="#{header.SignOut}">Sign Out</button>
+      </form>
      </div>
+    
     </div>
    </div>
 

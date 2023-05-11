@@ -30,82 +30,155 @@
 
    <div class="row">
 
-    <form class="col-4"
-     th:action="@{/groups/__${groupModel.id}__/update}" method="post">
-     <div class="row mt-2">
-      <div class="col-4 fs-6 fw-bold text-end"
-       th:text="|#{thead.groupId}: |">Group ID:</div>
-      <div class="col" th:text="${groupModel.id}">1</div>
-     </div>
-     <div class="row mt-2">
-      <div class="col-4 fs-6 fw-bold text-end"
-       th:text="|#{thead.groupName}: |">Group name:</div>
-      <div class="col" th:text="${groupModel.name}">ku-58</div>
-     </div>
-     <div class="row mt-2">
-      <div class="col-4 fs-6 fw-bold text-end"
-       th:text="|#{thead.newName}: |">New name:</div>
-      <div class="col">
-       <input class="form-control" type="text" name="name">
+    <div class="col-3">
+
+     <form class="row"
+      th:action="@{/groups/__${groupModel.id}__/update}" method="post">
+      <div class="row mt-2">
+       <div class="col-6 fs-6 fw-bold text-end"
+        th:text="|#{thead.groupId}: |">Group ID:</div>
+       <div class="col" th:text="${groupModel.id}">1</div>
       </div>
-     </div>
+      <div class="row mt-2">
+       <div class="col-6 fs-6 fw-bold text-end"
+        th:text="|#{thead.groupName}: |">Group name:</div>
+       <div class="col" th:text="${groupModel.name}">ku-58</div>
+      </div>
+      <div class="row mt-2">
+       <div class="col-6 fs-6 fw-bold text-end"
+        th:text="|#{thead.newName}: |">New name:</div>
+       <div class="col">
+        <input class="form-control" id="groupUpdateNameField"
+         type="text" name="name">
+       </div>
+      </div>
 
-     <div class="row text-center">
-      <div>
-       <button type="button" class="btn btn-primary mt-2"
-        data-bs-toggle="modal" data-bs-target="#updateGroup">
-        Update group</button>
+      <div class="row text-center">
+       <div>
+        <button type="button" class="btn btn-primary mt-2"
+         data-bs-toggle="modal" data-bs-target="#updateGroup"
+         id="nameUpdateButton">Update group</button>
 
-       <div class="modal fade" id="updateGroup"
-        data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-        aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-         <div class="modal-content">
-          <div class="modal-header">
-           <h1 class="modal-title fs-5" id="staticBackdropLabel"></h1>
-           <button type="button" class="btn-close"
-            data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body" th:text="#{message.confirm-update}">Are
-           you sure to update the data?</div>
-          <div class="modal-footer">
-           <button type="button" class="btn btn-secondary"
-            data-bs-dismiss="modal">Close</button>
-           <button type="submit" class="btn btn-primary"
-            th:text="#{button.confirm}">Confirm</button>
+        <div class="modal fade" id="updateGroup"
+         data-bs-backdrop="static" data-bs-keyboard="false"
+         tabindex="-1" aria-labelledby="staticBackdropLabel"
+         aria-hidden="true">
+         <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+           <div class="modal-header">
+            <h1 class="modal-title fs-5" id="staticBackdropLabel"></h1>
+            <button type="button" class="btn-close"
+             data-bs-dismiss="modal" aria-label="Close"></button>
+           </div>
+           <div class="modal-body" th:text="#{message.confirm-update}">Are
+            you sure to update the data?</div>
+           <div class="modal-footer">
+            <button type="button" class="btn btn-secondary"
+             data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary"
+             th:text="#{button.confirm}" id="confirmButton">Confirm</button>
+           </div>
           </div>
          </div>
         </div>
        </div>
       </div>
+     </form>
 
-     </div>
+    </div>
 
-    </form>
-
-    <div class="col-3 text-center me-5">
-     <p th:text="|#{groups.students}: |">All students in the group:</p>
+    <div class="col-4 text-center me-5">
 
      <div class="row">
-      <table class="table">
-       <thead>
-        <tr>
-         <th scope="col">#</th>
-         <th scope="col" th:text="#{thead.name}">Name</th>
-         <th scope="col" th:text="#{thead.studentId}">Student ID</th>
-        </tr>
-       </thead>
-       <tbody>
-        <tr
-         th:each="student, iterationStatus : ${#lists.sort(groupModel.students, new ua.com.foxminded.university.comparator.StudentModelComparator())}">
-         <th scope="row" th:text="${iterationStatus.count}">1</th>
-         <td class="text-start"><span th:text="${student.user.person.firstName}">Mark</span>
-          <span th:text="${student.user.person.lastName}">Otto</span></td>
-         <td th:text="${student.id}">1</td>
-        </tr>
-      </table>
+      <button type="button" class="btn btn-primary"
+       data-bs-toggle="modal" data-bs-target="#exampleModal"
+       th:text="#{button.add-student}">Add student</button>
+
+      <form class="modal fade" id="exampleModal" tabindex="-1"
+       aria-labelledby="exampleModalLabel" aria-hidden="true"
+       th:action="@{/groups/__${groupModel.id}__/assign-students}"
+       method="post">
+       <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+         <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel"
+           th:text="#{students.tableName}">All students of the
+           university title</h1>
+          <button type="button" class="btn-close"
+           data-bs-dismiss="modal" aria-label="Close"></button>
+         </div>
+         <div class="modal-body">
+          <table class="table">
+           <thead>
+            <tr>
+             <th scope="col">#</th>
+             <th scope="col" th:text="#{thead.lastName}"
+              class="text-start">Last name</th>
+             <th scope="col" th:text="#{thead.firstName}"
+              class="text-start">First name</th>
+             <th scope="col" th:text="#{thead.studentId}">Student
+              ID</th>
+             <th></th>
+            </tr>
+           </thead>
+           <tbody>
+            <tr th:each="student, iterationStatus : ${students}">
+             <th scope="row" th:text="${iterationStatus.count}">1</th>
+             <td class="text-start"
+              th:text="${student.user.person.lastName}">Parker</td>
+             <td class="text-start"
+              th:text="${student.user.person.firstName}">Jones</td>
+             <td th:text="${student.id}">1</td>
+             <td><input type="checkbox" name="studentId"
+              th:value="${student.id}"></td>
+            </tr>
+          </table>
+         </div>
+         <div class="modal-footer">
+          <button type="button" class="btn btn-secondary"
+           data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Save
+           changes</button>
+         </div>
+        </div>
+       </div>
+      </form>
      </div>
 
+     <div class="row mt-5">
+      <p th:text="|#{groups.students}: |">All students in the group:</p>
+      <div class="row">
+       <table class="table">
+        <thead>
+         <tr>
+          <th scope="col">#</th>
+          <th scope="col" th:text="#{thead.lastName}">Last name</th>
+          <th scope="col" th:text="#{thead.firstName}">First name</th>
+          <th scope="col" th:text="#{thead.studentId}">Student ID</th>
+          <th></th>
+         </tr>
+        </thead>
+        <tbody>
+         <tr th:each="student, iterationStatus : ${groupModel.students}">
+          <th scope="row" th:text="${iterationStatus.count}">1</th>
+          <td class="text-start"
+           th:text="${student.user.person.lastName}">Parker</td>
+          <td class="text-start"
+           th:text="${student.user.person.firstName}">Jones</td>
+          <td th:text="${student.id}">1</td>
+          <td>
+           <form
+            th:action="@{/groups/__${groupModel.id}__/deassign-student}"
+            method="post">
+            <button type="submit"
+             class="btn btn-sm btn-outline-secondary" name="studentId"
+             th:value="${student.id}" th:text="#{button.deassign}">Deassign</button>
+           </form>
+          </td>
+         </tr>
+       </table>
+      </div>
+     </div>
     </div>
 
     <div class="col-4">

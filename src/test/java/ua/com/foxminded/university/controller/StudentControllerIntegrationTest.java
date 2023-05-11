@@ -84,4 +84,5 @@ class StudentControllerIntegrationTest {
                .andExpect(authenticated().withRoles(Authority.ADMIN.toString()))
                .andExpect(status().isOk());
     }
+    
 }

@@ -93,14 +93,14 @@
        </tr>
       </thead>
       <tbody>
-       <tr th:each="teacher,iterationStatus : ${courseModel.teachers}">
+       <tr th:each="teacher,iterationStatus : ${#lists.sort(courseModel.teachers, new ua.com.foxminded.university.comparator.TeacherModelComparator())}">
         <th scope="row" th:text="${iterationStatus.count}">1</th>
         <td th:text="${teacher.user.person?.firstName}">Dennis</td>
         <td th:text="${teacher.user.person?.lastName}">Ritchie</td>
         <td th:text="${teacher.id}">1</td>
         <td>
          <button type="button" class="btn btn-outline-secondary btn-sm"
-          data-bs-toggle="modal" id="deleteTeacherButton"
+          data-bs-toggle="modal" id="deassignTeacherButton"
           th:text="#{button.deassign}"
           th:data-bs-target="|#deassign${teacher.id}|">Deassing</button>
 
@@ -131,7 +131,7 @@
              <button type="button" class="btn btn-secondary"
               data-bs-dismiss="modal" th:text="#{button.close}">Close</button>
              <button type="submit" class="btn btn-primary"
-              id="confirmDeletingButton"
+              id="confirmDeassignButton"
               th:text="#{button.confirm-deassign}">Confirm</button>
             </div>
            </div>
@@ -146,7 +146,7 @@
     <div class="row">
 
      <button type="button" class="btn btn-primary btn-sm"
-      id="createButton" data-bs-toggle="modal"
+      id="assignButton" data-bs-toggle="modal"
       data-bs-target="#assignTeacher" th:text="#{button.assign-teacher}">Assign
       teacher</button>
 
@@ -168,7 +168,7 @@
           <div class="row">
            <div class="col">
             <select class="form-select" aria-label="Lesson selection"
-             name="teacherId">
+             name="teacherId" id="teacherSelect">
              <option th:each="teacher : ${allTeachers}"
               th:value="${teacher.id}"
               th:text="|${teacher.user.person.firstName} ${teacher.user.person.lastName}|">Dennis
@@ -182,7 +182,7 @@
          <button type="button" class="btn btn-secondary"
           data-bs-dismiss="modal">Close</button>
          <button type="submit" class="btn btn-primary"
-          id="createSubmitButton" th:text="#{button.saveChange}">Save
+          id="saveAssignmentButton" th:text="#{button.saveChange}">Save
           changes</button>
         </div>
        </form>

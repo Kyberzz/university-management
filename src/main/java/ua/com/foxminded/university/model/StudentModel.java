@@ -4,10 +4,16 @@ import java.io.Serializable;
 
 import javax.validation.constraints.NotNull;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class StudentModel implements Serializable {
     
     private static final long serialVersionUID = 1L;
@@ -20,6 +26,8 @@ public class StudentModel implements Serializable {
     
     @ToString.Exclude
     private GroupModel group;
+    
+    private boolean selected;
     
     public boolean hasUser() {
         return user != null;
