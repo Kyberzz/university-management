@@ -27,8 +27,6 @@ public class StudentModel implements Serializable {
     @ToString.Exclude
     private GroupModel group;
     
-    private boolean selected;
-    
     public boolean hasUser() {
         return user != null;
     }
