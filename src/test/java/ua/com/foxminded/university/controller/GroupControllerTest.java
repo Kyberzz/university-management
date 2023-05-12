@@ -1,6 +1,8 @@
 package ua.com.foxminded.university.controller;
 
 import static ua.com.foxminded.university.controller.GroupController.*;
+import static ua.com.foxminded.university.controller.StudentControllerTest.STUDENT_ID;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.verify;
@@ -44,6 +46,26 @@ class GroupControllerTest {
     }
     
     @Test
+    void deassignGroup_ShouldRedirectToGetById() throws Exception {
+        mockMvc.perform(post("/groups/{groupId}/deassign-group", GROUP_ID)
+                    .param("studentId", String.valueOf(STUDENT_ID)))
+        .andDo(print())
+        .andExpect(redirectedUrl(new StringBuilder().append(GROUPS_PATH)
+                                                    .append(GROUP_ID).toString()));
+        verify(groupServiceMock).deassignGroup(anyInt());
+    }
+    
+    @Test
+    void assignGroup_ShouldRedirectToGetById() throws Exception {
+        mockMvc.perform(post("/groups/{groupId}/assign-group", GROUP_ID)
+                    .param("studentIds", "1,5"))
+               .andDo(print())
+               .andExpect(redirectedUrl(new StringBuilder().append(GROUPS_PATH)
+                                                           .append(GROUP_ID) .toString()));
+        verify(groupServiceMock).assignGroup(anyInt(), any(int[].class));
+    }
+    
+    @Test
     void delete_ShouldRedirectToList() throws Exception {
         mockMvc.perform(post("/groups/{groupId}/delete", GROUP_ID))
                .andDo(print())
@@ -82,7 +104,7 @@ class GroupControllerTest {
     }
     
     @Test
-    void getAllGroups_shouldRenderListTemplate() throws Exception {
+    void list_shouldRenderListTemplate() throws Exception {
         mockMvc.perform(get("/groups/list"))
                .andDo(print())
                .andExpect(status().isOk())

@@ -31,9 +31,9 @@ public class GroupController extends DefaultController {
     private final GroupService groupService;
     private final StudentService studentService;
     
-    @PostMapping(value = "/{groupId}/deassign-group")
-    public String deassignStudent(@PathVariable int groupId, 
-                                  @RequestParam int studentId) {
+    @PostMapping("/{groupId}/deassign-group")
+    public String deassignGroup(@PathVariable int groupId, 
+                                @RequestParam int studentId) {
         groupService.deassignGroup(studentId);
         return new StringBuilder().append(REDIRECT_KEY_WORD)
                                   .append(GROUPS_PATH)
@@ -41,9 +41,9 @@ public class GroupController extends DefaultController {
     }
     
     @PostMapping(value = "/{groupId}/assign-group")
-    public String assignStudents(@PathVariable int groupId,
-                                 @RequestParam int[] studentId) {
-        groupService.assignGroup(groupId, studentId);
+    public String assignGroup(@PathVariable int groupId,
+                              @RequestParam int[] studentIds) {
+        groupService.assignGroup(groupId, studentIds);
         return new StringBuilder().append(REDIRECT_KEY_WORD)
                                   .append(GROUPS_PATH)
                                   .append(groupId).toString();
@@ -88,7 +88,7 @@ public class GroupController extends DefaultController {
     }
 
     @GetMapping("/list")
-    public String getAllGroups(Model model) throws ServiceException {
+    public String list(Model model) throws ServiceException {
         List<GroupModel> groups = groupService.getAll();
         Collections.sort(groups, Comparator.comparing(GroupModel::getName));
         model.addAttribute("groups", groups);
