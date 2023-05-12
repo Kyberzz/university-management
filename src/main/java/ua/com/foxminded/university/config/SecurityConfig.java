@@ -56,6 +56,7 @@ public class SecurityConfig {
                 .mvcMatchers("/courses/**").hasAnyRole(ADMIN)
                 .mvcMatchers("/groups/{id:\\d+}/update").hasAnyRole(ADMIN, STAFF)
                 .mvcMatchers("/groups/{id:\\d+}").hasAnyRole(ADMIN, STAFF)
+                .mvcMatchers("/groups/{id:\\d+}/delete").hasAnyRole(ADMIN)
                 .mvcMatchers("/groups/create*").hasAnyRole(ADMIN, STAFF)
                 .mvcMatchers("/groups/list*").hasAnyRole(ADMIN, STAFF, TEACHER, STUDENT)
                 .mvcMatchers("/groups/{id:\\d+}/assign-students").hasAnyRole(ADMIN, STAFF)
