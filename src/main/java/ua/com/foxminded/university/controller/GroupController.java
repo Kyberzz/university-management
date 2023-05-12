@@ -40,7 +40,7 @@ public class GroupController extends DefaultController {
                                   .append(groupId).toString();
     }
     
-    @PostMapping(value = "/{groupId}/assign-group")
+    @PostMapping("/{groupId}/assign-group")
     public String assignGroup(@PathVariable int groupId,
                               @RequestParam int[] studentIds) {
         groupService.assignGroup(groupId, studentIds);
@@ -88,7 +88,7 @@ public class GroupController extends DefaultController {
     }
 
     @GetMapping("/list")
-    public String list(Model model) throws ServiceException {
+    public String getAllGroups(Model model) throws ServiceException {
         List<GroupModel> groups = groupService.getAll();
         Collections.sort(groups, Comparator.comparing(GroupModel::getName));
         model.addAttribute("groups", groups);
