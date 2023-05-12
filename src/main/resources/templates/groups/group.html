@@ -96,7 +96,7 @@
 
       <form class="modal fade" id="exampleModal" tabindex="-1"
        aria-labelledby="exampleModalLabel" aria-hidden="true"
-       th:action="@{/groups/__${groupModel.id}__/assign-students}"
+       th:action="@{/groups/__${groupModel.id}__/assign-group}"
        method="post">
        <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
@@ -168,7 +168,7 @@
           <td th:text="${student.id}">1</td>
           <td>
            <form
-            th:action="@{/groups/__${groupModel.id}__/deassign-student}"
+            th:action="@{/groups/__${groupModel.id}__/deassign-group}"
             method="post">
             <button type="submit"
              class="btn btn-sm btn-outline-secondary" name="studentId"

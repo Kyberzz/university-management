@@ -7,7 +7,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static ua.com.foxminded.university.controller.DefaultControllerTest.AUTHORIZED_EMAIL;
-import static ua.com.foxminded.university.controller.StudentControllerTest.STUDENT_ID;
 import static ua.com.foxminded.university.entity.RoleAuthority.ROLE_ADMIN;
 import static ua.com.foxminded.university.model.Authority.ADMIN;
 

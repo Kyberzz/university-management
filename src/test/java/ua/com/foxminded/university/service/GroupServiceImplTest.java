@@ -1,12 +1,16 @@
 package ua.com.foxminded.university.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static ua.com.foxminded.university.service.StudentServiceImplTest.*;
 
 import java.util.Arrays;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,16 +21,24 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 
 import ua.com.foxminded.university.entity.GroupEntity;
+import ua.com.foxminded.university.entity.StudentEntity;
 import ua.com.foxminded.university.entitymother.GroupEntityMother;
+import ua.com.foxminded.university.entitymother.StudentEntityMother;
 import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.GroupModel;
+import ua.com.foxminded.university.model.PersonModel;
+import ua.com.foxminded.university.model.StudentModel;
+import ua.com.foxminded.university.model.UserModel;
 import ua.com.foxminded.university.modelmother.GroupModelMother;
+import ua.com.foxminded.university.modelmother.StudentModelMother;
 import ua.com.foxminded.university.repository.GroupRepository;
+import ua.com.foxminded.university.repository.StudentRepository;
 import ua.com.foxminded.university.service.impl.GroupServiceImpl;
 
 @ExtendWith(MockitoExtension.class)
 class GroupServiceImplTest {
     
+    public static final int STUDENT_ID = 1;
     public static final int GROUP_ID = 1;
     
     @InjectMocks
@@ -36,17 +48,56 @@ class GroupServiceImplTest {
     private GroupRepository groupRepository;
     
     @Mock
+    private StudentRepository studentRepository;
+    
+    @Mock
     private ModelMapper modelMapper;
     
     private GroupEntity groupEntity;
     private List<GroupEntity> groupEntities;
     private GroupModel groupModel;
+    private StudentEntity studentEntity;
     
     @BeforeEach
     void setUp() {
         groupEntity = GroupEntityMother.complete().build();
         groupEntities = Arrays.asList(groupEntity);
         groupModel = GroupModelMother.complete().build();
+        studentEntity = StudentEntityMother.complete().build();
+    }
+    
+    @Test
+    void deassignGroup() {
+        when(studentRepository.findById(anyInt())).thenReturn(studentEntity);
+        groupService.deassignGroup(STUDENT_ID);
+        verify(studentRepository).saveAndFlush(isA(StudentEntity.class));
+    }
+    
+    @Test
+    void sortStudentsByLastName() {
+        PersonModel person_A = PersonModel.builder().lastName(LAST_NAME_A).build();
+        PersonModel person_B = PersonModel.builder().lastName(LAST_NAME_B).build();
+        UserModel user_A = UserModel.builder().person(person_A).build();
+        UserModel user_B = UserModel.builder().person(person_B).build();
+        
+        StudentModel student_A = StudentModelMother.complete().user(user_A).build();
+        StudentModel student_B = StudentModelMother.complete().user(user_B).build();
+        Set<StudentModel> students = new LinkedHashSet<>();
+        students.add(student_B);
+        students.add(student_A);
+        groupModel.setStudents(students);
+        groupService.sortStudentsByLastName(groupModel);
+        Set<StudentModel> expectedResult = new LinkedHashSet<>(Arrays.asList(student_A, 
+                                                                             student_B));
+        assertEquals(expectedResult, groupModel.getStudents());
+    }
+    
+    @Test
+    void assignGroup_ShouldAssignGroupToStudents() { 
+        int[] studentIds = {STUDENT_ID};
+        when(studentRepository.findById(anyInt())).thenReturn(studentEntity);
+        groupService.assignGroup(GROUP_ID, studentIds);
+        verify(studentRepository).saveAndFlush(isA(StudentEntity.class));
     }
     
     @Test

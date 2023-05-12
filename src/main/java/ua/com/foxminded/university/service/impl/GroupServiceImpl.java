@@ -39,7 +39,7 @@ public class GroupServiceImpl implements GroupService {
     private final StudentRepository studentRepository;
     
     @Override
-    public void deassignStudent(int studentId) {
+    public void deassignGroup(int studentId) {
         StudentEntity student = studentRepository.findById(studentId);
         student.setGroup(null);
         studentRepository.saveAndFlush(student);
@@ -55,7 +55,7 @@ public class GroupServiceImpl implements GroupService {
     }
     
     @Override
-    public void assignStudents(int groupId, int[] studentIds) {
+    public void assignGroup(int groupId, int[] studentIds) {
         Arrays.stream(studentIds).forEach(studentId -> {
             StudentEntity student = studentRepository.findById(studentId);
             student.setGroup(new GroupEntity());

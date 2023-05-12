@@ -17,8 +17,8 @@ task 3.6
 + + User 'A' can Create/Read/Update/Delete group information
 
 task 3.7
-+ - - User 'A' can assign/ reassign Students to Group
-+ - - User 'B' should be able to list all students in a group (read access)
++ + - User 'A' can assign/ reassign Students to Group
++ + - User 'B' should be able to list all students in a group (read access)
 
 ## Student flow
 
