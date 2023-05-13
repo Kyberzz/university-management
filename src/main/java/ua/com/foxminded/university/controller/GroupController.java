@@ -42,8 +42,8 @@ public class GroupController extends DefaultController {
     
     @PostMapping("/{groupId}/assign-group")
     public String assignGroup(@PathVariable int groupId,
-                              @RequestParam int[] studentIds) {
-        groupService.assignGroup(groupId, studentIds);
+                              @RequestParam int[] studentId) {
+        groupService.assignGroup(groupId, studentId);
         return new StringBuilder().append(REDIRECT_KEY_WORD)
                                   .append(GROUPS_PATH)
                                   .append(groupId).toString();
