@@ -75,20 +75,20 @@ class GroupServiceImplTest {
     
     @Test
     void sortStudentsByLastName() {
-        PersonModel person_A = PersonModel.builder().lastName(LAST_NAME_A).build();
-        PersonModel person_B = PersonModel.builder().lastName(LAST_NAME_B).build();
-        UserModel user_A = UserModel.builder().person(person_A).build();
-        UserModel user_B = UserModel.builder().person(person_B).build();
+        PersonModel firstPerson = PersonModel.builder().lastName(LAST_NAME_A).build();
+        PersonModel secondPerson = PersonModel.builder().lastName(LAST_NAME_B).build();
+        UserModel firstUser = UserModel.builder().person(firstPerson).build();
+        UserModel secondUser = UserModel.builder().person(secondPerson).build();
         
-        StudentModel student_A = StudentModelMother.complete().user(user_A).build();
-        StudentModel student_B = StudentModelMother.complete().user(user_B).build();
+        StudentModel firstStudent = StudentModelMother.complete().user(firstUser).build();
+        StudentModel secondStudent = StudentModelMother.complete().user(secondUser).build();
         Set<StudentModel> students = new LinkedHashSet<>();
-        students.add(student_B);
-        students.add(student_A);
+        students.add(secondStudent);
+        students.add(firstStudent);
         groupModel.setStudents(students);
         groupService.sortStudentsByLastName(groupModel);
-        Set<StudentModel> expectedResult = new LinkedHashSet<>(Arrays.asList(student_A, 
-                                                                             student_B));
+        Set<StudentModel> expectedResult = new LinkedHashSet<>(Arrays.asList(firstStudent, 
+                                                                             secondStudent));
         assertEquals(expectedResult, groupModel.getStudents());
     }
     

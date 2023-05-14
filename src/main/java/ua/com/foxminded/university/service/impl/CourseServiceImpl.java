@@ -27,7 +27,7 @@ import ua.com.foxminded.university.service.CourseService;
 @RequiredArgsConstructor
 public class CourseServiceImpl implements CourseService {
     
-    private static final Type COURSE_MODEL_LIST_TYPE = 
+    public static final Type COURSE_MODEL_LIST_TYPE = 
             new TypeToken<List<CourseModel>>() {}.getType();
 
     private final CourseRepository courseRepository;

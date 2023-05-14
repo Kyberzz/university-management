@@ -5,7 +5,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.atLeastOnce;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -133,8 +132,8 @@ class TimetableServiceImplTest {
         timetableSerivice.getAll();
         
         InOrder inOrder = Mockito.inOrder(timetableRepositoryMock, modelMapperMock);
-        inOrder.verify(timetableRepositoryMock, times(1)).findAll();
-        inOrder.verify(modelMapperMock, times(1)).map(
+        inOrder.verify(timetableRepositoryMock).findAll();
+        inOrder.verify(modelMapperMock).map(
                 ArgumentMatchers.<TimetableEntity>anyList(), 
                 any(Type.class));
     }
