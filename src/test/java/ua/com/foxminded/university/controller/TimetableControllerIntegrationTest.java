@@ -13,7 +13,15 @@ import javax.persistence.EntityManager;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithUserDetails;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import ua.com.foxminded.university.entity.TimetableEntity;
 import ua.com.foxminded.university.entitymother.TimetableEntityMother;
@@ -21,11 +29,25 @@ import ua.com.foxminded.university.model.Authority;
 import ua.com.foxminded.university.model.TimetableModel;
 import ua.com.foxminded.university.modelmother.TimetableModelMother;
 
+@SpringBootTest
+@ActiveProfiles("prod")
+@AutoConfigureMockMvc
+@Testcontainers
 class TimetableControllerIntegrationTest extends DefaultControllerTest {
+    
+    @Container
+    private static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:14");
     
     private LocalDate localDate;
     private TimetableEntity timetableEntity;
     private TimetableModel timetableModel;
+    
+    @DynamicPropertySource
+    public static void configureProperties(DynamicPropertyRegistry registry) {
+        registry.add("spring.datasource.url", postgres::getJdbcUrl);
+        registry.add("spring.datasource.username", postgres::getUsername);
+        registry.add("spring.datasource.password", postgres::getPassword);
+    }
     
     @BeforeEach
     void setUp() {

@@ -9,9 +9,17 @@ import static ua.com.foxminded.university.model.Authority.ADMIN;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithUserDetails;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.transaction.AfterTransaction;
 import org.springframework.test.context.transaction.BeforeTransaction;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import ua.com.foxminded.university.entity.GroupEntity;
 import ua.com.foxminded.university.entity.StudentEntity;
@@ -21,9 +29,16 @@ import ua.com.foxminded.university.model.Authority;
 import ua.com.foxminded.university.repository.GroupRepository;
 import ua.com.foxminded.university.repository.StudentRepository;
 
+@SpringBootTest
+@ActiveProfiles("prod")
+@AutoConfigureMockMvc
+@Testcontainers
 class GroupControllerIntegrationTest extends DefaultControllerTest {
     
     public static final String GROUP_NAME = "kt-156";
+    
+    @Container
+    private static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:14");
     
     @Autowired
     private GroupRepository groupRepository;
@@ -35,6 +50,13 @@ class GroupControllerIntegrationTest extends DefaultControllerTest {
     private StudentEntity studentA;
     private StudentEntity studentB;
     private StudentEntity studentEntity;
+    
+    @DynamicPropertySource
+    public static void configureProperties(DynamicPropertyRegistry registry) {
+        registry.add("spring.datasource.url", postgres::getJdbcUrl);
+        registry.add("spring.datasource.username", postgres::getUsername);
+        registry.add("spring.datasource.password", postgres::getPassword);
+    }
     
     @BeforeTransaction
     void setUp() {
@@ -67,7 +89,7 @@ class GroupControllerIntegrationTest extends DefaultControllerTest {
     @WithUserDetails(AUTHORIZED_EMAIL)
     void assignGroup_ShouldAuthorizeCredentialsAndRedirect() throws Exception {
         mockMvc.perform(post("/groups/{groupId}/assign-group", groupEntity.getId())
-                    .param("studentIds", new StringBuilder().append(studentA.getId())
+                    .param("studentId", new StringBuilder().append(studentA.getId())
                                                             .append(",")
                                                             .append(studentB.getId())
                                                             .toString())

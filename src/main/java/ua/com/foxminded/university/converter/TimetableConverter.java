@@ -25,23 +25,22 @@ public class TimetableConverter implements Converter<TimetableEntity, TimetableM
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         TimetableModel model = modelMapper.map(source, TimetableModel.class);
-        TimetableModel modelWithLseeonOrder =  addLessonOrder(model);
-        return addEndTime(modelWithLseeonOrder);
-    }
-    
-    private TimetableModel addEndTime(TimetableModel model) {
-        Duration lessonMinutes = Duration.ofMinutes(config.getLessonMinutesDuration());
-        LocalTime endTime = model.getStartTime().plus(lessonMinutes);
-        model.setEndTime(endTime);
+        addLessonOrder(model);
+        addEndTime(model);
         return model;
     }
     
-    private TimetableModel addLessonOrder(TimetableModel model) {
+    private void addEndTime(TimetableModel model) {
+        Duration lessonMinutes = Duration.ofMinutes(config.getLessonMinutesDuration());
+        LocalTime endTime = model.getStartTime().plus(lessonMinutes);
+        model.setEndTime(endTime);
+    }
+    
+    private void addLessonOrder(TimetableModel model) {
         Duration lessonsPeriod = Duration.between(config.getFirstLessonStartTime(), 
                                                   model.getStartTime());
         float lessonOrder = (float) lessonsPeriod.toMinutes() / 
                 config.getAverageLessonsMinutesInterval() + 1f;
         model.setLessonOrder(LessonOrder.of(Math.round(lessonOrder)));
-        return model;
     }
 }

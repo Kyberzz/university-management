@@ -1,5 +1,6 @@
 <!doctype html>
-<html lang="en" xmlns:th="thymeleaf.org">
+<html lang="en" xmlns:th="thymeleaf.org"
+ xmlns:sec="http://www.springframework.org/security/tags">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -45,21 +46,31 @@
         nick</span>
       </div>
      </div>
-     
+
      <div class="row gx-2 me-2 justify-content-end">
-      <form class="col text-end" action="#" th:action="@{/users/list}"
-       method="get" sec:authorize="hasRole('ADMIN')">
-       <button class="btn btn-sm btn-primary d-inline"
-        id="adminPanelButton" th:text="#{header.adminPanel}">Admin
-        panel</button>
-      </form>
+
+      <div class="col text-end">
+       <div class="dropdown">
+        <button class="btn btn-primary btn-sm dropdown-toggle d-inline"
+         type="button" data-bs-toggle="dropdown" aria-expanded="false"
+         th:text="#{button.menu}">Menu</button>
+        <ul class="dropdown-menu">
+         <li>
+          <form>
+           <button class="dropdown-item" type="submit">My Schedule</button>
+          </form>
+         </li>
+        </ul>
+       </div>
+      </div>
+
       <form class="col-auto text-end" action="#" th:action="@{/logout}"
        method="post">
        <button class="btn btn-sm btn-secondary d-inline"
         th:text="#{header.SignOut}">Sign Out</button>
       </form>
      </div>
-    
+
     </div>
    </div>
 

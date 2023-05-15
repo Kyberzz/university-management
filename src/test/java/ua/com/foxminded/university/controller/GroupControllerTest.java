@@ -60,7 +60,7 @@ class GroupControllerTest {
     @Test
     void assignGroup_ShouldRedirectToGetById() throws Exception {
         mockMvc.perform(post("/groups/{groupId}/assign-group", GROUP_ID)
-                    .param("studentIds", "1,5"))
+                    .param("studentId", "1,5"))
                .andDo(print())
                .andExpect(redirectedUrl(new StringBuilder().append(GROUPS_PATH)
                                                            .append(GROUP_ID) .toString()));
