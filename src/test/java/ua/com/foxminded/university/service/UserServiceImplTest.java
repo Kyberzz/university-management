@@ -1,7 +1,6 @@
 package ua.com.foxminded.university.service;
 
 import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.ArgumentMatchers.isA;
@@ -76,20 +75,20 @@ class UserServiceImplTest {
     void getById_shouldExecuteCorrectNumberCalls() throws ServiceException {
         when(userRepositoryMock.findById(USER_ID)).thenReturn(entity);
         userService.getById(USER_ID);
-        verify(userRepositoryMock, times(1)).findById(anyInt());
-        verify(modelMapperMock, times(1)).map(entity, UserModel.class);
+        verify(userRepositoryMock).findById(anyInt());
+        verify(modelMapperMock).map(entity, UserModel.class);
     }
     
     @Test
     void deleteByEmail_shouldExecuteCorrectNumberCalls() throws ServiceException {
         userService.deleteByEmail(EMAIL);
-        verify(userDetailsManagerMock, times(1)).deleteUser(EMAIL);
+        verify(userDetailsManagerMock).deleteUser(EMAIL);
     }
 
     @Test
     void createUser_shouldExecuteCorrectNumberCalls() throws ServiceException {
         userService.create(model);
-        verify(userDetailsManagerMock, times(1)).createUser(isA(UserDetails.class));
+        verify(userDetailsManagerMock).createUser(isA(UserDetails.class));
     }
 
     @Test
@@ -97,8 +96,8 @@ class UserServiceImplTest {
         when(userRepositoryMock.findByUserAuthorityIsNull()).thenReturn(entities);
         Type type = new TypeToken<List<UserModel>>() {}.getType();
         userService.getNotAuthorizedUsers();
-        verify(userRepositoryMock, times(1)).findByUserAuthorityIsNull();
-        verify(modelMapperMock, times(1)).map(entities, type);
+        verify(userRepositoryMock).findByUserAuthorityIsNull();
+        verify(modelMapperMock).map(entities, type);
     }
 
     @Test
@@ -106,21 +105,21 @@ class UserServiceImplTest {
         when(userRepositoryMock.findByEmail(isA(String.class))).thenReturn(entity);
         
         userService.getByEmail(EMAIL);
-        verify(userRepositoryMock, times(1)).findByEmail(isA(String.class));
-        verify(modelMapperMock, times(1)).map(entity, UserModel.class);
+        verify(userRepositoryMock).findByEmail(isA(String.class));
+        verify(modelMapperMock).map(entity, UserModel.class);
     }
 
     @Test
     void getAll_shouldReturnCorrectModels() throws ServiceException {
         userService.getAll();
-        verify(userRepositoryMock, times(1)).findAll();
-        verify(modelMapperMock, times(1)).map(ArgumentMatchers.<UserEntity>anyList(), 
+        verify(userRepositoryMock).findAll();
+        verify(modelMapperMock).map(ArgumentMatchers.<UserEntity>anyList(), 
                                               isA(Type.class));
     }
     
     @Test
     void updateUser() throws ServiceException {
         userService.update(model);
-        verify(userDetailsManagerMock, times(1)).updateUser(isA(UserDetails.class));
+        verify(userDetailsManagerMock).updateUser(isA(UserDetails.class));
     }
 }

@@ -1,5 +1,6 @@
 package ua.com.foxminded.university.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.verify;
@@ -24,9 +25,13 @@ import ua.com.foxminded.university.entitymother.StudentEntityMother;
 import ua.com.foxminded.university.entitymother.UserEntityMother;
 import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.GroupModel;
+import ua.com.foxminded.university.model.PersonModel;
 import ua.com.foxminded.university.model.StudentModel;
+import ua.com.foxminded.university.model.UserModel;
 import ua.com.foxminded.university.modelmother.GroupModelMother;
+import ua.com.foxminded.university.modelmother.PersonModelMother;
 import ua.com.foxminded.university.modelmother.StudentModelMother;
+import ua.com.foxminded.university.modelmother.UserModelMother;
 import ua.com.foxminded.university.repository.GroupRepository;
 import ua.com.foxminded.university.repository.StudentRepository;
 import ua.com.foxminded.university.repository.UserRepository;
@@ -35,6 +40,8 @@ import ua.com.foxminded.university.service.impl.StudentServiceImpl;
 @ExtendWith(MockitoExtension.class)
 class StudentServiceImplTest {
     
+    public static final String LAST_NAME_A = "A";
+    public static final String LAST_NAME_B = "B";
     public static final int GROUP_ID = 1;
     public static final int STUDENT_ID = 1;
     
@@ -66,6 +73,19 @@ class StudentServiceImplTest {
         userEntity = UserEntityMother.complete().build();
         groupModel = GroupModelMother.complete().id(GROUP_ID).build();
         groupEntity = GroupEntityMother.complete().build();
+    }
+    
+    @Test
+    void sortByLastName_ShouldSortCorrectly() {
+        studentModel.getUser().getPerson().setLastName(LAST_NAME_A);
+        PersonModel person = PersonModelMother.complete().lastName(LAST_NAME_B).build();
+        UserModel user = UserModelMother.complete().person(person).build();
+        StudentModel studentB = StudentModelMother.complete().user(user).build();
+        List<StudentModel> list = Arrays.asList(studentB, studentModel);
+        studentService.sortByLastName(list);
+        List<StudentModel> expectedList = Arrays.asList(studentModel, studentB);
+        
+        assertEquals(expectedList, list);
     }
     
     @Test

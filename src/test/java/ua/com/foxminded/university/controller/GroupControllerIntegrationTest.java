@@ -5,6 +5,7 @@ import static org.springframework.security.test.web.servlet.response.SecurityMoc
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static ua.com.foxminded.university.model.Authority.ADMIN;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,9 +14,12 @@ import org.springframework.test.context.transaction.AfterTransaction;
 import org.springframework.test.context.transaction.BeforeTransaction;
 
 import ua.com.foxminded.university.entity.GroupEntity;
+import ua.com.foxminded.university.entity.StudentEntity;
 import ua.com.foxminded.university.entitymother.GroupEntityMother;
+import ua.com.foxminded.university.entitymother.StudentEntityMother;
 import ua.com.foxminded.university.model.Authority;
 import ua.com.foxminded.university.repository.GroupRepository;
+import ua.com.foxminded.university.repository.StudentRepository;
 
 class GroupControllerIntegrationTest extends DefaultControllerTest {
     
@@ -24,17 +28,52 @@ class GroupControllerIntegrationTest extends DefaultControllerTest {
     @Autowired
     private GroupRepository groupRepository;
     
+    @Autowired
+    private StudentRepository studentRepository;
+    
     private GroupEntity groupEntity;
+    private StudentEntity studentA;
+    private StudentEntity studentB;
+    private StudentEntity studentEntity;
     
     @BeforeTransaction
     void setUp() {
         groupEntity = GroupEntityMother.complete().build();
         groupRepository.saveAndFlush(groupEntity);
+        studentA = StudentEntityMother.complete().build();
+        studentB = StudentEntityMother.complete().build();
+        studentRepository.saveAndFlush(studentA);
+        studentRepository.saveAndFlush(studentB);
+        studentEntity = StudentEntityMother.complete().group(groupEntity).build();
+        studentRepository.saveAndFlush(studentEntity);
     }
     
     @AfterTransaction
     void tearDown() {
         groupRepository.deleteAll();
+    }
+    
+    @Test
+    @WithUserDetails(AUTHORIZED_EMAIL)
+    void deassignGroup_ShouldAuthorizeCredentialsAndRedirect() throws Exception {
+        mockMvc.perform(post("/groups/{groupId}/deassign-group", groupEntity.getId())
+                    .param("studentId", String.valueOf(studentEntity.getId()))
+                    .with(csrf()))
+               .andExpect(authenticated().withRoles(ADMIN.toString()))
+               .andExpect(status().is3xxRedirection());
+    }
+    
+    @Test
+    @WithUserDetails(AUTHORIZED_EMAIL)
+    void assignGroup_ShouldAuthorizeCredentialsAndRedirect() throws Exception {
+        mockMvc.perform(post("/groups/{groupId}/assign-group", groupEntity.getId())
+                    .param("studentIds", new StringBuilder().append(studentA.getId())
+                                                            .append(",")
+                                                            .append(studentB.getId())
+                                                            .toString())
+                    .with(csrf()))
+               .andExpect(authenticated().withRoles(ADMIN.toString()))
+               .andExpect(status().is3xxRedirection());
     }
     
     @Test

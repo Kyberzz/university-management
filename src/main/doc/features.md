@@ -17,8 +17,8 @@ task 3.6
 + + User 'A' can Create/Read/Update/Delete group information
 
 task 3.7
-+ - - User 'A' can assign/ reassign Students to Group
-+ - - User 'B' should be able to list all students in a group (read access)
++ + + User 'A' can assign/ reassign Students to Group
++ + + User 'B' should be able to list all students in a group (read access)
 
 ## Student flow
 
@@ -29,13 +29,13 @@ task 3.6
 + + User 'A' should be able to list all groups information (read access)
 
 task 3.7
-- - - User 'B' should be able to list all students in a group (read access)
++ + + User 'B' should be able to list all students in a group (read access)
 
 ## Teacher flow
 
 task 3.1 (for creating UML diagram):
-- A user can see and navigate to 'My schedule' menu
-- A user should see own Teacher according with selected date/range filter
+- - - User can see and navigate to `My Schedule` menu
+- - - User should see own Teacher schedule according with selected date/range filter
 
 task 3.5:
 + + A user should be able list all courses and have only the read access
@@ -44,7 +44,10 @@ task 3.6
 + + User 'A' should be able to list all groups information (read access)
 
 task 3.7
-- - - User 'B' should be able to list all students in a group (read access)
++ + + User 'B' should be able to list all students in a group (read access)
+
+task 3.8
+- - - User 'B' should be able to list all its courses.
 
 ## Staff flow
 
@@ -57,5 +60,5 @@ task 3.6
 + + User 'A' should be able to Create/Read/Update group information
 
 task 3.7
-- - - User 'A' can assign/ reassign Students to Group
-- - - User 'B' should be able to list all students in a group (read access)
++ + + User 'A' can assign/ reassign Students to Group
++ + + User 'B' should be able to list all students in a group (read access)_task_3.6 

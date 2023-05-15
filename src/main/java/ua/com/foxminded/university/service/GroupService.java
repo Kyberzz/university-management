@@ -6,11 +6,11 @@ import ua.com.foxminded.university.model.GroupModel;
 
 public interface GroupService extends GenericService<GroupModel> {
     
-    public void deassignStudent(int studentId);
+    public void deassignGroup(int studentId);
     
     public void sortStudentsByLastName(GroupModel group);
     
-    public void assignStudents(int groupId, int[] studentIds);
+    public void assignGroup(int groupId, int[] studentIds);
 
     public GroupModel getGroupRelationsById(int id) throws ServiceException;
 

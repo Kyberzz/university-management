@@ -97,7 +97,7 @@ class StudentControllerTest {
     }
     
     @Test
-    void deleteStudent_ShouldCallStudentServiceAndRedirect() throws Exception {
+    void delete_ShouldCallStudentServiceAndRedirect() throws Exception {
         mockMvc.perform(post("/students/delete").param("studentId", String.valueOf(STUDENT_ID)))
                .andDo(print())
                .andExpect(redirectedUrl(new StringBuilder().append(STUDENTS_PATH)

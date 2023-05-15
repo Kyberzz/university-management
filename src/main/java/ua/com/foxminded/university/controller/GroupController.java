@@ -31,19 +31,19 @@ public class GroupController extends DefaultController {
     private final GroupService groupService;
     private final StudentService studentService;
     
-    @PostMapping(value = "/{groupId}/deassign-student")
-    public String deassignStudent(@PathVariable int groupId, 
-                                  @RequestParam int studentId) {
-        groupService.deassignStudent(studentId);
+    @PostMapping("/{groupId}/deassign-group")
+    public String deassignGroup(@PathVariable int groupId, 
+                                @RequestParam int studentId) {
+        groupService.deassignGroup(studentId);
         return new StringBuilder().append(REDIRECT_KEY_WORD)
                                   .append(GROUPS_PATH)
                                   .append(groupId).toString();
     }
     
-    @PostMapping(value = "/{groupId}/assign-students")
-    public String assignStudents(@PathVariable int groupId,
-                                 @RequestParam int[] studentId) {
-        groupService.assignStudents(groupId, studentId);
+    @PostMapping("/{groupId}/assign-group")
+    public String assignGroup(@PathVariable int groupId,
+                              @RequestParam int[] studentId) {
+        groupService.assignGroup(groupId, studentId);
         return new StringBuilder().append(REDIRECT_KEY_WORD)
                                   .append(GROUPS_PATH)
                                   .append(groupId).toString();

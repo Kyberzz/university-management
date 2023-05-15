@@ -92,11 +92,11 @@
      <div class="row">
       <button type="button" class="btn btn-primary"
        data-bs-toggle="modal" data-bs-target="#exampleModal"
-       th:text="#{button.add-student}">Add student</button>
+       th:text="#{button.add-student}" id="addStudentButton">Add student</button>
 
       <form class="modal fade" id="exampleModal" tabindex="-1"
        aria-labelledby="exampleModalLabel" aria-hidden="true"
-       th:action="@{/groups/__${groupModel.id}__/assign-students}"
+       th:action="@{/groups/__${groupModel.id}__/assign-group}"
        method="post">
        <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
@@ -137,7 +137,7 @@
          <div class="modal-footer">
           <button type="button" class="btn btn-secondary"
            data-bs-dismiss="modal">Close</button>
-          <button type="submit" class="btn btn-primary">Save
+          <button type="submit" class="btn btn-primary" id="saveSelecetdStudents">Save
            changes</button>
          </div>
         </div>
@@ -168,7 +168,7 @@
           <td th:text="${student.id}">1</td>
           <td>
            <form
-            th:action="@{/groups/__${groupModel.id}__/deassign-student}"
+            th:action="@{/groups/__${groupModel.id}__/deassign-group}"
             method="post">
             <button type="submit"
              class="btn btn-sm btn-outline-secondary" name="studentId"

@@ -20,7 +20,6 @@ import ua.com.foxminded.university.model.Authority;
 @EnableConfigurationProperties(UserDetailsManagerConfig.class)
 public class SecurityConfig {
 
-    public static final String NONE = "";
     public static final String STUDENT = Authority.STUDENT.toString();
     public static final String TEACHER = Authority.TEACHER.toString();
     public static final String STAFF = Authority.STAFF.toString();
@@ -56,15 +55,16 @@ public class SecurityConfig {
                     .hasAnyRole(ADMIN, STAFF)
                 .mvcMatchers("/courses/**").hasAnyRole(ADMIN)
                 .mvcMatchers("/groups/{id:\\d+}/update").hasAnyRole(ADMIN, STAFF)
-                .mvcMatchers("/groups/{id:\\d+}").hasAnyRole(ADMIN, STAFF)
+                .mvcMatchers("/groups/{id:\\d+}/delete").hasAnyRole(ADMIN)
                 .mvcMatchers("/groups/create*").hasAnyRole(ADMIN, STAFF)
                 .mvcMatchers("/groups/list*").hasAnyRole(ADMIN, STAFF, TEACHER, STUDENT)
-                .mvcMatchers("/groups/{id:\\d+}/assign-students").hasAnyRole(ADMIN)
-                .mvcMatchers("/groups/{id:\\d+}/deassign-student").hasAnyRole(ADMIN)
+                .mvcMatchers("/groups/{id:\\d+}").hasAnyRole(ADMIN, STAFF, TEACHER, STUDENT)
+                .mvcMatchers("/groups/{id:\\d+}/assign-group").hasAnyRole(ADMIN, STAFF)
+                .mvcMatchers("/groups/{id:\\d+}/deassign-group").hasAnyRole(ADMIN, STAFF)
                 .mvcMatchers("/students/list*").hasAnyRole(ADMIN)
-                .mvcMatchers("/students/delete*").hasAnyRole(NONE)
-                .mvcMatchers("/students/{id:\\d+}/update*").hasAnyRole(NONE)
-                .mvcMatchers("/students/create*").hasAnyRole(NONE)
+                .mvcMatchers("/students/delete*").hasAnyRole(ADMIN)
+                .mvcMatchers("/students/{id:\\d+}/update*").hasAnyRole(ADMIN)
+                .mvcMatchers("/students/create*").hasAnyRole(ADMIN)
                 .anyRequest().authenticated()
                 )
             .formLogin(form -> form.loginPage("/login")

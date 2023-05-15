@@ -2,11 +2,10 @@ package ua.com.foxminded.university.service;
 
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.isA;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static ua.com.foxminded.university.service.impl.CourseServiceImpl.COURSE_MODEL_LIST_TYPE;
 
-import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -21,7 +20,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeToken;
 
 import ua.com.foxminded.university.entity.CourseEntity;
 import ua.com.foxminded.university.entity.TeacherEntity;
@@ -40,7 +38,6 @@ class CourseServiceImplTest {
     private static final int ID = 1;
     private static final int TEACHER_ID = 1;
     private static final int COURSE_ID = 1;
-    private static final Type TYPE = new TypeToken<List<CourseModel>>() {}.getType();
     
     @InjectMocks
     private CourseServiceImpl courseService;
@@ -87,14 +84,14 @@ class CourseServiceImplTest {
         when(courseRepositoryMock.getCourseRelationsById(anyInt()))
             .thenReturn(courseEntity);
         courseService.getTimetableAndTeachersByCourseId(ID);
-        verify(modelMapperMock, times(1)).map(courseEntity, CourseModel.class);
+        verify(modelMapperMock).map(courseEntity, CourseModel.class);
     }
     
     void update_ShouldExcecuteCorrectCallsQuantity() throws ServiceException {
         courseService.update(courseModel);
         InOrder inOrder = Mockito.inOrder(modelMapperMock, courseRepositoryMock);
-        inOrder.verify(modelMapperMock, times(1)).map(courseModel, CourseModel.class);
-        inOrder.verify(courseRepositoryMock, times(1)).saveAndFlush(courseEntity);
+        inOrder.verify(modelMapperMock).map(courseModel, CourseModel.class);
+        inOrder.verify(courseRepositoryMock).saveAndFlush(courseEntity);
     }
     
     @Test
@@ -103,7 +100,7 @@ class CourseServiceImplTest {
         List<CourseEntity> courses = Arrays.asList(course);
         when(courseRepositoryMock.findAll()).thenReturn(courses);
         courseService.getAll();
-        verify(modelMapperMock, times(1)).map(courses, TYPE);
+        verify(modelMapperMock).map(courses, COURSE_MODEL_LIST_TYPE);
     }
     
     @Test
@@ -116,13 +113,13 @@ class CourseServiceImplTest {
     @Test
     void deleteById_ShouldExcecuteCorrectCallsQauntity() throws ServiceException {
         courseService.deleteById(ID);
-        verify(courseRepositoryMock, times(1)).deleteById(anyInt());
+        verify(courseRepositoryMock).deleteById(anyInt());
     }
     
     @Test
     void getById_ShouldExecuteCorrectCallsQuantity() throws ServiceException {
         when(courseRepositoryMock.findById(anyInt())).thenReturn(courseEntity);
         courseService.getById(ID);
-        verify(modelMapperMock, times(1)).map(courseEntity, CourseModel.class);
+        verify(modelMapperMock).map(courseEntity, CourseModel.class);
     }
 }

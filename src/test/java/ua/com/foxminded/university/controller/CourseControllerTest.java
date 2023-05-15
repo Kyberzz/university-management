@@ -2,7 +2,6 @@ package ua.com.foxminded.university.controller;
 
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.isA;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -84,7 +83,7 @@ class CourseControllerTest {
     void delete_ShouldDeleteCourseAndRedirectToListView() throws Exception {
         mockMvc.perform(post("/courses/delete").param("courseId", String.valueOf(COURSE_ID)))
                .andExpect(redirectedUrl("/courses/list"));
-        verify(courseServiceMock, times(1)).deleteById(anyInt());
+        verify(courseServiceMock).deleteById(anyInt());
     }
     
     @Test
@@ -103,7 +102,7 @@ class CourseControllerTest {
                                                .flashAttr("courseModel", course))
                .andExpect(redirectedUrl("/courses/" + COURSE_ID));
         
-        verify(courseServiceMock, times(1)).update(isA(CourseModel.class));
+        verify(courseServiceMock).update(isA(CourseModel.class));
     }
     @Test
     void create_ShouldReturnBadRequestStatus() throws Exception {
@@ -117,7 +116,7 @@ class CourseControllerTest {
         mockMvc.perform(post("/courses/create").flashAttr("courseModel", course))
                .andExpect(redirectedUrl("/courses/list"));
         
-        verify(courseServiceMock, times(1)).create(isA(CourseModel.class));
+        verify(courseServiceMock).create(isA(CourseModel.class));
     }
     
     
@@ -129,6 +128,6 @@ class CourseControllerTest {
                .andExpect(model().attributeExists("courses"))
                .andExpect(view().name("courses/list"));
         
-        verify(courseServiceMock, times(1)).getAll();
+        verify(courseServiceMock).getAll();
     }
 }
