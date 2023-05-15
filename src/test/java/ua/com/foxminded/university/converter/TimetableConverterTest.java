@@ -22,17 +22,18 @@ import ua.com.foxminded.university.model.TimetableModel;
 @ExtendWith(MockitoExtension.class)
 class TimetableConverterTest {
     
-    public static final int AVERAGE_LESSON_MINUTES_INTERVAL = 20;
+    public static final int AVERAGE_LESSON_MINUTES_INTERVAL = 126;
+    public static final int LESSON_MINUTES_DUREATION = 20;
     public static final String FIRST_LESSON_START_TIME = "08:00";
     
     @InjectMocks
-    private TimetableConverter timetableConverter;
+    private TimetableConverter converterMock;
     
     @Mock
     private MappingContext<TimetableEntity, TimetableModel> contextMock;
     
     @Mock
-    private TimetableConverterConfig config;
+    private TimetableConverterConfig configMock;
     
     private TimetableEntity entity;
     
@@ -43,16 +44,16 @@ class TimetableConverterTest {
     
     @Test
     void toLessonPeriod_ShouldConvertPropertiesCorrectly() {
-        when(config.getLessonMinutesDuration())
-            .thenReturn(AVERAGE_LESSON_MINUTES_INTERVAL);
-        when(config.getFirstLessonStartTime())
+        when(configMock.getLessonMinutesDuration())
+            .thenReturn(LESSON_MINUTES_DUREATION);
+        when(configMock.getFirstLessonStartTime())
             .thenReturn(LocalTime.parse(FIRST_LESSON_START_TIME));
-        LessonOrder lessonOrder = LessonOrder.FIRST_LESSON;
+        when(configMock.getAverageLessonsMinutesInterval()).thenReturn(
+                AVERAGE_LESSON_MINUTES_INTERVAL);
         when(contextMock.getSource()).thenReturn(entity);
         
-        TimetableConverter converter = new TimetableConverter(config); 
-        TimetableModel model = converter.convert(contextMock);
+        TimetableModel model = converterMock.convert(contextMock);
         
-        assertEquals(lessonOrder, model.getLessonOrder());
+        assertEquals(LessonOrder.FIRST_LESSON, model.getLessonOrder());
     }
 }
