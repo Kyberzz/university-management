@@ -36,7 +36,7 @@ public class GroupEntity implements Serializable {
     @OneToMany(mappedBy = "group")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private Set<TimetableEntity> timetables;
+    private Set<ScheduleEntity> schedules;
   
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "group")
     @EqualsAndHashCode.Exclude

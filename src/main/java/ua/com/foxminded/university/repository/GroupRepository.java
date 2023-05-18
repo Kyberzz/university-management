@@ -8,7 +8,7 @@ import ua.com.foxminded.university.entity.GroupEntity;
 public interface GroupRepository extends JpaRepository<GroupEntity, Integer> {
 
     @Query("select g from GroupEntity g left join fetch g.students "
-                                     + "left join fetch g.timetables "
+                                     + "left join fetch g.schedules "
                                      + "where g.id = ?1")
     public GroupEntity getGroupRelationsById(int id);
     

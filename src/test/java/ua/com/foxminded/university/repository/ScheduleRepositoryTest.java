@@ -16,24 +16,24 @@ import org.springframework.test.context.ActiveProfiles;
 
 import ua.com.foxminded.university.entity.CourseEntity;
 import ua.com.foxminded.university.entity.GroupEntity;
-import ua.com.foxminded.university.entity.TimetableEntity;
+import ua.com.foxminded.university.entity.ScheduleEntity;
 import ua.com.foxminded.university.entitymother.CourseEntityMother;
 import ua.com.foxminded.university.entitymother.GroupEntityMother;
-import ua.com.foxminded.university.entitymother.TimetableEntityMother;
+import ua.com.foxminded.university.entitymother.ScheduleEntityMother;
 
 @DataJpaTest
 @ActiveProfiles("test")
-class TimetableRepositoryTest {
+class ScheduleRepositoryTest {
     
     @PersistenceUnit
     private EntityManagerFactory entityManagerFactory;
     
     @Autowired
-    private TimetableRepository timetableRepository;
+    private ScheduleRepository timetableRepository;
     
     private CourseEntity course;
     private GroupEntity group;
-    private TimetableEntity timetable;
+    private ScheduleEntity schedule;
     
     @BeforeEach
     void init() {
@@ -45,39 +45,45 @@ class TimetableRepositoryTest {
         group = GroupEntityMother.complete().build();
         entityManager.persist(group);
         
-        timetable = TimetableEntityMother.complete().build();
-        timetable.setCourse(course);
-        timetable.setGroup(group);
-        entityManager.persist(timetable);
+        schedule = ScheduleEntityMother.complete().build();
+        schedule.setCourse(course);
+        schedule.setGroup(group);
+        entityManager.persist(schedule);
         entityManager.getTransaction().commit();
         entityManager.close();
     }
     
+    void findByDatestampAndStartTimeAndGroupId_ShouldReturnTimetableEntity() {
+        ScheduleEntity entity = timetableRepository.findByDatestampAndLessonOrderAndGroupId(
+                schedule.getDatestamp(), schedule.getLessonOrder(), group.getId());
+        assertEquals(schedule.getGroup().getId(), entity.getGroup().getId());
+    }
+    
     @Test
     void findByDatestamp_ShouldReturnTimetablesOfDay() {
-        List<TimetableEntity> timetables = timetableRepository.findByDatestamp(
-                timetable.getDatestamp());
-        assertEquals(timetable.getDatestamp(), timetables.iterator().next().getDatestamp());
+        List<ScheduleEntity> timetables = timetableRepository.findByDatestamp(
+                schedule.getDatestamp());
+        assertEquals(schedule.getDatestamp(), timetables.iterator().next().getDatestamp());
     }
     
     @Test
     void findCourseById_ShouldReturnCourseOwnedByTimetableWithId() {
-        TimetableEntity receivedTimetable = timetableRepository.findCourseById(
-                timetable.getId());
+        ScheduleEntity receivedTimetable = timetableRepository.findCourseById(
+                schedule.getId());
         assertEquals(course.getId(), receivedTimetable.getCourse().getId());
     }
         
     @Test
     void findGroupById_ShouldReturnGroupOwnedByTimetableWithId() {
-        TimetableEntity receivedTimetable = timetableRepository.findGroupById(
-                timetable.getId());
+        ScheduleEntity receivedTimetable = timetableRepository.findGroupById(
+                schedule.getId());
         assertEquals(group.getId(), receivedTimetable.getGroup().getId());
     }
     
     @Test
     void findById_ShouldReturnTimetableEntityWithId() {
-        TimetableEntity receivedTimetable = timetableRepository.findById(
-                timetable.getId().intValue());
-        assertEquals(timetable.getId(), receivedTimetable.getId());
+        ScheduleEntity receivedTimetable = timetableRepository.findById(
+                schedule.getId().intValue());
+        assertEquals(schedule.getId(), receivedTimetable.getId());
     }
 }

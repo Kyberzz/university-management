@@ -25,7 +25,7 @@ import ua.com.foxminded.university.entitymother.TeacherEntityMother;
 
 @DataJpaTest
 @ActiveProfiles("test")
-@DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
+@DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 class TeacherRepositoryTest {
     
     private static final int COURSES_QUANTITY = 1;

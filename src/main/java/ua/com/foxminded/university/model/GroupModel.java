@@ -31,5 +31,5 @@ public class GroupModel implements Serializable {
     
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private Set<TimetableModel> timetables;
+    private Set<ScheduleModel> timetables;
 }

@@ -1,14 +1,11 @@
-
 package ua.com.foxminded.university.entity;
 
 import java.io.Serializable;
-import java.time.Duration;
 import java.time.LocalDate;
-import java.time.LocalTime;
 
-import javax.persistence.Column;
-import javax.persistence.Convert;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -21,36 +18,40 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ua.com.foxminded.university.converter.DurationConverter;
+import lombok.ToString;
+import ua.com.foxminded.university.model.LessonOrder;
 
 @Entity
-@Table(name = "timetables", schema = "university")
+@Table(name = "schedules", schema = "university")
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TimetableEntity implements Serializable {
+public class ScheduleEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    
-    @Column(name = "start_time")
-    private LocalTime startTime;
-    
-    @Column(name = "break_duration")
-    @Convert(converter = DurationConverter.class)
-    private Duration breakDuration;
     private LocalDate datestamp;
+    
+    @Enumerated(EnumType.STRING)
+    private LessonOrder lessonOrder;
     private String description;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "group_id")
+    @ToString.Exclude
     private GroupEntity group;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id")
+    @ToString.Exclude
     private CourseEntity course;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "timing_id")
+    @ToString.Exclude
+    private TimingEntity timing;
 }

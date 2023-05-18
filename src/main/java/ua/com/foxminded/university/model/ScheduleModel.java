@@ -1,9 +1,7 @@
 package ua.com.foxminded.university.model;
 
 import java.io.Serializable;
-import java.time.Duration;
 import java.time.LocalDate;
-import java.time.LocalTime;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,17 +13,16 @@ import lombok.ToString;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class TimetableModel implements Serializable {
+public class ScheduleModel implements Serializable {
     
     private static final long serialVersionUID = 1L;
 
     private Integer id;
-    private LessonOrder lessonOrder;
-    private LocalTime startTime;
-    private LocalTime endTime;
     private LocalDate datestamp;
-    private Duration breakDuration;
+    private LessonOrder lessonOrder;
     private String description;
+    
+    private TimingModel timing;
     
     @ToString.Exclude
     private CourseModel course;

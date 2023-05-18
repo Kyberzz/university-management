@@ -1,6 +1,6 @@
 package ua.com.foxminded.university.controller;
 
-import static ua.com.foxminded.university.controller.TimetableController.*;
+import static ua.com.foxminded.university.controller.ScheduleController.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -23,24 +23,27 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import ua.com.foxminded.university.entity.TimetableEntity;
-import ua.com.foxminded.university.entitymother.TimetableEntityMother;
+import ua.com.foxminded.university.entity.ScheduleEntity;
+import ua.com.foxminded.university.entitymother.ScheduleEntityMother;
 import ua.com.foxminded.university.model.Authority;
-import ua.com.foxminded.university.model.TimetableModel;
-import ua.com.foxminded.university.modelmother.TimetableModelMother;
+import ua.com.foxminded.university.model.GroupModel;
+import ua.com.foxminded.university.model.ScheduleModel;
+import ua.com.foxminded.university.modelmother.GroupModelMother;
+import ua.com.foxminded.university.modelmother.ScheduleModelMother;
 
 @SpringBootTest
 @ActiveProfiles("prod")
 @AutoConfigureMockMvc
 @Testcontainers
-class TimetableControllerIntegrationTest extends DefaultControllerTest {
+class ScheduleControllerIntegrationTest extends DefaultControllerTest {
     
     @Container
     private static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:14");
     
     private LocalDate localDate;
-    private TimetableEntity timetableEntity;
-    private TimetableModel timetableModel;
+    private ScheduleEntity timetableEntity;
+    private ScheduleModel timetableModel;
+    private GroupModel groupModel;
     
     @DynamicPropertySource
     public static void configureProperties(DynamicPropertyRegistry registry) {
@@ -52,20 +55,23 @@ class TimetableControllerIntegrationTest extends DefaultControllerTest {
     @BeforeEach
     void setUp() {
         localDate = LocalDate.now();
-        timetableEntity = TimetableEntityMother.complete().build();
+        timetableEntity = ScheduleEntityMother.complete().build();
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
         entityManager.persist(timetableEntity);
         entityManager.getTransaction().commit();
         entityManager.close();
         
-        timetableModel = TimetableModelMother.complete()
+        timetableModel = ScheduleModelMother.complete()
                                              .id(timetableEntity.getId()).build();
+        
+        groupModel = GroupModelMother.complete().build();
     }
     
     @Test
     @WithUserDetails(AUTHORIZED_EMAIL)
     void create_ShouldAuthorizeCredentialsAndRedirect() throws Exception {
+        
         mockMvc.perform(post("/timetables/create/timetable/{date}", localDate.toString())
                     .flashAttr(TIMETABLE_MODEL_ATTRIBUTE, timetableModel)
                     .with(csrf()))

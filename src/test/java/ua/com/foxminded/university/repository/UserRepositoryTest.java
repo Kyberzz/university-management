@@ -21,7 +21,7 @@ import ua.com.foxminded.university.entitymother.UserEntityMother;
 
 @DataJpaTest
 @ActiveProfiles("test")
-@DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
+@DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 class UserRepositoryTest {
 
     public static final String NOT_AUTHORIZED_EMAIL = "some@email";

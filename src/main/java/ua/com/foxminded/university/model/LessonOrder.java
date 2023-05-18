@@ -6,8 +6,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Getter
 public enum LessonOrder {
-    FIRST_LESSON(1), SECOND_LESSON(2), THIRD_LESSON(3), FOURTH_LESSON(4), 
-    FIFTH_LESSON(5);
+    FIRST_LESSON(1), SECOND_LESSON(2), THIRD_LESSON(3), FOURTH_LESSON(4), FIFTH_LESSON(5);
     
     private final int representation;
     

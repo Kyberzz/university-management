@@ -10,8 +10,7 @@
 		   last_name="Parker" />
 	<STUDENTS group_id='101' 
 		   	  user_id='101' />
-	<TIMETABLES group_id='101' 
-				start_time='08:00:00'
-				break_duration='15' 
-				datestamp='2023-05-03' />
+	<SCHEDULES group_id='101' 
+			   lesson_order='FIRST_LESSON'
+			   datestamp='2023-05-03' />
 </dataset>

@@ -1,6 +1,6 @@
 package ua.com.foxminded.university.controller;
 
-import static ua.com.foxminded.university.controller.TimetableController.*;
+import static ua.com.foxminded.university.controller.ScheduleController.*;
 
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.verify;
@@ -26,19 +26,19 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import ua.com.foxminded.university.model.TimetableModel;
-import ua.com.foxminded.university.modelmother.TimetableModelMother;
+import ua.com.foxminded.university.model.ScheduleModel;
+import ua.com.foxminded.university.modelmother.ScheduleModelMother;
 import ua.com.foxminded.university.service.CourseService;
 import ua.com.foxminded.university.service.GroupService;
-import ua.com.foxminded.university.service.TimetableService;
+import ua.com.foxminded.university.service.ScheduleService;
 
 @ExtendWith(SpringExtension.class)
-class TimetableControllerTest {
+class ScheduleControllerTest {
     
     public static final int TIMETABLE_ID = 1;
     
     @MockBean
-    private TimetableService timetableServiceMock;
+    private ScheduleService timetableServiceMock;
     
     @MockBean
     private CourseService courseServiceMock;
@@ -47,22 +47,22 @@ class TimetableControllerTest {
     private GroupService groupServiceMock;
     
     private MockMvc mockMvc;
-    private TimetableModel timetableModel;
+    private ScheduleModel timetableModel;
     
     @BeforeEach
     void setup() {
         mockMvc = MockMvcBuilders.standaloneSetup(
-                new TimetableController(timetableServiceMock, 
+                new ScheduleController(timetableServiceMock, 
                                         courseServiceMock, 
                                         groupServiceMock)).build();
 
-        timetableModel = TimetableModelMother.complete().build();
+        timetableModel = ScheduleModelMother.complete().build();
     }
     
     @Test
     void create_ShouldRedirectToGetDayTimetable() throws Exception {
         LocalDate localDate = LocalDate.now();
-        TimetableModel timetableModel = TimetableModelMother.complete().build();
+        ScheduleModel timetableModel = ScheduleModelMother.complete().build();
         mockMvc.perform(post("/timetables/create/timetable/{date}", localDate.toString())
                     .flashAttr(TIMETABLE_MODEL_ATTRIBUTE, timetableModel))
                .andDo(print())
@@ -70,7 +70,7 @@ class TimetableControllerTest {
                .andExpect(redirectedUrl(new StringBuffer().append(DAY_TIMETABLES_PATH)
                                                           .append(localDate)
                                                           .append("?").toString()));
-        verify(timetableServiceMock).create(isA(TimetableModel.class));
+        verify(timetableServiceMock).create(isA(ScheduleModel.class));
     }
     
     @Test
@@ -94,7 +94,7 @@ class TimetableControllerTest {
                                           .append(timetableModel.getDatestamp())
                                           .append("?").toString()));
         
-        verify(timetableServiceMock).update(isA(TimetableModel.class));
+        verify(timetableServiceMock).update(isA(ScheduleModel.class));
     }
     
     @Test

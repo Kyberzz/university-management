@@ -42,7 +42,7 @@ public class CourseEntity implements Serializable {
     @OneToMany(mappedBy = "course")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private Set<TimetableEntity> timetables;
+    private Set<ScheduleEntity> schedules;
     
     public void addTeacher(TeacherEntity teacher) {
         this.teachers.add(teacher);

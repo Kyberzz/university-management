@@ -17,15 +17,15 @@ import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.CourseModel;
 import ua.com.foxminded.university.model.GroupModel;
 import ua.com.foxminded.university.model.TeacherModel;
-import ua.com.foxminded.university.model.TimetableModel;
+import ua.com.foxminded.university.model.ScheduleModel;
 import ua.com.foxminded.university.service.CourseService;
 import ua.com.foxminded.university.service.GroupService;
-import ua.com.foxminded.university.service.TimetableService;
+import ua.com.foxminded.university.service.ScheduleService;
 
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/timetables")
-public class TimetableController extends DefaultController {
+public class ScheduleController extends DefaultController {
     
     public static final String TIMETABLES_PATH = "/timetables/";
     public static final String DAY_TIMETABLE_TEMPLATE = "timetables/day-timetable";
@@ -37,13 +37,13 @@ public class TimetableController extends DefaultController {
     public static final String DAY_TIMETABLE_ATTRIBUTE = "dayTimetable";
     public static final String MONTH_TIMETABLE_ATTRIBUTE = "monthTimetable";
     
-    private final TimetableService timetableService;
+    private final ScheduleService timetableService;
     private final CourseService courseService;
     private final GroupService groupService;
 
     @PostMapping("/create/timetable/{date}")
     public String create(@PathVariable String date, 
-                         @ModelAttribute TimetableModel timetableModel, 
+                         @ModelAttribute ScheduleModel timetableModel, 
                          Model model) throws ServiceException {
         timetableModel.setDatestamp(LocalDate.parse(date));
         timetableService.create(timetableModel);
@@ -55,7 +55,7 @@ public class TimetableController extends DefaultController {
     }
     
     @PostMapping("/delete/{timetableId}")
-    public String delete(@ModelAttribute TimetableModel timetableModel, 
+    public String delete(@ModelAttribute ScheduleModel timetableModel, 
                          @PathVariable int timetableId) throws ServiceException {
         timetableService.deleteById(timetableId);
         return new StringBuilder().append(REDIRECT_KEY_WORD)
@@ -66,9 +66,9 @@ public class TimetableController extends DefaultController {
     
     @PostMapping("/update/{id}")
     public String update(@PathVariable int id, 
-                         @ModelAttribute TimetableModel timetableModel, 
+                         @ModelAttribute ScheduleModel timetableModel, 
                          Model model) throws ServiceException {
-        
+        timetableModel.setId(id);
         timetableService.update(timetableModel);
         return new StringBuilder().append(REDIRECT_KEY_WORD)
                                   .append(DAY_TIMETABLES_PATH)
@@ -81,8 +81,8 @@ public class TimetableController extends DefaultController {
     public String getDayTimetable(@PathVariable String date,
                                   Model model) throws ServiceException {
         LocalDate localDate = LocalDate.parse(date);
-        List<TimetableModel> dayTimetable = timetableService.getDayTimetalbe(localDate);
-        TimetableModel timetableModel = new TimetableModel();
+        List<ScheduleModel> dayTimetable = timetableService.getDayTimetalbe(localDate);
+        ScheduleModel timetableModel = new ScheduleModel();
         timetableModel.setDatestamp(localDate);
         timetableModel.setCourse(new CourseModel());
         timetableModel.getCourse().setTeachers(new HashSet<>());
@@ -125,9 +125,9 @@ public class TimetableController extends DefaultController {
     public String list(@PathVariable String date,
                        Model model) throws ServiceException {
         LocalDate datestamp = LocalDate.parse(date);
-        List<List<List<TimetableModel>>> monthTimetable = timetableService
+        List<List<List<ScheduleModel>>> monthTimetable = timetableService
                 .getMonthTimetable(datestamp);
-        TimetableModel timetableModel = TimetableModel.builder()
+        ScheduleModel timetableModel = ScheduleModel.builder()
                                                       .datestamp(datestamp).build();
         timetableModel.setDatestamp(datestamp);
         List<CourseModel> courses = courseService.getAll();
