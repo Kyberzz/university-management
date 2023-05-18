@@ -13,15 +13,16 @@
 <body>
  <div th:replace="~{fragments/header::navigationBar}">Navigation
   bar</div>
+ 
  <nav class="ms-2" aria-label="breadcrumb" th:fragment="page-path">
   <ol class="breadcrumb container-fluid">
    <li class="breadcrumb-item"><a th:href="@{/}"
     th:text="#{href.home}">Home</a></li>
    <li class="breadcrumb-item"><a
-    th:href="@{/timetables/__${timetableModel.datestamp}__/list}"
-    th:text="#{href.month-timetable}">Month timetable</a></li>
+    th:href="@{/schedules/__${scheduleModel.datestamp}__/list}"
+    th:text="#{href.month-schedule}">Month schedule</a></li>
    <li class="breadcrumb-item active" aria-current="page"
-    th:text="#{href.day-timetable}">Day timetable</li>
+    th:text="#{href.day-schedule}">Day schedule</li>
   </ol>
  </nav>
 
@@ -29,12 +30,12 @@
   aria-labelledby="addCourse" aria-hidden="true">
   <div class="modal-dialog">
    <form class="modal-content"
-    th:action="@{/timetables/create/timetable/__${timetableModel.datestamp}__}"
-    th:object="${timetableModel}" method="post">
+    th:action="@{/schedules/create/schedule/__${scheduleModel.datestamp}__}"
+    th:object="${scheduleModel}" method="post">
     <div class="modal-header">
-     <h1 class="modal-title fs-5" id="createTimetable"
-      th:text="|#{timetables.create} __${timetableModel.datestamp}__|">Create
-      timetable</h1>
+     <h1 class="modal-title fs-5" id="createSchedule"
+      th:text="|#{schedules.create} __${scheduleModel.datestamp}__|">Create
+      schedule</h1>
      <button type="button" class="btn-close" data-bs-dismiss="modal"
       aria-label="Close"></button>
     </div>
@@ -99,9 +100,10 @@
  </div>
 
  <div class="container">
+  
   <div class="col">
    <div class="row">
-    <p th:text="${timetableModel.datestamp}">2023-04-25</p>
+    <p th:text="${scheduleModel.datestamp}">2023-04-25</p>
    </div>
    <div class="row">
     <table class="table">
@@ -124,26 +126,26 @@
      </thead>
      <tbody>
       <tr
-       th:each="timetable, iterationStatus : ${#lists.sort(dayTimetable , new ua.com.foxminded.university.comparator.TimetableModelComparator())}"
-       th:if="${timetable.id}">
+       th:each="schedule, iterationStatus : ${#lists.sort(daySchedule , new ua.com.foxminded.university.comparator.ScheduleModelComparator())}"
+       th:if="${schedule.id}">
        <td
-        th:text="|${timetable.lessonOrder?.representation}#{tr.order-suffix}|">1</td>
-       <td th:text="${timetable.startTime}">8:00</td>
-       <td th:text="${timetable.endTime}">9:30</td>
-       <td th:text="${timetable.breakDuration?.toMinutes()}">15</td>
+        th:text="|${schedule.lessonOrder?.representation}#{tr.order-suffix}|">1</td>
+       <td th:text="${schedule.startTime}">8:00</td>
+       <td th:text="${schedule.endTime}">9:30</td>
+       <td th:text="${schedule.breakDuration?.toMinutes()}">15</td>
        <td></td>
-       <td th:text="${timetable.group?.name}">kr-85</td>
-       <td th:text="${timetable.course?.name}">Programming</td>
+       <td th:text="${schedule.group?.name}">kr-85</td>
+       <td th:text="${schedule.course?.name}">Programming</td>
        <td class="text-center">
 
         <button type="button" class="btn btn-outline-secondary btn-sm"
          data-bs-toggle="modal"
-         th:data-bs-target="|#editTimetable${timetable.id}|">
+         th:data-bs-target="|#editSchedule${schedule.id}|">
          Edit</button>
 
-        <form th:action="@{/timetables/update/__${timetable.id}__}"
-         method="post" th:object="${timetableModel}" class="modal fade"
-         th:id="|editTimetable${timetable.id}|" tabindex="-1"
+        <form th:action="@{/schedules/update/__${schedule.id}__}"
+         method="post" th:object="${scheduleModel}" class="modal fade"
+         th:id="|editSchedule${schedule.id}|" tabindex="-1"
          aria-labelledby="exampleModalLabel" aria-hidden="true">
          <div class="modal-dialog">
           <div class="modal-content">
@@ -220,13 +222,13 @@
        <td class="text-start">
         <button type="button" class="btn btn-outline-danger btn-sm"
          th:text="#{button.delete}" data-bs-toggle="modal"
-         id="deleteTimetableButton"
-         th:data-bs-target="|#delete${timetable.id}|">Delete</button>
+         id="deleteScheduleButton"
+         th:data-bs-target="|#delete${schedule.id}|">Delete</button>
 
         <form class="modal fade" method="post"
-         th:id="|delete${timetable.id}|"
-         th:action="@{/timetables/delete/__${timetable.id}__}"
-         th:object="${timetableModel}" data-bs-backdrop="static"
+         th:id="|delete${schedule.id}|"
+         th:action="@{/schedules/delete/__${schedule.id}__}"
+         th:object="${scheduleModel}" data-bs-backdrop="static"
          data-bs-keyboard="false" tabindex="-1"
          aria-labelledby="staticBackdropLabel" aria-hidden="true">
          <div class="modal-dialog">
@@ -241,8 +243,8 @@
              <div>
               <input type="hidden" th:field="*{datestamp}">
              </div>
-             <div th:text="#{timetables.delete-timetable}">The
-              timetable will be deleted</div>
+             <div th:text="#{schedules.delete-schedule}">The
+              schedule will be deleted</div>
             </div>
            </div>
            <div class="modal-footer">
@@ -261,6 +263,35 @@
     </table>
    </div>
   </div>
+  
+  <div class="col">
+  <table class="table">
+   <thead>
+    <tr>
+      <th scope="col" th:text="#{thead.lesson-order}">Lesson order</th>
+      <th scope="col" th:text="#{th.timing.lesson-duration}">Lesson duration</th>
+      <th scope="col" th:text="#{th.timing.break-duration}">Break duration</th>
+    </tr>
+   </thead>
+   <tbody>
+    <tr>
+     <th th:text="|T(ua.com.foxminded.university.entity.LessonOder.FIRST_LESSON).representation()tr.order-suffix|">1th</th>
+     <td>8:00 - 9:30</td>
+     <td>20</td>
+    </tr>
+    <tr>
+     <th th:text="|T(ua.com.foxminded.university.entity.LessonOder.SECOND_LESSON).representation()tr.order-suffix|">2th</th>
+     
+    
+    
+    </tr>
+   
+   
+   </tbody>
+  
+  </table>
+  
+  </div> 
  </div>
 
  <script

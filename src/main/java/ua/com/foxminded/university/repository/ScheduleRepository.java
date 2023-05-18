@@ -6,8 +6,8 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import ua.com.foxminded.university.entity.LessonOrder;
 import ua.com.foxminded.university.entity.ScheduleEntity;
-import ua.com.foxminded.university.model.LessonOrder;
 
 public interface ScheduleRepository extends JpaRepository<ScheduleEntity, Integer> {
     

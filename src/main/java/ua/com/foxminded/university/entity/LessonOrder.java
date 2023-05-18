@@ -1,4 +1,4 @@
-package ua.com.foxminded.university.model;
+package ua.com.foxminded.university.entity;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

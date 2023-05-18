@@ -2,8 +2,8 @@ package ua.com.foxminded.university.entitymother;
 
 import java.time.LocalDate;
 
+import ua.com.foxminded.university.entity.LessonOrder;
 import ua.com.foxminded.university.entity.ScheduleEntity;
-import ua.com.foxminded.university.model.LessonOrder;
 
 public class ScheduleEntityMother {
     

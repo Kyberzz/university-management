@@ -64,10 +64,10 @@ class ScheduleControllerTest {
         LocalDate localDate = LocalDate.now();
         ScheduleModel timetableModel = ScheduleModelMother.complete().build();
         mockMvc.perform(post("/timetables/create/timetable/{date}", localDate.toString())
-                    .flashAttr(TIMETABLE_MODEL_ATTRIBUTE, timetableModel))
+                    .flashAttr(SHCEDULE_MODEL_ATTRIBUTE, timetableModel))
                .andDo(print())
-               .andExpect(model().attributeExists(TIMETABLE_MODEL_ATTRIBUTE))
-               .andExpect(redirectedUrl(new StringBuffer().append(DAY_TIMETABLES_PATH)
+               .andExpect(model().attributeExists(SHCEDULE_MODEL_ATTRIBUTE))
+               .andExpect(redirectedUrl(new StringBuffer().append(DAY_SCHEDULE_PATH)
                                                           .append(localDate)
                                                           .append("?").toString()));
         verify(timetableServiceMock).create(isA(ScheduleModel.class));
@@ -76,9 +76,9 @@ class ScheduleControllerTest {
     @Test
     void delete_ShouldRedirectToList() throws Exception {
         mockMvc.perform(post("/timetables/delete/{id}", TIMETABLE_ID)
-                    .flashAttr(TIMETABLE_MODEL_ATTRIBUTE, timetableModel))
+                    .flashAttr(SHCEDULE_MODEL_ATTRIBUTE, timetableModel))
                .andDo(print())
-               .andExpect(redirectedUrl(new StringBuilder().append(DAY_TIMETABLES_PATH)
+               .andExpect(redirectedUrl(new StringBuilder().append(DAY_SCHEDULE_PATH)
                                                            .append(timetableModel.getDatestamp())
                                                            .append("?").toString()));
         verify(timetableServiceMock).deleteById(isA(Integer.class));
@@ -90,7 +90,7 @@ class ScheduleControllerTest {
                     .flashAttr("timetableModel", timetableModel))
                .andDo(print())
                .andExpect(redirectedUrl(
-                       new StringBuilder().append(DAY_TIMETABLES_PATH)
+                       new StringBuilder().append(DAY_SCHEDULE_PATH)
                                           .append(timetableModel.getDatestamp())
                                           .append("?").toString()));
         
@@ -104,11 +104,11 @@ class ScheduleControllerTest {
                .andDo(print())
                .andExpect(model().attributeExists(GROUPS_ATTRIBUTE, 
                                                   COURSES_ATTRIBUTE, 
-                                                  DAY_TIMETABLE_ATTRIBUTE,
-                                                  TIMETABLE_MODEL_ATTRIBUTE))
-               .andExpect(view().name(DAY_TIMETABLE_TEMPLATE));
+                                                  DAY_SCHEDULE_ATTRIBUTE,
+                                                  SHCEDULE_MODEL_ATTRIBUTE))
+               .andExpect(view().name(DAY_SCHEDULE_TEMPLATE));
         
-        verify(timetableServiceMock).getDayTimetalbe(isA(LocalDate.class));
+        verify(timetableServiceMock).getDaySdhedule(isA(LocalDate.class));
         verify(courseServiceMock).getAll();
         verify(groupServiceMock).getAll();
     }
@@ -139,11 +139,11 @@ class ScheduleControllerTest {
                .andExpect(status().isOk())
                .andExpect(model().attributeExists(GROUPS_ATTRIBUTE))
                .andExpect(model().attributeExists(COURSES_ATTRIBUTE))
-               .andExpect(model().attributeExists(MONTH_TIMETABLE_ATTRIBUTE))
-               .andExpect(model().attributeExists(TIMETABLE_MODEL_ATTRIBUTE))
-               .andExpect(MockMvcResultMatchers.view().name(TIMETABLES_LIST_TEMPLATE));
+               .andExpect(model().attributeExists(MONTH_SCHEDULE_ATTRIBUTE))
+               .andExpect(model().attributeExists(SHCEDULE_MODEL_ATTRIBUTE))
+               .andExpect(MockMvcResultMatchers.view().name(DAY_SCHEDULE_TEMPLATE));
         
-        verify(timetableServiceMock).getMonthTimetable(LocalDate.now());
+        verify(timetableServiceMock).getMonthSchedule(LocalDate.now());
         verify(courseServiceMock).getAll();
         verify(groupServiceMock).getAll();
     }

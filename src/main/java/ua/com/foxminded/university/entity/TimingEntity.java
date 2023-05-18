@@ -39,25 +39,41 @@ public class TimingEntity implements Serializable {
     @Column(name = "start_time")
     private LocalTime startTime;
     
-    @Column(name = "lesson_duration")
+    @Column(name = "first_lesson_duration")
     @Convert(converter = DurationConverter.class)
-    private Duration lessonDuration;
+    private Duration firstlessonDuration;
     
     @Column(name = "first_break_duration")
     @Convert(converter = DurationConverter.class)
     private Duration firstBreakDuration;
     
+    @Column(name = "second_lesson_duration")
+    @Convert(converter = DurationConverter.class)
+    private Duration secondLessonDuration;
+    
     @Column(name = "second_break_duration")
     @Convert(converter = DurationConverter.class)
     private Duration secondBreakDuration;
+    
+    @Column(name = "third_lesson_duration")
+    @Convert(converter = DurationConverter.class)
+    private Duration thirdLessonDuration;
     
     @Column(name = "third_break_duration")
     @Convert(converter = DurationConverter.class)
     private Duration thirdBreakDuration;
     
+    @Column(name = "fourth_lesson_duration")
+    @Convert(converter = DurationConverter.class)
+    private Duration fourthLessonDuration;
+    
     @Column(name = "fourth_break_duration")
     @Convert(converter = DurationConverter.class)
     private Duration fourthBreakDuration;
+    
+    @Column(name = "fifth_lesson_duration")
+    @Convert(converter = DurationConverter.class)
+    private Duration fifthLessonDuration;
     
     @OneToMany(mappedBy = "timing")
     @EqualsAndHashCode.Exclude

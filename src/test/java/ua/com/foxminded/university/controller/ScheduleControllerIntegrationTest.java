@@ -73,7 +73,7 @@ class ScheduleControllerIntegrationTest extends DefaultControllerTest {
     void create_ShouldAuthorizeCredentialsAndRedirect() throws Exception {
         
         mockMvc.perform(post("/timetables/create/timetable/{date}", localDate.toString())
-                    .flashAttr(TIMETABLE_MODEL_ATTRIBUTE, timetableModel)
+                    .flashAttr(SHCEDULE_MODEL_ATTRIBUTE, timetableModel)
                     .with(csrf()))
                .andExpect(authenticated().withRoles(Authority.ADMIN.toString()))
                .andExpect(status().is3xxRedirection());
@@ -84,7 +84,7 @@ class ScheduleControllerIntegrationTest extends DefaultControllerTest {
     void delete_ShouldAuthanticateCredentialsAndRedirect() throws Exception {
         timetableModel.setDatestamp(localDate);
         mockMvc.perform(post("/timetables/delete/{id}", timetableEntity.getId())
-                    .flashAttr(TIMETABLE_MODEL_ATTRIBUTE, timetableModel)
+                    .flashAttr(SHCEDULE_MODEL_ATTRIBUTE, timetableModel)
                     .with(csrf()))
                .andExpect(authenticated().withRoles(Authority.ADMIN.toString()))
                .andExpect(status().is3xxRedirection());
@@ -94,7 +94,7 @@ class ScheduleControllerIntegrationTest extends DefaultControllerTest {
     @WithUserDetails(AUTHORIZED_EMAIL)
     void update_ShouldAuthorizeCredentialsAndRedirect() throws Exception {
         mockMvc.perform(post("/timetables/update/{id}", timetableModel.getId())
-                    .flashAttr(TIMETABLE_MODEL_ATTRIBUTE, timetableModel)
+                    .flashAttr(SHCEDULE_MODEL_ATTRIBUTE, timetableModel)
                     .with(csrf()))
                .andExpect(authenticated().withRoles(Authority.ADMIN.toString()))
                .andExpect(status().is3xxRedirection());

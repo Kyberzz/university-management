@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import ua.com.foxminded.university.entity.LessonOrder;
 
 @Data
 @Builder
@@ -22,6 +23,7 @@ public class ScheduleModel implements Serializable {
     private LessonOrder lessonOrder;
     private String description;
     
+    @ToString.Exclude
     private TimingModel timing;
     
     @ToString.Exclude

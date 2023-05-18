@@ -19,7 +19,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import ua.com.foxminded.university.model.LessonOrder;
 
 @Entity
 @Table(name = "schedules", schema = "university")

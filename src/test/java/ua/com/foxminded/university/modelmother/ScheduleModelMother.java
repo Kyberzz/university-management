@@ -2,7 +2,7 @@ package ua.com.foxminded.university.modelmother;
 
 import static ua.com.foxminded.university.entitymother.ScheduleEntityMother.*;
 
-import ua.com.foxminded.university.model.LessonOrder;
+import ua.com.foxminded.university.entity.LessonOrder;
 import ua.com.foxminded.university.model.ScheduleModel;
 
 public class ScheduleModelMother {

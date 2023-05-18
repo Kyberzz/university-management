@@ -12,8 +12,8 @@ public interface ScheduleService extends GenericService<ScheduleModel> {
     
     public LocalDate moveBack(LocalDate date);
     
-    public List<List<List<ScheduleModel>>> getMonthTimetable(LocalDate date) 
+    public List<List<List<ScheduleModel>>> getMonthSchedule(LocalDate date) 
             throws ServiceException;
     
-    public List<ScheduleModel> getDayTimetalbe(LocalDate date) throws ServiceException;
+    public List<ScheduleModel> getDaySdhedule(LocalDate date) throws ServiceException;
 }

@@ -26,11 +26,11 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 
+import ua.com.foxminded.university.entity.LessonOrder;
 import ua.com.foxminded.university.entity.ScheduleEntity;
 import ua.com.foxminded.university.entitymother.ScheduleEntityMother;
 import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.GroupModel;
-import ua.com.foxminded.university.model.LessonOrder;
 import ua.com.foxminded.university.model.ScheduleModel;
 import ua.com.foxminded.university.modelmother.GroupModelMother;
 import ua.com.foxminded.university.modelmother.ScheduleModelMother;
@@ -138,7 +138,7 @@ class ShceduleServiceImplTest {
         .thenReturn(timetableEntities);
         when(modelMapperMock.map(timetableEntities, ScheduleServiceImpl.SCHEDULE_MODEL_LIST_TYPE))
         .thenReturn(timetableModels);
-        timetableSerivice.getMonthTimetable(LocalDate.now());
+        timetableSerivice.getMonthSchedule(LocalDate.now());
         verify(modelMapperMock, atLeastOnce()).map(timetableEntities, ScheduleServiceImpl.SCHEDULE_MODEL_LIST_TYPE);
     }
     
@@ -148,7 +148,7 @@ class ShceduleServiceImplTest {
             .thenReturn(timetableEntities);
         when(modelMapperMock.map(timetableEntities, ScheduleServiceImpl.SCHEDULE_MODEL_LIST_TYPE))
             .thenReturn(timetableModels);
-        timetableSerivice.getDayTimetalbe(LocalDate.now());
+        timetableSerivice.getDaySdhedule(LocalDate.now());
         verify(modelMapperMock).map(timetableEntities, ScheduleServiceImpl.SCHEDULE_MODEL_LIST_TYPE);
     }
     

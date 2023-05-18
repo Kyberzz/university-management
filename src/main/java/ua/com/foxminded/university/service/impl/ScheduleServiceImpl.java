@@ -102,7 +102,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
     
     @Override
-    public List<List<List<ScheduleModel>>> getMonthTimetable(LocalDate date) 
+    public List<List<List<ScheduleModel>>> getMonthSchedule(LocalDate date) 
             throws ServiceException {
         
         List<List<List<ScheduleModel>>> monthTimetable = new ArrayList<>();
@@ -117,7 +117,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     
     
     @Override
-    public List<ScheduleModel> getDayTimetalbe(LocalDate date) throws ServiceException {
+    public List<ScheduleModel> getDaySdhedule(LocalDate date) throws ServiceException {
         try {
             List<ScheduleEntity> entities = scheduleRepository.findByDatestamp(date);
             List<ScheduleModel> models =  modelMapper.map(entities, SCHEDULE_MODEL_LIST_TYPE);
@@ -152,7 +152,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         List<ScheduleModel> dayTimetables;
         
         for (int i = 0; i < DayOfWeek.values().length; i++) {
-            dayTimetables = getDayTimetalbe(startDayOfWeek.plusDays(i));
+            dayTimetables = getDaySdhedule(startDayOfWeek.plusDays(i));
             weekTimetables.add(dayTimetables);
         }
         return weekTimetables;

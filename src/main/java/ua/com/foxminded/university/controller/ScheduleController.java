@@ -24,119 +24,120 @@ import ua.com.foxminded.university.service.ScheduleService;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/timetables")
+@RequestMapping("/schedules")
 public class ScheduleController extends DefaultController {
     
-    public static final String TIMETABLES_PATH = "/timetables/";
-    public static final String DAY_TIMETABLE_TEMPLATE = "timetables/day-timetable";
+    public static final String SHEDULES_PATH = "/schedules/";
+    public static final String MONTH_SHEDULE_TEMPLATE = "month-schedule";
+    public static final String MONTH_SHEDULE_TEMPLATE_PATH = "schedules/month-schedule";
     public static final String COURSES_ATTRIBUTE = "courses";
     public static final String GROUPS_ATTRIBUTE = "groups";
-    public static final String DAY_TIMETABLES_PATH = "/timetables/day-timetables/";
-    public static final String TIMETABLES_LIST_TEMPLATE = "timetables/list";
-    public static final String TIMETABLE_MODEL_ATTRIBUTE = "timetableModel";
-    public static final String DAY_TIMETABLE_ATTRIBUTE = "dayTimetable";
-    public static final String MONTH_TIMETABLE_ATTRIBUTE = "monthTimetable";
+    public static final String DAY_SCHEDULE_PATH = "/schedules/day-schedules/";
+    public static final String DAY_SCHEDULE_TEMPLATE = "schedules/day-schedule";
+    public static final String SHCEDULE_MODEL_ATTRIBUTE = "scheduleModel";
+    public static final String DAY_SCHEDULE_ATTRIBUTE = "daySchedule";
+    public static final String MONTH_SCHEDULE_ATTRIBUTE = "monthSchedule";
     
-    private final ScheduleService timetableService;
+    private final ScheduleService scheduleService;
     private final CourseService courseService;
     private final GroupService groupService;
 
-    @PostMapping("/create/timetable/{date}")
+    @PostMapping("/create/schedule/{date}")
     public String create(@PathVariable String date, 
-                         @ModelAttribute ScheduleModel timetableModel, 
+                         @ModelAttribute ScheduleModel scheduleModel, 
                          Model model) throws ServiceException {
-        timetableModel.setDatestamp(LocalDate.parse(date));
-        timetableService.create(timetableModel);
+        scheduleModel.setDatestamp(LocalDate.parse(date));
+        scheduleService.create(scheduleModel);
         
         return new StringBuilder().append(REDIRECT_KEY_WORD)
-                                  .append(DAY_TIMETABLES_PATH)
-                                  .append(timetableModel.getDatestamp())
+                                  .append(DAY_SCHEDULE_PATH)
+                                  .append(scheduleModel.getDatestamp())
                                   .append("?").toString();
     }
     
-    @PostMapping("/delete/{timetableId}")
-    public String delete(@ModelAttribute ScheduleModel timetableModel, 
-                         @PathVariable int timetableId) throws ServiceException {
-        timetableService.deleteById(timetableId);
+    @PostMapping("/delete/{scheduleId}")
+    public String delete(@ModelAttribute ScheduleModel scheduleModel, 
+                         @PathVariable int scheduleId) throws ServiceException {
+        scheduleService.deleteById(scheduleId);
         return new StringBuilder().append(REDIRECT_KEY_WORD)
-                                  .append(DAY_TIMETABLES_PATH)
-                                  .append(timetableModel.getDatestamp())
+                                  .append(DAY_SCHEDULE_PATH)
+                                  .append(scheduleModel.getDatestamp())
                                   .append("?").toString();
     }
     
     @PostMapping("/update/{id}")
     public String update(@PathVariable int id, 
-                         @ModelAttribute ScheduleModel timetableModel, 
+                         @ModelAttribute ScheduleModel scheduleModel, 
                          Model model) throws ServiceException {
-        timetableModel.setId(id);
-        timetableService.update(timetableModel);
+        scheduleModel.setId(id);
+        scheduleService.update(scheduleModel);
         return new StringBuilder().append(REDIRECT_KEY_WORD)
-                                  .append(DAY_TIMETABLES_PATH)
-                                  .append(timetableModel.getDatestamp())
+                                  .append(DAY_SCHEDULE_PATH)
+                                  .append(scheduleModel.getDatestamp())
                                   .append("?")
                                   .toString();
     }
     
-    @GetMapping("/day-timetables/{date}")
-    public String getDayTimetable(@PathVariable String date,
-                                  Model model) throws ServiceException {
+    @GetMapping("/day-schedule/{date}")
+    public String getDaySchedule(@PathVariable String date,
+                                 Model model) throws ServiceException {
         LocalDate localDate = LocalDate.parse(date);
-        List<ScheduleModel> dayTimetable = timetableService.getDayTimetalbe(localDate);
-        ScheduleModel timetableModel = new ScheduleModel();
-        timetableModel.setDatestamp(localDate);
-        timetableModel.setCourse(new CourseModel());
-        timetableModel.getCourse().setTeachers(new HashSet<>());
-        timetableModel.getCourse().getTeachers().add(new TeacherModel());
+        List<ScheduleModel> daySchedule = scheduleService.getDaySdhedule(localDate);
+        ScheduleModel scheduleModel = new ScheduleModel();
+        scheduleModel.setDatestamp(localDate);
+        scheduleModel.setCourse(new CourseModel());
+        scheduleModel.getCourse().setTeachers(new HashSet<>());
+        scheduleModel.getCourse().getTeachers().add(new TeacherModel());
         List<CourseModel> courses = courseService.getAll();
         List<GroupModel> groups = groupService.getAll();
         
         model.addAttribute(GROUPS_ATTRIBUTE, groups);
         model.addAttribute(COURSES_ATTRIBUTE, courses);
-        model.addAttribute(DAY_TIMETABLE_ATTRIBUTE, dayTimetable);
-        model.addAttribute(TIMETABLE_MODEL_ATTRIBUTE, timetableModel);
-        return DAY_TIMETABLE_TEMPLATE;
+        model.addAttribute(DAY_SCHEDULE_ATTRIBUTE, daySchedule);
+        model.addAttribute(SHCEDULE_MODEL_ATTRIBUTE, scheduleModel);
+        return DAY_SCHEDULE_TEMPLATE;
     }
     
     @GetMapping(value = "/{date}/back")
     public String back(@PathVariable String date) {
         LocalDate localDate = LocalDate.parse(date);
-        LocalDate datestamp = timetableService.moveBack(localDate);
+        LocalDate datestamp = scheduleService.moveBack(localDate);
         return new StringBuilder().append(REDIRECT_KEY_WORD)
-                                  .append(TIMETABLES_PATH)
+                                  .append(SHEDULES_PATH)
                                   .append(datestamp)
                                   .append(SLASH)
-                                  .append(LIST_TEMPLATE)
+                                  .append(MONTH_SHEDULE_TEMPLATE)
                                   .append("?").toString();
     }
     
     @GetMapping(value = "/{date}/next")
     public String next(@PathVariable String date) {
         LocalDate localDate = LocalDate.parse(date);
-        LocalDate datestamp = timetableService.moveForward(localDate);
+        LocalDate datestamp = scheduleService.moveForward(localDate);
         return new StringBuilder().append(REDIRECT_KEY_WORD)
-                                  .append(TIMETABLES_PATH)
+                                  .append(SHEDULES_PATH)
                                   .append(datestamp)
                                   .append(SLASH)
-                                  .append(LIST_TEMPLATE)
+                                  .append(MONTH_SHEDULE_TEMPLATE)
                                   .append("?").toString();
     }
     
-    @GetMapping(value = "/{date}/list")
-    public String list(@PathVariable String date,
-                       Model model) throws ServiceException {
+    @GetMapping("/{date}/month-schedule")
+    public String getMonthSchedule(@PathVariable String date,
+                                   Model model) throws ServiceException {
         LocalDate datestamp = LocalDate.parse(date);
-        List<List<List<ScheduleModel>>> monthTimetable = timetableService
-                .getMonthTimetable(datestamp);
-        ScheduleModel timetableModel = ScheduleModel.builder()
+        List<List<List<ScheduleModel>>> monthSchedule = scheduleService
+                .getMonthSchedule(datestamp);
+        ScheduleModel scheduleModel = ScheduleModel.builder()
                                                       .datestamp(datestamp).build();
-        timetableModel.setDatestamp(datestamp);
+        scheduleModel.setDatestamp(datestamp);
         List<CourseModel> courses = courseService.getAll();
         List<GroupModel> groups = groupService.getAll();
         
-        model.addAttribute(TIMETABLE_MODEL_ATTRIBUTE, timetableModel);
+        model.addAttribute(SHCEDULE_MODEL_ATTRIBUTE, scheduleModel);
         model.addAttribute(GROUPS_ATTRIBUTE, groups);
         model.addAttribute(COURSES_ATTRIBUTE, courses);
-        model.addAttribute(MONTH_TIMETABLE_ATTRIBUTE, monthTimetable);
-        return TIMETABLES_LIST_TEMPLATE;
+        model.addAttribute(MONTH_SCHEDULE_ATTRIBUTE, monthSchedule);
+        return MONTH_SHEDULE_TEMPLATE_PATH;
     }
 }

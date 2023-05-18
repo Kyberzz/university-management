@@ -54,9 +54,13 @@ insert into university.students(user_id, group_id) values(14, 2);
 insert into university.students(user_id, group_id) values(15, 2);
 insert into university.students(user_id, group_id) values(16, 2);
 
-insert into university.timings(start_time, lesson_duration, first_break_duration, 
-    second_break_duration, third_break_duration, fourth_break_duration)
-    values ('08:00', 90, 15, 45, 20, 10);
+insert into university.timings(start_time, 
+                               first_lesson_duration, first_break_duration, 
+                               second_lesson_duration, second_break_duration, 
+                               third_lesson_duration, third_break_duration,
+                               fourth_lesson_duration, fourth_break_duration,
+                               fifth_lesson_duration)
+    values ('08:00', 90, 15, 90, 45, 90, 20, 90, 10, 90);
 
 insert into university.schedules(lesson_order, datestamp, group_id, course_id, timing_id)
     values('FIRST_LESSON', '2023-04-21', 1, 1, 1);

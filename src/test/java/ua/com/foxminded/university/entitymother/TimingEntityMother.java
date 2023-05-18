@@ -16,10 +16,14 @@ public class TimingEntityMother {
     
     public static TimingEntity.TimingEntityBuilder complete() {
         return TimingEntity.builder().startTime(START_TIME)
-                                     .lessonDuration(LESSON_DURATION)
+                                     .firstlessonDuration(LESSON_DURATION)
                                      .firstBreakDuration(FIRST_BREAK_DURATION)
+                                     .secondLessonDuration(LESSON_DURATION)
                                      .secondBreakDuration(SECOND_BREAK_DURATION)
+                                     .thirdLessonDuration(LESSON_DURATION)
                                      .thirdBreakDuration(THIRD_BREAK_DURATION)
-                                     .fourthBreakDuration(FOURTH_BREAK_DURATION);
+                                     .fourthLessonDuration(LESSON_DURATION)
+                                     .fourthBreakDuration(FOURTH_BREAK_DURATION)
+                                     .fifthLessonDuration(LESSON_DURATION);
     }
 }
