@@ -2,12 +2,12 @@ package ua.com.foxminded.university.comparator;
 
 import java.util.Comparator;
 
-import ua.com.foxminded.university.model.ScheduleModel;
+import ua.com.foxminded.university.model.LessonModel;
 
-public class ScheduleModelComparator implements Comparator<ScheduleModel> {
+public class ScheduleModelComparator implements Comparator<LessonModel> {
 
     @Override
-    public int compare(ScheduleModel firstSchedule, ScheduleModel secondScheule) {
+    public int compare(LessonModel firstSchedule, LessonModel secondScheule) {
         if (compareByDate(firstSchedule, secondScheule) == 0 ) {
             return Integer.compare(firstSchedule.getLessonOrder().getRepresentation(), 
                                    secondScheule.getLessonOrder().getRepresentation());
@@ -16,7 +16,7 @@ public class ScheduleModelComparator implements Comparator<ScheduleModel> {
         }
     }
     
-    private int compareByDate(ScheduleModel one, ScheduleModel another) {
+    private int compareByDate(LessonModel one, LessonModel another) {
         return one.getDatestamp().compareTo(another.getDatestamp());
     }
 }

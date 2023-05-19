@@ -14,7 +14,7 @@ import ua.com.foxminded.university.entity.LessonOrder;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ScheduleModel implements Serializable {
+public class LessonModel implements Serializable {
     
     private static final long serialVersionUID = 1L;
 

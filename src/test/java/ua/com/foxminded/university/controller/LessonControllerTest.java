@@ -1,6 +1,6 @@
 package ua.com.foxminded.university.controller;
 
-import static ua.com.foxminded.university.controller.ScheduleController.*;
+import static ua.com.foxminded.university.controller.LessonController.*;
 
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.verify;
@@ -26,19 +26,19 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import ua.com.foxminded.university.model.ScheduleModel;
-import ua.com.foxminded.university.modelmother.ScheduleModelMother;
+import ua.com.foxminded.university.model.LessonModel;
+import ua.com.foxminded.university.modelmother.LessonModelMother;
 import ua.com.foxminded.university.service.CourseService;
 import ua.com.foxminded.university.service.GroupService;
-import ua.com.foxminded.university.service.ScheduleService;
+import ua.com.foxminded.university.service.LessonService;
 
 @ExtendWith(SpringExtension.class)
-class ScheduleControllerTest {
+class LessonControllerTest {
     
     public static final int TIMETABLE_ID = 1;
     
     @MockBean
-    private ScheduleService timetableServiceMock;
+    private LessonService timetableServiceMock;
     
     @MockBean
     private CourseService courseServiceMock;
@@ -47,38 +47,38 @@ class ScheduleControllerTest {
     private GroupService groupServiceMock;
     
     private MockMvc mockMvc;
-    private ScheduleModel timetableModel;
+    private LessonModel timetableModel;
     
     @BeforeEach
     void setup() {
         mockMvc = MockMvcBuilders.standaloneSetup(
-                new ScheduleController(timetableServiceMock, 
+                new LessonController(timetableServiceMock, 
                                         courseServiceMock, 
                                         groupServiceMock)).build();
 
-        timetableModel = ScheduleModelMother.complete().build();
+        timetableModel = LessonModelMother.complete().build();
     }
     
     @Test
     void create_ShouldRedirectToGetDayTimetable() throws Exception {
         LocalDate localDate = LocalDate.now();
-        ScheduleModel timetableModel = ScheduleModelMother.complete().build();
+        LessonModel timetableModel = LessonModelMother.complete().build();
         mockMvc.perform(post("/timetables/create/timetable/{date}", localDate.toString())
-                    .flashAttr(SHCEDULE_MODEL_ATTRIBUTE, timetableModel))
+                    .flashAttr(LESSON_MODEL_ATTRIBUTE, timetableModel))
                .andDo(print())
-               .andExpect(model().attributeExists(SHCEDULE_MODEL_ATTRIBUTE))
-               .andExpect(redirectedUrl(new StringBuffer().append(DAY_SCHEDULE_PATH)
+               .andExpect(model().attributeExists(LESSON_MODEL_ATTRIBUTE))
+               .andExpect(redirectedUrl(new StringBuffer().append(DAY_LESSONS_PATH)
                                                           .append(localDate)
                                                           .append("?").toString()));
-        verify(timetableServiceMock).create(isA(ScheduleModel.class));
+        verify(timetableServiceMock).create(isA(LessonModel.class));
     }
     
     @Test
     void delete_ShouldRedirectToList() throws Exception {
         mockMvc.perform(post("/timetables/delete/{id}", TIMETABLE_ID)
-                    .flashAttr(SHCEDULE_MODEL_ATTRIBUTE, timetableModel))
+                    .flashAttr(LESSON_MODEL_ATTRIBUTE, timetableModel))
                .andDo(print())
-               .andExpect(redirectedUrl(new StringBuilder().append(DAY_SCHEDULE_PATH)
+               .andExpect(redirectedUrl(new StringBuilder().append(DAY_LESSONS_PATH)
                                                            .append(timetableModel.getDatestamp())
                                                            .append("?").toString()));
         verify(timetableServiceMock).deleteById(isA(Integer.class));
@@ -90,11 +90,11 @@ class ScheduleControllerTest {
                     .flashAttr("timetableModel", timetableModel))
                .andDo(print())
                .andExpect(redirectedUrl(
-                       new StringBuilder().append(DAY_SCHEDULE_PATH)
+                       new StringBuilder().append(DAY_LESSONS_PATH)
                                           .append(timetableModel.getDatestamp())
                                           .append("?").toString()));
         
-        verify(timetableServiceMock).update(isA(ScheduleModel.class));
+        verify(timetableServiceMock).update(isA(LessonModel.class));
     }
     
     @Test
@@ -104,11 +104,11 @@ class ScheduleControllerTest {
                .andDo(print())
                .andExpect(model().attributeExists(GROUPS_ATTRIBUTE, 
                                                   COURSES_ATTRIBUTE, 
-                                                  DAY_SCHEDULE_ATTRIBUTE,
-                                                  SHCEDULE_MODEL_ATTRIBUTE))
-               .andExpect(view().name(DAY_SCHEDULE_TEMPLATE));
+                                                  DAY_LESSONS_ATTRIBUTE,
+                                                  LESSON_MODEL_ATTRIBUTE))
+               .andExpect(view().name(DAY_LESSONS_TEMPLATE));
         
-        verify(timetableServiceMock).getDaySdhedule(isA(LocalDate.class));
+        verify(timetableServiceMock).getDayLessons(isA(LocalDate.class));
         verify(courseServiceMock).getAll();
         verify(groupServiceMock).getAll();
     }
@@ -139,11 +139,11 @@ class ScheduleControllerTest {
                .andExpect(status().isOk())
                .andExpect(model().attributeExists(GROUPS_ATTRIBUTE))
                .andExpect(model().attributeExists(COURSES_ATTRIBUTE))
-               .andExpect(model().attributeExists(MONTH_SCHEDULE_ATTRIBUTE))
-               .andExpect(model().attributeExists(SHCEDULE_MODEL_ATTRIBUTE))
-               .andExpect(MockMvcResultMatchers.view().name(DAY_SCHEDULE_TEMPLATE));
+               .andExpect(model().attributeExists(MONTH_LESSONS_ATTRIBUTE))
+               .andExpect(model().attributeExists(LESSON_MODEL_ATTRIBUTE))
+               .andExpect(MockMvcResultMatchers.view().name(DAY_LESSONS_TEMPLATE));
         
-        verify(timetableServiceMock).getMonthSchedule(LocalDate.now());
+        verify(timetableServiceMock).getMonthLessons(LocalDate.now());
         verify(courseServiceMock).getAll();
         verify(groupServiceMock).getAll();
     }

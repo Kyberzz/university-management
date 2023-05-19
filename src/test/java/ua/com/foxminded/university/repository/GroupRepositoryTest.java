@@ -27,7 +27,7 @@ import ua.com.foxminded.university.entity.GroupEntity;
 class GroupRepositoryTest {
     
     private static final int STUDENTS_QUANTITY = 1;
-    private static final int SCHEDULES_QUANTITY = 1;
+    private static final int LESSONS_QUANTITY = 1;
     private static final int GROUP_ID = 101;
     
     @Autowired
@@ -37,13 +37,13 @@ class GroupRepositoryTest {
     void getGroupRelationsById_ShouldReturnGroupWithItsAllRelations() {
         GroupEntity receivedGroup = groupRepository.getGroupRelationsById(GROUP_ID);
         assertEquals(STUDENTS_QUANTITY, receivedGroup.getStudents().size());
-        assertEquals(SCHEDULES_QUANTITY, receivedGroup.getSchedules().size());
+        assertEquals(LESSONS_QUANTITY, receivedGroup.getLessons().size());
     }
 
     @Test
     void findTimetablesById_ShouldReturnTimetalbesOwnedByGroup() {
         GroupEntity receivedGroup = groupRepository.findTimetablesById(GROUP_ID);
-        assertEquals(SCHEDULES_QUANTITY, receivedGroup.getSchedules().size());
+        assertEquals(LESSONS_QUANTITY, receivedGroup.getLessons().size());
     }
 
     @Test

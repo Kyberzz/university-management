@@ -17,91 +17,91 @@ import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.CourseModel;
 import ua.com.foxminded.university.model.GroupModel;
 import ua.com.foxminded.university.model.TeacherModel;
-import ua.com.foxminded.university.model.ScheduleModel;
+import ua.com.foxminded.university.model.LessonModel;
 import ua.com.foxminded.university.service.CourseService;
 import ua.com.foxminded.university.service.GroupService;
-import ua.com.foxminded.university.service.ScheduleService;
+import ua.com.foxminded.university.service.LessonService;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/schedules")
-public class ScheduleController extends DefaultController {
+@RequestMapping("/lessons")
+public class LessonController extends DefaultController {
     
-    public static final String SHEDULES_PATH = "/schedules/";
-    public static final String MONTH_SHEDULE_TEMPLATE = "month-schedule";
-    public static final String MONTH_SHEDULE_TEMPLATE_PATH = "schedules/month-schedule";
+    public static final String SHEDULES_PATH = "/lessons/";
+    public static final String MONTH_SHEDULE_TEMPLATE = "month-lessons";
+    public static final String MONTH_SHEDULE_TEMPLATE_PATH = "lessons/month-lessons";
     public static final String COURSES_ATTRIBUTE = "courses";
     public static final String GROUPS_ATTRIBUTE = "groups";
-    public static final String DAY_SCHEDULE_PATH = "/schedules/day-schedules/";
-    public static final String DAY_SCHEDULE_TEMPLATE = "schedules/day-schedule";
-    public static final String SHCEDULE_MODEL_ATTRIBUTE = "scheduleModel";
-    public static final String DAY_SCHEDULE_ATTRIBUTE = "daySchedule";
-    public static final String MONTH_SCHEDULE_ATTRIBUTE = "monthSchedule";
+    public static final String DAY_LESSONS_PATH = "/lessons/day-lessons/";
+    public static final String DAY_LESSONS_TEMPLATE = "lessons/day-lesson";
+    public static final String LESSON_MODEL_ATTRIBUTE = "lessonModel";
+    public static final String DAY_LESSONS_ATTRIBUTE = "dayLesson";
+    public static final String MONTH_LESSONS_ATTRIBUTE = "monthLessons";
     
-    private final ScheduleService scheduleService;
+    private final LessonService lessonService;
     private final CourseService courseService;
     private final GroupService groupService;
 
-    @PostMapping("/create/schedule/{date}")
+    @PostMapping("/create/{date}/lesson")
     public String create(@PathVariable String date, 
-                         @ModelAttribute ScheduleModel scheduleModel, 
+                         @ModelAttribute LessonModel lessonModel, 
                          Model model) throws ServiceException {
-        scheduleModel.setDatestamp(LocalDate.parse(date));
-        scheduleService.create(scheduleModel);
+        lessonModel.setDatestamp(LocalDate.parse(date));
+        lessonService.create(lessonModel);
         
         return new StringBuilder().append(REDIRECT_KEY_WORD)
-                                  .append(DAY_SCHEDULE_PATH)
-                                  .append(scheduleModel.getDatestamp())
+                                  .append(DAY_LESSONS_PATH)
+                                  .append(lessonModel.getDatestamp())
                                   .append("?").toString();
     }
     
-    @PostMapping("/delete/{scheduleId}")
-    public String delete(@ModelAttribute ScheduleModel scheduleModel, 
-                         @PathVariable int scheduleId) throws ServiceException {
-        scheduleService.deleteById(scheduleId);
+    @PostMapping("/delete/{lessonId}")
+    public String delete(@ModelAttribute LessonModel lessonModel, 
+                         @PathVariable int lessonId) throws ServiceException {
+        lessonService.deleteById(lessonId);
         return new StringBuilder().append(REDIRECT_KEY_WORD)
-                                  .append(DAY_SCHEDULE_PATH)
-                                  .append(scheduleModel.getDatestamp())
+                                  .append(DAY_LESSONS_PATH)
+                                  .append(lessonModel.getDatestamp())
                                   .append("?").toString();
     }
     
-    @PostMapping("/update/{id}")
-    public String update(@PathVariable int id, 
-                         @ModelAttribute ScheduleModel scheduleModel, 
+    @PostMapping("/update/{lessonId}")
+    public String update(@PathVariable int lessonId, 
+                         @ModelAttribute LessonModel lessonModel, 
                          Model model) throws ServiceException {
-        scheduleModel.setId(id);
-        scheduleService.update(scheduleModel);
+        lessonModel.setId(lessonId);
+        lessonService.update(lessonModel);
         return new StringBuilder().append(REDIRECT_KEY_WORD)
-                                  .append(DAY_SCHEDULE_PATH)
-                                  .append(scheduleModel.getDatestamp())
+                                  .append(DAY_LESSONS_PATH)
+                                  .append(lessonModel.getDatestamp())
                                   .append("?")
                                   .toString();
     }
     
-    @GetMapping("/day-schedule/{date}")
-    public String getDaySchedule(@PathVariable String date,
-                                 Model model) throws ServiceException {
+    @GetMapping("/{date}/day-lessons")
+    public String getDayLessons(@PathVariable String date,
+                                Model model) throws ServiceException {
         LocalDate localDate = LocalDate.parse(date);
-        List<ScheduleModel> daySchedule = scheduleService.getDaySdhedule(localDate);
-        ScheduleModel scheduleModel = new ScheduleModel();
-        scheduleModel.setDatestamp(localDate);
-        scheduleModel.setCourse(new CourseModel());
-        scheduleModel.getCourse().setTeachers(new HashSet<>());
-        scheduleModel.getCourse().getTeachers().add(new TeacherModel());
+        List<LessonModel> daylessons = lessonService.getDayLessons(localDate);
+        LessonModel lessonModel = new LessonModel();
+        lessonModel.setDatestamp(localDate);
+        lessonModel.setCourse(new CourseModel());
+        lessonModel.getCourse().setTeachers(new HashSet<>());
+        lessonModel.getCourse().getTeachers().add(new TeacherModel());
         List<CourseModel> courses = courseService.getAll();
         List<GroupModel> groups = groupService.getAll();
         
         model.addAttribute(GROUPS_ATTRIBUTE, groups);
         model.addAttribute(COURSES_ATTRIBUTE, courses);
-        model.addAttribute(DAY_SCHEDULE_ATTRIBUTE, daySchedule);
-        model.addAttribute(SHCEDULE_MODEL_ATTRIBUTE, scheduleModel);
-        return DAY_SCHEDULE_TEMPLATE;
+        model.addAttribute(DAY_LESSONS_ATTRIBUTE, daylessons);
+        model.addAttribute(LESSON_MODEL_ATTRIBUTE, lessonModel);
+        return DAY_LESSONS_TEMPLATE;
     }
     
     @GetMapping(value = "/{date}/back")
     public String back(@PathVariable String date) {
         LocalDate localDate = LocalDate.parse(date);
-        LocalDate datestamp = scheduleService.moveBack(localDate);
+        LocalDate datestamp = lessonService.moveBack(localDate);
         return new StringBuilder().append(REDIRECT_KEY_WORD)
                                   .append(SHEDULES_PATH)
                                   .append(datestamp)
@@ -113,7 +113,7 @@ public class ScheduleController extends DefaultController {
     @GetMapping(value = "/{date}/next")
     public String next(@PathVariable String date) {
         LocalDate localDate = LocalDate.parse(date);
-        LocalDate datestamp = scheduleService.moveForward(localDate);
+        LocalDate datestamp = lessonService.moveForward(localDate);
         return new StringBuilder().append(REDIRECT_KEY_WORD)
                                   .append(SHEDULES_PATH)
                                   .append(datestamp)
@@ -122,22 +122,21 @@ public class ScheduleController extends DefaultController {
                                   .append("?").toString();
     }
     
-    @GetMapping("/{date}/month-schedule")
-    public String getMonthSchedule(@PathVariable String date,
-                                   Model model) throws ServiceException {
+    @GetMapping("/{date}/month-lessons")
+    public String getMonthLessons(@PathVariable String date,
+                                  Model model) throws ServiceException {
         LocalDate datestamp = LocalDate.parse(date);
-        List<List<List<ScheduleModel>>> monthSchedule = scheduleService
-                .getMonthSchedule(datestamp);
-        ScheduleModel scheduleModel = ScheduleModel.builder()
+        List<List<List<LessonModel>>> monthLessons = lessonService.getMonthLessons(datestamp);
+        LessonModel lessonModel = LessonModel.builder()
                                                       .datestamp(datestamp).build();
-        scheduleModel.setDatestamp(datestamp);
+        lessonModel.setDatestamp(datestamp);
         List<CourseModel> courses = courseService.getAll();
         List<GroupModel> groups = groupService.getAll();
         
-        model.addAttribute(SHCEDULE_MODEL_ATTRIBUTE, scheduleModel);
+        model.addAttribute(LESSON_MODEL_ATTRIBUTE, lessonModel);
         model.addAttribute(GROUPS_ATTRIBUTE, groups);
         model.addAttribute(COURSES_ATTRIBUTE, courses);
-        model.addAttribute(MONTH_SCHEDULE_ATTRIBUTE, monthSchedule);
+        model.addAttribute(MONTH_LESSONS_ATTRIBUTE, monthLessons);
         return MONTH_SHEDULE_TEMPLATE_PATH;
     }
 }

@@ -3,6 +3,7 @@ package ua.com.foxminded.university.entity;
 import java.io.Serializable;
 import java.time.LocalDate;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -19,12 +20,12 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Entity
-@Table(name = "schedules", schema = "university")
+@Table(name = "lessons", schema = "university")
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ScheduleEntity implements Serializable {
+public class LessonEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
     
@@ -34,6 +35,9 @@ public class ScheduleEntity implements Serializable {
     private LocalDate datestamp;
     private String description;
     
+    @Column(name = "lesson_order")
+    private Integer lessonOrder;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "group_id")
     @ToString.Exclude
@@ -45,7 +49,7 @@ public class ScheduleEntity implements Serializable {
     private CourseEntity course;
     
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "timing_id")
+    @JoinColumn(name = "timetable_id")
     @ToString.Exclude
-    private TimingEntity timing;
+    private TimetableEntity timetableEntity;
 }

@@ -3,6 +3,7 @@ package ua.com.foxminded.university.entity;
 import java.io.Serializable;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -32,18 +33,18 @@ public class TimetableEntity implements Serializable {
     private Integer id;
     private String name;
     
-    @OneToMany(mappedBy = "timetable")
+    @OneToMany(mappedBy = "timetable", cascade = CascadeType.REMOVE)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private Set<TimingEntity> timings;
+    private Set<LessonTimingEntity> lessonsTiming;
     
-    public void addTiming(TimingEntity timing) {
-        this.timings.add(timing);
+    public void addTiming(LessonTimingEntity timing) {
+        this.lessonsTiming.add(timing);
         timing.setTimetable(this);
     }
     
-    public void removeTiming(TimingEntity timing) {
-        this.timings.remove(timing);
+    public void removeTiming(LessonTimingEntity timing) {
+        this.lessonsTiming.remove(timing);
         timing.setTimetable(null);
     }
 }

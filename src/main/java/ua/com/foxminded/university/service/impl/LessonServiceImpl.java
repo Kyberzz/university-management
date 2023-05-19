@@ -14,16 +14,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
-import ua.com.foxminded.university.entity.ScheduleEntity;
+import ua.com.foxminded.university.entity.LessonEntity;
 import ua.com.foxminded.university.exception.ServiceException;
-import ua.com.foxminded.university.model.ScheduleModel;
-import ua.com.foxminded.university.repository.ScheduleRepository;
-import ua.com.foxminded.university.service.ScheduleService;
+import ua.com.foxminded.university.model.LessonModel;
+import ua.com.foxminded.university.repository.LessonRepository;
+import ua.com.foxminded.university.service.LessonService;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class ScheduleServiceImpl implements ScheduleService {
+public class LessonServiceImpl implements LessonService {
     
     public static final int OFFSET_WEEKS_QUANTITY = 3;
     public static final int WEEKS_QUANTITY = 4;
@@ -31,10 +31,10 @@ public class ScheduleServiceImpl implements ScheduleService {
     public static final int START_WEEK_DAY_NUMBER = 0;
     public static final int ONE_DAY = 1;
     public static final Type SCHEDULE_MODEL_LIST_TYPE = 
-            new TypeToken<List<ScheduleModel>>() {}.getType();
+            new TypeToken<List<LessonModel>>() {}.getType();
     
     private final ModelMapper modelMapper;
-    private final ScheduleRepository scheduleRepository;
+    private final LessonRepository scheduleRepository;
     
     @Override
     public LocalDate moveForward(LocalDate date) {
@@ -56,10 +56,10 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public void update(ScheduleModel model) throws ServiceException {
+    public void update(LessonModel model) throws ServiceException {
         try {
-            ScheduleEntity entity = modelMapper.map(model, ScheduleEntity.class);
-            ScheduleEntity persistEntity = scheduleRepository.findById(
+            LessonEntity entity = modelMapper.map(model, LessonEntity.class);
+            LessonEntity persistEntity = scheduleRepository.findById(
                     model.getId().intValue());
             persistEntity.setCourse(entity.getCourse());
             persistEntity.setDatestamp(entity.getDatestamp());
@@ -72,44 +72,44 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
     
     @Override
-    public void create(ScheduleModel model) throws ServiceException {
+    public void create(LessonModel model) throws ServiceException {
         try {
-//            ScheduleEntity persistEntity = scheduleRepository
-//                    .findByDatestampAndLessonOrderAndGroupId(model.getDatestamp(), 
-//                                                             model.getLessonOrder(), 
-//                                                             model.getGroup().getId());
+            LessonEntity persistEntity = scheduleRepository
+                    .findByDatestampAndGroupIdAndTimingId(model.getDatestamp(), 
+                                                          model.getGroup().getId(),
+                                                          model.getTiming().getId());
             
-//            if (persistEntity == null) {
-//                ScheduleEntity entity = modelMapper.map(model, ScheduleEntity.class);
-//                scheduleRepository.saveAndFlush(entity);
-//            } else {
-//                model.setId(persistEntity.getId());
-//                update(model);
-//            }
+            if (persistEntity == null) {
+                LessonEntity entity = modelMapper.map(model, LessonEntity.class);
+                scheduleRepository.saveAndFlush(entity);
+            } else {
+                model.setId(persistEntity.getId());
+                update(model);
+            }
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
             throw new ServiceException("Creating a timetable fails", e);
         }
     }
 
     @Override
-    public ScheduleModel getById(int id) throws ServiceException {
+    public LessonModel getById(int id) throws ServiceException {
         try {
-            ScheduleEntity entity = scheduleRepository.findById(id);
-            return modelMapper.map(entity, ScheduleModel.class);
+            LessonEntity entity = scheduleRepository.findById(id);
+            return modelMapper.map(entity, LessonModel.class);
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
             throw new ServiceException("Getting timetable by ID fails", e);
         }
     }
     
     @Override
-    public List<List<List<ScheduleModel>>> getMonthSchedule(LocalDate date) 
+    public List<List<List<LessonModel>>> getMonthLessons(LocalDate date) 
             throws ServiceException {
         
-        List<List<List<ScheduleModel>>> monthTimetable = new ArrayList<>();
+        List<List<List<LessonModel>>> monthTimetable = new ArrayList<>();
         
         for(int i = 0; i < WEEKS_QUANTITY; i++) {
             LocalDate datestamp = date.plusWeeks(i);
-            List<List<ScheduleModel>> weekTimetables = getWeekTimetable(datestamp);
+            List<List<LessonModel>> weekTimetables = getWeekTimetable(datestamp);
             monthTimetable.add(weekTimetables);
         }
         return monthTimetable;
@@ -117,14 +117,14 @@ public class ScheduleServiceImpl implements ScheduleService {
     
     
     @Override
-    public List<ScheduleModel> getDaySdhedule(LocalDate date) throws ServiceException {
+    public List<LessonModel> getDayLessons(LocalDate date) throws ServiceException {
         try {
-            List<ScheduleEntity> entities = scheduleRepository.findByDatestamp(date);
-            List<ScheduleModel> models =  modelMapper.map(entities, SCHEDULE_MODEL_LIST_TYPE);
+            List<LessonEntity> entities = scheduleRepository.findByDatestamp(date);
+            List<LessonModel> models =  modelMapper.map(entities, SCHEDULE_MODEL_LIST_TYPE);
 
             if (models.isEmpty()) {
                 models = new ArrayList<>();
-                ScheduleModel model = new ScheduleModel();
+                LessonModel model = new LessonModel();
                 model.setDatestamp(date);
                 models.add(model);
             }
@@ -135,24 +135,24 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
     
     @Override
-    public List<ScheduleModel> getAll() throws ServiceException {
+    public List<LessonModel> getAll() throws ServiceException {
         try {
-            List<ScheduleEntity> timetableEntities = scheduleRepository.findAll();
+            List<LessonEntity> timetableEntities = scheduleRepository.findAll();
             return modelMapper.map(timetableEntities, SCHEDULE_MODEL_LIST_TYPE);
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
             throw new ServiceException("Getting all timetables was failed", e);
         }
     }
     
-    private List<List<ScheduleModel>> getWeekTimetable(LocalDate date) 
+    private List<List<LessonModel>> getWeekTimetable(LocalDate date) 
             throws ServiceException {
         
         LocalDate startDayOfWeek = findMondayOfWeek(date);
-        List<List<ScheduleModel>> weekTimetables = new ArrayList<>();
-        List<ScheduleModel> dayTimetables;
+        List<List<LessonModel>> weekTimetables = new ArrayList<>();
+        List<LessonModel> dayTimetables;
         
         for (int i = 0; i < DayOfWeek.values().length; i++) {
-            dayTimetables = getDaySdhedule(startDayOfWeek.plusDays(i));
+            dayTimetables = getDayLessons(startDayOfWeek.plusDays(i));
             weekTimetables.add(dayTimetables);
         }
         return weekTimetables;

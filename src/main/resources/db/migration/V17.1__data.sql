@@ -56,33 +56,33 @@ insert into university.students(user_id, group_id) values(16, 2);
 
 insert into university.timetables(name) values('general');
 
-insert into university.timings(start_time, lesson_duration, break_duration, timetable_id)
+insert into university.lessons_timing(start_time, lesson_duration, break_duration, timetable_id)
     values ('08:00', 90, 15, 1);
-insert into university.timings(start_time, lesson_duration, break_duration, timetable_id)
+insert into university.lessons_timing(start_time, lesson_duration, break_duration, timetable_id)
     values ('09:45', 90, 45, 1);
-insert into university.timings(start_time, lesson_duration, break_duration, timetable_id)
+insert into university.lessons_timing(start_time, lesson_duration, break_duration, timetable_id)
     values ('12:00', 90, 20, 1);
-insert into university.timings(start_time, lesson_duration, break_duration, timetable_id)
+insert into university.lessons_timing(start_time, lesson_duration, break_duration, timetable_id)
     values ('13:50', 90, 10, 1);
-insert into university.timings(start_time, lesson_duration, break_duration, timetable_id)
+insert into university.lessons_timing(start_time, lesson_duration, break_duration, timetable_id)
     values ('15:30', 90, 10, 1);
 
-insert into university.schedules(datestamp, group_id, course_id, timing_id)
-    values('2023-05-22', 1, 1, 1);
-insert into university.schedules(datestamp, group_id, course_id, timing_id)
-    values('2023-05-22', 1, 2, 2);
-insert into university.schedules(datestamp, group_id, course_id, timing_id)
-    values('2023-05-23', 1, 3, 3);
-insert into university.schedules(datestamp, group_id, course_id, timing_id)
-    values('2023-05-24', 2, 3, 4);
-insert into university.schedules(datestamp, group_id, course_id, timing_id)
-    values('2023-05-25', 1, 1, 5);
-insert into university.schedules(datestamp, group_id, course_id, timing_id)
-    values('2023-05-25', 1, 1, 1);  
-insert into university.schedules(datestamp, group_id, course_id, timing_id)
-    values('2023-05-26', 2, 1, 3);  
-insert into university.schedules(datestamp, group_id, course_id, timing_id)
-    values('2023-05-26', 2, 2, 2);
-insert into university.schedules(datestamp, group_id, course_id, timing_id)
-    values('2023-05-26', 2, 2, 5);
+insert into university.lessons(datestamp, lesson_order, group_id, course_id, timetable_id)
+    values('2023-05-22', 1, 1, 1, 1);
+insert into university.lessons(datestamp, lesson_order, group_id, course_id, timetable_id)
+    values('2023-05-22', 2, 1, 2, 1);
+insert into university.lessons(datestamp, lesson_order, group_id, course_id, timetable_id)
+    values('2023-05-23', 3, 1, 3, 1);
+insert into university.lessons(datestamp, lesson_order, group_id, course_id, timetable_id)
+    values('2023-05-24', 4, 2, 3, 1);
+insert into university.lessons(datestamp, lesson_order, group_id, course_id, timetable_id)
+    values('2023-05-25', 5, 1, 1, 1);
+insert into university.lessons(datestamp, lesson_order, group_id, course_id, timetable_id)
+    values('2023-05-25', 1, 1, 1, 1);  
+insert into university.lessons(datestamp, lesson_order, group_id, course_id, timetable_id)
+    values('2023-05-26', 2, 2, 1, 1);  
+insert into university.lessons(datestamp, lesson_order, group_id, course_id, timetable_id)
+    values('2023-05-26', 3, 2, 2, 1);
+insert into university.lessons(datestamp, lesson_order, group_id, course_id, timetable_id)
+    values('2023-05-26', 4, 2, 2, 1);
     

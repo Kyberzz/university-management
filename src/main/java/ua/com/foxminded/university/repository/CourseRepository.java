@@ -9,7 +9,7 @@ public interface CourseRepository extends JpaRepository<CourseEntity, Integer> {
     
     
     @Query("select c from CourseEntity c left join fetch c.teachers "
-                                      + "left join fetch c.schedules "
+                                      + "left join fetch c.lessons "
                                       + "where c.id = ?1")
     public CourseEntity getCourseRelationsById(int id);
     

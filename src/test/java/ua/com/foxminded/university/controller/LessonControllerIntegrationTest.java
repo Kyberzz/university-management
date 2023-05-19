@@ -1,6 +1,6 @@
 package ua.com.foxminded.university.controller;
 
-import static ua.com.foxminded.university.controller.ScheduleController.*;
+import static ua.com.foxminded.university.controller.LessonController.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -23,26 +23,26 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import ua.com.foxminded.university.entity.ScheduleEntity;
-import ua.com.foxminded.university.entitymother.ScheduleEntityMother;
+import ua.com.foxminded.university.entity.LessonEntity;
+import ua.com.foxminded.university.entitymother.LessonEntityMother;
 import ua.com.foxminded.university.model.Authority;
 import ua.com.foxminded.university.model.GroupModel;
-import ua.com.foxminded.university.model.ScheduleModel;
+import ua.com.foxminded.university.model.LessonModel;
 import ua.com.foxminded.university.modelmother.GroupModelMother;
-import ua.com.foxminded.university.modelmother.ScheduleModelMother;
+import ua.com.foxminded.university.modelmother.LessonModelMother;
 
 @SpringBootTest
 @ActiveProfiles("prod")
 @AutoConfigureMockMvc
 @Testcontainers
-class ScheduleControllerIntegrationTest extends DefaultControllerTest {
+class LessonControllerIntegrationTest extends DefaultControllerTest {
     
     @Container
     private static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:14");
     
     private LocalDate localDate;
-    private ScheduleEntity timetableEntity;
-    private ScheduleModel timetableModel;
+    private LessonEntity timetableEntity;
+    private LessonModel timetableModel;
     private GroupModel groupModel;
     
     @DynamicPropertySource
@@ -55,14 +55,14 @@ class ScheduleControllerIntegrationTest extends DefaultControllerTest {
     @BeforeEach
     void setUp() {
         localDate = LocalDate.now();
-        timetableEntity = ScheduleEntityMother.complete().build();
+        timetableEntity = LessonEntityMother.complete().build();
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
         entityManager.persist(timetableEntity);
         entityManager.getTransaction().commit();
         entityManager.close();
         
-        timetableModel = ScheduleModelMother.complete()
+        timetableModel = LessonModelMother.complete()
                                              .id(timetableEntity.getId()).build();
         
         groupModel = GroupModelMother.complete().build();
@@ -73,7 +73,7 @@ class ScheduleControllerIntegrationTest extends DefaultControllerTest {
     void create_ShouldAuthorizeCredentialsAndRedirect() throws Exception {
         
         mockMvc.perform(post("/timetables/create/timetable/{date}", localDate.toString())
-                    .flashAttr(SHCEDULE_MODEL_ATTRIBUTE, timetableModel)
+                    .flashAttr(LESSON_MODEL_ATTRIBUTE, timetableModel)
                     .with(csrf()))
                .andExpect(authenticated().withRoles(Authority.ADMIN.toString()))
                .andExpect(status().is3xxRedirection());
@@ -84,7 +84,7 @@ class ScheduleControllerIntegrationTest extends DefaultControllerTest {
     void delete_ShouldAuthanticateCredentialsAndRedirect() throws Exception {
         timetableModel.setDatestamp(localDate);
         mockMvc.perform(post("/timetables/delete/{id}", timetableEntity.getId())
-                    .flashAttr(SHCEDULE_MODEL_ATTRIBUTE, timetableModel)
+                    .flashAttr(LESSON_MODEL_ATTRIBUTE, timetableModel)
                     .with(csrf()))
                .andExpect(authenticated().withRoles(Authority.ADMIN.toString()))
                .andExpect(status().is3xxRedirection());
@@ -94,7 +94,7 @@ class ScheduleControllerIntegrationTest extends DefaultControllerTest {
     @WithUserDetails(AUTHORIZED_EMAIL)
     void update_ShouldAuthorizeCredentialsAndRedirect() throws Exception {
         mockMvc.perform(post("/timetables/update/{id}", timetableModel.getId())
-                    .flashAttr(SHCEDULE_MODEL_ATTRIBUTE, timetableModel)
+                    .flashAttr(LESSON_MODEL_ATTRIBUTE, timetableModel)
                     .with(csrf()))
                .andExpect(authenticated().withRoles(Authority.ADMIN.toString()))
                .andExpect(status().is3xxRedirection());

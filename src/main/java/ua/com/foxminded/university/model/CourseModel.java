@@ -32,5 +32,5 @@ public class CourseModel implements Serializable {
     
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private Set<ScheduleModel> timetables;
+    private Set<LessonModel> timetables;
 }
