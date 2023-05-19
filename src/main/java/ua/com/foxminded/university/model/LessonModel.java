@@ -8,7 +8,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import ua.com.foxminded.university.entity.LessonOrder;
 
 @Data
 @Builder
@@ -20,7 +19,7 @@ public class LessonModel implements Serializable {
 
     private Integer id;
     private LocalDate datestamp;
-    private LessonOrder lessonOrder;
+    private Integer lessonOrder;
     private String description;
     
     @ToString.Exclude

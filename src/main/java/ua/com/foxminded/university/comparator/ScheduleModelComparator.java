@@ -9,8 +9,8 @@ public class ScheduleModelComparator implements Comparator<LessonModel> {
     @Override
     public int compare(LessonModel firstSchedule, LessonModel secondScheule) {
         if (compareByDate(firstSchedule, secondScheule) == 0 ) {
-            return Integer.compare(firstSchedule.getLessonOrder().getRepresentation(), 
-                                   secondScheule.getLessonOrder().getRepresentation());
+            return Integer.compare(firstSchedule.getLessonOrder(), 
+                                   secondScheule.getLessonOrder());
         } else {
             return compareByDate(firstSchedule, secondScheule);
         }
