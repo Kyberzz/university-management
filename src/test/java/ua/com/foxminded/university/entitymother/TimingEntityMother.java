@@ -3,7 +3,7 @@ package ua.com.foxminded.university.entitymother;
 import java.time.Duration;
 import java.time.LocalTime;
 
-import ua.com.foxminded.university.entity.LessonTimingEntity;
+import ua.com.foxminded.university.entity.TimingEntity;
 
 public class TimingEntityMother {
     
@@ -11,9 +11,9 @@ public class TimingEntityMother {
     public static final Duration BREAK_DURATION = Duration.ofMinutes(15);
     public static final Duration LESSON_DURATION = Duration.ofMinutes(90);
     
-    public static LessonTimingEntity.LessonTimingEntityBuilder complete() {
-        return LessonTimingEntity.builder().startTime(START_TIME)
-                                           .lessonDuration(LESSON_DURATION)
-                                           .breakDuration(BREAK_DURATION);
+    public static TimingEntity.TimingEntityBuilder complete() {
+        return TimingEntity.builder().startTime(START_TIME)
+                                     .lessonDuration(LESSON_DURATION)
+                                     .breakDuration(BREAK_DURATION);
     }
 }

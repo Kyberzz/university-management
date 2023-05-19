@@ -4,8 +4,6 @@ import java.io.Serializable;
 import java.time.LocalDate;
 
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -47,7 +45,7 @@ public class ScheduleEntity implements Serializable {
     private CourseEntity course;
     
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "lesson_timing_id")
+    @JoinColumn(name = "timing_id")
     @ToString.Exclude
-    private LessonTimingEntity lessonTiming;
+    private TimingEntity timing;
 }

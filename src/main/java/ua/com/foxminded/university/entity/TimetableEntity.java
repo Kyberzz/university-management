@@ -8,13 +8,21 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Entity
+@Table(name = "timetables", schema = "university")
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class TimetableEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -27,15 +35,15 @@ public class TimetableEntity implements Serializable {
     @OneToMany(mappedBy = "timetable")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private Set<LessonTimingEntity> lessonTiming;
+    private Set<TimingEntity> timings;
     
-    public void addLessonTiming(LessonTimingEntity lessonTiming) {
-        this.lessonTiming.add(lessonTiming);
-        lessonTiming.setTimetable(this);
+    public void addTiming(TimingEntity timing) {
+        this.timings.add(timing);
+        timing.setTimetable(this);
     }
     
-    public void removeLessonTiming(LessonTimingEntity lessonTiming) {
-        this.lessonTiming.remove(lessonTiming);
-        lessonTiming.setTimetable(null);
+    public void removeTiming(TimingEntity timing) {
+        this.timings.remove(timing);
+        timing.setTimetable(null);
     }
 }

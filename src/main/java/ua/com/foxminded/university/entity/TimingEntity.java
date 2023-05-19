@@ -31,13 +31,13 @@ import ua.com.foxminded.university.converter.DurationConverter;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class LessonTimingEntity implements Serializable {
+public class TimingEntity implements Serializable {
     
     private static final long serialVersionUID = 1L;
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Integer id;
     
     @Column(name = "start_time")
     private LocalTime startTime;
@@ -55,18 +55,18 @@ public class LessonTimingEntity implements Serializable {
     @ToString.Exclude
     private TimetableEntity timetable;
     
-    @OneToMany(mappedBy = "lessonTiming")
+    @OneToMany(mappedBy = "timing")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private Set<ScheduleEntity> schedules;
     
     public void addSchedule(ScheduleEntity schedule) {
         this.schedules.add(schedule);
-        schedule.setLessonTiming(this);
+        schedule.setTiming(this);
     }
     
     public void removeShcedule(ScheduleEntity schedule) {
         this.schedules.remove(schedule);
-        schedule.setLessonTiming(null);
+        schedule.setTiming(null);
     }
 }
