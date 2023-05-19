@@ -103,9 +103,9 @@ class ShceduleServiceImplTest {
         timetableModel.setId(TIMETABLE_ID);
         groupModel.setId(GROUP_ID);
         timetableModel.setGroup(groupModel);
-        when(timetableRepositoryMock.findByDatestampAndLessonOrderAndGroupId(
-                isA(LocalDate.class), isA(LessonOrder.class), anyInt()))
-            .thenReturn(timetableEntity);
+//        when(timetableRepositoryMock.findByDatestampAndLessonOrderAndGroupId(
+//                isA(LocalDate.class), isA(LessonOrder.class), anyInt()))
+//            .thenReturn(timetableEntity);
         when(modelMapperMock.map(timetableModel, ScheduleEntity.class)).thenReturn(
                 timetableEntity);
         when(timetableRepositoryMock.findById(anyInt())).thenReturn(timetableEntity);
@@ -117,8 +117,8 @@ class ShceduleServiceImplTest {
     void create_ShouldCallComponents_WhenIfBlockTure() throws ServiceException {
         groupModel.setId(GROUP_ID);
         timetableModel.setGroup(groupModel);
-        when(timetableRepositoryMock.findByDatestampAndLessonOrderAndGroupId(
-                isA(LocalDate.class), isA(LessonOrder.class), anyInt())).thenReturn(null);
+//        when(timetableRepositoryMock.findByDatestampAndLessonOrderAndGroupId(
+//                isA(LocalDate.class), isA(LessonOrder.class), anyInt())).thenReturn(null);
         when(modelMapperMock.map(timetableModel, ScheduleEntity.class))
             .thenReturn(timetableEntity);
         timetableSerivice.create(timetableModel);

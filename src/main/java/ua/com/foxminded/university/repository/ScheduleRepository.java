@@ -11,11 +11,11 @@ import ua.com.foxminded.university.entity.ScheduleEntity;
 
 public interface ScheduleRepository extends JpaRepository<ScheduleEntity, Integer> {
     
-    @Query("select s from ScheduleEntity s left join fetch s.group " + 
-           "where s.datestamp = ?1 and s.lessonOrder = ?2 and s.group.id = ?3")
-    public ScheduleEntity findByDatestampAndLessonOrderAndGroupId(LocalDate date, 
-                                                                  LessonOrder order, 
-                                                                  int groupId);
+//    @Query("select s from ScheduleEntity s left join fetch s.group " + 
+//           "where s.datestamp = ?1 and s.lessonOrder = ?2 and s.group.id = ?3")
+//    public ScheduleEntity findByDatestampAndLessonOrderAndGroupId(LocalDate date, 
+//                                                                  LessonOrder order, 
+//                                                                  int groupId);
     
     public List<ScheduleEntity> findByDatestamp(LocalDate date);
     

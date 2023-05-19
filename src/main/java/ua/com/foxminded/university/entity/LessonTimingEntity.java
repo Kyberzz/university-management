@@ -8,9 +8,12 @@ import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -28,7 +31,7 @@ import ua.com.foxminded.university.converter.DurationConverter;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class TimingEntity implements Serializable {
+public class LessonTimingEntity implements Serializable {
     
     private static final long serialVersionUID = 1L;
     
@@ -39,54 +42,31 @@ public class TimingEntity implements Serializable {
     @Column(name = "start_time")
     private LocalTime startTime;
     
-    @Column(name = "first_lesson_duration")
+    @Column(name = "lesson_duration")
     @Convert(converter = DurationConverter.class)
-    private Duration firstlessonDuration;
+    private Duration lessonDuration;
     
-    @Column(name = "first_break_duration")
+    @Column(name = "break_duration")
     @Convert(converter = DurationConverter.class)
-    private Duration firstBreakDuration;
+    private Duration breakDuration;
     
-    @Column(name = "second_lesson_duration")
-    @Convert(converter = DurationConverter.class)
-    private Duration secondLessonDuration;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "timetable_id")
+    @ToString.Exclude
+    private TimetableEntity timetable;
     
-    @Column(name = "second_break_duration")
-    @Convert(converter = DurationConverter.class)
-    private Duration secondBreakDuration;
-    
-    @Column(name = "third_lesson_duration")
-    @Convert(converter = DurationConverter.class)
-    private Duration thirdLessonDuration;
-    
-    @Column(name = "third_break_duration")
-    @Convert(converter = DurationConverter.class)
-    private Duration thirdBreakDuration;
-    
-    @Column(name = "fourth_lesson_duration")
-    @Convert(converter = DurationConverter.class)
-    private Duration fourthLessonDuration;
-    
-    @Column(name = "fourth_break_duration")
-    @Convert(converter = DurationConverter.class)
-    private Duration fourthBreakDuration;
-    
-    @Column(name = "fifth_lesson_duration")
-    @Convert(converter = DurationConverter.class)
-    private Duration fifthLessonDuration;
-    
-    @OneToMany(mappedBy = "timing")
+    @OneToMany(mappedBy = "lessonTiming")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private Set<ScheduleEntity> schedules;
     
     public void addSchedule(ScheduleEntity schedule) {
         this.schedules.add(schedule);
-        schedule.setTiming(this);
+        schedule.setLessonTiming(this);
     }
     
     public void removeShcedule(ScheduleEntity schedule) {
         this.schedules.remove(schedule);
-        schedule.setTiming(null);
+        schedule.setLessonTiming(null);
     }
 }

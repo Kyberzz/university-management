@@ -34,9 +34,6 @@ public class ScheduleEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private LocalDate datestamp;
-    
-    @Enumerated(EnumType.STRING)
-    private LessonOrder lessonOrder;
     private String description;
     
     @ManyToOne(fetch = FetchType.LAZY)
@@ -50,7 +47,7 @@ public class ScheduleEntity implements Serializable {
     private CourseEntity course;
     
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "timing_id")
+    @JoinColumn(name = "lesson_timing_id")
     @ToString.Exclude
-    private TimingEntity timing;
+    private LessonTimingEntity lessonTiming;
 }

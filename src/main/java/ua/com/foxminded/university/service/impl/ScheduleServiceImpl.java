@@ -74,18 +74,18 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Override
     public void create(ScheduleModel model) throws ServiceException {
         try {
-            ScheduleEntity persistEntity = scheduleRepository
-                    .findByDatestampAndLessonOrderAndGroupId(model.getDatestamp(), 
-                                                             model.getLessonOrder(), 
-                                                             model.getGroup().getId());
+//            ScheduleEntity persistEntity = scheduleRepository
+//                    .findByDatestampAndLessonOrderAndGroupId(model.getDatestamp(), 
+//                                                             model.getLessonOrder(), 
+//                                                             model.getGroup().getId());
             
-            if (persistEntity == null) {
-                ScheduleEntity entity = modelMapper.map(model, ScheduleEntity.class);
-                scheduleRepository.saveAndFlush(entity);
-            } else {
-                model.setId(persistEntity.getId());
-                update(model);
-            }
+//            if (persistEntity == null) {
+//                ScheduleEntity entity = modelMapper.map(model, ScheduleEntity.class);
+//                scheduleRepository.saveAndFlush(entity);
+//            } else {
+//                model.setId(persistEntity.getId());
+//                update(model);
+//            }
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
             throw new ServiceException("Creating a timetable fails", e);
         }

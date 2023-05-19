@@ -53,11 +53,11 @@ class ScheduleRepositoryTest {
         entityManager.close();
     }
     
-    void findByDatestampAndStartTimeAndGroupId_ShouldReturnTimetableEntity() {
-        ScheduleEntity entity = timetableRepository.findByDatestampAndLessonOrderAndGroupId(
-                schedule.getDatestamp(), schedule.getLessonOrder(), group.getId());
-        assertEquals(schedule.getGroup().getId(), entity.getGroup().getId());
-    }
+//    void findByDatestampAndStartTimeAndGroupId_ShouldReturnTimetableEntity() {
+//        ScheduleEntity entity = timetableRepository.findByDatestampAndLessonOrderAndGroupId(
+//                schedule.getDatestamp(), schedule.getLessonOrder(), group.getId());
+//        assertEquals(schedule.getGroup().getId(), entity.getGroup().getId());
+//    }
     
     @Test
     void findByDatestamp_ShouldReturnTimetablesOfDay() {

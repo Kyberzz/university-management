@@ -1,25 +1,26 @@
 alter table university.timetables rename to schedules;
 alter table university.schedules
-    add column lesson_order varchar,
     drop column start_time, 
     drop column lesson_duration,
     drop column break_duration;
 
-create sequence university.timings_seq as integer;
-create table university.timings (
-    id bigint default nextval('university.timings_seq'::regclass) primary key,
-    start_time time,
-    first_lesson_duration integer,
-    first_break_duration integer,
-    second_lesson_duration integer,
-    second_break_duration integer,
-    third_lesson_duration integer,
-    third_break_duration integer,
-    fourth_lesson_duration integer,
-    fourth_break_duration integer,
-    fifth_lesson_duration integer
+create sequence university.timetables_seq as integer;
+create table university.timetables (
+    id bigint default nextval('university.timetables_seq'::regclass) primary key,
+    name varchar
 );
-alter sequence university.timings_seq owned by university.timings.id;
+alter sequence university.timetables_seq owned by university.timetables.id;
+    
+create sequence university.lessons_timing_seq as integer;
+create table university.lessons_timing (
+    id bigint default nextval('university.lessons_timing_seq'::regclass) primary key,
+    start_time time,
+    lesson_duration integer,
+    break_duration integer,
+    timetable_id bigint references university.timetables(id) on delete set null
+);
+alter sequence university.lessons_timing_seq owned by university.lessons_timing.id;
 
 alter table university.schedules 
-    add column timing_id bigint references university.timings(id) on delete set null;
+    add column lesson_timing_id bigint references university.lessons_timing(id) 
+    on delete set null;

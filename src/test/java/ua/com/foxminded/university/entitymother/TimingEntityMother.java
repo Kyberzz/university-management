@@ -3,27 +3,17 @@ package ua.com.foxminded.university.entitymother;
 import java.time.Duration;
 import java.time.LocalTime;
 
-import ua.com.foxminded.university.entity.TimingEntity;
+import ua.com.foxminded.university.entity.LessonTimingEntity;
 
 public class TimingEntityMother {
     
     public static final LocalTime START_TIME = LocalTime.of(8, 00);
-    public static final Duration FOURTH_BREAK_DURATION = Duration.ofMinutes(10);
-    public static final Duration THIRD_BREAK_DURATION = Duration.ofMinutes(20);
-    public static final Duration SECOND_BREAK_DURATION = Duration.ofMinutes(45);
-    public static final Duration FIRST_BREAK_DURATION = Duration.ofMinutes(15);
+    public static final Duration BREAK_DURATION = Duration.ofMinutes(15);
     public static final Duration LESSON_DURATION = Duration.ofMinutes(90);
     
-    public static TimingEntity.TimingEntityBuilder complete() {
-        return TimingEntity.builder().startTime(START_TIME)
-                                     .firstlessonDuration(LESSON_DURATION)
-                                     .firstBreakDuration(FIRST_BREAK_DURATION)
-                                     .secondLessonDuration(LESSON_DURATION)
-                                     .secondBreakDuration(SECOND_BREAK_DURATION)
-                                     .thirdLessonDuration(LESSON_DURATION)
-                                     .thirdBreakDuration(THIRD_BREAK_DURATION)
-                                     .fourthLessonDuration(LESSON_DURATION)
-                                     .fourthBreakDuration(FOURTH_BREAK_DURATION)
-                                     .fifthLessonDuration(LESSON_DURATION);
+    public static LessonTimingEntity.LessonTimingEntityBuilder complete() {
+        return LessonTimingEntity.builder().startTime(START_TIME)
+                                           .lessonDuration(LESSON_DURATION)
+                                           .breakDuration(BREAK_DURATION);
     }
 }
