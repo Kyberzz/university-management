@@ -83,7 +83,7 @@ class CourseServiceImplTest {
             throws ServiceException {
         when(courseRepositoryMock.getCourseRelationsById(anyInt()))
             .thenReturn(courseEntity);
-        courseService.getTimetableAndTeachersByCourseId(ID);
+        courseService.getByIdWithLessonsAndTeachers(ID);
         verify(modelMapperMock).map(courseEntity, CourseModel.class);
     }
     

@@ -9,5 +9,5 @@ public interface TeacherService {
 
     public List<TeacherModel> getAll() throws ServiceException;
 
-    public TeacherModel getCoursesByTeacherId(int id) throws ServiceException;
+    public TeacherModel getByIdWithCourses(int teacherId) throws ServiceException;
 }

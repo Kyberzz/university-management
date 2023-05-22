@@ -68,7 +68,7 @@ class CourseControllerTest {
     
     @Test
     void getById_ShouldRenderCourseView() throws Exception {
-        when(courseServiceMock.getTimetableAndTeachersByCourseId(anyInt())).thenReturn(course);
+        when(courseServiceMock.getByIdWithLessonsAndTeachers(anyInt())).thenReturn(course);
         
         mockMvc.perform(get("/courses/{id}", COURSE_ID))
                .andDo(print())

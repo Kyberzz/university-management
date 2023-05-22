@@ -9,7 +9,7 @@ public interface CourseService extends GenericService<CourseModel> {
     
     public void assignTeacherToCourse(int teacherId, int courseId);
     
-    public CourseModel getTimetableAndTeachersByCourseId(int id) throws ServiceException;
+    public CourseModel getByIdWithLessonsAndTeachers(int courseId) throws ServiceException;
     
-    public CourseModel getTimetableListByCourseId(int id) throws ServiceException;
+    public CourseModel getByIdWithLessons(int courseId) throws ServiceException;
 }

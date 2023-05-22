@@ -34,4 +34,8 @@ public class LessonModel implements Serializable {
     
     private LocalTime startTime;
     private LocalTime endTime;
+    
+    public boolean hasTimetable() {
+        return timetable != null;
+    }
 }

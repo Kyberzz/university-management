@@ -40,7 +40,7 @@ public class TeacherServiceImpl implements TeacherService {
     }
     
     @Override
-    public TeacherModel getCoursesByTeacherId(int id) throws ServiceException {
+    public TeacherModel getByIdWithCourses(int id) throws ServiceException {
         try {
             TeacherEntity entity = teacherRepository.findCoursesById(id);
             ModelMapper modelMapper = new ModelMapper();

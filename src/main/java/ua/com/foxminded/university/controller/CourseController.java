@@ -56,7 +56,7 @@ public class CourseController extends DefaultController {
     
     @GetMapping("/{id}")
     public String getById(@PathVariable int id, Model model) throws ServiceException {
-        CourseModel courseModel = courseService.getTimetableAndTeachersByCourseId(id);
+        CourseModel courseModel = courseService.getByIdWithLessonsAndTeachers(id);
         CourseModel updatedCourse = new CourseModel();
         List<TeacherModel> allTeachers = teacherService.getAll();
         

@@ -55,7 +55,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public CourseModel getTimetableAndTeachersByCourseId(int id) throws ServiceException {
+    public CourseModel getByIdWithLessonsAndTeachers(int id) throws ServiceException {
         try {
             CourseEntity entity = courseRepository.getCourseRelationsById(id);
             return modelMapper.map(entity, CourseModel.class);
@@ -119,7 +119,7 @@ public class CourseServiceImpl implements CourseService {
     }
    
     @Override
-    public CourseModel getTimetableListByCourseId(int id) throws ServiceException {
+    public CourseModel getByIdWithLessons(int id) throws ServiceException {
         try {
             CourseEntity courseEntity = courseRepository.findTimetablesById(id);
             return modelMapper.map(courseEntity, CourseModel.class);
