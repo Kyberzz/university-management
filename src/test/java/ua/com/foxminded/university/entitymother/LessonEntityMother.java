@@ -12,6 +12,6 @@ public class LessonEntityMother {
     
     public static LessonEntity.LessonEntityBuilder complete() {
         return LessonEntity.builder().datestamp(DATE)
-                                       .description(SCHEDULE_DESCRIPTION);
+                                     .description(SCHEDULE_DESCRIPTION);
     }
 }

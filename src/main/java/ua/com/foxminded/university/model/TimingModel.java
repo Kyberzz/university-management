@@ -5,12 +5,18 @@ import java.time.Duration;
 import java.time.LocalTime;
 import java.util.Set;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 import ua.com.foxminded.university.entity.TimetableEntity;
 
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class TimingModel implements Serializable {
 
     private static final long serialVersionUID = 1L;

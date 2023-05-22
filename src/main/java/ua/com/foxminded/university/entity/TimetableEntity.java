@@ -33,18 +33,23 @@ public class TimetableEntity implements Serializable {
     private Integer id;
     private String name;
     
+    @OneToMany(mappedBy = "timetable")
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private Set<LessonEntity> lessons;
+    
     @OneToMany(mappedBy = "timetable", cascade = CascadeType.REMOVE)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private Set<LessonTimingEntity> lessonsTiming;
+    private Set<TimingEntity> timings;
     
-    public void addTiming(LessonTimingEntity timing) {
-        this.lessonsTiming.add(timing);
+    public void addTiming(TimingEntity timing) {
+        this.timings.add(timing);
         timing.setTimetable(this);
     }
     
-    public void removeTiming(LessonTimingEntity timing) {
-        this.lessonsTiming.remove(timing);
+    public void removeTiming(TimingEntity timing) {
+        this.timings.remove(timing);
         timing.setTimetable(null);
     }
 }

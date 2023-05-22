@@ -19,23 +19,23 @@
    <li class="breadcrumb-item"><a th:href="@{/}"
     th:text="#{href.home}">Home</a></li>
    <li class="breadcrumb-item"><a
-    th:href="@{/schedules/__${scheduleModel.datestamp}__/list}"
-    th:text="#{href.month-schedule}">Month schedule</a></li>
+    th:href="@{/lessons/__${lessonModel.datestamp}__/month-lessons}"
+    th:text="#{href.month-lesson}">Month lesson</a></li>
    <li class="breadcrumb-item active" aria-current="page"
-    th:text="#{href.day-schedule}">Day schedule</li>
+    th:text="#{href.day-lesson}">Day lesson</li>
   </ol>
  </nav>
-
+<!-- 
  <div class="modal fade" id="add" tabindex="-1"
   aria-labelledby="addCourse" aria-hidden="true">
   <div class="modal-dialog">
    <form class="modal-content"
-    th:action="@{/schedules/create/schedule/__${scheduleModel.datestamp}__}"
-    th:object="${scheduleModel}" method="post">
+    th:action="@{/lessons/__${lessonModel.datestamp}__/create}"
+    th:object="${lessonModel}" method="post">
     <div class="modal-header">
-     <h1 class="modal-title fs-5" id="createSchedule"
-      th:text="|#{schedules.create} __${scheduleModel.datestamp}__|">Create
-      schedule</h1>
+     <h1 class="modal-title fs-5" id="createlesson"
+      th:text="|#{lessons.create} __${lessonModel.datestamp}__|">Create
+      lesson</h1>
      <button type="button" class="btn-close" data-bs-dismiss="modal"
       aria-label="Close"></button>
     </div>
@@ -98,12 +98,11 @@
    </form>
   </div>
  </div>
-
+ -->
  <div class="container">
-  
   <div class="col">
    <div class="row">
-    <p th:text="${scheduleModel.datestamp}">2023-04-25</p>
+    <p th:text="${lessonModel.datestamp}">2023-04-25</p>
    </div>
    <div class="row">
     <table class="table">
@@ -126,26 +125,26 @@
      </thead>
      <tbody>
       <tr
-       th:each="schedule, iterationStatus : ${#lists.sort(daySchedule , new ua.com.foxminded.university.comparator.ScheduleModelComparator())}"
-       th:if="${schedule.id}">
+       th:each="lesson, iterationStatus : ${dayLessons}"
+       th:if="${lesson.id}">
        <td
-        th:text="|${schedule.lessonOrder?.representation}#{tr.order-suffix}|">1</td>
-       <td th:text="${schedule.startTime}">8:00</td>
-       <td th:text="${schedule.endTime}">9:30</td>
-       <td th:text="${schedule.breakDuration?.toMinutes()}">15</td>
+        th:text="|${lesson.lessonOrder}#{tr.order-suffix}|">1</td>
+       <td th:text="${lesson.startTime}">8:00</td>
+       <td th:text="${lesson.endTime}">9:30</td>
+       <td th:text="${lesson.breakDuration?.toMinutes()}">15</td>
        <td></td>
-       <td th:text="${schedule.group?.name}">kr-85</td>
-       <td th:text="${schedule.course?.name}">Programming</td>
+       <td th:text="${lesson.group?.name}">kr-85</td>
+       <td th:text="${lesson.course?.name}">Programming</td>
        <td class="text-center">
 
         <button type="button" class="btn btn-outline-secondary btn-sm"
          data-bs-toggle="modal"
-         th:data-bs-target="|#editSchedule${schedule.id}|">
+         th:data-bs-target="|#editLesson${lesson.id}|">
          Edit</button>
 
-        <form th:action="@{/schedules/update/__${schedule.id}__}"
-         method="post" th:object="${scheduleModel}" class="modal fade"
-         th:id="|editSchedule${schedule.id}|" tabindex="-1"
+        <form th:action="@{/lessons/update/__${lesson.id}__}"
+         method="post" th:object="${lessonModel}" class="modal fade"
+         th:id="|editLesson${lesson.id}|" tabindex="-1"
          aria-labelledby="exampleModalLabel" aria-hidden="true">
          <div class="modal-dialog">
           <div class="modal-content">
@@ -222,13 +221,13 @@
        <td class="text-start">
         <button type="button" class="btn btn-outline-danger btn-sm"
          th:text="#{button.delete}" data-bs-toggle="modal"
-         id="deleteScheduleButton"
-         th:data-bs-target="|#delete${schedule.id}|">Delete</button>
+         id="deleteLessonButton"
+         th:data-bs-target="|#delete${lesson.id}|">Delete</button>
 
         <form class="modal fade" method="post"
-         th:id="|delete${schedule.id}|"
-         th:action="@{/schedules/delete/__${schedule.id}__}"
-         th:object="${scheduleModel}" data-bs-backdrop="static"
+         th:id="|delete${lesson.id}|"
+         th:action="@{/lessons/delete/__${lesson.id}__}"
+         th:object="${lessonModel}" data-bs-backdrop="static"
          data-bs-keyboard="false" tabindex="-1"
          aria-labelledby="staticBackdropLabel" aria-hidden="true">
          <div class="modal-dialog">
@@ -243,8 +242,8 @@
              <div>
               <input type="hidden" th:field="*{datestamp}">
              </div>
-             <div th:text="#{schedules.delete-schedule}">The
-              schedule will be deleted</div>
+             <div th:text="#{lessons.delete-lesson}">The
+              lesson will be deleted</div>
             </div>
            </div>
            <div class="modal-footer">

@@ -2,6 +2,7 @@ package ua.com.foxminded.university.model;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,15 +20,18 @@ public class LessonModel implements Serializable {
 
     private Integer id;
     private LocalDate datestamp;
-    private Integer lessonOrder;
     private String description;
+    private Integer lessonOrder;
     
     @ToString.Exclude
-    private TimingModel timing;
+    private TimetableModel timetable;
     
     @ToString.Exclude
     private CourseModel course;
     
     @ToString.Exclude
     private GroupModel group;
+    
+    private LocalTime startTime;
+    private LocalTime endTime;
 }

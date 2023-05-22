@@ -23,12 +23,12 @@ import lombok.ToString;
 import ua.com.foxminded.university.converter.DurationConverter;
 
 @Entity
-@Table(name = "lessons_timing", schema = "university")
+@Table(name = "timings", schema = "university")
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class LessonTimingEntity implements Serializable {
+public class TimingEntity implements Serializable {
     
     private static final long serialVersionUID = 1L;
     

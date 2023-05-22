@@ -31,6 +31,7 @@ import ua.com.foxminded.university.modelmother.LessonModelMother;
 import ua.com.foxminded.university.service.CourseService;
 import ua.com.foxminded.university.service.GroupService;
 import ua.com.foxminded.university.service.LessonService;
+import ua.com.foxminded.university.service.TimetableService;
 
 @ExtendWith(SpringExtension.class)
 class LessonControllerTest {
@@ -46,6 +47,10 @@ class LessonControllerTest {
     @MockBean
     private GroupService groupServiceMock;
     
+    @MockBean
+    private TimetableService timetableService;
+    
+    
     private MockMvc mockMvc;
     private LessonModel timetableModel;
     
@@ -53,8 +58,9 @@ class LessonControllerTest {
     void setup() {
         mockMvc = MockMvcBuilders.standaloneSetup(
                 new LessonController(timetableServiceMock, 
-                                        courseServiceMock, 
-                                        groupServiceMock)).build();
+                                     courseServiceMock, 
+                                     groupServiceMock, 
+                                     timetableService)).build();
 
         timetableModel = LessonModelMother.complete().build();
     }

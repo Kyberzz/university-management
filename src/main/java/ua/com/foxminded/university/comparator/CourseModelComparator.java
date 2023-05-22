@@ -7,7 +7,7 @@ import ua.com.foxminded.university.model.CourseModel;
 public class CourseModelComparator implements Comparator<CourseModel> {
     
     @Override
-    public int compare(CourseModel courseA, CourseModel courseB) {
-        return Integer.compare(courseA.getId(), courseB.getId());
+    public int compare(CourseModel firstCourse, CourseModel secondCourse) {
+        return Integer.compare(firstCourse.getId(), secondCourse.getId());
     }
 }

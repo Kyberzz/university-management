@@ -51,5 +51,5 @@ public class LessonEntity implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "timetable_id")
     @ToString.Exclude
-    private TimetableEntity timetableEntity;
+    private TimetableEntity timetable;
 }

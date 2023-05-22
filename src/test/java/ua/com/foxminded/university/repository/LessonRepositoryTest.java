@@ -16,12 +16,12 @@ import org.springframework.test.context.ActiveProfiles;
 
 import ua.com.foxminded.university.entity.CourseEntity;
 import ua.com.foxminded.university.entity.GroupEntity;
-import ua.com.foxminded.university.entity.LessonTimingEntity;
+import ua.com.foxminded.university.entity.TimingEntity;
 import ua.com.foxminded.university.entity.LessonEntity;
 import ua.com.foxminded.university.entity.TimetableEntity;
 import ua.com.foxminded.university.entitymother.CourseEntityMother;
 import ua.com.foxminded.university.entitymother.GroupEntityMother;
-import ua.com.foxminded.university.entitymother.LessonTimingEntityMother;
+import ua.com.foxminded.university.entitymother.TimingEntityMother;
 import ua.com.foxminded.university.entitymother.LessonEntityMother;
 import ua.com.foxminded.university.entitymother.TimetableEntityMother;
 
@@ -39,7 +39,7 @@ class LessonRepositoryTest {
     private GroupEntity group;
     private LessonEntity lesson;
     private TimetableEntity timetable;
-    private LessonTimingEntity lessonTiming;
+    private TimingEntity lessonTiming;
     
     @BeforeEach
     void init() {
@@ -49,7 +49,7 @@ class LessonRepositoryTest {
         timetable = TimetableEntityMother.complete().build();
         entityManager.persist(timetable);
         
-        lessonTiming = LessonTimingEntityMother.complete().timetable(timetable).build();
+        lessonTiming = TimingEntityMother.complete().timetable(timetable).build();
         entityManager.persist(lessonTiming);
         
         course = CourseEntityMother.complete().build();

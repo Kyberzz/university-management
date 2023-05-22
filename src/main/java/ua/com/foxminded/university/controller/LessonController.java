@@ -17,10 +17,13 @@ import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.model.CourseModel;
 import ua.com.foxminded.university.model.GroupModel;
 import ua.com.foxminded.university.model.TeacherModel;
+import ua.com.foxminded.university.model.TimetableModel;
+import ua.com.foxminded.university.repository.TimetableRepository;
 import ua.com.foxminded.university.model.LessonModel;
 import ua.com.foxminded.university.service.CourseService;
 import ua.com.foxminded.university.service.GroupService;
 import ua.com.foxminded.university.service.LessonService;
+import ua.com.foxminded.university.service.TimetableService;
 
 @Controller
 @RequiredArgsConstructor
@@ -33,16 +36,18 @@ public class LessonController extends DefaultController {
     public static final String COURSES_ATTRIBUTE = "courses";
     public static final String GROUPS_ATTRIBUTE = "groups";
     public static final String DAY_LESSONS_PATH = "/lessons/day-lessons/";
-    public static final String DAY_LESSONS_TEMPLATE = "lessons/day-lesson";
+    public static final String DAY_LESSONS_TEMPLATE = "lessons/day-lessons";
     public static final String LESSON_MODEL_ATTRIBUTE = "lessonModel";
-    public static final String DAY_LESSONS_ATTRIBUTE = "dayLesson";
+    public static final String DAY_LESSONS_ATTRIBUTE = "dayLessons";
     public static final String MONTH_LESSONS_ATTRIBUTE = "monthLessons";
+    public static final String TIMETABLES_ATTRIBUTE = "timetables";
     
     private final LessonService lessonService;
     private final CourseService courseService;
     private final GroupService groupService;
+    private final TimetableService timetableService;
 
-    @PostMapping("/create/{date}/lesson")
+    @PostMapping("/{date}/create")
     public String create(@PathVariable String date, 
                          @ModelAttribute LessonModel lessonModel, 
                          Model model) throws ServiceException {
@@ -82,7 +87,7 @@ public class LessonController extends DefaultController {
     public String getDayLessons(@PathVariable String date,
                                 Model model) throws ServiceException {
         LocalDate localDate = LocalDate.parse(date);
-        List<LessonModel> daylessons = lessonService.getDayLessons(localDate);
+        List<LessonModel> dayLessons = lessonService.getDayLessons(localDate);
         LessonModel lessonModel = new LessonModel();
         lessonModel.setDatestamp(localDate);
         lessonModel.setCourse(new CourseModel());
@@ -93,7 +98,7 @@ public class LessonController extends DefaultController {
         
         model.addAttribute(GROUPS_ATTRIBUTE, groups);
         model.addAttribute(COURSES_ATTRIBUTE, courses);
-        model.addAttribute(DAY_LESSONS_ATTRIBUTE, daylessons);
+        model.addAttribute(DAY_LESSONS_ATTRIBUTE, dayLessons);
         model.addAttribute(LESSON_MODEL_ATTRIBUTE, lessonModel);
         return DAY_LESSONS_TEMPLATE;
     }
@@ -128,11 +133,13 @@ public class LessonController extends DefaultController {
         LocalDate datestamp = LocalDate.parse(date);
         List<List<List<LessonModel>>> monthLessons = lessonService.getMonthLessons(datestamp);
         LessonModel lessonModel = LessonModel.builder()
-                                                      .datestamp(datestamp).build();
+                                             .datestamp(datestamp).build();
         lessonModel.setDatestamp(datestamp);
         List<CourseModel> courses = courseService.getAll();
         List<GroupModel> groups = groupService.getAll();
+        List<TimetableModel> timetables = timetableService.getAllWithTimings();
         
+        model.addAttribute(TIMETABLES_ATTRIBUTE, timetables);
         model.addAttribute(LESSON_MODEL_ATTRIBUTE, lessonModel);
         model.addAttribute(GROUPS_ATTRIBUTE, groups);
         model.addAttribute(COURSES_ATTRIBUTE, courses);
