@@ -23,8 +23,9 @@ public class ServiceConfig {
     public ModelMapper modelMapper(TimingRepository timingRepository) {
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-//        modelMapper.typeMap(LessonEntity.class, LessonModel.class)
-//                   .addMappings(new LessonEntityMap(timingRepository));
+        LessonEntityMap lessonEntityMap = new LessonEntityMap(timingRepository);
+        modelMapper.typeMap(LessonEntity.class, LessonModel.class)
+                   .addMappings(lessonEntityMap);
         return modelMapper;
     }
 }

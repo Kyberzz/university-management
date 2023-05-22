@@ -38,17 +38,17 @@ public class LessonEntity implements Serializable {
     @Column(name = "lesson_order")
     private Integer lessonOrder;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "group_id")
     @ToString.Exclude
     private GroupEntity group;
     
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "course_id")
     @ToString.Exclude
     private CourseEntity course;
     
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "timetable_id")
     @ToString.Exclude
     private TimetableEntity timetable;

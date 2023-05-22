@@ -47,7 +47,7 @@ public class TimingEntity implements Serializable {
     @Convert(converter = DurationConverter.class)
     private Duration breakDuration;
     
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(optional = false)
     @JoinColumn(name = "timetable_id")
     @ToString.Exclude
     private TimetableEntity timetable;

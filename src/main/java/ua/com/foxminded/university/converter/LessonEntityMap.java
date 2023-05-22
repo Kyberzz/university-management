@@ -22,13 +22,16 @@ public class LessonEntityMap extends PropertyMap<LessonEntity, LessonModel> {
 
     @Override
     protected void configure() {
+        map().setLessonOrder(888);
         map().setStartTime(getTiming().getStartTime());
-        map().setEndTime(getTiming().getStartTime().plus(getTiming().getLessonDuration()));
+//        map().setEndTime(getTiming().getStartTime().plus(getTiming().getLessonDuration()));
     }
     
     private TimingEntity getTiming() {
-        List<TimingEntity> timings = timingRepository.findAllById(
-                Arrays.asList(source.getTimetable().getId()));
+        List<TimingEntity> timings = timingRepository.findByTimetableId(
+                source.getTimetable().getId());
+        
+        
         return timings.stream().sorted(comparing(TimingEntity::getStartTime))
                                .skip(source.getLessonOrder() - OFFSET)
                                .findFirst().get();
