@@ -39,7 +39,7 @@ class LessonRepositoryTest {
     private Group group;
     private Lesson lesson;
     private Timetable timetable;
-    private Timing lessonTiming;
+    private Timing timing;
     
     @BeforeEach
     void init() {
@@ -49,8 +49,8 @@ class LessonRepositoryTest {
         timetable = TimetableMother.complete().build();
         entityManager.persist(timetable);
         
-        lessonTiming = TimingMother.complete().timetable(timetable).build();
-        entityManager.persist(lessonTiming);
+        timing = TimingMother.complete().timetable(timetable).build();
+        entityManager.persist(timing);
         
         course = CourseMother.complete().build();
         entityManager.persist(course);
@@ -68,7 +68,7 @@ class LessonRepositoryTest {
     
     void findByDatestampAndGroupIdAndLessonTimingId_ShouldReturnScheduleEntity() {
         Lesson entity = lessonRepository.findByDatestampAndGroupIdAndTimingId(
-                lesson.getDatestamp(), group.getId(), lessonTiming.getId());
+                lesson.getDatestamp(), group.getId(), timing.getId());
         assertEquals(lesson.getGroup().getId(), entity.getGroup().getId());
     }
     
