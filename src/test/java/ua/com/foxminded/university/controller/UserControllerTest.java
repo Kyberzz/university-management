@@ -19,11 +19,11 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import ua.com.foxminded.university.dto.UserAuthorityDTO;
+import ua.com.foxminded.university.dto.UserDTO;
+import ua.com.foxminded.university.entity.Authority;
 import ua.com.foxminded.university.exception.ServiceException;
-import ua.com.foxminded.university.model.Authority;
-import ua.com.foxminded.university.model.UserAuthorityModel;
-import ua.com.foxminded.university.model.UserModel;
-import ua.com.foxminded.university.modelmother.UserModelMother;
+import ua.com.foxminded.university.modelmother.UserDtoMother;
 import ua.com.foxminded.university.service.UserService;
 
 @ExtendWith(SpringExtension.class)
@@ -37,25 +37,25 @@ class UserControllerTest {
     private UserService userServiceMock;
     
     private MockMvc mockMvc;
-    private UserModel user;
-    private UserAuthorityModel userAuthorit;
+    private UserDTO userDto;
+    private UserAuthorityDTO userAuthorityDto;
     
     @BeforeEach
     void setup() {
         mockMvc = MockMvcBuilders.standaloneSetup(new UserController(userServiceMock))
                                  .build();
-        userAuthorit = UserAuthorityModel.builder()
-                                         .authority(Authority.ADMIN).build();
-        user = UserModelMother.complete().id(USER_ID)
-                                         .userAuthority(userAuthorit).build();
+        userAuthorityDto = UserAuthorityDTO.builder()
+                                           .authority(Authority.ADMIN).build();
+        userDto = UserDtoMother.complete().id(USER_ID)
+                                          .userAuthority(userAuthorityDto).build();
     }
     
     @Test
     void authorize_ShouldReturnBadRequestStatus() throws Exception {
         
-        mockMvc.perform(post("/users/authorize").param("email", user.getEmail())
-                                                .param("password", user.getPassword())
-                                                .param("passwordConfirm", user.getPassword())
+        mockMvc.perform(post("/users/authorize").param("email", userDto.getEmail())
+                                                .param("password", userDto.getPassword())
+                                                .param("passwordConfirm", userDto.getPassword())
                                                 .content(BAD_CONTENT))
                .andExpect(status().is4xxClientError())
                .andExpect(view().name("error"));
@@ -63,33 +63,33 @@ class UserControllerTest {
     
     @Test
     void authorize_ShouldRednderNoConfirmView() throws Exception {
-        mockMvc.perform(post("/users/authorize").param("email", user.getEmail())
-                                                .param("password", user.getPassword())
+        mockMvc.perform(post("/users/authorize").param("email", userDto.getEmail())
+                                                .param("password", userDto.getPassword())
                                                 .param("passwordConfirm", NON_CONFIRM_PASSWORD)
-                                                .flashAttr("userModel", user))
+                                                .flashAttr("userModel", userDto))
                .andExpect(view().name("users/no-confirm"));
     }
     
     @Test
     void authorize_ShouldRenderNotFoundView() throws Exception {
         when(userServiceMock.getByEmail(anyString())).thenThrow(new ServiceException());
-        mockMvc.perform(post("/users/authorize").param("email", user.getEmail())
-                                                .param("password", user.getPassword())
-                                                .param("passwordConfirm", user.getPassword())
-                                                .flashAttr("userModel", user))
+        mockMvc.perform(post("/users/authorize").param("email", userDto.getEmail())
+                                                .param("password", userDto.getPassword())
+                                                .param("passwordConfirm", userDto.getPassword())
+                                                .flashAttr("userModel", userDto))
                .andExpect(view().name("users/not-found"));
     }
     
     @Test
     void authorize_ShouldAuthorizeUserAndRedirectToListView() throws Exception {
-        when(userServiceMock.getByEmail(anyString())).thenReturn(user);
+        when(userServiceMock.getByEmail(anyString())).thenReturn(userDto);
         
-        mockMvc.perform(post("/users/authorize").param("email", user.getEmail())
-                                                .param("password", user.getPassword())
-                                                .param("passwordConfirm", user.getPassword())
-                                                .flashAttr("userModel", user))
+        mockMvc.perform(post("/users/authorize").param("email", userDto.getEmail())
+                                                .param("password", userDto.getPassword())
+                                                .param("passwordConfirm", userDto.getPassword())
+                                                .flashAttr("userModel", userDto))
                .andExpect(redirectedUrl("/users/list"));
-        verify(userServiceMock, times(1)).update(isA(UserModel.class));
+        verify(userServiceMock, times(1)).update(isA(UserDTO.class));
     }
     
     @Test
@@ -106,9 +106,9 @@ class UserControllerTest {
     
     @Test
     void update_ShouldReturnBadRequestStatus() throws Exception {
-        user.setUserAuthority(userAuthorit);
-        when(userServiceMock.getById(anyInt())).thenReturn(user);
-        mockMvc.perform(post("/users/edit").param("userId", user.getId().toString())
+        userDto.setUserAuthority(userAuthorityDto);
+        when(userServiceMock.getById(anyInt())).thenReturn(userDto);
+        mockMvc.perform(post("/users/edit").param("userId", userDto.getId().toString())
                                            .content(BAD_CONTENT))
                .andExpect(status().is4xxClientError())
                .andExpect(view().name("error"));
@@ -116,22 +116,22 @@ class UserControllerTest {
     
     @Test
     void edit_ShouldEditUserAndRediredtToListView() throws Exception {
-        user.setUserAuthority(userAuthorit);
-        when(userServiceMock.getById(anyInt())).thenReturn(user);
-        mockMvc.perform(post("/users/edit").param("userId", user.getId().toString())
-                                           .flashAttr("userModel", user))
+        userDto.setUserAuthority(userAuthorityDto);
+        when(userServiceMock.getById(anyInt())).thenReturn(userDto);
+        mockMvc.perform(post("/users/edit").param("userId", userDto.getId().toString())
+                                           .flashAttr("userModel", userDto))
                .andExpect(redirectedUrl("/users/list"));
         
         InOrder inOrder = Mockito.inOrder(userServiceMock);
         inOrder.verify(userServiceMock).getById(anyInt());
-        inOrder.verify(userServiceMock).update(isA(UserModel.class));
+        inOrder.verify(userServiceMock).update(isA(UserDTO.class));
     }
     
     @Test
     void delete_ShouldDeleteUserAndRedirectToListView() throws Exception {
-        mockMvc.perform(post("/users/delete").param("email", user.getEmail()))
+        mockMvc.perform(post("/users/delete").param("email", userDto.getEmail()))
                .andExpect(redirectedUrl("/users/list"));
         
-        verify(userServiceMock).deleteByEmail(user.getEmail());
+        verify(userServiceMock).deleteByEmail(userDto.getEmail());
     }
 }

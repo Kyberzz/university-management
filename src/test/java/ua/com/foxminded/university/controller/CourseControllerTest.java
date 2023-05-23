@@ -17,8 +17,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import ua.com.foxminded.university.model.CourseModel;
-import ua.com.foxminded.university.modelmother.CourseModelMother;
+import ua.com.foxminded.university.dto.CourseDTO;
+import ua.com.foxminded.university.modelmother.CourseDtoMother;
 import ua.com.foxminded.university.service.CourseService;
 import ua.com.foxminded.university.service.TeacherService;
 
@@ -36,13 +36,13 @@ class CourseControllerTest {
     
     private MockMvc mockMvc;
     
-    private CourseModel course;
+    private CourseDTO course;
     
     @BeforeEach
     void init() {
         mockMvc = MockMvcBuilders.standaloneSetup(new CourseController(
                 teacherServiceMock, courseServiceMock)).build();
-        course = CourseModelMother.complete().build();
+        course = CourseDtoMother.complete().build();
     }
     
     @Test
@@ -102,7 +102,7 @@ class CourseControllerTest {
                                                .flashAttr("courseModel", course))
                .andExpect(redirectedUrl("/courses/" + COURSE_ID));
         
-        verify(courseServiceMock).update(isA(CourseModel.class));
+        verify(courseServiceMock).update(isA(CourseDTO.class));
     }
     @Test
     void create_ShouldReturnBadRequestStatus() throws Exception {
@@ -116,7 +116,7 @@ class CourseControllerTest {
         mockMvc.perform(post("/courses/create").flashAttr("courseModel", course))
                .andExpect(redirectedUrl("/courses/list"));
         
-        verify(courseServiceMock).create(isA(CourseModel.class));
+        verify(courseServiceMock).create(isA(CourseDTO.class));
     }
     
     

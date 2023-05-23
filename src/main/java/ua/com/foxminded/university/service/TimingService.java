@@ -1,7 +1,11 @@
 package ua.com.foxminded.university.service;
 
-import ua.com.foxminded.university.model.TimingModel;
+import java.util.List;
 
-public interface TimingService extends GenericService<TimingModel> {
+import ua.com.foxminded.university.dto.TimingDTO;
+import ua.com.foxminded.university.exception.ServiceException;
+
+public interface TimingService extends GenericService<TimingDTO> {
     
+    public List<TimingDTO> getByTimetableId(int id) throws ServiceException;
 }

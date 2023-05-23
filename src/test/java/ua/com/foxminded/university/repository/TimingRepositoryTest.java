@@ -10,10 +10,10 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.transaction.BeforeTransaction;
 
-import ua.com.foxminded.university.entity.TimetableEntity;
-import ua.com.foxminded.university.entity.TimingEntity;
-import ua.com.foxminded.university.entitymother.TimetableEntityMother;
-import ua.com.foxminded.university.entitymother.TimingEntityMother;
+import ua.com.foxminded.university.entity.Timetable;
+import ua.com.foxminded.university.entity.Timing;
+import ua.com.foxminded.university.entitymother.TimetableMother;
+import ua.com.foxminded.university.entitymother.TimingMother;
 
 @DataJpaTest
 @ActiveProfiles("test")
@@ -25,20 +25,20 @@ class TimingRepositoryTest {
     @Autowired
     private TimetableRepository timetableRepository;
     
-    private TimingEntity timingEntity;
-    private TimetableEntity timetableEntity;
+    private Timing timing;
+    private Timetable timetable;
     
     @BeforeTransaction
     void init() {
-        timetableEntity = TimetableEntityMother.complete().build();
-        timetableRepository.saveAndFlush(timetableEntity);
-        timingEntity = TimingEntityMother.complete().timetable(timetableEntity).build();
-        timingRepository.saveAndFlush(timingEntity);
+        timetable = TimetableMother.complete().build();
+        timetableRepository.saveAndFlush(timetable);
+        timing = TimingMother.complete().timetable(timetable).build();
+        timingRepository.saveAndFlush(timing);
     }
 
     @Test
     void test() {
-        List<TimingEntity> timings = timingRepository.findByTimetableId(timetableEntity.getId());
-        assertEquals(timings.iterator().next(), timingEntity);
+        List<Timing> timings = timingRepository.findByTimetableId(timetable.getId());
+        assertEquals(timings.iterator().next(), timing);
     }
 }

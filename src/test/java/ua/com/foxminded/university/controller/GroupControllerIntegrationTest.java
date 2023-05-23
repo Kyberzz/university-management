@@ -5,7 +5,7 @@ import static org.springframework.security.test.web.servlet.response.SecurityMoc
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static ua.com.foxminded.university.model.Authority.ADMIN;
+import static ua.com.foxminded.university.entity.Authority.ADMIN;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,11 +21,11 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import ua.com.foxminded.university.entity.GroupEntity;
-import ua.com.foxminded.university.entity.StudentEntity;
-import ua.com.foxminded.university.entitymother.GroupEntityMother;
-import ua.com.foxminded.university.entitymother.StudentEntityMother;
-import ua.com.foxminded.university.model.Authority;
+import ua.com.foxminded.university.entity.Authority;
+import ua.com.foxminded.university.entity.Group;
+import ua.com.foxminded.university.entity.Student;
+import ua.com.foxminded.university.entitymother.GroupMother;
+import ua.com.foxminded.university.entitymother.StudentMother;
 import ua.com.foxminded.university.repository.GroupRepository;
 import ua.com.foxminded.university.repository.StudentRepository;
 
@@ -46,10 +46,10 @@ class GroupControllerIntegrationTest extends DefaultControllerTest {
     @Autowired
     private StudentRepository studentRepository;
     
-    private GroupEntity groupEntity;
-    private StudentEntity studentA;
-    private StudentEntity studentB;
-    private StudentEntity studentEntity;
+    private Group group;
+    private Student firstStudent;
+    private Student secondStudent;
+    private Student student;
     
     @DynamicPropertySource
     public static void configureProperties(DynamicPropertyRegistry registry) {
@@ -60,14 +60,14 @@ class GroupControllerIntegrationTest extends DefaultControllerTest {
     
     @BeforeTransaction
     void setUp() {
-        groupEntity = GroupEntityMother.complete().build();
-        groupRepository.saveAndFlush(groupEntity);
-        studentA = StudentEntityMother.complete().build();
-        studentB = StudentEntityMother.complete().build();
-        studentRepository.saveAndFlush(studentA);
-        studentRepository.saveAndFlush(studentB);
-        studentEntity = StudentEntityMother.complete().group(groupEntity).build();
-        studentRepository.saveAndFlush(studentEntity);
+        group = GroupMother.complete().build();
+        groupRepository.saveAndFlush(group);
+        firstStudent = StudentMother.complete().build();
+        secondStudent = StudentMother.complete().build();
+        studentRepository.saveAndFlush(firstStudent);
+        studentRepository.saveAndFlush(secondStudent);
+        student = StudentMother.complete().group(group).build();
+        studentRepository.saveAndFlush(student);
     }
     
     @AfterTransaction
@@ -78,8 +78,8 @@ class GroupControllerIntegrationTest extends DefaultControllerTest {
     @Test
     @WithUserDetails(AUTHORIZED_EMAIL)
     void deassignGroup_ShouldAuthorizeCredentialsAndRedirect() throws Exception {
-        mockMvc.perform(post("/groups/{groupId}/deassign-group", groupEntity.getId())
-                    .param("studentId", String.valueOf(studentEntity.getId()))
+        mockMvc.perform(post("/groups/{groupId}/deassign-group", group.getId())
+                    .param("studentId", String.valueOf(student.getId()))
                     .with(csrf()))
                .andExpect(authenticated().withRoles(ADMIN.toString()))
                .andExpect(status().is3xxRedirection());
@@ -88,10 +88,10 @@ class GroupControllerIntegrationTest extends DefaultControllerTest {
     @Test
     @WithUserDetails(AUTHORIZED_EMAIL)
     void assignGroup_ShouldAuthorizeCredentialsAndRedirect() throws Exception {
-        mockMvc.perform(post("/groups/{groupId}/assign-group", groupEntity.getId())
-                    .param("studentId", new StringBuilder().append(studentA.getId())
+        mockMvc.perform(post("/groups/{groupId}/assign-group", group.getId())
+                    .param("studentId", new StringBuilder().append(firstStudent.getId())
                                                             .append(",")
-                                                            .append(studentB.getId())
+                                                            .append(secondStudent.getId())
                                                             .toString())
                     .with(csrf()))
                .andExpect(authenticated().withRoles(ADMIN.toString()))
@@ -101,7 +101,7 @@ class GroupControllerIntegrationTest extends DefaultControllerTest {
     @Test
     @WithUserDetails(AUTHORIZED_EMAIL)
     void delete_ShouldAuthenticateCredantialsAndRedirect() throws Exception {
-        mockMvc.perform(post("/groups/{groupId}/delete", groupEntity.getId()).with(csrf()))
+        mockMvc.perform(post("/groups/{groupId}/delete", group.getId()).with(csrf()))
                .andExpect(authenticated().withRoles(Authority.ADMIN.toString()))
                .andExpect(status().is3xxRedirection());
     }
@@ -118,7 +118,7 @@ class GroupControllerIntegrationTest extends DefaultControllerTest {
     @Test
     @WithUserDetails(AUTHORIZED_EMAIL)
     void update() throws Exception {
-        mockMvc.perform(post("/groups/{groupId}/update", groupEntity.getId())
+        mockMvc.perform(post("/groups/{groupId}/update", group.getId())
                     .param("name", GROUP_NAME)
                     .with(csrf()))
         .andExpect(authenticated().withRoles(Authority.ADMIN.toString()))
@@ -128,7 +128,7 @@ class GroupControllerIntegrationTest extends DefaultControllerTest {
     @Test
     @WithUserDetails(AUTHORIZED_EMAIL)
     void getById_ShouldAuthoriseCredentialsAndReturnStatusIsOk() throws Exception {
-        mockMvc.perform(get("/groups/{groupId}", groupEntity.getId()))
+        mockMvc.perform(get("/groups/{groupId}", group.getId()))
                .andExpect(authenticated().withRoles(Authority.ADMIN.toString()))
                .andExpect(status().isOk());
     }

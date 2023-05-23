@@ -12,7 +12,7 @@ import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 import lombok.RequiredArgsConstructor;
-import ua.com.foxminded.university.model.Authority;
+import ua.com.foxminded.university.entity.Authority;
 
 @EnableWebSecurity
 @RequiredArgsConstructor

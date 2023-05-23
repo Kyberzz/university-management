@@ -26,13 +26,13 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 
-import ua.com.foxminded.university.entity.LessonEntity;
-import ua.com.foxminded.university.entitymother.LessonEntityMother;
+import ua.com.foxminded.university.dto.GroupDTO;
+import ua.com.foxminded.university.dto.LessonDTO;
+import ua.com.foxminded.university.entity.Lesson;
+import ua.com.foxminded.university.entitymother.LessonMother;
 import ua.com.foxminded.university.exception.ServiceException;
-import ua.com.foxminded.university.model.GroupModel;
-import ua.com.foxminded.university.model.LessonModel;
-import ua.com.foxminded.university.modelmother.GroupModelMother;
-import ua.com.foxminded.university.modelmother.LessonModelMother;
+import ua.com.foxminded.university.modelmother.GroupDtoMother;
+import ua.com.foxminded.university.modelmother.LessonDtoMother;
 import ua.com.foxminded.university.repository.LessonRepository;
 import ua.com.foxminded.university.service.impl.LessonServiceImpl;
 
@@ -50,19 +50,19 @@ class LessonServiceImplTest {
     @Mock
     private ModelMapper modelMapperMock;
     
-    private LessonEntity lessonEntity;
-    private LessonModel lessonModel;
-    private List<LessonEntity> lessonEntities;
-    private List<LessonModel> lessonModels;
-    private GroupModel groupModel;
+    private Lesson lesson;
+    private LessonDTO lessonDto;
+    private List<Lesson> lessons;
+    private List<LessonDTO> lessonsDto;
+    private GroupDTO groupDto;
     
     @BeforeEach
     void setUp() throws IOException {
-        lessonEntity = LessonEntityMother.complete().build();
-        lessonModel = LessonModelMother.complete().build();
-        lessonEntities = Arrays.asList(lessonEntity);
-        lessonModels = Arrays.asList(lessonModel);
-        groupModel = GroupModelMother.complete().build();
+        lesson = LessonMother.complete().build();
+        lessonDto = LessonDtoMother.complete().build();
+        lessons = Arrays.asList(lesson);
+        lessonsDto = Arrays.asList(lessonDto);
+        groupDto = GroupDtoMother.complete().build();
     }
     
     @Test
@@ -89,78 +89,78 @@ class LessonServiceImplTest {
     
     @Test
     void update_ShouldExecuteCorrectCallsQuantity() throws ServiceException {
-        LessonModel model = LessonModel.builder().id(LESSON_ID).build();
-        when(modelMapperMock.map(model, LessonEntity.class)).thenReturn(lessonEntity);
-        when(lessonRepositoryMock.findById(anyInt())).thenReturn(lessonEntity);
+        LessonDTO model = LessonDTO.builder().id(LESSON_ID).build();
+        when(modelMapperMock.map(model, Lesson.class)).thenReturn(lesson);
+        when(lessonRepositoryMock.findById(anyInt())).thenReturn(lesson);
         lessonSerivice.update(model);
-        verify(lessonRepositoryMock).saveAndFlush(isA(LessonEntity.class));
+        verify(lessonRepositoryMock).saveAndFlush(isA(Lesson.class));
     }
     
     @Test
     void create_ShouldCallComponents_WhenIfBlockFalse() throws ServiceException {
-        lessonEntity.setId(LESSON_ID);
-        lessonModel.setId(LESSON_ID);
-        groupModel.setId(GROUP_ID);
-        lessonModel.setGroup(groupModel);
+        lesson.setId(LESSON_ID);
+        lessonDto.setId(LESSON_ID);
+        groupDto.setId(GROUP_ID);
+        lessonDto.setGroup(groupDto);
         when(lessonRepositoryMock.findByDatestampAndGroupIdAndTimingId(
                 isA(LocalDate.class), anyInt(), anyInt()))
-            .thenReturn(lessonEntity);
-        when(modelMapperMock.map(lessonModel, LessonEntity.class)).thenReturn(
-                lessonEntity);
-        when(lessonRepositoryMock.findById(anyInt())).thenReturn(lessonEntity);
-        lessonSerivice.create(lessonModel);
-        verify(lessonRepositoryMock).saveAndFlush(isA(LessonEntity.class));
+            .thenReturn(lesson);
+        when(modelMapperMock.map(lessonDto, Lesson.class)).thenReturn(
+                lesson);
+        when(lessonRepositoryMock.findById(anyInt())).thenReturn(lesson);
+        lessonSerivice.create(lessonDto);
+        verify(lessonRepositoryMock).saveAndFlush(isA(Lesson.class));
     }
     
     @Test
     void create_ShouldCallComponents_WhenIfBlockTure() throws ServiceException {
-        groupModel.setId(GROUP_ID);
-        lessonModel.setGroup(groupModel);
+        groupDto.setId(GROUP_ID);
+        lessonDto.setGroup(groupDto);
         when(lessonRepositoryMock.findByDatestampAndGroupIdAndTimingId(
                 isA(LocalDate.class), anyInt(), anyInt())).thenReturn(null);
-        when(modelMapperMock.map(lessonModel, LessonEntity.class))
-            .thenReturn(lessonEntity);
-        lessonSerivice.create(lessonModel);
-        verify(lessonRepositoryMock).saveAndFlush(isA(LessonEntity.class));
+        when(modelMapperMock.map(lessonDto, Lesson.class))
+            .thenReturn(lesson);
+        lessonSerivice.create(lessonDto);
+        verify(lessonRepositoryMock).saveAndFlush(isA(Lesson.class));
     }
     
     @Test
     void getById_ShouldExecuteCorrectCallsQuantity() throws ServiceException {
-        when(lessonRepositoryMock.findById(anyInt())).thenReturn(lessonEntity);
+        when(lessonRepositoryMock.findById(anyInt())).thenReturn(lesson);
         lessonSerivice.getById(LESSON_ID);
-        verify(modelMapperMock).map(lessonEntity, LessonModel.class);
+        verify(modelMapperMock).map(lesson, LessonDTO.class);
     }
     
     @Test
     void getMonthTimetable_ShouldExecuteCorrectCallsQuantity() throws ServiceException {
         when(lessonRepositoryMock.findByDatestamp(isA(LocalDate.class)))
-        .thenReturn(lessonEntities);
-        when(modelMapperMock.map(lessonEntities, LessonServiceImpl.LESSON_MODELS_LIST_TYPE))
-        .thenReturn(lessonModels);
+        .thenReturn(lessons);
+        when(modelMapperMock.map(lessons, LessonServiceImpl.LESSON_MODELS_LIST_TYPE))
+        .thenReturn(lessonsDto);
         lessonSerivice.getMonthLessons(LocalDate.now());
-        verify(modelMapperMock, atLeastOnce()).map(lessonEntities, LessonServiceImpl.LESSON_MODELS_LIST_TYPE);
+        verify(modelMapperMock, atLeastOnce()).map(lessons, LessonServiceImpl.LESSON_MODELS_LIST_TYPE);
     }
     
     @Test
     void getDayTimetalbe_ShouldExecuteCorectCallsQuantity() throws ServiceException {
         when(lessonRepositoryMock.findByDatestamp(isA(LocalDate.class)))
-            .thenReturn(lessonEntities);
-        when(modelMapperMock.map(lessonEntities, LessonServiceImpl.LESSON_MODELS_LIST_TYPE))
-            .thenReturn(lessonModels);
+            .thenReturn(lessons);
+        when(modelMapperMock.map(lessons, LessonServiceImpl.LESSON_MODELS_LIST_TYPE))
+            .thenReturn(lessonsDto);
         lessonSerivice.getDayLessons(LocalDate.now());
-        verify(modelMapperMock).map(lessonEntities, LessonServiceImpl.LESSON_MODELS_LIST_TYPE);
+        verify(modelMapperMock).map(lessons, LessonServiceImpl.LESSON_MODELS_LIST_TYPE);
     }
     
     @Test
     void getAll_ShouldExecuteCorrectCallsQuantity() throws ServiceException {
-        List<LessonEntity> entities = Arrays.asList(lessonEntity);
+        List<Lesson> entities = Arrays.asList(lesson);
         when(lessonRepositoryMock.findAll()).thenReturn(entities);
         lessonSerivice.getAll();
         
         InOrder inOrder = Mockito.inOrder(lessonRepositoryMock, modelMapperMock);
         inOrder.verify(lessonRepositoryMock).findAll();
         inOrder.verify(modelMapperMock).map(
-                ArgumentMatchers.<LessonEntity>anyList(), 
+                ArgumentMatchers.<Lesson>anyList(), 
                 any(Type.class));
     }
 }

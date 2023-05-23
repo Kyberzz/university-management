@@ -2,12 +2,12 @@ package ua.com.foxminded.university.comparator;
 
 import java.util.Comparator;
 
-import ua.com.foxminded.university.model.UserModel;
+import ua.com.foxminded.university.dto.UserDTO;
 
-public class UserModelComparator implements Comparator<UserModel> {
+public class UserModelComparator implements Comparator<UserDTO> {
     
     @Override
-    public int compare(UserModel userA, UserModel userB) {
+    public int compare(UserDTO userA, UserDTO userB) {
         return Integer.compare(userA.getId(), userB.getId());
     }
 }

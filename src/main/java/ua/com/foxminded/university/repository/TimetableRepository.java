@@ -5,12 +5,12 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import ua.com.foxminded.university.entity.TimetableEntity;
+import ua.com.foxminded.university.entity.Timetable;
 
-public interface TimetableRepository extends JpaRepository<TimetableEntity, Integer> {
+public interface TimetableRepository extends JpaRepository<Timetable, Integer> {
     
-    @Query("select t from TimetableEntity t left join fetch t.timings")
-    public List<TimetableEntity> getAllWithTimings();
+    @Query("select t from Timetable t left join fetch t.timings")
+    public List<Timetable> getAllWithTimings();
     
-    public TimetableEntity findById(int id);
+    public Timetable findById(int id);
 }

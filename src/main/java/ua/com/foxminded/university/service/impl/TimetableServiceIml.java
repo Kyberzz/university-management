@@ -11,9 +11,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
-import ua.com.foxminded.university.entity.TimetableEntity;
+import ua.com.foxminded.university.dto.TimetableDTO;
+import ua.com.foxminded.university.entity.Timetable;
 import ua.com.foxminded.university.exception.ServiceException;
-import ua.com.foxminded.university.model.TimetableModel;
 import ua.com.foxminded.university.repository.TimetableRepository;
 import ua.com.foxminded.university.service.TimetableService;
 
@@ -23,15 +23,15 @@ import ua.com.foxminded.university.service.TimetableService;
 public class TimetableServiceIml implements TimetableService {
     
     public static final Type TIMETABLE_MODELS_LIST_TYPE = 
-            new TypeToken<List<TimetableModel>>() {}.getType();
+            new TypeToken<List<TimetableDTO>>() {}.getType();
     
     private final TimetableRepository timetableRepository;
     private final ModelMapper modelMapper;
 
     @Override
-    public List<TimetableModel> getAllWithTimings() throws ServiceException {
+    public List<TimetableDTO> getAllWithTimings() throws ServiceException {
         try {
-            List<TimetableEntity> entities = timetableRepository.getAllWithTimings();
+            List<Timetable> entities = timetableRepository.getAllWithTimings();
             return modelMapper.map(entities, TIMETABLE_MODELS_LIST_TYPE);
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
             throw new ServiceException("Getting timetables with timings relationships fails", e);
@@ -48,9 +48,9 @@ public class TimetableServiceIml implements TimetableService {
     }
 
     @Override
-    public void create(TimetableModel model) throws ServiceException {
+    public void create(TimetableDTO model) throws ServiceException {
         try {
-            TimetableEntity entity = modelMapper.map(model, TimetableEntity.class);
+            Timetable entity = modelMapper.map(model, Timetable.class);
             timetableRepository.saveAndFlush(entity);
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
             throw new ServiceException("Creating timetable fails", e);
@@ -58,11 +58,11 @@ public class TimetableServiceIml implements TimetableService {
     }
 
     @Override
-    public void update(TimetableModel model) throws ServiceException {
+    public void update(TimetableDTO model) throws ServiceException {
         try {
-            TimetableEntity persistedEntity = timetableRepository.findById(
+            Timetable persistedEntity = timetableRepository.findById(
                     model.getId().intValue());
-            TimetableEntity entity = modelMapper.map(model, TimetableEntity.class);
+            Timetable entity = modelMapper.map(model, Timetable.class);
             persistedEntity.setName(model.getName());
             timetableRepository.saveAndFlush(entity);
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
@@ -71,19 +71,19 @@ public class TimetableServiceIml implements TimetableService {
     }
 
     @Override
-    public TimetableModel getById(int id) throws ServiceException {
+    public TimetableDTO getById(int id) throws ServiceException {
         try {
-            TimetableEntity entity = timetableRepository.findById(id);
-            return modelMapper.map(entity, TimetableModel.class);
+            Timetable entity = timetableRepository.findById(id);
+            return modelMapper.map(entity, TimetableDTO.class);
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
             throw new ServiceException("Getting the timetable by its id fails", e);
         }
     }
 
     @Override
-    public List<TimetableModel> getAll() throws ServiceException {
+    public List<TimetableDTO> getAll() throws ServiceException {
         try {
-            List<TimetableEntity> entities = timetableRepository.findAll();
+            List<Timetable> entities = timetableRepository.findAll();
             return modelMapper.map(entities, TIMETABLE_MODELS_LIST_TYPE);
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
             throw new ServiceException("Getting all timetables fails", e);

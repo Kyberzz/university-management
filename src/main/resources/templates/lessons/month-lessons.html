@@ -1,111 +1,102 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="thymeleaf.org">
 
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>month-lessons</title>
-<link
- href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
- rel="stylesheet"
- integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
- crossorigin="anonymous">
-</head>
+ <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>month-lessons</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+   rel="stylesheet"
+   integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
+   crossorigin="anonymous">
+ </head>
 
-<body>
- <div th:replace="~{fragments/header::navigationBar}">Navigation
-  bar</div>
+ <body>
+  <div th:replace="~{fragments/header::navigationBar}">Navigation
+   bar</div>
 
- <nav class="ms-2" aria-label="breadcrumb" th:fragment="page-path">
-  <ol class="breadcrumb container-fluid">
-   <li class="breadcrumb-item"><a th:href="@{/}"
-    th:text="#{href.home}">Home</a></li>
-   <li class="breadcrumb-item active" aria-current="page"
-    th:text="#{href.month-lessons}">Month lesson</li>
-  </ol>
- </nav>
+  <nav class="ms-2" aria-label="breadcrumb" th:fragment="page-path">
+   <ol class="breadcrumb container-fluid">
+    <li class="breadcrumb-item"><a th:href="@{/}" th:text="#{href.home}">Home</a></li>
+    <li class="breadcrumb-item active" aria-current="page" th:text="#{href.month-lessons}">Month
+     lesson</li>
+   </ol>
+  </nav>
 
- <br>
- <div class="container">
-  <div class="col">
-   <div class="row">
-    <div class="col">
-     <form th:action="@{/lessons/__${lessonModel.datestamp}__/back}"
-      th:method="get">
-      <button type="submit" class="btn btn-primary"
-       th:text="#{lessons.previous}">Previous period</button>
-     </form>
+  <br>
+  <div class="container">
+   <div class="col">
+    <div class="row">
+     <div class="col">
+      <form th:action="@{/lessons/__${lessonModel.datestamp}__/back}" th:method="get">
+       <button type="submit" class="btn btn-primary" th:text="#{lessons.previous}">Previous
+        period</button>
+      </form>
+     </div>
+     <div class="col text-end">
+      <form th:action="@{/lessons/__${lessonModel.datestamp}__/next}" th:method="get">
+       <button type="submit" class="btn btn-primary" th:text="#{lessons.next}">Next period</button>
+      </form>
+     </div>
     </div>
-    <div class="col text-end">
-     <form th:action="@{/lessons/__${lessonModel.datestamp}__/next}"
-      th:method="get">
-      <button type="submit" class="btn btn-primary"
-       th:text="#{lessons.next}">Next period</button>
-     </form>
-    </div>
+    <br>
    </div>
-   <br>
   </div>
- </div>
- <div class="container">
-  <div class="col">
-   <div class="row">
-    <table class="table-bordered text-center">
-     <thead>
-      <tr>
-       <th scope="col">#</th>
-       <th scope="col"
-        th:each="dayOfWeek : ${T(java.time.DayOfWeek).values()}"
-        th:text="${dayOfWeek}" class="fs-6">MONDAY</th>
-      </tr>
-     </thead>
-     <tbody>
-      <tr th:each="weekLessons, iterationStatus : ${monthLessons}">
-       <th scope="row" style="width: 3%"
-        th:text="${iterationStatus.count}">1</th>
-       <td th:each="dayLessons : ${weekLessons}">
-        <div class="container">
-         <div class="col">
-          <div class="row">
-           <div th:text="${dayLessons[0].datestamp}">2023-04-24</div>
-          </div>
-          <div class="row" th:if="${dayLessons[0].id}">
-           <p>
-           <div>
-            <form
-             th:action="@{/lessons/__${dayLessons[0].datestamp}__/day-lessons}">
-             <button type="submit" class="btn btn-success btn-sm"
-              th:text="#{button.expand}" id="expandButton">Expand</button>
-            </form>
+  <div class="container">
+   <div class="col">
+    <div class="row">
+     <table class="table-bordered text-center">
+      <thead>
+       <tr>
+        <th scope="col">#</th>
+        <th scope="col" th:each="dayOfWeek : ${T(java.time.DayOfWeek).values()}"
+         th:text="${dayOfWeek}" class="fs-6">MONDAY</th>
+       </tr>
+      </thead>
+      <tbody>
+       <tr th:each="weekLessons, iterationStatus : ${monthLessons}">
+        
+        <th scope="row" style="width: 3%" th:text="${iterationStatus.count}">1</th>
+        <td th:each="dayLessons : ${weekLessons}">
+         <div class="container">
+          <div class="col">
+           <div class="row">
+            <div th:text="${dayLessons[0].datestamp}">2023-04-24</div>
            </div>
-          </div>
-          <div class="row" th:if="${dayLessons[0].id == null}">
-           <div th:text="#{courses.novalue}">No value</div>
-           <div class="mb-2">
-
-            <button type="button" class="btn btn-outline-success btn-sm"
-             id="createButton" data-bs-toggle="modal"
-             th:data-bs-target="|#create${dayLessons[0].datestamp}|"
-             th:text="#{fragments.add}">Create</button>
-
-
+           
+           <div class="row" th:if="${dayLessons[0].id}">
+            <p>
+            <div>
+             <form th:action="@{/lessons/__${dayLessons[0].datestamp}__/day-lessons}" method="get">
+              <button type="submit" class="btn btn-success btn-sm" th:text="#{button.expand}"
+               id="expandButton">Expand</button>
+              <input type="hidden" name="timetableId" th:value="${dayLessons[0].timetable.id}"/>
+             </form>
+            </div>
+           </div>
+           
+           <div class="row" th:if="${dayLessons[0].id == null}">
+            <div th:text="#{courses.novalue}">No value</div>
+            <div class="mb-2">
+             <button type="button" class="btn btn-outline-success btn-sm" id="createButton"
+              data-bs-toggle="modal" th:data-bs-target="|#create${dayLessons[0].datestamp}|"
+              th:text="#{fragments.add}">Create</button>
+            </div>
            </div>
           </div>
          </div>
-        </div>
-       </td>
-      </tr>
-     </tbody>
-    </table>
+        </td>
+       </tr>
+      </tbody>
+     </table>
 
+    </div>
    </div>
   </div>
- </div>
 
- <script
-  src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
-  integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
-  crossorigin="anonymous"></script>
-</body>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+   integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+   crossorigin="anonymous"></script>
+ </body>
 
 </html>

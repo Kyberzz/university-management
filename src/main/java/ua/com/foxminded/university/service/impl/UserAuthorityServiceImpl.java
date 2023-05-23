@@ -8,9 +8,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
-import ua.com.foxminded.university.entity.UserAuthorityEntity;
+import ua.com.foxminded.university.dto.UserAuthorityDTO;
+import ua.com.foxminded.university.entity.UserAuthority;
 import ua.com.foxminded.university.exception.ServiceException;
-import ua.com.foxminded.university.model.UserAuthorityModel;
 import ua.com.foxminded.university.repository.UserAuthorityRepository;
 import ua.com.foxminded.university.service.UserAuthorityService;
 
@@ -22,13 +22,13 @@ public class UserAuthorityServiceImpl implements UserAuthorityService {
     private final UserAuthorityRepository userAuthorityRepository;
     
     @Override
-    public UserAuthorityModel saveUserAuthority(UserAuthorityModel model) 
+    public UserAuthorityDTO saveUserAuthority(UserAuthorityDTO model) 
             throws ServiceException {
         try {
             ModelMapper modelMapper = new ModelMapper();
-            UserAuthorityEntity entity = modelMapper.map(model, UserAuthorityEntity.class);
-            UserAuthorityEntity persistedEntity = userAuthorityRepository.saveAndFlush(entity);
-            return modelMapper.map(persistedEntity, UserAuthorityModel.class);
+            UserAuthority entity = modelMapper.map(model, UserAuthority.class);
+            UserAuthority persistedEntity = userAuthorityRepository.saveAndFlush(entity);
+            return modelMapper.map(persistedEntity, UserAuthorityDTO.class);
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
             throw new ServiceException("Persisting UserAuthority object fais.", e);
         }

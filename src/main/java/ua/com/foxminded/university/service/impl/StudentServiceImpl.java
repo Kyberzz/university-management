@@ -13,11 +13,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
-import ua.com.foxminded.university.entity.GroupEntity;
-import ua.com.foxminded.university.entity.StudentEntity;
-import ua.com.foxminded.university.entity.UserEntity;
+import ua.com.foxminded.university.dto.StudentDTO;
+import ua.com.foxminded.university.entity.Group;
+import ua.com.foxminded.university.entity.Student;
+import ua.com.foxminded.university.entity.User;
 import ua.com.foxminded.university.exception.ServiceException;
-import ua.com.foxminded.university.model.StudentModel;
 import ua.com.foxminded.university.repository.GroupRepository;
 import ua.com.foxminded.university.repository.StudentRepository;
 import ua.com.foxminded.university.repository.UserRepository;
@@ -29,7 +29,7 @@ import ua.com.foxminded.university.service.StudentService;
 public class StudentServiceImpl implements StudentService {
     
     public static final Type STUDENT_MODEL_LIST_TYPE = 
-            new TypeToken<List<StudentModel>>() {}.getType();
+            new TypeToken<List<StudentDTO>>() {}.getType();
     
     private final ModelMapper modelMapper;
     private final StudentRepository studentRepository;
@@ -37,7 +37,7 @@ public class StudentServiceImpl implements StudentService {
     private final UserRepository userRepository;
     
     @Override 
-    public void sortByLastName(List<StudentModel> students) {
+    public void sortByLastName(List<StudentDTO> students) {
         Collections.sort(students, Comparator.comparing(student -> student.getUser()
                                                                           .getPerson()
                                                                           .getLastName()));
@@ -53,20 +53,20 @@ public class StudentServiceImpl implements StudentService {
     }
     
     @Override
-    public void update(StudentModel studentModel) throws ServiceException {
+    public void update(StudentDTO studentModel) throws ServiceException {
         try {
-            StudentEntity studentEntity = modelMapper.map(studentModel, StudentEntity.class);
-            StudentEntity persistedStudent = studentRepository.findById(studentEntity.getId());
+            Student studentEntity = modelMapper.map(studentModel, Student.class);
+            Student persistedStudent = studentRepository.findById(studentEntity.getId());
             
             if (studentModel.hasGroup()) {
                 int groupId = studentModel.getGroup().getId();
-                GroupEntity persistedGroup = groupRepository.findById(groupId);
+                Group persistedGroup = groupRepository.findById(groupId);
                 persistedStudent.setGroup(persistedGroup);
             } else {
                 persistedStudent.setGroup(null);
             }
             
-            UserEntity persistedUser = userRepository.findById(
+            User persistedUser = userRepository.findById(
                     persistedStudent.getUser().getId().intValue());
             String firstName = studentModel.getUser().getPerson().getFirstName();
             persistedUser.getPerson().setFirstName(firstName);
@@ -81,19 +81,19 @@ public class StudentServiceImpl implements StudentService {
     }
     
     @Override 
-    public StudentModel getById(int id) throws ServiceException {
+    public StudentDTO getById(int id) throws ServiceException {
         try {
-            StudentEntity studentEntity = studentRepository.findById(id);
-            return modelMapper.map(studentEntity, StudentModel.class);
+            Student studentEntity = studentRepository.findById(id);
+            return modelMapper.map(studentEntity, StudentDTO.class);
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
             throw new ServiceException("Getting a student by its id fails", e);
         }
     }
     
     @Override
-    public List<StudentModel> getAll() throws ServiceException {
+    public List<StudentDTO> getAll() throws ServiceException {
         try {
-            List<StudentEntity> studentEntities = studentRepository.findAll();
+            List<Student> studentEntities = studentRepository.findAll();
             return modelMapper.map(studentEntities, STUDENT_MODEL_LIST_TYPE);
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
             throw new ServiceException("Getting all students fails", e);
@@ -101,9 +101,9 @@ public class StudentServiceImpl implements StudentService {
     }
     
     @Override
-    public void create(StudentModel model) throws ServiceException {
+    public void create(StudentDTO model) throws ServiceException {
         try {
-            StudentEntity entity = modelMapper.map(model, StudentEntity.class);
+            Student entity = modelMapper.map(model, Student.class);
             studentRepository.saveAndFlush(entity);
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
             throw new ServiceException("Creating a student fails", e);

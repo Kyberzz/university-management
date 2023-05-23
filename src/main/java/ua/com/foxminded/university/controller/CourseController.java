@@ -16,9 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import lombok.RequiredArgsConstructor;
+import ua.com.foxminded.university.dto.CourseDTO;
+import ua.com.foxminded.university.dto.TeacherDTO;
 import ua.com.foxminded.university.exception.ServiceException;
-import ua.com.foxminded.university.model.CourseModel;
-import ua.com.foxminded.university.model.TeacherModel;
 import ua.com.foxminded.university.service.CourseService;
 import ua.com.foxminded.university.service.TeacherService;
 
@@ -56,9 +56,9 @@ public class CourseController extends DefaultController {
     
     @GetMapping("/{id}")
     public String getById(@PathVariable int id, Model model) throws ServiceException {
-        CourseModel courseModel = courseService.getByIdWithLessonsAndTeachers(id);
-        CourseModel updatedCourse = new CourseModel();
-        List<TeacherModel> allTeachers = teacherService.getAll();
+        CourseDTO courseModel = courseService.getByIdWithLessonsAndTeachers(id);
+        CourseDTO updatedCourse = new CourseDTO();
+        List<TeacherDTO> allTeachers = teacherService.getAll();
         
         model.addAttribute("allTeachers", allTeachers);
         model.addAttribute(UPDATED_COURSE_ATTRIBUTE, updatedCourse);
@@ -76,7 +76,7 @@ public class CourseController extends DefaultController {
     
     @PostMapping(value = "/update", params = "courseId")
     public String update(@RequestParam Integer courseId,
-                         @Valid @ModelAttribute CourseModel updatedCourse, 
+                         @Valid @ModelAttribute CourseDTO updatedCourse, 
                          BindingResult bindingResult) throws BindException, 
                                                              ServiceException {
         if (bindingResult.hasErrors()) {
@@ -90,7 +90,7 @@ public class CourseController extends DefaultController {
     }
     
     @PostMapping(value = "/create")
-    public String create(@Valid @ModelAttribute CourseModel courseModel, 
+    public String create(@Valid @ModelAttribute CourseDTO courseModel, 
                          BindingResult bindingResult) throws BindException, 
                                                              ServiceException {
         if (bindingResult.hasErrors()) {
@@ -104,8 +104,8 @@ public class CourseController extends DefaultController {
     
     @GetMapping("/list")
     public String list(Model model) throws ServiceException {
-        CourseModel course = new CourseModel();
-        List<CourseModel> courses = courseService.getAll();
+        CourseDTO course = new CourseDTO();
+        List<CourseDTO> courses = courseService.getAll();
         model.addAttribute(COURSES_ATTRIBUTE, courses);
         model.addAttribute(COURSE_MODEL_ATTRIBUTE, course);
         return "courses/list";

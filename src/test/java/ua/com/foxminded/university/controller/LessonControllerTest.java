@@ -26,12 +26,13 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import ua.com.foxminded.university.model.LessonModel;
-import ua.com.foxminded.university.modelmother.LessonModelMother;
+import ua.com.foxminded.university.dto.LessonDTO;
+import ua.com.foxminded.university.modelmother.LessonDtoMother;
 import ua.com.foxminded.university.service.CourseService;
 import ua.com.foxminded.university.service.GroupService;
 import ua.com.foxminded.university.service.LessonService;
 import ua.com.foxminded.university.service.TimetableService;
+import ua.com.foxminded.university.service.TimingService;
 
 @ExtendWith(SpringExtension.class)
 class LessonControllerTest {
@@ -50,9 +51,12 @@ class LessonControllerTest {
     @MockBean
     private TimetableService timetableService;
     
+    @MockBean
+    private TimingService timingService;
+    
     
     private MockMvc mockMvc;
-    private LessonModel timetableModel;
+    private LessonDTO lesson;
     
     @BeforeEach
     void setup() {
@@ -60,32 +64,33 @@ class LessonControllerTest {
                 new LessonController(timetableServiceMock, 
                                      courseServiceMock, 
                                      groupServiceMock, 
-                                     timetableService)).build();
+                                     timetableService, 
+                                     timingService)).build();
 
-        timetableModel = LessonModelMother.complete().build();
+        lesson = LessonDtoMother.complete().build();
     }
     
     @Test
     void create_ShouldRedirectToGetDayTimetable() throws Exception {
         LocalDate localDate = LocalDate.now();
-        LessonModel timetableModel = LessonModelMother.complete().build();
+        LessonDTO lessonDto = LessonDtoMother.complete().build();
         mockMvc.perform(post("/timetables/create/timetable/{date}", localDate.toString())
-                    .flashAttr(LESSON_MODEL_ATTRIBUTE, timetableModel))
+                    .flashAttr(LESSON_MODEL_ATTRIBUTE, lessonDto))
                .andDo(print())
                .andExpect(model().attributeExists(LESSON_MODEL_ATTRIBUTE))
                .andExpect(redirectedUrl(new StringBuffer().append(DAY_LESSONS_PATH)
                                                           .append(localDate)
                                                           .append("?").toString()));
-        verify(timetableServiceMock).create(isA(LessonModel.class));
+        verify(timetableServiceMock).create(isA(LessonDTO.class));
     }
     
     @Test
     void delete_ShouldRedirectToList() throws Exception {
         mockMvc.perform(post("/timetables/delete/{id}", TIMETABLE_ID)
-                    .flashAttr(LESSON_MODEL_ATTRIBUTE, timetableModel))
+                    .flashAttr(LESSON_MODEL_ATTRIBUTE, lesson))
                .andDo(print())
                .andExpect(redirectedUrl(new StringBuilder().append(DAY_LESSONS_PATH)
-                                                           .append(timetableModel.getDatestamp())
+                                                           .append(lesson.getDatestamp())
                                                            .append("?").toString()));
         verify(timetableServiceMock).deleteById(isA(Integer.class));
     }
@@ -93,20 +98,20 @@ class LessonControllerTest {
     @Test
     void update_ShouldRedirectToGetDayTimetable() throws Exception {
         mockMvc.perform(post("/timetables/update/{id}", TIMETABLE_ID)
-                    .flashAttr("timetableModel", timetableModel))
+                    .flashAttr("timetableModel", lesson))
                .andDo(print())
                .andExpect(redirectedUrl(
                        new StringBuilder().append(DAY_LESSONS_PATH)
-                                          .append(timetableModel.getDatestamp())
+                                          .append(lesson.getDatestamp())
                                           .append("?").toString()));
         
-        verify(timetableServiceMock).update(isA(LessonModel.class));
+        verify(timetableServiceMock).update(isA(LessonDTO.class));
     }
     
     @Test
     void getDayTimetable_ShouldRenderDayTimetableTemplate() throws Exception {
         mockMvc.perform(get("/timetables/day-timetables/{datestamp}", 
-                            timetableModel.getDatestamp().toString()))
+                            lesson.getDatestamp().toString()))
                .andDo(print())
                .andExpect(model().attributeExists(GROUPS_ATTRIBUTE, 
                                                   COURSES_ATTRIBUTE, 

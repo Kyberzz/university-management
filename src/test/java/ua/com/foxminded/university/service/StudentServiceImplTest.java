@@ -17,21 +17,21 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 
-import ua.com.foxminded.university.entity.GroupEntity;
-import ua.com.foxminded.university.entity.StudentEntity;
-import ua.com.foxminded.university.entity.UserEntity;
-import ua.com.foxminded.university.entitymother.GroupEntityMother;
-import ua.com.foxminded.university.entitymother.StudentEntityMother;
-import ua.com.foxminded.university.entitymother.UserEntityMother;
+import ua.com.foxminded.university.dto.GroupDTO;
+import ua.com.foxminded.university.dto.PersonDTO;
+import ua.com.foxminded.university.dto.StudentDTO;
+import ua.com.foxminded.university.dto.UserDTO;
+import ua.com.foxminded.university.entity.Group;
+import ua.com.foxminded.university.entity.Student;
+import ua.com.foxminded.university.entity.User;
+import ua.com.foxminded.university.entitymother.GroupMother;
+import ua.com.foxminded.university.entitymother.StudentMother;
+import ua.com.foxminded.university.entitymother.UserMother;
 import ua.com.foxminded.university.exception.ServiceException;
-import ua.com.foxminded.university.model.GroupModel;
-import ua.com.foxminded.university.model.PersonModel;
-import ua.com.foxminded.university.model.StudentModel;
-import ua.com.foxminded.university.model.UserModel;
-import ua.com.foxminded.university.modelmother.GroupModelMother;
-import ua.com.foxminded.university.modelmother.PersonModelMother;
-import ua.com.foxminded.university.modelmother.StudentModelMother;
-import ua.com.foxminded.university.modelmother.UserModelMother;
+import ua.com.foxminded.university.modelmother.GroupDtoMother;
+import ua.com.foxminded.university.modelmother.PersonDtoMother;
+import ua.com.foxminded.university.modelmother.StudentDtoMother;
+import ua.com.foxminded.university.modelmother.UserDtoMother;
 import ua.com.foxminded.university.repository.GroupRepository;
 import ua.com.foxminded.university.repository.StudentRepository;
 import ua.com.foxminded.university.repository.UserRepository;
@@ -60,30 +60,30 @@ class StudentServiceImplTest {
     @Mock
     private ModelMapper modelMapperMock;
     
-    private StudentModel studentModel;
-    private StudentEntity studentEntity;
-    private UserEntity userEntity;
-    private GroupModel groupModel;
-    private GroupEntity groupEntity;
+    private StudentDTO studentDto;
+    private Student student;
+    private User user;
+    private GroupDTO groupDto;
+    private Group group;
     
     @BeforeEach
     void setUp() {
-        studentModel = StudentModelMother.complete().build();
-        studentEntity = StudentEntityMother.complete().build();
-        userEntity = UserEntityMother.complete().build();
-        groupModel = GroupModelMother.complete().id(GROUP_ID).build();
-        groupEntity = GroupEntityMother.complete().build();
+        studentDto = StudentDtoMother.complete().build();
+        student = StudentMother.complete().build();
+        user = UserMother.complete().build();
+        groupDto = GroupDtoMother.complete().id(GROUP_ID).build();
+        group = GroupMother.complete().build();
     }
     
     @Test
     void sortByLastName_ShouldSortCorrectly() {
-        studentModel.getUser().getPerson().setLastName(LAST_NAME_A);
-        PersonModel person = PersonModelMother.complete().lastName(LAST_NAME_B).build();
-        UserModel user = UserModelMother.complete().person(person).build();
-        StudentModel studentB = StudentModelMother.complete().user(user).build();
-        List<StudentModel> list = Arrays.asList(studentB, studentModel);
+        studentDto.getUser().getPerson().setLastName(LAST_NAME_A);
+        PersonDTO person = PersonDtoMother.complete().lastName(LAST_NAME_B).build();
+        UserDTO user = UserDtoMother.complete().person(person).build();
+        StudentDTO studentB = StudentDtoMother.complete().user(user).build();
+        List<StudentDTO> list = Arrays.asList(studentB, studentDto);
         studentService.sortByLastName(list);
-        List<StudentModel> expectedList = Arrays.asList(studentModel, studentB);
+        List<StudentDTO> expectedList = Arrays.asList(studentDto, studentB);
         
         assertEquals(expectedList, list);
     }
@@ -97,38 +97,38 @@ class StudentServiceImplTest {
     @Test
     void update_ShouldExecuteCorrectCallsQuantity_WhenStudentHasGroup() 
             throws ServiceException {
-        studentEntity.getUser().setId(STUDENT_ID);
-        groupModel.setId(GROUP_ID);
-        studentModel.setGroup(groupModel);
-        when(groupRepository.findById(anyInt())).thenReturn(groupEntity);
-        when(modelMapperMock.map(studentModel, StudentEntity.class)).thenReturn(studentEntity);
-        when(studentRepositoryMock.findById(anyInt())).thenReturn(studentEntity);
-        when(userRepositoryMock.findById(anyInt())).thenReturn(userEntity);
-        studentService.update(studentModel);
-        verify(studentRepositoryMock).saveAndFlush(isA(StudentEntity.class));
+        student.getUser().setId(STUDENT_ID);
+        groupDto.setId(GROUP_ID);
+        studentDto.setGroup(groupDto);
+        when(groupRepository.findById(anyInt())).thenReturn(group);
+        when(modelMapperMock.map(studentDto, Student.class)).thenReturn(student);
+        when(studentRepositoryMock.findById(anyInt())).thenReturn(student);
+        when(userRepositoryMock.findById(anyInt())).thenReturn(user);
+        studentService.update(studentDto);
+        verify(studentRepositoryMock).saveAndFlush(isA(Student.class));
     }
     
     @Test
     void update_ShouldExecuteCorrectCallsQuantity_WhenStudentHasNoGroup() 
             throws ServiceException {
-        studentEntity.getUser().setId(STUDENT_ID);
-        when(modelMapperMock.map(studentModel, StudentEntity.class)).thenReturn(studentEntity);
-        when(studentRepositoryMock.findById(anyInt())).thenReturn(studentEntity);
-        when(userRepositoryMock.findById(anyInt())).thenReturn(userEntity);
-        studentService.update(studentModel);
-        verify(studentRepositoryMock).saveAndFlush(isA(StudentEntity.class));
+        student.getUser().setId(STUDENT_ID);
+        when(modelMapperMock.map(studentDto, Student.class)).thenReturn(student);
+        when(studentRepositoryMock.findById(anyInt())).thenReturn(student);
+        when(userRepositoryMock.findById(anyInt())).thenReturn(user);
+        studentService.update(studentDto);
+        verify(studentRepositoryMock).saveAndFlush(isA(Student.class));
     }
     
     @Test
     void getById_ShouldExecuteCorrectCallsQuantity() throws ServiceException {
-        when(studentRepositoryMock.findById(anyInt())).thenReturn(studentEntity);
+        when(studentRepositoryMock.findById(anyInt())).thenReturn(student);
         studentService.getById(STUDENT_ID);
-        verify(modelMapperMock).map(studentEntity, StudentModel.class);
+        verify(modelMapperMock).map(student, StudentDTO.class);
     }
     
     @Test
     void getAll_ShouldExecuteCorrectCallsQuantity() throws ServiceException {
-        List<StudentEntity> students = Arrays.asList(studentEntity);
+        List<Student> students = Arrays.asList(student);
         when(studentRepositoryMock.findAll()).thenReturn(students);
         studentService.getAll();
         verify(modelMapperMock).map(students, StudentServiceImpl.STUDENT_MODEL_LIST_TYPE);
@@ -136,8 +136,8 @@ class StudentServiceImplTest {
     
     @Test
     void create_ShouldExecuteCorrectCallsQuantity() throws ServiceException {
-        when(modelMapperMock.map(studentModel, StudentEntity.class)).thenReturn(studentEntity);
-        studentService.create(studentModel);
-        verify(studentRepositoryMock).saveAndFlush(isA(StudentEntity.class));
+        when(modelMapperMock.map(studentDto, Student.class)).thenReturn(student);
+        studentService.create(studentDto);
+        verify(studentRepositoryMock).saveAndFlush(isA(Student.class));
     }
 }

@@ -2,12 +2,12 @@ package ua.com.foxminded.university.comparator;
 
 import java.util.Comparator;
 
-import ua.com.foxminded.university.model.GroupModel;
+import ua.com.foxminded.university.dto.GroupDTO;
 
-public class GroupModelComparator implements Comparator<GroupModel> {
+public class GroupModelComparator implements Comparator<GroupDTO> {
 
     @Override
-    public int compare(GroupModel groupA, GroupModel anotherB) {
+    public int compare(GroupDTO groupA, GroupDTO anotherB) {
         return Integer.compare(groupA.getId(), anotherB.getId());
     }
 }

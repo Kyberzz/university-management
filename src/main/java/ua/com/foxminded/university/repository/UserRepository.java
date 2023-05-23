@@ -4,15 +4,15 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import ua.com.foxminded.university.entity.UserEntity;
+import ua.com.foxminded.university.entity.User;
 
-public interface UserRepository extends JpaRepository<UserEntity, Integer> {
+public interface UserRepository extends JpaRepository<User, Integer> {
     
-    public List<UserEntity> findByPasswordIsNotNull();
+    public List<User> findByPasswordIsNotNull();
     
-    public List<UserEntity> findByUserAuthorityIsNull();
+    public List<User> findByUserAuthorityIsNull();
     
-    public UserEntity findById(int id);
+    public User findById(int id);
     
-    public UserEntity findByEmail(String email);
+    public User findByEmail(String email);
 }

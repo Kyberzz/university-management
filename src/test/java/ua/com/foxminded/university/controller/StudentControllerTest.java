@@ -18,8 +18,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import ua.com.foxminded.university.model.StudentModel;
-import ua.com.foxminded.university.modelmother.StudentModelMother;
+import ua.com.foxminded.university.dto.StudentDTO;
+import ua.com.foxminded.university.modelmother.StudentDtoMother;
 import ua.com.foxminded.university.service.GroupService;
 import ua.com.foxminded.university.service.StudentService;
 
@@ -35,19 +35,19 @@ class StudentControllerTest {
     private GroupService groupServiceMock;
     
     private MockMvc mockMvc;
-    private StudentModel studentModel;
+    private StudentDTO studentDto;
     
     @BeforeEach
     void setup() {
         mockMvc = MockMvcBuilders.standaloneSetup(new StudentController(
                 studentServiceMock, groupServiceMock)).build();
-        studentModel = StudentModelMother.complete().build();
+        studentDto = StudentDtoMother.complete().build();
     }
     
     @Test
     void create_ShouldReturnBadRequestStatus() throws Exception {
-        studentModel.setUser(null);
-        mockMvc.perform(post("/students/create").flashAttr("studentModel", studentModel))
+        studentDto.setUser(null);
+        mockMvc.perform(post("/students/create").flashAttr("studentModel", studentDto))
                .andDo(print())
                .andExpect(status().is4xxClientError())
                .andExpect(view().name(ERROR_VIEW));
@@ -55,11 +55,11 @@ class StudentControllerTest {
     
     @Test
     void create_ShouldCallServiceAndRedirectToList() throws Exception {
-        mockMvc.perform(post("/students/create").flashAttr("studentModel", studentModel))
+        mockMvc.perform(post("/students/create").flashAttr("studentModel", studentDto))
                .andDo(print())
                .andExpect(redirectedUrl(new StringBuilder().append(STUDENTS_PATH)
                                                            .append(LIST_TEMPLATE).toString()));
-        verify(studentServiceMock).create(isA(StudentModel.class));
+        verify(studentServiceMock).create(isA(StudentDTO.class));
     }
     
     @Test
@@ -78,9 +78,9 @@ class StudentControllerTest {
     
     @Test
     void update_ShouldReturnBadRequestStatus() throws Exception {
-        studentModel.setUser(null);
+        studentDto.setUser(null);
         mockMvc.perform(post("/students/{studentId}/update", STUDENT_ID)
-                    .flashAttr("studentModel", studentModel))
+                    .flashAttr("studentModel", studentDto))
                .andDo(print())
                .andExpect(status().is4xxClientError())
                .andExpect(view().name(ERROR_VIEW));
@@ -89,11 +89,11 @@ class StudentControllerTest {
     @Test
     void update_ShouldCallStudentServiceAndRedirect() throws Exception {
         mockMvc.perform(post("/students/{studentId}/update", STUDENT_ID)
-                    .flashAttr("studentModel", studentModel))
+                    .flashAttr("studentModel", studentDto))
                .andDo(print())
                .andExpect(redirectedUrl(new StringBuilder().append(STUDENTS_PATH)
                                                            .append(LIST_TEMPLATE).toString()));
-        verify(studentServiceMock).update(isA(StudentModel.class));
+        verify(studentServiceMock).update(isA(StudentDTO.class));
     }
     
     @Test

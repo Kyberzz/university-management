@@ -23,13 +23,13 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import ua.com.foxminded.university.entity.LessonEntity;
-import ua.com.foxminded.university.entitymother.LessonEntityMother;
-import ua.com.foxminded.university.model.Authority;
-import ua.com.foxminded.university.model.GroupModel;
-import ua.com.foxminded.university.model.LessonModel;
-import ua.com.foxminded.university.modelmother.GroupModelMother;
-import ua.com.foxminded.university.modelmother.LessonModelMother;
+import ua.com.foxminded.university.dto.GroupDTO;
+import ua.com.foxminded.university.dto.LessonDTO;
+import ua.com.foxminded.university.entity.Authority;
+import ua.com.foxminded.university.entity.Lesson;
+import ua.com.foxminded.university.entitymother.LessonMother;
+import ua.com.foxminded.university.modelmother.GroupDtoMother;
+import ua.com.foxminded.university.modelmother.LessonDtoMother;
 
 @SpringBootTest
 @ActiveProfiles("prod")
@@ -41,9 +41,9 @@ class LessonControllerIntegrationTest extends DefaultControllerTest {
     private static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:14");
     
     private LocalDate localDate;
-    private LessonEntity timetableEntity;
-    private LessonModel timetableModel;
-    private GroupModel groupModel;
+    private Lesson lesson;
+    private LessonDTO lessonDto;
+    private GroupDTO groupDto;
     
     @DynamicPropertySource
     public static void configureProperties(DynamicPropertyRegistry registry) {
@@ -55,17 +55,17 @@ class LessonControllerIntegrationTest extends DefaultControllerTest {
     @BeforeEach
     void setUp() {
         localDate = LocalDate.now();
-        timetableEntity = LessonEntityMother.complete().build();
+        lesson = LessonMother.complete().build();
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
-        entityManager.persist(timetableEntity);
+        entityManager.persist(lesson);
         entityManager.getTransaction().commit();
         entityManager.close();
         
-        timetableModel = LessonModelMother.complete()
-                                             .id(timetableEntity.getId()).build();
+        lessonDto = LessonDtoMother.complete()
+                                   .id(lesson.getId()).build();
         
-        groupModel = GroupModelMother.complete().build();
+        groupDto = GroupDtoMother.complete().build();
     }
     
     @Test
@@ -73,7 +73,7 @@ class LessonControllerIntegrationTest extends DefaultControllerTest {
     void create_ShouldAuthorizeCredentialsAndRedirect() throws Exception {
         
         mockMvc.perform(post("/timetables/create/timetable/{date}", localDate.toString())
-                    .flashAttr(LESSON_MODEL_ATTRIBUTE, timetableModel)
+                    .flashAttr(LESSON_MODEL_ATTRIBUTE, lessonDto)
                     .with(csrf()))
                .andExpect(authenticated().withRoles(Authority.ADMIN.toString()))
                .andExpect(status().is3xxRedirection());
@@ -82,9 +82,9 @@ class LessonControllerIntegrationTest extends DefaultControllerTest {
     @Test
     @WithUserDetails(AUTHORIZED_EMAIL)
     void delete_ShouldAuthanticateCredentialsAndRedirect() throws Exception {
-        timetableModel.setDatestamp(localDate);
-        mockMvc.perform(post("/timetables/delete/{id}", timetableEntity.getId())
-                    .flashAttr(LESSON_MODEL_ATTRIBUTE, timetableModel)
+        lessonDto.setDatestamp(localDate);
+        mockMvc.perform(post("/timetables/delete/{id}", lesson.getId())
+                    .flashAttr(LESSON_MODEL_ATTRIBUTE, lessonDto)
                     .with(csrf()))
                .andExpect(authenticated().withRoles(Authority.ADMIN.toString()))
                .andExpect(status().is3xxRedirection());
@@ -93,8 +93,8 @@ class LessonControllerIntegrationTest extends DefaultControllerTest {
     @Test
     @WithUserDetails(AUTHORIZED_EMAIL)
     void update_ShouldAuthorizeCredentialsAndRedirect() throws Exception {
-        mockMvc.perform(post("/timetables/update/{id}", timetableModel.getId())
-                    .flashAttr(LESSON_MODEL_ATTRIBUTE, timetableModel)
+        mockMvc.perform(post("/timetables/update/{id}", lessonDto.getId())
+                    .flashAttr(LESSON_MODEL_ATTRIBUTE, lessonDto)
                     .with(csrf()))
                .andExpect(authenticated().withRoles(Authority.ADMIN.toString()))
                .andExpect(status().is3xxRedirection());

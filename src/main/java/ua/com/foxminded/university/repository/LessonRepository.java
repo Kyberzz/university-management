@@ -6,21 +6,21 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import ua.com.foxminded.university.entity.LessonEntity;
+import ua.com.foxminded.university.entity.Lesson;
 
-public interface LessonRepository extends JpaRepository<LessonEntity, Integer> {
+public interface LessonRepository extends JpaRepository<Lesson, Integer> {
     
-    @Query("select l from LessonEntity l left join fetch l.group " + 
+    @Query("select l from Lesson l left join fetch l.group " + 
            "where l.datestamp = ?1 and l.lessonOrder =?2 and l.group.id = ?3")
-    public LessonEntity findByDatestampAndGroupIdAndTimingId(LocalDate date,
-                                                             int lessonOrder,                                                 
-                                                             int groupId);
+    public Lesson findByDatestampAndGroupIdAndTimingId(LocalDate date,
+                                                       int lessonOrder,                                                 
+                                                       int groupId);
     
-    public List<LessonEntity> findByDatestamp(LocalDate date);
+    public List<Lesson> findByDatestamp(LocalDate date);
     
-    public LessonEntity findCourseById(Integer id);
+    public Lesson findCourseById(Integer id);
 
-    public LessonEntity findGroupById(Integer id);
+    public Lesson findGroupById(Integer id);
 
-    public LessonEntity findById(int id);
+    public Lesson findById(int id);
 }

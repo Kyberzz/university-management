@@ -1,0 +1,5 @@
+@charset "UTF-8";
+.scrollable-col {
+  overflow-y: scroll;
+ /* max-height: 300px;  Adjust the max-height as needed */
+}

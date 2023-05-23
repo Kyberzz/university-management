@@ -18,10 +18,10 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ActiveProfiles;
 
-import ua.com.foxminded.university.entity.CourseEntity;
-import ua.com.foxminded.university.entity.TeacherEntity;
-import ua.com.foxminded.university.entitymother.CourseEntityMother;
-import ua.com.foxminded.university.entitymother.TeacherEntityMother;
+import ua.com.foxminded.university.entity.Course;
+import ua.com.foxminded.university.entity.Teacher;
+import ua.com.foxminded.university.entitymother.CourseMother;
+import ua.com.foxminded.university.entitymother.TeacherMother;
 
 @DataJpaTest
 @ActiveProfiles("test")
@@ -39,17 +39,17 @@ class TeacherRepositoryTest {
     @Autowired
     private TeacherRepository teacherRepository;
     
-    private TeacherEntity teacher;
-    private CourseEntity course;
+    private Teacher teacher;
+    private Course course;
     
     @BeforeEach
     void setUp() {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
         
-        teacher = TeacherEntityMother.complete().build();
+        teacher = TeacherMother.complete().build();
         entityManager.persist(teacher);
-        course = CourseEntityMother.complete().build();
+        course = CourseMother.complete().build();
         course.setTeachers(new HashSet<>(Arrays.asList(teacher)));
         entityManager.persist(course);
         teacher.setCourses(new HashSet<>(Arrays.asList(course)));
@@ -60,13 +60,13 @@ class TeacherRepositoryTest {
     
     @Test
     void findCoursesById_ShouldReturnCoursesOwnedByTeacherWithId() {
-        TeacherEntity receivedTeacher = teacherRepository.findById(teacher.getId().intValue());
+        Teacher receivedTeacher = teacherRepository.findById(teacher.getId().intValue());
         assertEquals(COURSES_QUANTITY, receivedTeacher.getCourses().size());
     }
     
     @Test
     void findById_ShouldReturnTeacherEntityWithId() {
-        TeacherEntity receivedTeacher = teacherRepository.findById(teacher.getId().intValue());
+        Teacher receivedTeacher = teacherRepository.findById(teacher.getId().intValue());
         assertEquals(teacher.getId(), receivedTeacher.getId());
     }
 }

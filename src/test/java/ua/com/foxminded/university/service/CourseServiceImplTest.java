@@ -21,13 +21,13 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 
-import ua.com.foxminded.university.entity.CourseEntity;
-import ua.com.foxminded.university.entity.TeacherEntity;
-import ua.com.foxminded.university.entitymother.CourseEntityMother;
-import ua.com.foxminded.university.entitymother.TeacherEntityMother;
+import ua.com.foxminded.university.dto.CourseDTO;
+import ua.com.foxminded.university.entity.Course;
+import ua.com.foxminded.university.entity.Teacher;
+import ua.com.foxminded.university.entitymother.CourseMother;
+import ua.com.foxminded.university.entitymother.TeacherMother;
 import ua.com.foxminded.university.exception.ServiceException;
-import ua.com.foxminded.university.model.CourseModel;
-import ua.com.foxminded.university.modelmother.CourseModelMother;
+import ua.com.foxminded.university.modelmother.CourseDtoMother;
 import ua.com.foxminded.university.repository.CourseRepository;
 import ua.com.foxminded.university.repository.TeacherRepository;
 import ua.com.foxminded.university.service.impl.CourseServiceImpl;
@@ -51,53 +51,53 @@ class CourseServiceImplTest {
     @Mock
     private ModelMapper modelMapperMock;
     
-    private CourseEntity courseEntity;
-    private CourseModel courseModel;
-    private TeacherEntity teacherEntity;
+    private Course course;
+    private CourseDTO courseDto;
+    private Teacher teacher;
 
     @BeforeEach
     void setUp() {
-        courseModel = CourseModelMother.complete().build();
-        courseEntity = CourseEntityMother.complete().teachers(new HashSet<>()).build();
-        teacherEntity = TeacherEntityMother.complete().courses(new HashSet<>()).build();
+        courseDto = CourseDtoMother.complete().build();
+        course = CourseMother.complete().teachers(new HashSet<>()).build();
+        teacher = TeacherMother.complete().courses(new HashSet<>()).build();
     }
     
     @Test
     void deassignTeacherToCourse_ShouldExecuteCorrectCallsQuantity() throws ServiceException {
-        when(courseRepositoryMock.findById(anyInt())).thenReturn(courseEntity);
-        when(teacherRepositoryMock.findById(anyInt())).thenReturn(teacherEntity);
+        when(courseRepositoryMock.findById(anyInt())).thenReturn(course);
+        when(teacherRepositoryMock.findById(anyInt())).thenReturn(teacher);
         courseService.deassignTeacherToCourse(TEACHER_ID, COURSE_ID);
-        verify(courseRepositoryMock).saveAndFlush(isA(CourseEntity.class));
+        verify(courseRepositoryMock).saveAndFlush(isA(Course.class));
     }
     
     @Test
     void assignTeacherToCourse_ShouldExecuteCorrectCallsQuantity() throws ServiceException {
-        when(courseRepositoryMock.findById(anyInt())).thenReturn(courseEntity);
-        when(teacherRepositoryMock.findById(anyInt())).thenReturn(teacherEntity);
+        when(courseRepositoryMock.findById(anyInt())).thenReturn(course);
+        when(teacherRepositoryMock.findById(anyInt())).thenReturn(teacher);
         courseService.assignTeacherToCourse(TEACHER_ID, COURSE_ID);
-        verify(courseRepositoryMock).saveAndFlush(isA(CourseEntity.class));
+        verify(courseRepositoryMock).saveAndFlush(isA(Course.class));
     }
     
     @Test
     void getTimetableAndTeachersByCourseId_ShouldExecuteCorrecCallsQuantity() 
             throws ServiceException {
         when(courseRepositoryMock.getCourseRelationsById(anyInt()))
-            .thenReturn(courseEntity);
+            .thenReturn(course);
         courseService.getByIdWithLessonsAndTeachers(ID);
-        verify(modelMapperMock).map(courseEntity, CourseModel.class);
+        verify(modelMapperMock).map(course, CourseDTO.class);
     }
     
     void update_ShouldExcecuteCorrectCallsQuantity() throws ServiceException {
-        courseService.update(courseModel);
+        courseService.update(courseDto);
         InOrder inOrder = Mockito.inOrder(modelMapperMock, courseRepositoryMock);
-        inOrder.verify(modelMapperMock).map(courseModel, CourseModel.class);
-        inOrder.verify(courseRepositoryMock).saveAndFlush(courseEntity);
+        inOrder.verify(modelMapperMock).map(courseDto, CourseDTO.class);
+        inOrder.verify(courseRepositoryMock).saveAndFlush(course);
     }
     
     @Test
     void getAll_ShouldExecuteCorrectCallsQuantity() throws ServiceException {
-        CourseEntity course = CourseEntityMother.complete().build();
-        List<CourseEntity> courses = Arrays.asList(course);
+        Course course = CourseMother.complete().build();
+        List<Course> courses = Arrays.asList(course);
         when(courseRepositoryMock.findAll()).thenReturn(courses);
         courseService.getAll();
         verify(modelMapperMock).map(courses, COURSE_MODEL_LIST_TYPE);
@@ -105,9 +105,9 @@ class CourseServiceImplTest {
     
     @Test
     void create_ShouldExcecuteCorrectCallsQuantity() throws ServiceException {
-        when(modelMapperMock.map(courseModel, CourseEntity.class)).thenReturn(courseEntity);
-        courseService.create(courseModel);
-        verify(courseRepositoryMock).saveAndFlush(ArgumentMatchers.isA(CourseEntity.class));
+        when(modelMapperMock.map(courseDto, Course.class)).thenReturn(course);
+        courseService.create(courseDto);
+        verify(courseRepositoryMock).saveAndFlush(ArgumentMatchers.isA(Course.class));
     }
     
     @Test
@@ -118,8 +118,8 @@ class CourseServiceImplTest {
     
     @Test
     void getById_ShouldExecuteCorrectCallsQuantity() throws ServiceException {
-        when(courseRepositoryMock.findById(anyInt())).thenReturn(courseEntity);
+        when(courseRepositoryMock.findById(anyInt())).thenReturn(course);
         courseService.getById(ID);
-        verify(modelMapperMock).map(courseEntity, CourseModel.class);
+        verify(modelMapperMock).map(course, CourseDTO.class);
     }
 }

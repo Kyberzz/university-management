@@ -11,25 +11,29 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import lombok.RequiredArgsConstructor;
+import ua.com.foxminded.university.dto.CourseDTO;
+import ua.com.foxminded.university.dto.GroupDTO;
+import ua.com.foxminded.university.dto.LessonDTO;
+import ua.com.foxminded.university.dto.TeacherDTO;
+import ua.com.foxminded.university.dto.TimetableDTO;
+import ua.com.foxminded.university.dto.TimingDTO;
 import ua.com.foxminded.university.exception.ServiceException;
-import ua.com.foxminded.university.model.CourseModel;
-import ua.com.foxminded.university.model.GroupModel;
-import ua.com.foxminded.university.model.TeacherModel;
-import ua.com.foxminded.university.model.TimetableModel;
 import ua.com.foxminded.university.repository.TimetableRepository;
-import ua.com.foxminded.university.model.LessonModel;
 import ua.com.foxminded.university.service.CourseService;
 import ua.com.foxminded.university.service.GroupService;
 import ua.com.foxminded.university.service.LessonService;
 import ua.com.foxminded.university.service.TimetableService;
+import ua.com.foxminded.university.service.TimingService;
 
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/lessons")
 public class LessonController extends DefaultController {
     
+    public static final String TIMINGS_ATTRIBUTE = "timings";
     public static final String SHEDULES_PATH = "/lessons/";
     public static final String MONTH_SHEDULE_TEMPLATE = "month-lessons";
     public static final String MONTH_SHEDULE_TEMPLATE_PATH = "lessons/month-lessons";
@@ -46,10 +50,11 @@ public class LessonController extends DefaultController {
     private final CourseService courseService;
     private final GroupService groupService;
     private final TimetableService timetableService;
+    private final TimingService timingService;
 
     @PostMapping("/{date}/create")
     public String create(@PathVariable String date, 
-                         @ModelAttribute LessonModel lessonModel, 
+                         @ModelAttribute LessonDTO lessonModel, 
                          Model model) throws ServiceException {
         lessonModel.setDatestamp(LocalDate.parse(date));
         lessonService.create(lessonModel);
@@ -61,7 +66,7 @@ public class LessonController extends DefaultController {
     }
     
     @PostMapping("/delete/{lessonId}")
-    public String delete(@ModelAttribute LessonModel lessonModel, 
+    public String delete(@ModelAttribute LessonDTO lessonModel, 
                          @PathVariable int lessonId) throws ServiceException {
         lessonService.deleteById(lessonId);
         return new StringBuilder().append(REDIRECT_KEY_WORD)
@@ -72,7 +77,7 @@ public class LessonController extends DefaultController {
     
     @PostMapping("/update/{lessonId}")
     public String update(@PathVariable int lessonId, 
-                         @ModelAttribute LessonModel lessonModel, 
+                         @ModelAttribute LessonDTO lessonModel, 
                          Model model) throws ServiceException {
         lessonModel.setId(lessonId);
         lessonService.update(lessonModel);
@@ -85,17 +90,21 @@ public class LessonController extends DefaultController {
     
     @GetMapping("/{date}/day-lessons")
     public String getDayLessons(@PathVariable String date,
+                                @RequestParam int timetableId,
                                 Model model) throws ServiceException {
-        LocalDate localDate = LocalDate.parse(date);
-        List<LessonModel> dayLessons = lessonService.getDayLessons(localDate);
-        LessonModel lessonModel = new LessonModel();
-        lessonModel.setDatestamp(localDate);
-        lessonModel.setCourse(new CourseModel());
-        lessonModel.getCourse().setTeachers(new HashSet<>());
-        lessonModel.getCourse().getTeachers().add(new TeacherModel());
-        List<CourseModel> courses = courseService.getAll();
-        List<GroupModel> groups = groupService.getAll();
+        LocalDate datestamp = LocalDate.parse(date);
+        List<LessonDTO> dayLessons = lessonService.getDayLessons(datestamp);
+        lessonService.addLessonTiming(dayLessons);
+        LessonDTO lessonModel = LessonDTO.builder().datestamp(datestamp)
+                                                       .course(new CourseDTO())
+                                                       .build();
+        List<CourseDTO> courses = courseService.getAll();
+        List<GroupDTO> groups = groupService.getAll();
+        List<TimetableDTO> timetables = timetableService.getAll();
+        List<TimingDTO> timings = timingService.getByTimetableId(timetableId);  
         
+        model.addAttribute(TIMINGS_ATTRIBUTE, timings);
+        model.addAttribute(TIMETABLES_ATTRIBUTE, timetables);
         model.addAttribute(GROUPS_ATTRIBUTE, groups);
         model.addAttribute(COURSES_ATTRIBUTE, courses);
         model.addAttribute(DAY_LESSONS_ATTRIBUTE, dayLessons);
@@ -131,15 +140,13 @@ public class LessonController extends DefaultController {
     public String getMonthLessons(@PathVariable String date,
                                   Model model) throws ServiceException {
         LocalDate datestamp = LocalDate.parse(date);
-        List<List<List<LessonModel>>> monthLessons = lessonService.getMonthLessons(datestamp);
-        LessonModel lessonModel = LessonModel.builder()
+        List<List<List<LessonDTO>>> monthLessons = lessonService.getMonthLessons(datestamp);
+        LessonDTO lessonModel = LessonDTO.builder()
                                              .datestamp(datestamp).build();
         lessonModel.setDatestamp(datestamp);
-        List<CourseModel> courses = courseService.getAll();
-        List<GroupModel> groups = groupService.getAll();
-        List<TimetableModel> timetables = timetableService.getAllWithTimings();
+        List<CourseDTO> courses = courseService.getAll();
+        List<GroupDTO> groups = groupService.getAll();
         
-        model.addAttribute(TIMETABLES_ATTRIBUTE, timetables);
         model.addAttribute(LESSON_MODEL_ATTRIBUTE, lessonModel);
         model.addAttribute(GROUPS_ATTRIBUTE, groups);
         model.addAttribute(COURSES_ATTRIBUTE, courses);

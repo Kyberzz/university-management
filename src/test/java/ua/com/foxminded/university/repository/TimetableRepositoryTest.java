@@ -10,10 +10,10 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.transaction.BeforeTransaction;
 
-import ua.com.foxminded.university.entity.TimetableEntity;
-import ua.com.foxminded.university.entity.TimingEntity;
-import ua.com.foxminded.university.entitymother.TimetableEntityMother;
-import ua.com.foxminded.university.entitymother.TimingEntityMother;
+import ua.com.foxminded.university.entity.Timetable;
+import ua.com.foxminded.university.entity.Timing;
+import ua.com.foxminded.university.entitymother.TimetableMother;
+import ua.com.foxminded.university.entitymother.TimingMother;
 
 @ActiveProfiles("test")
 @DataJpaTest
@@ -25,21 +25,21 @@ class TimetableRepositoryTest {
     @Autowired
     private TimingRepository timingRepository;
     
-    private TimetableEntity timetable;
-    private TimingEntity timingEntity;
+    private Timetable timetable;
+    private Timing timing;
     
     @BeforeTransaction
     void init() {
-        timetable = TimetableEntityMother.complete().build();
+        timetable = TimetableMother.complete().build();
         timetableRepository.saveAndFlush(timetable);
-        timingEntity = TimingEntityMother.complete().timetable(timetable).build();
-        timingRepository.saveAndFlush(timingEntity);
+        timing = TimingMother.complete().timetable(timetable).build();
+        timingRepository.saveAndFlush(timing);
     }
     
     @Test
     void getByIdWithTimingRelationship_ShouldReturnTimngsRelationship() {
-        List<TimetableEntity> timetables = timetableRepository.getAllWithTimings();
-        TimetableEntity persistedTimetable = timetables.iterator().next();
+        List<Timetable> timetables = timetableRepository.getAllWithTimings();
+        Timetable persistedTimetable = timetables.iterator().next();
         
         assertEquals(timetable.getId(), 
                      persistedTimetable.getTimings().iterator().next().getId());
@@ -47,7 +47,7 @@ class TimetableRepositoryTest {
 
     @Test
     void findById_ShouldReturnEntity() {
-        TimetableEntity persistedTimetable = timetableRepository.findById(
+        Timetable persistedTimetable = timetableRepository.findById(
                 timetable.getId().intValue());
         assertEquals(timetable.getId(), persistedTimetable.getId());
     }

@@ -24,13 +24,13 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
+import ua.com.foxminded.university.dto.UserAuthorityDTO;
+import ua.com.foxminded.university.dto.UserDTO;
+import ua.com.foxminded.university.entity.Authority;
 import ua.com.foxminded.university.entity.RoleAuthority;
-import ua.com.foxminded.university.entity.UserAuthorityEntity;
-import ua.com.foxminded.university.entity.UserEntity;
-import ua.com.foxminded.university.entitymother.UserEntityMother;
-import ua.com.foxminded.university.model.Authority;
-import ua.com.foxminded.university.model.UserAuthorityModel;
-import ua.com.foxminded.university.model.UserModel;
+import ua.com.foxminded.university.entity.UserAuthority;
+import ua.com.foxminded.university.entity.User;
+import ua.com.foxminded.university.entitymother.UserMother;
 import ua.com.foxminded.university.repository.UserAuthorityRepository;
 import ua.com.foxminded.university.repository.UserRepository;
 
@@ -59,21 +59,21 @@ class UserControllerIntegrationTest {
     
     @Autowired
     private MockMvc mockMvc;
-    private UserEntity authorizedEntity;
-    private UserEntity notAuthorizedEntity;
+    private User authorizedUser;
+    private User notAuthorizedUser;
 
     @BeforeTransaction
     void init() {
-        UserEntity user = UserEntityMother.complete().email(AUTHORIZED_EMAIL).build();
-        authorizedEntity = userRepository.saveAndFlush(user);
-        UserAuthorityEntity userAuthority = UserAuthorityEntity.builder()
+        User user = UserMother.complete().email(AUTHORIZED_EMAIL).build();
+        authorizedUser = userRepository.saveAndFlush(user);
+        UserAuthority userAuthority = UserAuthority.builder()
               .roleAuthority(RoleAuthority.ROLE_ADMIN)
-              .user(authorizedEntity)
+              .user(authorizedUser)
               .build();
         userAuthorityRepository.saveAndFlush(userAuthority);
         
-        notAuthorizedEntity = UserEntityMother.complete().build();
-        userRepository.saveAndFlush(notAuthorizedEntity);
+        notAuthorizedUser = UserMother.complete().build();
+        userRepository.saveAndFlush(notAuthorizedUser);
     }
     
     @BeforeEach
@@ -90,15 +90,15 @@ class UserControllerIntegrationTest {
     @Test
     @WithUserDetails(AUTHORIZED_EMAIL)
     void edit_ShouldAuthenticateCredentialsAndRedirect() throws Exception {
-        UserAuthorityModel userAuthority = UserAuthorityModel.builder()
+        UserAuthorityDTO userAuthority = UserAuthorityDTO.builder()
                 .authority(Authority.STAFF).build();
-        UserModel model = UserModel.builder()
-                                   .email(authorizedEntity.getEmail())
+        UserDTO model = UserDTO.builder()
+                                   .email(authorizedUser.getEmail())
                                    .enabled(false)
                                    .userAuthority(userAuthority).build();
 
         mockMvc.perform(post("/users/edit").with(csrf())
-                                           .param("userId", authorizedEntity.getId()
+                                           .param("userId", authorizedUser.getId()
                                                                             .toString())
                                            .flashAttr("userModel", model))
                .andExpect(status().is3xxRedirection());
@@ -115,7 +115,7 @@ class UserControllerIntegrationTest {
     @Test
     @WithUserDetails(AUTHORIZED_EMAIL)
     void delete_ShouldDeleteUserByEmailAndRedirect() throws Exception {
-        mockMvc.perform(post("/users/delete").param("email", notAuthorizedEntity.getEmail())
+        mockMvc.perform(post("/users/delete").param("email", notAuthorizedUser.getEmail())
                                              .with(csrf()))
                .andExpect(authenticated().withRoles(Authority.ADMIN.toString()))
                .andExpect(status().is3xxRedirection());
@@ -124,15 +124,15 @@ class UserControllerIntegrationTest {
     @Test
     @WithUserDetails(AUTHORIZED_EMAIL)
     void authorize_ShouldAuthenticateCredentialsAndRedirect() throws Exception {
-        UserAuthorityModel userAuthorityModel = UserAuthorityModel.builder()
+        UserAuthorityDTO userAuthorityModel = UserAuthorityDTO.builder()
                                                                   .authority(Authority.ADMIN)
                                                                   .build();
-        UserModel model = UserModel.builder()
+        UserDTO model = UserDTO.builder()
                                    .enabled(true)
                                    .userAuthority(userAuthorityModel)
                                    .build();
 
-        mockMvc.perform(post("/users/authorize").param("email", notAuthorizedEntity.getEmail())
+        mockMvc.perform(post("/users/authorize").param("email", notAuthorizedUser.getEmail())
                                                 .param("password", PASSWORD)
                                                 .param("passwordConfirm", PASSWORD)
                                                 .flashAttr("userModel", model)

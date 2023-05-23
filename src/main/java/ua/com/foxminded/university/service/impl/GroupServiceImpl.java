@@ -17,11 +17,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
-import ua.com.foxminded.university.entity.GroupEntity;
-import ua.com.foxminded.university.entity.StudentEntity;
+import ua.com.foxminded.university.dto.GroupDTO;
+import ua.com.foxminded.university.dto.StudentDTO;
+import ua.com.foxminded.university.entity.Group;
+import ua.com.foxminded.university.entity.Student;
 import ua.com.foxminded.university.exception.ServiceException;
-import ua.com.foxminded.university.model.GroupModel;
-import ua.com.foxminded.university.model.StudentModel;
 import ua.com.foxminded.university.repository.GroupRepository;
 import ua.com.foxminded.university.repository.StudentRepository;
 import ua.com.foxminded.university.service.GroupService;
@@ -32,7 +32,7 @@ import ua.com.foxminded.university.service.GroupService;
 public class GroupServiceImpl implements GroupService {
     
     public static final Type GROUP_MODEL_LIST_TYPE = 
-            new TypeToken<List<GroupModel>>() {}.getType();
+            new TypeToken<List<GroupDTO>>() {}.getType();
     
     private final ModelMapper modelMapper;
     private final GroupRepository groupRepository;
@@ -40,35 +40,35 @@ public class GroupServiceImpl implements GroupService {
     
     @Override
     public void deassignGroup(int studentId) {
-        StudentEntity student = studentRepository.findById(studentId);
+        Student student = studentRepository.findById(studentId);
         student.setGroup(null);
         studentRepository.saveAndFlush(student);
     }
     
     @Override
-    public void sortStudentsByLastName(GroupModel group) {
-        List<StudentModel> list = new ArrayList<>(group.getStudents());
+    public void sortStudentsByLastName(GroupDTO group) {
+        List<StudentDTO> list = new ArrayList<>(group.getStudents());
         Collections.sort(list, Comparator.comparing(
                 student -> student.getUser().getPerson().getLastName()));
-        Set<StudentModel> set = new LinkedHashSet<>(list);
+        Set<StudentDTO> set = new LinkedHashSet<>(list);
         group.setStudents(set);
     }
     
     @Override
     public void assignGroup(int groupId, int[] studentIds) {
         Arrays.stream(studentIds).forEach(studentId -> {
-            StudentEntity student = studentRepository.findById(studentId);
-            student.setGroup(new GroupEntity());
+            Student student = studentRepository.findById(studentId);
+            student.setGroup(new Group());
             student.getGroup().setId(groupId);
             studentRepository.saveAndFlush(student);
         });
     }
     
     @Override
-    public GroupModel getGroupRelationsById(int id) throws ServiceException {
+    public GroupDTO getGroupRelationsById(int id) throws ServiceException {
         try {
-            GroupEntity entity = groupRepository.getGroupRelationsById(id);
-            return modelMapper.map(entity, GroupModel.class);
+            Group entity = groupRepository.getGroupRelationsById(id);
+            return modelMapper.map(entity, GroupDTO.class);
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
             throw new ServiceException("Getting group with its relations fails", e);
         }
@@ -84,9 +84,9 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public void create(GroupModel model) throws ServiceException {
+    public void create(GroupDTO model) throws ServiceException {
         try {
-            GroupEntity entity = modelMapper.map(model, GroupEntity.class);
+            Group entity = modelMapper.map(model, Group.class);
             groupRepository.saveAndFlush(entity);
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
             throw new ServiceException("Creating a group fails", e);
@@ -94,10 +94,10 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public void update(GroupModel model) throws ServiceException {
+    public void update(GroupDTO model) throws ServiceException {
         try {
-            GroupEntity entity = modelMapper.map(model, GroupEntity.class);
-            GroupEntity persistedEntity = groupRepository.findById(entity.getId().intValue());
+            Group entity = modelMapper.map(model, Group.class);
+            Group persistedEntity = groupRepository.findById(entity.getId().intValue());
             persistedEntity.setName(entity.getName());
             groupRepository.saveAndFlush(persistedEntity);
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
@@ -106,19 +106,19 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public GroupModel getById(int id) throws ServiceException {
+    public GroupDTO getById(int id) throws ServiceException {
         try {
-            GroupEntity entity = groupRepository.findById(id);
-            return modelMapper.map(entity, GroupModel.class);
+            Group entity = groupRepository.findById(id);
+            return modelMapper.map(entity, GroupDTO.class);
         } catch (Exception e) {
             throw new ServiceException("Getting a group by its id fails", e);
         }
     }
     
     @Override
-    public List<GroupModel> getAll() throws ServiceException {
+    public List<GroupDTO> getAll() throws ServiceException {
         try {
-            List<GroupEntity> groupEntities = groupRepository.findAll();
+            List<Group> groupEntities = groupRepository.findAll();
             return modelMapper.map(groupEntities, GROUP_MODEL_LIST_TYPE);
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
             throw new ServiceException("Getting all groups was failed", e);
@@ -126,20 +126,20 @@ public class GroupServiceImpl implements GroupService {
     }
     
     @Override
-    public GroupModel getStudentsByGroupId(int id) throws ServiceException {
+    public GroupDTO getStudentsByGroupId(int id) throws ServiceException {
         try {
-            GroupEntity groupEntity = groupRepository.findStudentsById(id);
-            return modelMapper.map(groupEntity, GroupModel.class);
+            Group groupEntity = groupRepository.findStudentsById(id);
+            return modelMapper.map(groupEntity, GroupDTO.class);
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
             throw new ServiceException("Getting students list of the group failed", e);
         }
     }
     
     @Override
-    public GroupModel getTimetablesByGroupId(int id) throws ServiceException {
+    public GroupDTO getTimetablesByGroupId(int id) throws ServiceException {
         try {
-            GroupEntity groupEntity = groupRepository.findTimetablesById(id);
-            return modelMapper.map(groupEntity, GroupModel.class);
+            Group groupEntity = groupRepository.findTimetablesById(id);
+            return modelMapper.map(groupEntity, GroupDTO.class);
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
             throw new ServiceException("Getting timebales list of the group failed", e);
         }

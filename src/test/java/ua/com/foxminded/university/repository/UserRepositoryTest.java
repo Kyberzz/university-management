@@ -15,9 +15,9 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import ua.com.foxminded.university.entity.RoleAuthority;
-import ua.com.foxminded.university.entity.UserAuthorityEntity;
-import ua.com.foxminded.university.entity.UserEntity;
-import ua.com.foxminded.university.entitymother.UserEntityMother;
+import ua.com.foxminded.university.entity.UserAuthority;
+import ua.com.foxminded.university.entity.User;
+import ua.com.foxminded.university.entitymother.UserMother;
 
 @DataJpaTest
 @ActiveProfiles("test")
@@ -36,21 +36,21 @@ class UserRepositoryTest {
     @Autowired
     private PlatformTransactionManager transactionManager;
     
-    private UserEntity persistedUser;
+    private User persistedUser;
 
     @BeforeEach
     void init() {
         new TransactionTemplate(transactionManager).execute(transactionStatus -> {
-            UserEntity user = UserEntityMother.complete().build();
+            User user = UserMother.complete().build();
             persistedUser = userRepository.saveAndFlush(user);
             
-            UserAuthorityEntity userAuthority = UserAuthorityEntity.builder()
+            UserAuthority userAuthority = UserAuthority.builder()
                     .user(persistedUser)
                     .roleAuthority(RoleAuthority.ROLE_ADMIN)
                     .build();
             userAuthorityRepository.save(userAuthority);
             
-            UserEntity userHasNoAuthority = UserEntity.builder()
+            User userHasNoAuthority = User.builder()
                     .email(NOT_AUTHORIZED_EMAIL).build();
             userRepository.save(userHasNoAuthority);
             return null;
@@ -59,25 +59,25 @@ class UserRepositoryTest {
     
     @Test
     void findById_ShouldReturnEntityType() {
-        UserEntity receivedUser = userRepository.findById(persistedUser.getId().intValue());
+        User receivedUser = userRepository.findById(persistedUser.getId().intValue());
         assertEquals(persistedUser.getId(), receivedUser.getId());
     }
 
     @Test
     void findByUserAuthoritiesIsNull_ShouldReturnUsersThatHaveNoAuthorityObject() {
-        List<UserEntity> users = userRepository.findByUserAuthorityIsNull();
+        List<User> users = userRepository.findByUserAuthorityIsNull();
         assertEquals(USERS_QUANTITY, users.size());
     }
 
     @Test
     void findByEmail_shouldReturnUser() {
-        UserEntity receivedUser = userRepository.findByEmail(persistedUser.getEmail());
+        User receivedUser = userRepository.findByEmail(persistedUser.getEmail());
         assertEquals(persistedUser.getEmail(), receivedUser.getEmail());
     }
      
     @Test
     void findByPasswordIsNotNull_shouldReturnAllUsersHavingPassword() {
-        List<UserEntity> receivedUsers = userRepository.findByPasswordIsNotNull();
+        List<User> receivedUsers = userRepository.findByPasswordIsNotNull();
         assertEquals(USERS_QUANTITY, receivedUsers.size());
     }
 }

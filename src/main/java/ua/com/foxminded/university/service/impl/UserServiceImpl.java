@@ -10,7 +10,6 @@ import org.modelmapper.ConfigurationException;
 import org.modelmapper.MappingException;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,9 +17,9 @@ import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
-import ua.com.foxminded.university.entity.UserEntity;
+import ua.com.foxminded.university.dto.UserDTO;
+import ua.com.foxminded.university.entity.User;
 import ua.com.foxminded.university.exception.ServiceException;
-import ua.com.foxminded.university.model.UserModel;
 import ua.com.foxminded.university.repository.UserRepository;
 import ua.com.foxminded.university.service.UserService;
 
@@ -30,16 +29,16 @@ import ua.com.foxminded.university.service.UserService;
 public class UserServiceImpl implements UserService {
     
     public static final Type USER_MODEL_LIST_TYPE = 
-            new TypeToken<List<UserModel>>() {}.getType();
+            new TypeToken<List<UserDTO>>() {}.getType();
     
     private final UserRepository userRepository;
     private final UserDetailsManager userDetailsManager;
     private final ModelMapper modelMapper;
     
-    public UserModel getById(int id) throws ServiceException {
+    public UserDTO getById(int id) throws ServiceException {
         try {
-            UserEntity entity = userRepository.findById(id);
-            return modelMapper.map(entity, UserModel.class);
+            User entity = userRepository.findById(id);
+            return modelMapper.map(entity, UserDTO.class);
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
             throw new ServiceException("Getting user by its id fails.", e);
         }
@@ -64,17 +63,18 @@ public class UserServiceImpl implements UserService {
     }
     
     @Override
-    public void create(UserModel model) throws ServiceException {
+    public void create(UserDTO dto) throws ServiceException {
         try {
             PasswordEncoder encoder = PasswordEncoderFactories
                     .createDelegatingPasswordEncoder();
-            String authority = String.valueOf(model.getUserAuthority().getAuthority());
-            UserDetails user = User.builder().username(model.getEmail())
-                                             .password(model.getPassword())
-                                             .passwordEncoder(encoder::encode)
-                                             .authorities(authority)
-                                             .disabled(!model.getEnabled())
-                                             .build();
+            String authority = String.valueOf(dto.getUserAuthority().getAuthority());
+            UserDetails user = org.springframework.security.core.userdetails.User.builder()
+                    .username(dto.getEmail())
+                    .password(dto.getPassword())
+                    .passwordEncoder(encoder::encode)
+                    .authorities(authority)
+                    .disabled(!dto.getEnabled())
+                    .build();
             userDetailsManager.createUser(user);
         } catch (ConstraintViolationException e) {
             throw new ServiceException("Creating the user fails.", e);
@@ -82,9 +82,9 @@ public class UserServiceImpl implements UserService {
     }
     
     @Override
-    public List<UserModel> getNotAuthorizedUsers() throws ServiceException {
+    public List<UserDTO> getNotAuthorizedUsers() throws ServiceException {
         try {
-            List<UserEntity> entities = userRepository.findByUserAuthorityIsNull();
+            List<User> entities = userRepository.findByUserAuthorityIsNull();
             return modelMapper.map(entities, USER_MODEL_LIST_TYPE);
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
             throw new ServiceException("Getting not authrized users fails.", e);
@@ -92,19 +92,19 @@ public class UserServiceImpl implements UserService {
     }
     
     @Override
-    public UserModel getByEmail(String email) throws ServiceException {
+    public UserDTO getByEmail(String email) throws ServiceException {
         try {
-            UserEntity entity = userRepository.findByEmail(email);
-            return modelMapper.map(entity, UserModel.class);
+            User entity = userRepository.findByEmail(email);
+            return modelMapper.map(entity, UserDTO.class);
         } catch (IllegalArgumentException e) {
             throw new ServiceException("Getting the email fails", e);
         }
     }
     
     @Override
-    public List<UserModel> getAll() throws ServiceException {
+    public List<UserDTO> getAll() throws ServiceException {
         try {
-            List<UserEntity> entities = userRepository.findAll();
+            List<User> entities = userRepository.findAll();
             return modelMapper.map(entities, USER_MODEL_LIST_TYPE);
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
             throw new ServiceException("Getting all students fails", e);
@@ -112,18 +112,17 @@ public class UserServiceImpl implements UserService {
     }
     
     @Override
-    public void update(UserModel model) throws ServiceException {
+    public void update(UserDTO dto) throws ServiceException {
         try {
             PasswordEncoder encoder = PasswordEncoderFactories
                     .createDelegatingPasswordEncoder();
-            UserDetails user = User.builder().username(model.getEmail())
-                                             .password(model.getPassword())
-                                             .passwordEncoder(encoder::encode)
-                                             .roles(String.valueOf(model.getUserAuthority()
-                                                                        .getAuthority()))
-                                             .disabled(!model.getEnabled())
-                                             .build();
-            userDetailsManager.updateUser(user);
+            UserDetails entity = org.springframework.security.core.userdetails.User.builder()
+                    .username(dto.getEmail())
+                    .password(dto.getPassword())
+                    .passwordEncoder(encoder::encode)
+                    .roles(String.valueOf(dto.getUserAuthority().getAuthority()))
+                    .disabled(!dto.getEnabled()).build();
+            userDetailsManager.updateUser(entity);
         } catch (ConstraintViolationException  e) {
             throw new ServiceException("Updating user object fails.", e);
         }

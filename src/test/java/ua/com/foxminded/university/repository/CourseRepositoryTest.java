@@ -19,12 +19,12 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
-import ua.com.foxminded.university.entity.CourseEntity;
-import ua.com.foxminded.university.entity.TeacherEntity;
-import ua.com.foxminded.university.entity.LessonEntity;
-import ua.com.foxminded.university.entitymother.CourseEntityMother;
-import ua.com.foxminded.university.entitymother.TeacherEntityMother;
-import ua.com.foxminded.university.entitymother.LessonEntityMother;
+import ua.com.foxminded.university.entity.Course;
+import ua.com.foxminded.university.entity.Teacher;
+import ua.com.foxminded.university.entity.Lesson;
+import ua.com.foxminded.university.entitymother.CourseMother;
+import ua.com.foxminded.university.entitymother.TeacherMother;
+import ua.com.foxminded.university.entitymother.LessonMother;
 
 @DataJpaTest
 @ActiveProfiles("test")
@@ -41,14 +41,14 @@ class CourseRepositoryTest {
     @Autowired
     private CourseRepository courseRepository;
     
-    private CourseEntity course;
-    private LessonEntity lesson;
-    private TeacherEntity teacher;
+    private Course course;
+    private Lesson lesson;
+    private Teacher teacher;
     
     @BeforeEach
     void init() {
-        course = CourseEntityMother.complete().build();
-        teacher = TeacherEntityMother.complete().build();
+        course = CourseMother.complete().build();
+        teacher = TeacherMother.complete().build();
         
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
@@ -57,7 +57,7 @@ class CourseRepositoryTest {
         teacher.getCourses().add(course);
         
         entityManager.persist(teacher);
-        lesson = LessonEntityMother.complete()
+        lesson = LessonMother.complete()
                                          .course(course).build();
         entityManager.persist(lesson);
         entityManager.getTransaction().commit();
@@ -66,7 +66,7 @@ class CourseRepositoryTest {
     
     @Test
     void getCourseRelationsById_ShouldContainAllDependencies() {
-        CourseEntity persistedCourse = courseRepository.getCourseRelationsById(course.getId());
+        Course persistedCourse = courseRepository.getCourseRelationsById(course.getId());
         LocalDate persistedDate = persistedCourse.getLessons()
                                                  .iterator().next().getDatestamp();
         
@@ -77,15 +77,14 @@ class CourseRepositoryTest {
 
     @Test
     void findTimetablesById_ShouldReturnCourseWithTimetableList_WhenEnterCourseId() {
-        CourseEntity receivedCourse = courseRepository
-                .findTimetablesById(course.getId());
-        Set<LessonEntity> timetables = receivedCourse.getLessons();
+        Course receivedCourse = courseRepository.findTimetablesById(course.getId());
+        Set<Lesson> timetables = receivedCourse.getLessons();
         assertEquals(LESSONS_QUANTITY, timetables.size());
     }
     
     @Test
     void findById_ShouldReturnCourseWithId() {
-        CourseEntity receivedCourse = courseRepository.findById(course.getId().intValue());
+        Course receivedCourse = courseRepository.findById(course.getId().intValue());
         assertEquals(course.getId(), receivedCourse.getId());
     }
 }

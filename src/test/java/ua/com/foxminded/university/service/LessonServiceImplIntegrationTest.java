@@ -12,14 +12,14 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.transaction.BeforeTransaction;
 import org.springframework.transaction.annotation.Transactional;
 
-import ua.com.foxminded.university.entity.LessonEntity;
-import ua.com.foxminded.university.entity.TimetableEntity;
-import ua.com.foxminded.university.entity.TimingEntity;
-import ua.com.foxminded.university.entitymother.LessonEntityMother;
-import ua.com.foxminded.university.entitymother.TimetableEntityMother;
-import ua.com.foxminded.university.entitymother.TimingEntityMother;
+import ua.com.foxminded.university.dto.LessonDTO;
+import ua.com.foxminded.university.entity.Lesson;
+import ua.com.foxminded.university.entity.Timetable;
+import ua.com.foxminded.university.entity.Timing;
+import ua.com.foxminded.university.entitymother.LessonMother;
+import ua.com.foxminded.university.entitymother.TimetableMother;
+import ua.com.foxminded.university.entitymother.TimingMother;
 import ua.com.foxminded.university.exception.ServiceException;
-import ua.com.foxminded.university.model.LessonModel;
 import ua.com.foxminded.university.repository.LessonRepository;
 import ua.com.foxminded.university.repository.TimetableRepository;
 import ua.com.foxminded.university.repository.TimingRepository;
@@ -43,24 +43,24 @@ class LessonServiceImplIntegrationTest {
     @Autowired
     private LessonRepository lessonRepository;
     
-    private TimetableEntity timetableEntity;
-    private TimingEntity timingEntity;
-    private LessonEntity lessonEntity;
+    private Timetable timetable;
+    private Timing timing;
+    private Lesson lesson;
     
     @BeforeTransaction
     void init() {
-        timetableEntity = TimetableEntityMother.complete().build();
-        timetableRepository.saveAndFlush(timetableEntity);
-        timingEntity = TimingEntityMother.complete().timetable(timetableEntity).build();
-        timingRepository.saveAndFlush(timingEntity);
-        lessonEntity = LessonEntityMother.complete().timetable(timetableEntity).build();
-        lessonRepository.saveAndFlush(lessonEntity);
+        timetable = TimetableMother.complete().build();
+        timetableRepository.saveAndFlush(timetable);
+        timing = TimingMother.complete().timetable(timetable).build();
+        timingRepository.saveAndFlush(timing);
+        lesson = LessonMother.complete().timetable(timetable).build();
+        lessonRepository.saveAndFlush(lesson);
     }
     
     @Test
     void getById_ShouldAddPropertiesUsingUsingModelMapperConfiguration() 
             throws ServiceException {
-        LessonModel lessonModel = lessonService.getById(lessonEntity.getId().intValue());
+        LessonDTO lessonModel = lessonService.getById(lesson.getId().intValue());
 //        assertEquals(timingEntity.getStartTime(), lessonModel.getStartTime());
         assertEquals(888, lessonModel.getLessonOrder());
         

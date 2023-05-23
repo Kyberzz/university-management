@@ -11,9 +11,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
-import ua.com.foxminded.university.entity.TimingEntity;
+import ua.com.foxminded.university.dto.TimingDTO;
+import ua.com.foxminded.university.entity.Timing;
 import ua.com.foxminded.university.exception.ServiceException;
-import ua.com.foxminded.university.model.TimingModel;
 import ua.com.foxminded.university.repository.TimingRepository;
 import ua.com.foxminded.university.service.TimingService;
 
@@ -23,10 +23,20 @@ import ua.com.foxminded.university.service.TimingService;
 public class TimingServiceImpl implements TimingService {
     
     public static final Type LESSON_TIMING_LIST_TYPE = 
-            new TypeToken<List<TimingModel>>() {}.getType();
+            new TypeToken<List<TimingDTO>>() {}.getType();
     
     private final ModelMapper modelMapper;
     private final TimingRepository timingRepository;
+    
+    @Override
+    public List<TimingDTO> getByTimetableId(int id) throws ServiceException {
+        try {
+            List<Timing> timings = timingRepository.findByTimetableId(id);
+            return modelMapper.map(timings, LESSON_TIMING_LIST_TYPE );
+        } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
+            throw new ServiceException("Getting timing of lessons fails", e);
+        }
+    }
 
     @Override
     public void deleteById(Integer id) throws ServiceException {
@@ -38,9 +48,9 @@ public class TimingServiceImpl implements TimingService {
     }
 
     @Override
-    public void create(TimingModel model) throws ServiceException {
+    public void create(TimingDTO model) throws ServiceException {
         try {
-            TimingEntity entity = modelMapper.map(model, TimingEntity.class);
+            Timing entity = modelMapper.map(model, Timing.class);
             timingRepository.saveAndFlush(entity);
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
             throw new ServiceException("Creating timing fails", e);
@@ -48,11 +58,11 @@ public class TimingServiceImpl implements TimingService {
     }
 
     @Override
-    public void update(TimingModel model) throws ServiceException {
+    public void update(TimingDTO model) throws ServiceException {
         try {
-            TimingEntity persistedEntity = timingRepository.findById(
+            Timing persistedEntity = timingRepository.findById(
                     model.getId().intValue());
-            TimingEntity entity = modelMapper.map(model, TimingEntity.class);
+            Timing entity = modelMapper.map(model, Timing.class);
             persistedEntity.setBreakDuration(entity.getBreakDuration());
             persistedEntity.setLessonDuration(entity.getLessonDuration());
             persistedEntity.setStartTime(entity.getStartTime());
@@ -64,19 +74,19 @@ public class TimingServiceImpl implements TimingService {
     }
 
     @Override
-    public TimingModel getById(int id) throws ServiceException {
+    public TimingDTO getById(int id) throws ServiceException {
         try {
-            TimingEntity entity = timingRepository.findById(id);
-            return modelMapper.map(entity, TimingModel.class);
+            Timing entity = timingRepository.findById(id);
+            return modelMapper.map(entity, TimingDTO.class);
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
             throw new ServiceException("Getting the LessonTiming by its fails", e);
         }
     }
 
     @Override
-    public List<TimingModel> getAll() throws ServiceException {
+    public List<TimingDTO> getAll() throws ServiceException {
         try {
-            List<TimingEntity> lessonsTiming = timingRepository.findAll();
+            List<Timing> lessonsTiming = timingRepository.findAll();
             return modelMapper.map(lessonsTiming, LESSON_TIMING_LIST_TYPE);
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
             throw new ServiceException("Getting lessons timing fails", e);

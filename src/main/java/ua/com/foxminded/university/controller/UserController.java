@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import lombok.RequiredArgsConstructor;
+import ua.com.foxminded.university.dto.UserDTO;
 import ua.com.foxminded.university.exception.ServiceException;
-import ua.com.foxminded.university.model.UserModel;
 import ua.com.foxminded.university.service.UserService;
 
 @Controller
@@ -39,13 +39,13 @@ public class UserController extends DefaultController {
     
     @PostMapping(value = "/edit", params = {"userId"})
     public String update(@RequestParam("userId") Integer userId, 
-                         @Valid @ModelAttribute UserModel userModel, 
+                         @Valid @ModelAttribute UserDTO userModel, 
                          BindingResult bindingResult) throws ServiceException, 
                                                              BindException {
         if (bindingResult.hasErrors()) {
             throw new BindException(bindingResult);
         }
-        UserModel persistedUser = userService.getById(userId);
+        UserDTO persistedUser = userService.getById(userId);
         persistedUser.setEnabled(userModel.getEnabled());
         persistedUser.setUserAuthority(userModel.getUserAuthority());
         userService.update(persistedUser);
@@ -56,11 +56,11 @@ public class UserController extends DefaultController {
 
     @GetMapping("/list")
     public String listAll(Model model) throws ServiceException {
-        List<UserModel> allUsers = userService.getAll();
-        List<UserModel> notAuthorizedUsers = userService.getNotAuthorizedUsers();
+        List<UserDTO> allUsers = userService.getAll();
+        List<UserDTO> notAuthorizedUsers = userService.getNotAuthorizedUsers();
         model.addAttribute("notAuthorizedUsers", notAuthorizedUsers);
         model.addAttribute("allUsers", allUsers);
-        model.addAttribute("userModel", new UserModel());
+        model.addAttribute("userModel", new UserDTO());
         return "users/list";
     }
 
@@ -68,7 +68,7 @@ public class UserController extends DefaultController {
     public String authorize(@RequestParam("email") String email,
                             @RequestParam("password") String password, 
                             @RequestParam("passwordConfirm") String passwordConfirm,
-                            @Valid @ModelAttribute UserModel userModel, 
+                            @Valid @ModelAttribute UserDTO userModel, 
                             BindingResult bindingResult) throws ServiceException, 
                                                                 BindException {
         if (bindingResult.hasErrors()) {

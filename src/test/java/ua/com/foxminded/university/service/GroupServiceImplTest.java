@@ -20,17 +20,17 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 
-import ua.com.foxminded.university.entity.GroupEntity;
-import ua.com.foxminded.university.entity.StudentEntity;
-import ua.com.foxminded.university.entitymother.GroupEntityMother;
-import ua.com.foxminded.university.entitymother.StudentEntityMother;
+import ua.com.foxminded.university.dto.GroupDTO;
+import ua.com.foxminded.university.dto.PersonDTO;
+import ua.com.foxminded.university.dto.StudentDTO;
+import ua.com.foxminded.university.dto.UserDTO;
+import ua.com.foxminded.university.entity.Group;
+import ua.com.foxminded.university.entity.Student;
+import ua.com.foxminded.university.entitymother.GroupMother;
+import ua.com.foxminded.university.entitymother.StudentMother;
 import ua.com.foxminded.university.exception.ServiceException;
-import ua.com.foxminded.university.model.GroupModel;
-import ua.com.foxminded.university.model.PersonModel;
-import ua.com.foxminded.university.model.StudentModel;
-import ua.com.foxminded.university.model.UserModel;
-import ua.com.foxminded.university.modelmother.GroupModelMother;
-import ua.com.foxminded.university.modelmother.StudentModelMother;
+import ua.com.foxminded.university.modelmother.GroupDtoMother;
+import ua.com.foxminded.university.modelmother.StudentDtoMother;
 import ua.com.foxminded.university.repository.GroupRepository;
 import ua.com.foxminded.university.repository.StudentRepository;
 import ua.com.foxminded.university.service.impl.GroupServiceImpl;
@@ -53,58 +53,58 @@ class GroupServiceImplTest {
     @Mock
     private ModelMapper modelMapper;
     
-    private GroupEntity groupEntity;
-    private List<GroupEntity> groupEntities;
-    private GroupModel groupModel;
-    private StudentEntity studentEntity;
+    private Group group;
+    private List<Group> groups;
+    private GroupDTO groupDto;
+    private Student student;
     
     @BeforeEach
     void setUp() {
-        groupEntity = GroupEntityMother.complete().build();
-        groupEntities = Arrays.asList(groupEntity);
-        groupModel = GroupModelMother.complete().build();
-        studentEntity = StudentEntityMother.complete().build();
+        group = GroupMother.complete().build();
+        groups = Arrays.asList(group);
+        groupDto = GroupDtoMother.complete().build();
+        student = StudentMother.complete().build();
     }
     
     @Test
     void deassignGroup() {
-        when(studentRepository.findById(anyInt())).thenReturn(studentEntity);
+        when(studentRepository.findById(anyInt())).thenReturn(student);
         groupService.deassignGroup(STUDENT_ID);
-        verify(studentRepository).saveAndFlush(isA(StudentEntity.class));
+        verify(studentRepository).saveAndFlush(isA(Student.class));
     }
     
     @Test
     void sortStudentsByLastName() {
-        PersonModel firstPerson = PersonModel.builder().lastName(LAST_NAME_A).build();
-        PersonModel secondPerson = PersonModel.builder().lastName(LAST_NAME_B).build();
-        UserModel firstUser = UserModel.builder().person(firstPerson).build();
-        UserModel secondUser = UserModel.builder().person(secondPerson).build();
+        PersonDTO firstPerson = PersonDTO.builder().lastName(LAST_NAME_A).build();
+        PersonDTO secondPerson = PersonDTO.builder().lastName(LAST_NAME_B).build();
+        UserDTO firstUser = UserDTO.builder().person(firstPerson).build();
+        UserDTO secondUser = UserDTO.builder().person(secondPerson).build();
         
-        StudentModel firstStudent = StudentModelMother.complete().user(firstUser).build();
-        StudentModel secondStudent = StudentModelMother.complete().user(secondUser).build();
-        Set<StudentModel> students = new LinkedHashSet<>();
+        StudentDTO firstStudent = StudentDtoMother.complete().user(firstUser).build();
+        StudentDTO secondStudent = StudentDtoMother.complete().user(secondUser).build();
+        Set<StudentDTO> students = new LinkedHashSet<>();
         students.add(secondStudent);
         students.add(firstStudent);
-        groupModel.setStudents(students);
-        groupService.sortStudentsByLastName(groupModel);
-        Set<StudentModel> expectedResult = new LinkedHashSet<>(Arrays.asList(firstStudent, 
+        groupDto.setStudents(students);
+        groupService.sortStudentsByLastName(groupDto);
+        Set<StudentDTO> expectedResult = new LinkedHashSet<>(Arrays.asList(firstStudent, 
                                                                              secondStudent));
-        assertEquals(expectedResult, groupModel.getStudents());
+        assertEquals(expectedResult, groupDto.getStudents());
     }
     
     @Test
     void assignGroup_ShouldAssignGroupToStudents() { 
         int[] studentIds = {STUDENT_ID};
-        when(studentRepository.findById(anyInt())).thenReturn(studentEntity);
+        when(studentRepository.findById(anyInt())).thenReturn(student);
         groupService.assignGroup(GROUP_ID, studentIds);
-        verify(studentRepository).saveAndFlush(isA(StudentEntity.class));
+        verify(studentRepository).saveAndFlush(isA(Student.class));
     }
     
     @Test
     void getGroupRelationsById_ShouldExecuteCorrectCallsQuantity() throws ServiceException {
-        when(groupRepository.getGroupRelationsById(anyInt())).thenReturn(groupEntity);
+        when(groupRepository.getGroupRelationsById(anyInt())).thenReturn(group);
         groupService.getGroupRelationsById(GROUP_ID);
-        verify(modelMapper).map(groupEntity, GroupModel.class);
+        verify(modelMapper).map(group, GroupDTO.class);
     }
     
     @Test
@@ -115,45 +115,45 @@ class GroupServiceImplTest {
     
     @Test
     void create_ShouldExecuteCorrectCallsQuantity() throws ServiceException {
-        when(modelMapper.map(groupModel, GroupEntity.class)).thenReturn(groupEntity);
-        groupService.create(groupModel);
-        verify(groupRepository).saveAndFlush(isA(GroupEntity.class));
+        when(modelMapper.map(groupDto, Group.class)).thenReturn(group);
+        groupService.create(groupDto);
+        verify(groupRepository).saveAndFlush(isA(Group.class));
     }
     
     @Test
     void update_ShouldExecuteCorrectCallsQuantity() throws ServiceException {
-        groupEntity.setId(GROUP_ID);
-        when(modelMapper.map(groupModel, GroupEntity.class)).thenReturn(groupEntity);
-        when(groupRepository.findById(anyInt())).thenReturn(groupEntity);
-        groupService.update(groupModel);
-        verify(groupRepository).saveAndFlush(isA(GroupEntity.class));
+        group.setId(GROUP_ID);
+        when(modelMapper.map(groupDto, Group.class)).thenReturn(group);
+        when(groupRepository.findById(anyInt())).thenReturn(group);
+        groupService.update(groupDto);
+        verify(groupRepository).saveAndFlush(isA(Group.class));
     }
     
     @Test
     void getById_ShouldExecuteCorrectCallsQuantity() throws ServiceException {
-        when(groupRepository.findById(anyInt())).thenReturn(groupEntity);
+        when(groupRepository.findById(anyInt())).thenReturn(group);
         groupService.getById(GROUP_ID);
-        verify(modelMapper).map(groupEntity, GroupModel.class);
+        verify(modelMapper).map(group, GroupDTO.class);
     }
     
     @Test
     void getAll_ShouldExecuteCorrectCallsQuantity() throws ServiceException {
-        when(groupRepository.findAll()).thenReturn(groupEntities);
+        when(groupRepository.findAll()).thenReturn(groups);
         groupService.getAll();
-        verify(modelMapper).map(groupEntities, GroupServiceImpl.GROUP_MODEL_LIST_TYPE);
+        verify(modelMapper).map(groups, GroupServiceImpl.GROUP_MODEL_LIST_TYPE);
     }
     
     @Test
     void getStudentsByGroupId_ShouldExecuteCorrectCallsQuantity() throws ServiceException {
-        when(groupRepository.findStudentsById(anyInt())).thenReturn(groupEntity);
+        when(groupRepository.findStudentsById(anyInt())).thenReturn(group);
         groupService.getStudentsByGroupId(GROUP_ID);
-        verify(modelMapper).map(groupEntity, GroupModel.class);
+        verify(modelMapper).map(group, GroupDTO.class);
     }
     
     @Test
     void getTimetablesByGroupId_ShouldExecuteCorrectCallsQuantity() throws ServiceException {
-        when(groupRepository.findTimetablesById(anyInt())).thenReturn(groupEntity);
+        when(groupRepository.findTimetablesById(anyInt())).thenReturn(group);
         groupService.getTimetablesByGroupId(GROUP_ID);
-        verify(modelMapper).map(groupEntity, GroupModel.class);
+        verify(modelMapper).map(group, GroupDTO.class);
     }
 }

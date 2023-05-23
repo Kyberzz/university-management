@@ -7,8 +7,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static ua.com.foxminded.university.controller.DefaultControllerTest.AUTHORIZED_EMAIL;
+import static ua.com.foxminded.university.entity.Authority.ADMIN;
 import static ua.com.foxminded.university.entity.RoleAuthority.ROLE_ADMIN;
-import static ua.com.foxminded.university.model.Authority.ADMIN;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,13 +26,13 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.web.context.WebApplicationContext;
 
-import ua.com.foxminded.university.entity.StudentEntity;
-import ua.com.foxminded.university.entity.UserAuthorityEntity;
-import ua.com.foxminded.university.entity.UserEntity;
-import ua.com.foxminded.university.entitymother.StudentEntityMother;
-import ua.com.foxminded.university.entitymother.UserEntityMother;
-import ua.com.foxminded.university.model.StudentModel;
-import ua.com.foxminded.university.modelmother.StudentModelMother;
+import ua.com.foxminded.university.dto.StudentDTO;
+import ua.com.foxminded.university.entity.Student;
+import ua.com.foxminded.university.entity.UserAuthority;
+import ua.com.foxminded.university.entity.User;
+import ua.com.foxminded.university.entitymother.StudentMother;
+import ua.com.foxminded.university.entitymother.UserMother;
+import ua.com.foxminded.university.modelmother.StudentDtoMother;
 import ua.com.foxminded.university.repository.StudentRepository;
 import ua.com.foxminded.university.repository.UserAuthorityRepository;
 import ua.com.foxminded.university.repository.UserRepository;
@@ -61,23 +61,23 @@ class StudentControllerIntegrationTest {
     @Autowired
     private PlatformTransactionManager transactionManager;
     
-    private StudentEntity studentEntity;
-    private StudentModel studentModel;
+    private Student student;
+    private StudentDTO studentDto;
     
     @BeforeTransaction
     void init() {
-        studentModel = StudentModelMother.complete().build();
-        studentEntity = StudentEntityMother.complete().build();
+        studentDto = StudentDtoMother.complete().build();
+        student = StudentMother.complete().build();
         
         new TransactionTemplate(transactionManager).execute(transactionStatus -> {
             userRepository.deleteAll();
-            UserEntity user = UserEntityMother.complete().email(AUTHORIZED_EMAIL).build();
+            User user = UserMother.complete().email(AUTHORIZED_EMAIL).build();
             userRepository.saveAndFlush(user);
-            UserAuthorityEntity userAuthority = UserAuthorityEntity.builder()
+            UserAuthority userAuthority = UserAuthority.builder()
                     .roleAuthority(ROLE_ADMIN)
                     .user(user).build();
             userAuthorityRepository.save(userAuthority);
-            studentRepository.saveAndFlush(studentEntity);
+            studentRepository.saveAndFlush(student);
             return null;
         });
     }
@@ -96,7 +96,7 @@ class StudentControllerIntegrationTest {
     @Test
     @WithUserDetails(AUTHORIZED_EMAIL)
     void create_ShouldAuthorizeCredentialsAndRedirect() throws Exception {
-        mockMvc.perform(post("/students/create").flashAttr("studentModel", studentModel)
+        mockMvc.perform(post("/students/create").flashAttr("studentModel", studentDto)
                                                 .with(csrf()))
                .andExpect(authenticated().withRoles(ADMIN.toString()))
                .andExpect(status().is3xxRedirection());
@@ -114,8 +114,8 @@ class StudentControllerIntegrationTest {
     @WithUserDetails(AUTHORIZED_EMAIL)
     void update_ShouldAuthorizeCredentialsAndRedirect() throws Exception {
         mockMvc.perform(post("/students/{studentId}/update", 
-                             String.valueOf(studentEntity.getId()))
-                    .flashAttr("studentModel", studentModel)
+                             String.valueOf(student.getId()))
+                    .flashAttr("studentModel", studentDto)
                     .with(csrf()))
                .andExpect(authenticated().withRoles(ADMIN.toString()))
                .andExpect(status().is3xxRedirection());
@@ -125,7 +125,7 @@ class StudentControllerIntegrationTest {
     @WithUserDetails(AUTHORIZED_EMAIL)
     void delete_ShouldAuthenticateCredentialsAndRedirect() throws Exception {
         mockMvc.perform(post("/students/delete")
-                    .param("studentId", String.valueOf(studentEntity.getId()))
+                    .param("studentId", String.valueOf(student.getId()))
                     .with(csrf()))
                .andExpect(authenticated().withRoles(ADMIN.toString()))
                .andExpect(status().is3xxRedirection());

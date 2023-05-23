@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import lombok.RequiredArgsConstructor;
+import ua.com.foxminded.university.dto.GroupDTO;
+import ua.com.foxminded.university.dto.StudentDTO;
 import ua.com.foxminded.university.exception.ServiceException;
-import ua.com.foxminded.university.model.GroupModel;
-import ua.com.foxminded.university.model.StudentModel;
 import ua.com.foxminded.university.service.GroupService;
 import ua.com.foxminded.university.service.StudentService;
 
@@ -32,7 +32,7 @@ public class StudentController extends DefaultController {
     private final GroupService groupService;
     
     @PostMapping("/create")
-    public String create(@Valid @ModelAttribute StudentModel studentModel, 
+    public String create(@Valid @ModelAttribute StudentDTO studentModel, 
                          BindingResult bindingResult) throws ServiceException, 
                                                                  BindException {
         if (bindingResult.hasErrors()) {
@@ -47,9 +47,9 @@ public class StudentController extends DefaultController {
 
     @RequestMapping("/list")
     public String list(Model model) throws ServiceException {
-        List<StudentModel> students = studentService.getAll();
-        List<GroupModel> groups = groupService.getAll();
-        StudentModel student = new StudentModel();
+        List<StudentDTO> students = studentService.getAll();
+        List<GroupDTO> groups = groupService.getAll();
+        StudentDTO student = new StudentDTO();
         model.addAttribute("studentModel", student);
         model.addAttribute("students", students);
         model.addAttribute("groups", groups);
@@ -58,7 +58,7 @@ public class StudentController extends DefaultController {
     
     @PostMapping("/{studentId}/update")
     public String update(@PathVariable int studentId, 
-                         @Valid @ModelAttribute StudentModel studentModel, 
+                         @Valid @ModelAttribute StudentDTO studentModel, 
                          BindingResult bindingResult) throws ServiceException, 
                                                              BindException {
         if (bindingResult.hasErrors()) {

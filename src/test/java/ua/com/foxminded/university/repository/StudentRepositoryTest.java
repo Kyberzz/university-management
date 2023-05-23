@@ -14,12 +14,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 
-import ua.com.foxminded.university.entity.GroupEntity;
-import ua.com.foxminded.university.entity.StudentEntity;
-import ua.com.foxminded.university.entity.UserEntity;
-import ua.com.foxminded.university.entitymother.GroupEntityMother;
-import ua.com.foxminded.university.entitymother.StudentEntityMother;
-import ua.com.foxminded.university.entitymother.UserEntityMother;
+import ua.com.foxminded.university.entity.Group;
+import ua.com.foxminded.university.entity.Student;
+import ua.com.foxminded.university.entity.User;
+import ua.com.foxminded.university.entitymother.GroupMother;
+import ua.com.foxminded.university.entitymother.StudentMother;
+import ua.com.foxminded.university.entitymother.UserMother;
 
 @DataJpaTest
 @ActiveProfiles("test")
@@ -34,22 +34,22 @@ class StudentRepositoryTest {
     @PersistenceUnit
     private EntityManagerFactory entityManagerFactory;
     
-    private StudentEntity student;
-    private GroupEntity group;
-    private UserEntity user;
+    private Student student;
+    private Group group;
+    private User user;
     
     @BeforeEach 
     void init() {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
         
-        group = GroupEntityMother.complete().build();
+        group = GroupMother.complete().build();
         entityManager.persist(group);
         
-        user = UserEntityMother.complete().build();
+        user = UserMother.complete().build();
         entityManager.persist(user);
         
-        student = StudentEntityMother.complete()
+        student = StudentMother.complete()
                                      .group(group)
                                      .user(user)
                                      .build();
@@ -60,13 +60,13 @@ class StudentRepositoryTest {
     
     @Test
     void findGroupById_ShouldRetrunGroupByStudentId() {
-        StudentEntity persistedStudent = studentRepository.findGroupById(student.getId());
+        Student persistedStudent = studentRepository.findGroupById(student.getId());
         assertEquals(group.getId(), persistedStudent.getGroup().getId());
     }
     
     @Test
     void findById_ShouldReturnStudentObjectWithId() {
-        StudentEntity persistedStudent = studentRepository.findById(student.getId());
+        Student persistedStudent = studentRepository.findById(student.getId());
         assertEquals(student.getId(), persistedStudent.getId());
     }
 }

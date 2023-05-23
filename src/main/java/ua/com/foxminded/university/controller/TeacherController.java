@@ -7,8 +7,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import lombok.RequiredArgsConstructor;
+import ua.com.foxminded.university.dto.TeacherDTO;
 import ua.com.foxminded.university.exception.ServiceException;
-import ua.com.foxminded.university.model.TeacherModel;
 import ua.com.foxminded.university.service.TeacherService;
 
 @Controller
@@ -19,7 +19,7 @@ public class TeacherController extends DefaultController {
 
     @RequestMapping(value = "/teachers/list")
     public String getAllTeachers(Model model) throws ServiceException {
-        List<TeacherModel> teachers = teacherService.getAll();
+        List<TeacherDTO> teachers = teacherService.getAll();
         model.addAttribute("teachers", teachers);
         return "teachers/list";
     }

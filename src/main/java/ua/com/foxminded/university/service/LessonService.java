@@ -3,17 +3,21 @@ package ua.com.foxminded.university.service;
 import java.time.LocalDate;
 import java.util.List;
 
+import ua.com.foxminded.university.dto.LessonDTO;
 import ua.com.foxminded.university.exception.ServiceException;
-import ua.com.foxminded.university.model.LessonModel;
 
-public interface LessonService extends GenericService<LessonModel> {
+public interface LessonService extends GenericService<LessonDTO> {
+    
+    public void addLessonTiming(List<LessonDTO> lessons);
+    
+    public void addLessonTiming(LessonDTO lesson);
     
     public LocalDate moveForward(LocalDate date);
     
     public LocalDate moveBack(LocalDate date);
     
-    public List<List<List<LessonModel>>> getMonthLessons(LocalDate date) 
+    public List<List<List<LessonDTO>>> getMonthLessons(LocalDate date) 
             throws ServiceException;
     
-    public List<LessonModel> getDayLessons(LocalDate date) throws ServiceException;
+    public List<LessonDTO> getDayLessons(LocalDate date) throws ServiceException;
 }
