@@ -9,105 +9,106 @@
    rel="stylesheet"
    integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ"
    crossorigin="anonymous">
-  <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/styles.css}" />
  </head>
 
  <body>
-  <div th:replace="~{fragments/header::navigationBar}">Navigation
-   bar</div>
+  <div class="container-fluid flex-column">
+  <div class="row flex-shrink-0">
+   My menu
+  </div>
+  
+   
+   
+   
+  </div>
+  
+  
+  
+<!--  <div th:replace="~{fragments/header::navigationBar}">Navigation bar</div>-->
 
   <nav class="ms-2" aria-label="breadcrumb" th:fragment="page-path">
    <ol class="breadcrumb container-fluid">
     <li class="breadcrumb-item"><a th:href="@{/}" th:text="#{href.home}">Home</a></li>
-    <li class="breadcrumb-item"><a th:href="@{/lessons/__${lessonModel.datestamp}__/month-lessons}"
+    <li class="breadcrumb-item"><a th:href="@{/lessons/__${lesson.datestamp}__/month-lessons}"
       th:text="#{href.month-lessons}">Month lesson</a></li>
     <li class="breadcrumb-item active" aria-current="page" th:text="#{href.day-lesson}">Day lesson
     </li>
    </ol>
   </nav>
-  <!-- 
- <div class="modal fade" id="add" tabindex="-1"
-  aria-labelledby="addCourse" aria-hidden="true">
-  <div class="modal-dialog">
-   <form class="modal-content"
-    th:action="@{/lessons/__${lessonModel.datestamp}__/create}"
-    th:object="${lessonModel}" method="post">
-    <div class="modal-header">
-     <h1 class="modal-title fs-5" id="createlesson"
-      th:text="|#{lessons.create} __${lessonModel.datestamp}__|">Create
-      lesson</h1>
-     <button type="button" class="btn-close" data-bs-dismiss="modal"
-      aria-label="Close"></button>
-    </div>
-    <div class="modal-body">
-     <div class="container-fluid">
-      <div class="row mt-2 text-end">
-       <div class="col-5" th:text="|#{thead.start-time}: |">Start
-        time:</div>
-       <div class="col-7">
-        <select class="form-select" aria-label="Lesson selection"
-         th:field="*{startTime}">
-         <option
-          th:each="startTime : ${T(ua.com.foxminded.university.model.LessonStartTime).values()}"
-          th:value="${startTime.representation}"
-          th:text="${startTime.representation}">8:00</option>
-        </select>
+
+  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add">
+   Launch demo modal
+  </button>
+
+  <div class="modal fade" id="add" tabindex="-1" aria-labelledby="addCourse" aria-hidden="true">
+   <div class="modal-dialog">
+    <form class="modal-content" th:action="@{/lessons/__${lesson.datestamp}__/create}"
+     th:object="${lesson}" method="post">
+     <div class="modal-header">
+      <h1 class="modal-title fs-5" id="createlesson"
+       th:text="|#{lessons.create} __${lesson.datestamp}__|">Create
+       lesson</h1>
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+     </div>
+     <div class="modal-body">
+      <div class="container-fluid">
+
+       <div class="row mt-2 text-end">
+        <div class="col-5" th:text="|#{thead.lesson}: |">Lesson:</div>
+        <div class="col-7">
+         <select class="form-select" aria-label="Lesson selection" th:field="*{course.id}"
+          id="lessonSelection">
+          <option th:each="course : ${courses}" th:value="${course.id}" th:text="${course.name}">
+           Electrodynamics</option>
+         </select>
+        </div>
        </div>
-      </div>
-      <div class="row mt-2 text-end">
-       <div class="col-5" th:text="|#{thead.break-duration}: |">Duration:</div>
-       <div class="col-7">
-        <select class="form-select" aria-label="Lesson selection"
-         th:field="*{breakDuration}">
-         <option
-          th:each="breakDuration : ${T(ua.com.foxminded.university.model.LessonBreakDuration).values()}"
-          th:value="${breakDuration.duration}"
-          th:text="${breakDuration.duration.toMinutes()}">15:00</option>
-        </select>
+
+       <div class="row mt-2 text-end">
+        <div class="col-5" th:text="|#{thead.group}: |">Group:</div>
+        <div class="col-7">
+         <select class="form-select" aria-label="Group selection" th:field="*{group.id}"
+          id="groupSelection">
+          <option th:each="group : ${groups}" th:value="${group.id}" th:text="${group.name}">lk-74
+          </option>
+         </select>
+        </div>
        </div>
-      </div>
-      <div class="row mt-2 text-end">
-       <div class="col-5" th:text="|#{thead.lesson}: |">Lesson:</div>
-       <div class="col-7">
-        <select class="form-select" aria-label="Lesson selection"
-         th:field="*{course.id}" id="lessonSelection">
-         <option th:each="course : ${courses}" th:value="${course.id}"
-          th:text="${course.name}">Electrodynamics</option>
-        </select>
+
+       <div class="row mt-2 text-end">
+        <div class="col-5" th:text="|#{div.lesson-order}: |">Lesson order:</div>
+        <div class="col-7">
+         <input type="hidden" name="timetableId" th:value="${timetable.id}"/>
+         <select class="form-select" aria-label="Group selection" th:field="*{lessonOrder}"
+          id="groupSelection">
+          <option th:each="timing, iterationStatus : ${timetable.timings}" th:value="${iterationStatus.count}"
+           th:text="${iterationStatus.count}">1</option>
+         </select>
+        </div>
        </div>
-      </div>
-      <div class="row mt-2 text-end">
-       <div class="col-5" th:text="|#{thead.group}: |">Group:</div>
-       <div class="col-7">
-        <select class="form-select" aria-label="Group selection"
-         th:field="*{group.id}" id="groupSelection">
-         <option th:each="group : ${groups}" th:value="${group.id}"
-          th:text="${group.name}">lk-74</option>
-        </select>
-       </div>
+
       </div>
      </div>
-    </div>
-    <div class="modal-footer">
-     <button type="button" class="btn btn-secondary"
-      data-bs-dismiss="modal">Close</button>
-     <button type="submit" class="btn btn-primary"
-      id="createSubmitButton" th:text="#{button.saveChange}">Save
-      changes</button>
-    </div>
-   </form>
+     <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      <button type="submit" class="btn btn-primary" id="createSubmitButton"
+       th:text="#{button.saveChange}">Save
+       changes</button>
+     </div>
+    </form>
+   </div>
   </div>
- </div>
- -->
-  <div class="container-fluid">
+
+
+  <div class="container-fluid h-100 d-flex flex-column">
    <div class="row">
-    <p th:text="${lessonModel.datestamp}">2023-04-25</p>
+    <p th:text="${lesson.datestamp}">2023-04-25</p>
    </div>
 
-   <div class="row">
-    <div class="col-7 ms-3 scrollable-col">
+   <div class="row flex-grow-1">
+    <div class="col-7 ms-3" style="overflow-y: scroll;">
 
-     <div class="row">
+<!--     <div class="row">-->
       <table class="table">
        <thead>
         <tr>
@@ -141,7 +142,7 @@
            Edit</button>
 
           <form th:action="@{/lessons/update/__${lesson.id}__}" method="post"
-           th:object="${lessonModel}" class="modal fade" th:id="|editLesson${lesson.id}|"
+           th:object="${lesson}" class="modal fade" th:id="|editLesson${lesson.id}|"
            tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
            <div class="modal-dialog">
             <div class="modal-content">
@@ -178,6 +179,7 @@
                   </select>
                  </div>
                 </div>
+               
                </div>
               </div>
               <div class="modal-footer">
@@ -196,7 +198,7 @@
            th:data-bs-target="|#delete${lesson.id}|">Delete</button>
 
           <form class="modal fade" method="post" th:id="|delete${lesson.id}|"
-           th:action="@{/lessons/delete/__${lesson.id}__}" th:object="${lessonModel}"
+           th:action="@{/lessons/delete/__${lesson.id}__}" th:object="${lesson}"
            data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
            aria-labelledby="staticBackdropLabel" aria-hidden="true">
            <div class="modal-dialog">
@@ -229,13 +231,13 @@
         </tr>
        </tbody>
       </table>
-     </div>
+<!--     </div>-->
     </div>
 
-    <div class="col-4 ms-3">
+    <div class="col-4 ms-5" style="overflow-y: scroll;">
+     
      <div class="row mb-2 mb-3">
-      <div class="col fs-5 text-center" th:text="#{tname.timetable-schema-name}">Timetable schema
-      </div>
+      <div class="col fs-5 text-center" th:text="#{tname.timetable}">Timetable</div>
      </div>
 
      <div class="row">
@@ -273,10 +275,11 @@
         </tr>
        </thead>
        <tbody>
-        <tr th:eache="timing : ${timings}">
+        <tr th:each="timing, iterationStatus : ${timetable.timings}">
+         <td th:text="${iterationStatus.count}">1</td>
          <td th:text="${timing.startTime}">08:00</td>
          <td th:text="${timing.endTime}">09:30</td>
-         <td th:text="${timing.breakDuration}">20</td>
+         <td th:text="${timing.breakDuration.toMinutes()}">20</td>
         </tr>
        </tbody>
       </table>

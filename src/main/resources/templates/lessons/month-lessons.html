@@ -28,13 +28,13 @@
    <div class="col">
     <div class="row">
      <div class="col">
-      <form th:action="@{/lessons/__${lessonModel.datestamp}__/back}" th:method="get">
+      <form th:action="@{/lessons/__${lesson.datestamp}__/back}" th:method="get">
        <button type="submit" class="btn btn-primary" th:text="#{lessons.previous}">Previous
         period</button>
       </form>
      </div>
      <div class="col text-end">
-      <form th:action="@{/lessons/__${lessonModel.datestamp}__/next}" th:method="get">
+      <form th:action="@{/lessons/__${lesson.datestamp}__/next}" th:method="get">
        <button type="submit" class="btn btn-primary" th:text="#{lessons.next}">Next period</button>
       </form>
      </div>
@@ -67,7 +67,7 @@
            <div class="row" th:if="${dayLessons[0].id}">
             <p>
             <div>
-             <form th:action="@{/lessons/__${dayLessons[0].datestamp}__/day-lessons}" method="get">
+             <form th:action="@{/lessons/day-lessons/__${dayLessons[0].datestamp}__}" method="get">
               <button type="submit" class="btn btn-success btn-sm" th:text="#{button.expand}"
                id="expandButton">Expand</button>
               <input type="hidden" name="timetableId" th:value="${dayLessons[0].timetable.id}"/>

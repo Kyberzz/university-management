@@ -49,5 +49,6 @@ class TimingServiceImplIntegreaionTest {
         TimingDTO timingDto = timingService.getById(timing.getId());
         assertEquals(timing.getStartTime().plus(timing.getLessonDuration()), 
                      timingDto.getEndTime());
+        assertEquals(timing.getStartTime(), timingDto.getStartTime());
     }
 }

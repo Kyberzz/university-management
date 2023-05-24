@@ -64,8 +64,7 @@ class LessonControllerTest {
                 new LessonController(timetableServiceMock, 
                                      courseServiceMock, 
                                      groupServiceMock, 
-                                     timetableService, 
-                                     timingService)).build();
+                                     timetableService)).build();
 
         lesson = LessonDtoMother.complete().build();
     }
@@ -75,9 +74,9 @@ class LessonControllerTest {
         LocalDate localDate = LocalDate.now();
         LessonDTO lessonDto = LessonDtoMother.complete().build();
         mockMvc.perform(post("/timetables/create/timetable/{date}", localDate.toString())
-                    .flashAttr(LESSON_MODEL_ATTRIBUTE, lessonDto))
+                    .flashAttr(LESSON_ATTRIBUTE, lessonDto))
                .andDo(print())
-               .andExpect(model().attributeExists(LESSON_MODEL_ATTRIBUTE))
+               .andExpect(model().attributeExists(LESSON_ATTRIBUTE))
                .andExpect(redirectedUrl(new StringBuffer().append(DAY_LESSONS_PATH)
                                                           .append(localDate)
                                                           .append("?").toString()));
@@ -87,7 +86,7 @@ class LessonControllerTest {
     @Test
     void delete_ShouldRedirectToList() throws Exception {
         mockMvc.perform(post("/timetables/delete/{id}", TIMETABLE_ID)
-                    .flashAttr(LESSON_MODEL_ATTRIBUTE, lesson))
+                    .flashAttr(LESSON_ATTRIBUTE, lesson))
                .andDo(print())
                .andExpect(redirectedUrl(new StringBuilder().append(DAY_LESSONS_PATH)
                                                            .append(lesson.getDatestamp())
@@ -116,7 +115,7 @@ class LessonControllerTest {
                .andExpect(model().attributeExists(GROUPS_ATTRIBUTE, 
                                                   COURSES_ATTRIBUTE, 
                                                   DAY_LESSONS_ATTRIBUTE,
-                                                  LESSON_MODEL_ATTRIBUTE))
+                                                  LESSON_ATTRIBUTE))
                .andExpect(view().name(DAY_LESSONS_TEMPLATE));
         
         verify(timetableServiceMock).getDayLessons(isA(LocalDate.class));
@@ -151,7 +150,7 @@ class LessonControllerTest {
                .andExpect(model().attributeExists(GROUPS_ATTRIBUTE))
                .andExpect(model().attributeExists(COURSES_ATTRIBUTE))
                .andExpect(model().attributeExists(MONTH_LESSONS_ATTRIBUTE))
-               .andExpect(model().attributeExists(LESSON_MODEL_ATTRIBUTE))
+               .andExpect(model().attributeExists(LESSON_ATTRIBUTE))
                .andExpect(MockMvcResultMatchers.view().name(DAY_LESSONS_TEMPLATE));
         
         verify(timetableServiceMock).getMonthLessons(LocalDate.now());

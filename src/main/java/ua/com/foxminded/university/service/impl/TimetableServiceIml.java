@@ -27,6 +27,16 @@ public class TimetableServiceIml implements TimetableService {
     
     private final TimetableRepository timetableRepository;
     private final ModelMapper modelMapper;
+    
+    @Override
+    public TimetableDTO getByIdWithTimings(int id) throws ServiceException {
+        try {
+            Timetable timetable = timetableRepository.getByIdWithTimings(id);
+            return modelMapper.map(timetable, TimetableDTO.class);
+        } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
+            throw new ServiceException("Fetching the timetable with its timings list fails", e);
+        }
+    }
 
     @Override
     public List<TimetableDTO> getAllWithTimings() throws ServiceException {

@@ -1,22 +1,22 @@
 package ua.com.foxminded.university.converter;
 
-import org.modelmapper.Converter;
+import org.modelmapper.AbstractConverter;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
-import org.modelmapper.spi.MappingContext;
 
+import lombok.RequiredArgsConstructor;
 import ua.com.foxminded.university.dto.TimingDTO;
 import ua.com.foxminded.university.entity.Timing;
 
-public class TimingConverter implements Converter<Timing, TimingDTO> {
-
+@RequiredArgsConstructor
+public class TimingConverter extends AbstractConverter<Timing, TimingDTO> {
+    
     @Override
-    public TimingDTO convert(MappingContext<Timing, TimingDTO> context) {
-        Timing timing = context.getSource();
+    protected TimingDTO convert(Timing source) {
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-        TimingDTO timingDto = modelMapper.map(timing, TimingDTO.class);
-        timingDto.setEndTime(timingDto.getStartTime().plus(timingDto.getLessonDuration()));
+        TimingDTO timingDto = modelMapper.map(source, TimingDTO.class);
+        timingDto.setEndTime(source.getStartTime().plus(source.getLessonDuration()));
         return timingDto;
     }
 }

@@ -37,7 +37,13 @@ class TimetableRepositoryTest {
     }
     
     @Test
-    void getByIdWithTimingRelationship_ShouldReturnTimngsRelationship() {
+    void getByIdWithTimings_ShouldReturnTimingsRelationship() {
+        Timetable persistedTimetable = timetableRepository.getByIdWithTimings(timetable.getId());
+        assertEquals(timing, persistedTimetable.getTimings().iterator().next());
+    }
+    
+    @Test
+    void getAllWithTimings_ShouldReturnTimingsRelationship() {
         List<Timetable> timetables = timetableRepository.getAllWithTimings();
         Timetable persistedTimetable = timetables.iterator().next();
         

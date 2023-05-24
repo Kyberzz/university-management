@@ -7,7 +7,6 @@ import org.modelmapper.TypeToken;
 import org.modelmapper.ConfigurationException;
 import org.modelmapper.MappingException;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.Provider;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -77,11 +76,8 @@ public class TimingServiceImpl implements TimingService {
     @Override
     public TimingDTO getById(int id) throws ServiceException {
         try {
-            Timing entity = timingRepository.findById(id);
-            Provider<Timing> timingProvider = request -> new Timing();
-            modelMapper.typeMap(Timing.class, TimingDTO.class).addMappings(mapper -> mapper.with(timingProvider)
-                       .map(src -> src.getStartTime().plus(src.getLessonDuration()), TimingDTO::setEndTime));
-            return modelMapper.map(entity, TimingDTO.class);
+            Timing timing = timingRepository.findById(id);
+            return modelMapper.map(timing, TimingDTO.class);
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
             throw new ServiceException("Getting the LessonTiming by its fails", e);
         }

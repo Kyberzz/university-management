@@ -7,5 +7,7 @@ import ua.com.foxminded.university.exception.ServiceException;
 
 public interface TimetableService extends GenericService<TimetableDTO> {
     
+    public TimetableDTO getByIdWithTimings(int id) throws ServiceException;
+    
     public List<TimetableDTO> getAllWithTimings() throws ServiceException;
 }
