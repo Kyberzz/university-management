@@ -103,7 +103,7 @@ class GroupControllerTest {
                .andExpect(status().isOk())
                .andExpect(model().attributeExists(GROUP_MODEL_ATTRIBUTE))
                .andExpect(view().name("groups/group"));
-        verify(groupServiceMock).sortStudentsByLastName(any(GroupDTO.class));
+        verify(groupServiceMock).sortContainedStudentsByLastName(any(GroupDTO.class));
         verify(studentServiceMock).sortByLastName(ArgumentMatchers.<StudentDTO>anyList());
     }
     

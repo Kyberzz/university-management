@@ -8,6 +8,8 @@ import ua.com.foxminded.university.exception.ServiceException;
 
 public interface LessonService extends GenericService<LessonDTO> {
     
+    public void sortByLessonOrder(List<LessonDTO> lessons);
+    
     public void addLessonTiming(List<LessonDTO> lessons);
     
     public void addLessonTiming(LessonDTO lesson);

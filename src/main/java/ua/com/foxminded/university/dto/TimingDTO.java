@@ -5,13 +5,14 @@ import java.time.Duration;
 import java.time.LocalTime;
 import java.util.Set;
 
+import javax.validation.constraints.NotNull;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import ua.com.foxminded.university.entity.Timetable;
 
 @Data
 @Builder
@@ -22,11 +23,17 @@ public class TimingDTO implements Serializable {
     private static final long serialVersionUID = 1L;
     
     private Integer id;
+    
+    @NotNull
     private LocalTime startTime;
+    
+    @NotNull
     private Duration lessonDuration;
+    
+    @NotNull
     private Duration breakDuration;
     
-    private Timetable timetable;
+    private TimetableDTO timetable;
     
     @ToString.Exclude
     @EqualsAndHashCode.Exclude

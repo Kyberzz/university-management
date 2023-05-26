@@ -14,17 +14,21 @@ import ua.com.foxminded.university.exception.ServiceException;
 @Slf4j
 public class DefaultController {
     
+    public static final String ERROR_MESSAGE_ATTRIBUTE = "errorMessage";
+    public static final String QUESTION_MARK = "?";
     public static final String SLASH = "/";
     public static final String LIST_TEMPLATE = "list";
     public static final String REDIRECT_KEY_WORD = "redirect:";
+    public static final String URL_ATTRIBUTE = "url";
+    public static final String ERROR_TEMPLATE_NAME = "error";
     
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(ServiceException.class)
     public ModelAndView serviceExceptionHandler(HttpServletRequest request, ServiceException e) {
         ModelAndView modelAndView = new ModelAndView();
-        log.error("The controller class method fails.", e);
-        modelAndView.addObject("url", request.getRequestURI());
-        modelAndView.setViewName("error");
+        log.error("The service error has occurred", e);
+        modelAndView.addObject(URL_ATTRIBUTE, request.getRequestURI());
+        modelAndView.setViewName(ERROR_TEMPLATE_NAME);
         return modelAndView;
     }
     
@@ -32,9 +36,10 @@ public class DefaultController {
     @ExceptionHandler(BindException.class)
     public ModelAndView binding(HttpServletRequest request, BindException e) {
         ModelAndView modelAndView = new ModelAndView();
-        log.error("The binding request data fails", e);
-        modelAndView.addObject("url", request.getRequestURL());
-        modelAndView.setViewName("error");
+        log.error("The request data binding fails", e);
+        modelAndView.addObject(URL_ATTRIBUTE, request.getRequestURL());
+        modelAndView.addObject(ERROR_MESSAGE_ATTRIBUTE, e.getMessage());
+        modelAndView.setViewName(ERROR_TEMPLATE_NAME);
         return modelAndView;
     }
 }

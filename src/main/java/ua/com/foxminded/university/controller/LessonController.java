@@ -1,5 +1,7 @@
 package ua.com.foxminded.university.controller;
 
+import static ua.com.foxminded.university.controller.TimetableController.TIMETABLE_ID_PARAMETER_NAME;
+
 import java.time.LocalDate;
 import java.util.List;
 
@@ -60,7 +62,7 @@ public class LessonController extends DefaultController {
                                   .append(DAY_LESSONS_PATH)
                                   .append(lesson.getDatestamp())
                                   .append("?")
-                                  .append("timetableId=")
+                                  .append(TIMETABLE_ID_PARAMETER_NAME)
                                   .append(lesson.getTimetable().getId())
                                   .toString();
     }
@@ -96,6 +98,7 @@ public class LessonController extends DefaultController {
         LocalDate datestamp = LocalDate.parse(date);
         List<LessonDTO> dayLessons = lessonService.getDayLessons(datestamp);
         lessonService.addLessonTiming(dayLessons);
+        lessonService.sortByLessonOrder(dayLessons);
         LessonDTO lessonModel = LessonDTO.builder().datestamp(datestamp)
                                                    .course(new CourseDTO())
                                                    .build();
@@ -103,6 +106,7 @@ public class LessonController extends DefaultController {
         List<GroupDTO> groups = groupService.getAll();
         List<TimetableDTO> timetables = timetableService.getAll();
         TimetableDTO timetable = timetableService.getByIdWithTimings(timetableId);
+        timetableService.sortTimingsByStartTime(timetable);
         
         model.addAttribute(TIMETABLE_ATTRIBUTE, timetable);
         model.addAttribute(TIMETABLES_ATTRIBUTE, timetables);

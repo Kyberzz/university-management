@@ -86,7 +86,7 @@ class GroupServiceImplTest {
         students.add(secondStudent);
         students.add(firstStudent);
         groupDto.setStudents(students);
-        groupService.sortStudentsByLastName(groupDto);
+        groupService.sortContainedStudentsByLastName(groupDto);
         Set<StudentDTO> expectedResult = new LinkedHashSet<>(Arrays.asList(firstStudent, 
                                                                              secondStudent));
         assertEquals(expectedResult, groupDto.getStudents());

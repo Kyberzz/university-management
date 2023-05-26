@@ -46,10 +46,11 @@ public class GroupServiceImpl implements GroupService {
     }
     
     @Override
-    public void sortStudentsByLastName(GroupDTO group) {
+    public void sortContainedStudentsByLastName(GroupDTO group) {
         List<StudentDTO> list = new ArrayList<>(group.getStudents());
-        Collections.sort(list, Comparator.comparing(
-                student -> student.getUser().getPerson().getLastName()));
+        Collections.sort(list, Comparator.comparing(student -> student.getUser()
+                                                                      .getPerson()
+                                                                      .getLastName()));
         Set<StudentDTO> set = new LinkedHashSet<>(list);
         group.setStudents(set);
     }
@@ -84,10 +85,11 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public void create(GroupDTO model) throws ServiceException {
+    public GroupDTO create(GroupDTO model) throws ServiceException {
         try {
             Group entity = modelMapper.map(model, Group.class);
-            groupRepository.saveAndFlush(entity);
+            Group createdEntity = groupRepository.saveAndFlush(entity);
+            return modelMapper.map(createdEntity, GroupDTO.class);
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
             throw new ServiceException("Creating a group fails", e);
         }

@@ -101,10 +101,11 @@ public class StudentServiceImpl implements StudentService {
     }
     
     @Override
-    public void create(StudentDTO model) throws ServiceException {
+    public StudentDTO create(StudentDTO model) throws ServiceException {
         try {
             Student entity = modelMapper.map(model, Student.class);
-            studentRepository.saveAndFlush(entity);
+            Student createdEntity = studentRepository.saveAndFlush(entity);
+            return modelMapper.map(createdEntity, StudentDTO.class);
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
             throw new ServiceException("Creating a student fails", e);
         }

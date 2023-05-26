@@ -1,7 +1,12 @@
 package ua.com.foxminded.university.service.impl;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.modelmapper.TypeToken;
 import org.modelmapper.ConfigurationException;
@@ -12,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import ua.com.foxminded.university.dto.TimetableDTO;
+import ua.com.foxminded.university.dto.TimingDTO;
 import ua.com.foxminded.university.entity.Timetable;
 import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.repository.TimetableRepository;
@@ -27,6 +33,18 @@ public class TimetableServiceIml implements TimetableService {
     
     private final TimetableRepository timetableRepository;
     private final ModelMapper modelMapper;
+    
+    public void sortByName(List<TimetableDTO> timetables) {
+        Collections.sort(timetables, Comparator.comparing(TimetableDTO::getName));
+    }
+    
+    @Override
+    public void sortTimingsByStartTime(TimetableDTO timetable) {
+        List<TimingDTO> list = new ArrayList<>(timetable.getTimings());
+        Collections.sort(list, Comparator.comparing(TimingDTO::getStartTime));
+        Set<TimingDTO> set = new LinkedHashSet<>(list);
+        timetable.setTimings(set);
+    }
     
     @Override
     public TimetableDTO getByIdWithTimings(int id) throws ServiceException {
@@ -58,10 +76,11 @@ public class TimetableServiceIml implements TimetableService {
     }
 
     @Override
-    public void create(TimetableDTO model) throws ServiceException {
+    public TimetableDTO create(TimetableDTO timetable) throws ServiceException {
         try {
-            Timetable entity = modelMapper.map(model, Timetable.class);
-            timetableRepository.saveAndFlush(entity);
+            Timetable entity = modelMapper.map(timetable, Timetable.class);
+            Timetable createdEntity = timetableRepository.saveAndFlush(entity);
+            return modelMapper.map(createdEntity, TimetableDTO.class);
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
             throw new ServiceException("Creating timetable fails", e);
         }

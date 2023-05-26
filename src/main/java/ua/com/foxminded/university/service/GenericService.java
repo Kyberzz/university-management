@@ -8,7 +8,7 @@ public interface GenericService <T> {
     
     public void deleteById(Integer id) throws ServiceException; 
     
-    public void create(T model) throws ServiceException;
+    public T create(T model) throws ServiceException;
     
     public void update(T model) throws ServiceException;
     

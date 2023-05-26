@@ -7,6 +7,10 @@ import ua.com.foxminded.university.exception.ServiceException;
 
 public interface TimetableService extends GenericService<TimetableDTO> {
     
+    public void sortByName(List<TimetableDTO> timetables);
+    
+    public void sortTimingsByStartTime(TimetableDTO timetable);
+    
     public TimetableDTO getByIdWithTimings(int id) throws ServiceException;
     
     public List<TimetableDTO> getAllWithTimings() throws ServiceException;

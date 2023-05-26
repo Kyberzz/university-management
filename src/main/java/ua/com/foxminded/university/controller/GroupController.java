@@ -79,7 +79,7 @@ public class GroupController extends DefaultController {
     @GetMapping("/{groupId}")
     public String getById(@PathVariable int groupId, Model model) throws ServiceException {
         GroupDTO groupModel = groupService.getGroupRelationsById(groupId);
-        groupService.sortStudentsByLastName(groupModel);
+        groupService.sortContainedStudentsByLastName(groupModel);
         List<StudentDTO> students = studentService.getAll();
         studentService.sortByLastName(students);
         model.addAttribute(STUDENTS_MODEL_ATTRIBUTE, students);

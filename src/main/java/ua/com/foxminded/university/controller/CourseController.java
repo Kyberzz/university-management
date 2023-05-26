@@ -6,8 +6,6 @@ import javax.validation.Valid;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindException;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -76,12 +74,8 @@ public class CourseController extends DefaultController {
     
     @PostMapping(value = "/update", params = "courseId")
     public String update(@RequestParam Integer courseId,
-                         @Valid @ModelAttribute CourseDTO updatedCourse, 
-                         BindingResult bindingResult) throws BindException, 
-                                                             ServiceException {
-        if (bindingResult.hasErrors()) {
-            throw new BindException(bindingResult);
-        }
+                         @Valid @ModelAttribute CourseDTO updatedCourse) 
+                                 throws ServiceException {
         updatedCourse.setId(courseId);
         courseService.update(updatedCourse);
         return new StringBuilder().append(REDIRECT_KEY_WORD)
@@ -90,12 +84,8 @@ public class CourseController extends DefaultController {
     }
     
     @PostMapping(value = "/create")
-    public String create(@Valid @ModelAttribute CourseDTO courseModel, 
-                         BindingResult bindingResult) throws BindException, 
-                                                             ServiceException {
-        if (bindingResult.hasErrors()) {
-            throw new BindException(bindingResult);
-        }
+    public String create(@Valid @ModelAttribute CourseDTO courseModel) 
+            throws ServiceException {
         courseService.create(courseModel);   
         return new StringBuilder().append(REDIRECT_KEY_WORD)
                                   .append(COURSES_PATH)

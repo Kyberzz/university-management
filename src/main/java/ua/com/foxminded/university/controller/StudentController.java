@@ -6,8 +6,6 @@ import javax.validation.Valid;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindException;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,12 +30,9 @@ public class StudentController extends DefaultController {
     private final GroupService groupService;
     
     @PostMapping("/create")
-    public String create(@Valid @ModelAttribute StudentDTO studentModel, 
-                         BindingResult bindingResult) throws ServiceException, 
-                                                                 BindException {
-        if (bindingResult.hasErrors()) {
-            throw new BindException(bindingResult);
-        }
+    public String create(@Valid @ModelAttribute StudentDTO studentModel) 
+            throws ServiceException {
+        
         studentService.create(studentModel);
         return new StringBuilder().append(REDIRECT_KEY_WORD)
                                   .append(STUDENTS_PATH)
@@ -58,12 +53,8 @@ public class StudentController extends DefaultController {
     
     @PostMapping("/{studentId}/update")
     public String update(@PathVariable int studentId, 
-                         @Valid @ModelAttribute StudentDTO studentModel, 
-                         BindingResult bindingResult) throws ServiceException, 
-                                                             BindException {
-        if (bindingResult.hasErrors()) {
-            throw new BindException(bindingResult);
-        }
+                         @Valid @ModelAttribute StudentDTO studentModel) 
+                                 throws ServiceException {
         studentModel.setId(studentId);
         studentService.update(studentModel);
         return new StringBuilder().append(REDIRECT_KEY_WORD)

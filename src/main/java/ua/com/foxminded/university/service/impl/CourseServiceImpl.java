@@ -85,10 +85,11 @@ public class CourseServiceImpl implements CourseService {
     }
     
     @Override
-    public void create(CourseDTO model) throws ServiceException {
+    public CourseDTO create(CourseDTO model) throws ServiceException {
         try {
             Course entity = modelMapper.map(model, Course.class);
-            courseRepository.saveAndFlush(entity);
+            Course createdEntity = courseRepository.saveAndFlush(entity);
+            return modelMapper.map(createdEntity, CourseDTO.class);
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
             throw new ServiceException("Creating the course fails", e);
         }

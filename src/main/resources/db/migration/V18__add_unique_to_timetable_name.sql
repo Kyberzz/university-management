@@ -1,0 +1,1 @@
+alter table university.timetables add constraint timetables_name_key unique (name); 

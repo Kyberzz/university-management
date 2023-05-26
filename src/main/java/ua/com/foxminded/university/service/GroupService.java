@@ -8,7 +8,7 @@ public interface GroupService extends GenericService<GroupDTO> {
     
     public void deassignGroup(int studentId);
     
-    public void sortStudentsByLastName(GroupDTO group);
+    public void sortContainedStudentsByLastName(GroupDTO group);
     
     public void assignGroup(int groupId, int[] studentIds);
 

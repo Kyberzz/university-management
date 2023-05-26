@@ -48,10 +48,11 @@ public class TimingServiceImpl implements TimingService {
     }
 
     @Override
-    public void create(TimingDTO model) throws ServiceException {
+    public TimingDTO create(TimingDTO model) throws ServiceException {
         try {
             Timing entity = modelMapper.map(model, Timing.class);
-            timingRepository.saveAndFlush(entity);
+            Timing createdEntity = timingRepository.saveAndFlush(entity);
+            return modelMapper.map(createdEntity, TimingDTO.class);
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
             throw new ServiceException("Creating timing fails", e);
         }

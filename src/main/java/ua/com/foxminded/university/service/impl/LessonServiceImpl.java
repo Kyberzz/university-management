@@ -4,10 +4,10 @@ import java.lang.reflect.Type;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.modelmapper.ConfigurationException;
 import org.modelmapper.MappingException;
@@ -42,6 +42,11 @@ public class LessonServiceImpl implements LessonService {
     private final ModelMapper modelMapper;
     private final LessonRepository lessonRepository;
     private final TimingRepository timingRepository;
+    
+    @Override
+    public void sortByLessonOrder(List<LessonDTO> lessons) {
+        Collections.sort(lessons, Comparator.comparing(LessonDTO::getLessonOrder));
+    }
     
     @Override
     public void addLessonTiming(List<LessonDTO> lessons) {
@@ -102,19 +107,21 @@ public class LessonServiceImpl implements LessonService {
     }
     
     @Override
-    public void create(LessonDTO model) throws ServiceException {
+    public LessonDTO create(LessonDTO model) throws ServiceException {
         try {
-            Lesson persistEntity = lessonRepository
-                    .findByDatestampAndGroupIdAndTimingId(model.getDatestamp(), 
-                                                          model.getLessonOrder(),
-                                                          model.getGroup().getId());
+            Lesson persistEntity = lessonRepository.findByDatestampAndGroupIdAndTimingId(
+                    model.getDatestamp(), 
+                    model.getLessonOrder(),
+                    model.getGroup().getId());
             
             if (persistEntity == null) {
                 Lesson entity = modelMapper.map(model, Lesson.class);
-                lessonRepository.saveAndFlush(entity);
+                Lesson createdEntity = lessonRepository.saveAndFlush(entity);
+                return modelMapper.map(createdEntity, LessonDTO.class);
             } else {
                 model.setId(persistEntity.getId());
                 update(model);
+                return model;
             }
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
             throw new ServiceException("Creating a timetable fails", e);
