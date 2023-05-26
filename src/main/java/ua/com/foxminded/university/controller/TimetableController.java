@@ -38,8 +38,8 @@ public class TimetableController extends DefaultController {
     
     @PostMapping("/add-timing/{timetableId}")
     public String addTiming(@PathVariable int timetableId, 
-                            @Valid @ModelAttribute TimingDTO timing) throws ServiceException 
-                                                                {
+                            @Valid @ModelAttribute TimingDTO timing) 
+                                    throws ServiceException {
         timing.setTimetable(TimetableDTO.builder().id(timetableId).build());
         timingService.update(timing);
         

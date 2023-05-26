@@ -12,6 +12,7 @@ import org.modelmapper.TypeToken;
 import org.modelmapper.ConfigurationException;
 import org.modelmapper.MappingException;
 import org.modelmapper.ModelMapper;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -81,7 +82,8 @@ public class TimetableServiceIml implements TimetableService {
             Timetable entity = modelMapper.map(timetable, Timetable.class);
             Timetable createdEntity = timetableRepository.saveAndFlush(entity);
             return modelMapper.map(createdEntity, TimetableDTO.class);
-        } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
+        } catch (DataAccessException | IllegalArgumentException | 
+                 ConfigurationException | MappingException e) {
             throw new ServiceException("Creating timetable fails", e);
         }
     }
