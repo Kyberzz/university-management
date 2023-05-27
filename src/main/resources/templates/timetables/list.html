@@ -79,9 +79,10 @@
         </td>
         <td class="text-end">
          <button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal"
-          th:data-bs-target="|delete#${timetable.id}|">Delete</button>
+          th:data-bs-target="|#delete${timetable.id}|">Delete</button>
          <form class="modal fade" th:id="|delete${timetable.id}|" tabindex="-1"
-          aria-labelledby="exampleModalLabel" aria-hidden="true">
+          aria-labelledby="exampleModalLabel" aria-hidden="true"
+          th:action="@{/timetables/delete/__${timetable.id}__}" method="post">
           <div class="modal-dialog">
            <div class="modal-content">
             <div class="modal-header">
@@ -105,7 +106,7 @@
             </div>
             <div class="modal-footer">
              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-             <button type="button" class="btn btn-primary"
+             <button type="submit" class="btn btn-primary"
               th:text="#{button.confirm}">Confirm</button>
             </div>
            </div>
@@ -131,15 +132,13 @@
       <div class="col-6 d-inline-flex">
        <div class="fw-bold pt-2 flex-shrink-0 me-2" th:text="|#{tag.update-name}:|">Update-name:
        </div>
-       <div class="d-inline">
-        <form class="input-group mb-3" th:action="@{/timetables/update-name/__${timetable.id}__}"
-         th:object="${timetable}" method="post">
-         <input type="text" class="form-control" th:placeholder="#{thead.change-name}"
-          aria-label="Timetable name updating" aria-describedby="button-addon2" th:field="*{name}">
-         <button class="btn btn-primary btn-sm" type="submit" id="saveChangedName"
-          th:text="#{button.save-changes}">Save changes</button>
-        </form>
-       </div>
+       <form class="input-group mb-3" th:action="@{/timetables/update-name/__${timetable.id}__}"
+        th:object="${timetable}" method="post">
+        <input type="text" class="form-control" th:placeholder="#{thead.change-name}"
+         aria-label="Timetable name updating" aria-describedby="button-addon2" th:field="*{name}">
+        <button class="btn btn-primary btn-sm" type="submit" id="saveChangedName"
+         th:text="#{button.save-changes}">Save changes</button>
+       </form>
       </div>
      </div>
      <div class="row">
@@ -150,6 +149,7 @@
          <th scope="col" th:text="#{thead.start-time}">Start time</th>
          <th scope="col" th:text="#{thead.lesson-duration}">Lesson duration, min</th>
          <th scope="col" th:text="#{thead.break-duration}">Break duration, min</th>
+         <th scope="col"></th>
         </tr>
        </thead>
        <tbody>
@@ -158,6 +158,12 @@
          <td th:text="${timing.startTime}">8:00</td>
          <td th:text="${timing.lessonDuration.toMinutes()}">90</td>
          <td th:text="${timing.breakDuration.toMinutes()}">20</td>
+         <td>
+          <form th:action="@{/timetables/delete-timing/__${timetable.id}__/__${timing.id}__}"
+           method="post">
+           <button type="submit" class="btn btn-outline-danger btn-sm">Delete</button>
+          </form>
+         </td>
         </tr>
        </tbody>
       </table>
@@ -180,7 +186,7 @@
            <div class="col">
             <div class="row">
              <div class="form-floating mb-3">
-              <input type="text" class="form-control" id="startTimeInput" placeholder="#"
+              <input type="time" class="form-control" id="startTimeInput" placeholder="#"
                th:field="*{startTime}">
               <label for="startTimeInput" class="ms-2" th:text="|#{thead.start-time}:|">Start
                time:</label>
@@ -188,20 +194,20 @@
             </div>
             <div class="row">
              <div class="form-floating mb-3">
-              <input type="email" class="form-control" id="lessonDurationInput" placeholder="#"
+              <input type="number" class="form-control" id="lessonDurationInput" placeholder="#"
                th:field="*{lessonDuration}">
               <label for="lessonDurationInput" class="ms-2"
-               th:text="|#{th.timing.lesson-duration}:|">Lesson
-               duration:</label>
+               th:text="|#{thead.lesson-duration}:|">Lesson
+               duration, min:</label>
              </div>
             </div>
             <div class="row">
              <div class="form-floating mb-3">
-              <input type="text" class="form-control" id="breakDurationInput" placeholder="#"
+              <input type="number" class="form-control" id="breakDurationInput" placeholder="#"
                th:field="*{breakDuration}">
               <label for="breakDurationInput" class="ms-2"
-               th:text="|#{th.timing.break-duration}:|">Break
-               duration:</label>
+               th:text="|#{thead.break-duration}:|">Break
+               duration, min:</label>
              </div>
             </div>
            </div>

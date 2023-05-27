@@ -27,10 +27,8 @@ public class TimingDTO implements Serializable {
     @NotNull
     private LocalTime startTime;
     
-    @NotNull
     private Duration lessonDuration;
     
-    @NotNull
     private Duration breakDuration;
     
     private TimetableDTO timetable;

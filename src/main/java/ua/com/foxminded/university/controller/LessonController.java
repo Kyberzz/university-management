@@ -48,7 +48,21 @@ public class LessonController extends DefaultController {
     private final CourseService courseService;
     private final GroupService groupService;
     private final TimetableService timetableService;
-
+    
+    @PostMapping("/{date}/apply-timetable")
+    public String applyTimetable(@PathVariable String date, 
+                                 @RequestParam int timetableId) {
+        lessonService.applyTimetable(LocalDate.parse(date), timetableId);
+        return new StringBuilder().append(REDIRECT_KEY_WORD)
+                                  .append(SLASH)
+                                  .append(DAY_LESSONS_TEMPLATE)
+                                  .append(SLASH)
+                                  .append(date)
+                                  .append(QUESTION_MARK)
+                                  .append(TIMETABLE_ID_PARAMETER_NAME)
+                                  .append(timetableId).toString();
+    }
+    
     @PostMapping("/{date}/create")
     public String create(@PathVariable String date,
                          @RequestParam int timetableId,

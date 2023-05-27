@@ -52,4 +52,8 @@ public class Lesson implements Serializable {
     @JoinColumn(name = "timetable_id")
     @ToString.Exclude
     private Timetable timetable;
+    
+    public boolean hasTimetable() {
+        return timetable != null;
+    }
 }

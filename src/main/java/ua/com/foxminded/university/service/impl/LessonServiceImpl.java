@@ -13,15 +13,18 @@ import org.modelmapper.ConfigurationException;
 import org.modelmapper.MappingException;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import ua.com.foxminded.university.dto.LessonDTO;
+import ua.com.foxminded.university.entity.Timetable;
 import ua.com.foxminded.university.entity.Lesson;
 import ua.com.foxminded.university.entity.Timing;
 import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.repository.LessonRepository;
+import ua.com.foxminded.university.repository.TimetableRepository;
 import ua.com.foxminded.university.repository.TimingRepository;
 import ua.com.foxminded.university.service.LessonService;
 
@@ -42,6 +45,21 @@ public class LessonServiceImpl implements LessonService {
     private final ModelMapper modelMapper;
     private final LessonRepository lessonRepository;
     private final TimingRepository timingRepository;
+    private final TimetableRepository timetableRepository;
+    
+    @Override
+    public List<LessonDTO> applyTimetable(LocalDate date, int timetableId) {
+        Timetable timetable = timetableRepository.findById(timetableId);
+        List<Lesson> lessons = lessonRepository.findByDatestamp(date);
+        lessons.stream().forEach(lesson -> lesson.setTimetable(timetable));
+        try {
+            lessonRepository.saveAllAndFlush(lessons);
+            return modelMapper.map(lessons, LESSON_MODELS_LIST_TYPE);
+        } catch (DataAccessException e) {
+            throw new ServiceException(
+                    "Applying timetable for lessons fails", e);
+        }
+    }
     
     @Override
     public void sortByLessonOrder(List<LessonDTO> lessons) {

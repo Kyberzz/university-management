@@ -7,7 +7,6 @@ import java.time.LocalTime;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -20,7 +19,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import ua.com.foxminded.university.converter.DurationConverter;
+import ua.com.foxminded.university.converter.PersistenceDurationConverter;
 
 @Entity
 @Table(name = "timings", schema = "university")
@@ -40,11 +39,11 @@ public class Timing implements Serializable {
     private LocalTime startTime;
     
     @Column(name = "lesson_duration")
-    @Convert(converter = DurationConverter.class)
+    @Convert(converter = PersistenceDurationConverter.class)
     private Duration lessonDuration;
     
     @Column(name = "break_duration")
-    @Convert(converter = DurationConverter.class)
+    @Convert(converter = PersistenceDurationConverter.class)
     private Duration breakDuration;
     
     @ManyToOne(optional = false)

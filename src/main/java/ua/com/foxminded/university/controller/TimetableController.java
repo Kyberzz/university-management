@@ -7,6 +7,7 @@ import javax.validation.Valid;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,6 +25,7 @@ import ua.com.foxminded.university.service.TimingService;
 @Controller
 @RequestMapping("/timetables")
 @RequiredArgsConstructor
+@Validated
 public class TimetableController extends DefaultController {
     
     public static final String TIMING_ATTRIBUTE = "timing";
@@ -36,14 +38,41 @@ public class TimetableController extends DefaultController {
     private final TimetableService timetableService;
     private final TimingService timingService;
     
+    @PostMapping("/delete-timing/{timetableId}/{timingId}")
+    public String deleteTiming(@PathVariable int timetableId, 
+                               @PathVariable int timingId) {
+        timingService.deleteById(timingId);
+
+        return new StringBuilder().append(REDIRECT_KEY_WORD)
+                                  .append(SLASH)
+                                  .append(TIMETABLES_LIST_TEMPLATE_PATH)
+                                  .append(QUESTION_MARK)
+                                  .append(TIMETABLE_ID_PARAMETER_NAME)
+                                  .append(timetableId).toString();
+    }
+    
+    @PostMapping("/delete/{timetableId}")
+    public String delete(@PathVariable int timetableId) {
+        timetableService.deleteById(timetableId);
+
+        return new StringBuilder().append(REDIRECT_KEY_WORD)
+                                  .append(SLASH)
+                                  .append(TIMETABLES_LIST_TEMPLATE_PATH)
+                                  .append(QUESTION_MARK)
+                                  .append(TIMETABLE_ID_PARAMETER_NAME)
+                                  .append(STUB).toString();
+    }
+    
     @PostMapping("/add-timing/{timetableId}")
-    public String addTiming(@PathVariable int timetableId, 
+    public String addTiming(@PathVariable int timetableId,                            
                             @Valid @ModelAttribute TimingDTO timing) 
                                     throws ServiceException {
-        timing.setTimetable(TimetableDTO.builder().id(timetableId).build());
-        timingService.update(timing);
         
-        return new StringBuilder().append(SLASH)
+        timing.setTimetable(TimetableDTO.builder().id(timetableId).build());
+        timingService.create(timing);
+        
+        return new StringBuilder().append(REDIRECT_KEY_WORD)
+                                  .append(SLASH)
                                   .append(TIMETABLES_LIST_TEMPLATE_PATH)
                                   .append(QUESTION_MARK)
                                   .append(TIMETABLE_ID_PARAMETER_NAME)

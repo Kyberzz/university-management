@@ -238,29 +238,43 @@
       </div>
      </div>
 
-     <div class="row mb-2 mb-3">
-      <div class="col fs-5 text-center" th:text="#{tname.timetable}">Timetable</div>
+     <div class="row mb-3">
+      <span class="col-6 fw-bold text-start" th:text="|#{timetable.current-table}:|">The current
+       timetable for this day: </span>
+      <span class="col-6 text-start flex-shrink-1"
+       th:text="${dayLessons[0].timetable?.name}">default</span>
      </div>
 
-     <div class="row">
+     <form class="row" th:action="@{/lessons/__${dayLessons[0].datestamp}__/apply-timetable}"
+      method="post">
       <div class="col-6">
-       <form th:action="@{/lessons/__${dayLessons[0].datestamp}__/day-lessons}" method="get"
-        name="timetableId">
-        <div class="form">
-         <select class="form-select" id="floatingSelect" aria-label="Floating label select example">
-          <option selected th:text="#{select.timetable-name}">Select a schema</option>
-          <option th:each="timetable : ${timetables}" th:value="timetable.id"
-           th:text="${timetable.name}">default</option>
-         </select>
-        </div>
+       <div class="form">
+        <select class="form-select" id="floatingSelect" aria-label="Timetables selection"
+         name="timetableId">
+         <option selected th:text="#{select.timetable-name}" th:value="${timetable.id}">Select a
+          schema</option>
+         <option th:each="timetable : ${timetables}" th:value="${timetable.id}"
+          th:text="${timetable.name}">default</option>
+        </select>
+       </div>
       </div>
-      <div class="col-3 text-end">
-       <button class="btn btn-primary" type="submit">Show</button>
+
+      <div class="col-2">
+       <button class="btn btn-primary w-100" type="submit" th:text="#{button.print}"
+        th:formaction="@{/lessons/day-lessons/__${dayLessons[0].datestamp}__}"
+        formmethod="get">Print</button>
       </div>
-      </form>
-      <div class="col-3">
-       <button class="btn btn-primary" type="submit">Apply</button>
+
+      <div class="col-2">
+       <button class="btn btn-primary w-100" type="submit">Apply</button>
       </div>
+
+     </form>
+
+     <div class="row mt-3 mb-2">
+      <div class="col-4 fw-bold text-start" th:text="|#{timetable.name-heard}:|">Timetable name:
+      </div>
+      <div class="col-8 text-start flex-shrink-1" th:text="${timetable.name}">short lessons</div>
      </div>
 
      <div class="row">

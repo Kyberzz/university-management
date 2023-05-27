@@ -3,7 +3,7 @@ package ua.com.foxminded.university.dto;
 import java.io.Serializable;
 import java.util.Set;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,8 +21,8 @@ public class TimetableDTO implements Serializable {
     private static final long serialVersionUID = 1L;
     
     private Integer id;
-    
-    @NotNull
+
+    @NotBlank
     private String name;
     
     @EqualsAndHashCode.Exclude

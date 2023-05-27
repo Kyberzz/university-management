@@ -1,7 +1,10 @@
 package ua.com.foxminded.university.service.impl;
 
 import java.lang.reflect.Type;
+import java.time.LocalTime;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 import org.modelmapper.TypeToken;
 import org.modelmapper.ConfigurationException;
@@ -21,7 +24,9 @@ import ua.com.foxminded.university.service.TimingService;
 @Transactional
 @RequiredArgsConstructor
 public class TimingServiceImpl implements TimingService {
-    
+   
+    public static final int FIRST_ELEMENT = 0;
+    public static final int SECOND_ELEMENT = 1;
     public static final Type LESSON_TIMING_LIST_TYPE = 
             new TypeToken<List<TimingDTO>>() {}.getType();
     
@@ -50,6 +55,7 @@ public class TimingServiceImpl implements TimingService {
     @Override
     public TimingDTO create(TimingDTO model) throws ServiceException {
         try {
+            checkTimingConsistency(model);
             Timing entity = modelMapper.map(model, Timing.class);
             Timing createdEntity = timingRepository.saveAndFlush(entity);
             return modelMapper.map(createdEntity, TimingDTO.class);
@@ -61,6 +67,7 @@ public class TimingServiceImpl implements TimingService {
     @Override
     public void update(TimingDTO model) throws ServiceException {
         try {
+            checkTimingConsistency(model);
             Timing persistedEntity = timingRepository.findById(
                     model.getId().intValue());
             Timing entity = modelMapper.map(model, Timing.class);
@@ -92,5 +99,57 @@ public class TimingServiceImpl implements TimingService {
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
             throw new ServiceException("Getting lessons timing fails", e);
         }
+    }
+    
+    private void checkConsistencyWithLessonBefore(Optional<Timing> lessonBefore, 
+                                                  TimingDTO timingDto) {
+        if (lessonBefore.isPresent()) {
+            LocalTime lessonBeforeEndTime = lessonBefore.get().getStartTime()
+                    .plus(lessonBefore.get().getLessonDuration())
+                    .plus(lessonBefore.get().getBreakDuration());
+            
+            if (lessonBeforeEndTime.isAfter(timingDto.getStartTime())) {
+                throw new IllegalArgumentException(
+                        "The start lesson time is not compatible with existence ones");
+            }
+        }
+    }
+    
+    private void checkConsistencyWithLessonAfter(Optional<Timing> lessonAfter, 
+                                                 TimingDTO timingDto) {
+        if (lessonAfter.isPresent()) {
+            LocalTime checkingPeriodEndTime = timingDto.getStartTime()
+                    .plus(timingDto.getLessonDuration())
+                    .plus(timingDto.getBreakDuration());
+            
+            if(checkingPeriodEndTime.isAfter(lessonAfter.get().getStartTime())) {
+                throw new IllegalAccessError(
+                        "The end lesson time is not compatible with existence ones");
+            }
+        }
+    }
+    
+    private void checkTimingConsistency(TimingDTO timingDto) {
+        List<Timing> timings = timingRepository.findByTimetableId(timingDto.getTimetable()
+                                                                           .getId());
+        Optional<Timing> counterpartLesson = timings.stream()
+                .filter(timing -> timing.getStartTime().equals(timingDto.getStartTime()))
+                .findFirst();
+        if (counterpartLesson.isPresent()) {
+            throw new IllegalArgumentException("A lesson with the same start time is present");
+        }
+        
+        Optional<Timing> lessonBefore = timings.stream()
+                .filter(timing -> timing.getStartTime().isBefore(timingDto.getStartTime()))
+                .sorted(Comparator.comparing(Timing::getStartTime))
+                .reduce((first, second) -> second);
+                
+        Optional<Timing> lessonAfter = timings.stream()
+                .filter(timing -> timing.getStartTime().isAfter(timingDto.getStartTime()))
+                .sorted(Comparator.comparing(Timing::getStartTime))
+                .findFirst();
+        
+        checkConsistencyWithLessonBefore(lessonBefore, timingDto);
+        checkConsistencyWithLessonAfter(lessonAfter, timingDto);
     }
 }
