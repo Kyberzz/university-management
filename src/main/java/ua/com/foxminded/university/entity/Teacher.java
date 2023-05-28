@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -39,7 +40,7 @@ public class Teacher implements Serializable {
     @JoinTable(
             schema = "university",
             name = "teacher_course", 
-            joinColumns = @JoinColumn(name = "teacher_id", referencedColumnName="id"),
+            joinColumns = @JoinColumn(name = "teacher_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "course_id", referencedColumnName = "id"))
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
@@ -48,6 +49,11 @@ public class Teacher implements Serializable {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private User user;
+    
+    @OneToMany(mappedBy = "teacher")
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private Set<Lesson> lessons;
     
     public void addCourse(Course course) {
         this.courses.add(course);

@@ -23,6 +23,10 @@ public class TeacherDTO implements Serializable {
     @ToString.Exclude
     private UserDTO user;
     
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private Set<LessonDTO> lessons;
+    
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private Set<CourseDTO> courses;

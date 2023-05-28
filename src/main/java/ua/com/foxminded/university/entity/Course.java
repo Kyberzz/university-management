@@ -51,7 +51,7 @@ public class Course implements Serializable {
     
     public void addLesson(Lesson lesson) {
         this.lessons.add(lesson);
-        lesson.setCourse(this);
+        lesson.getCourse().setLessons(lessons);
     }
     
     public void addTeacher(Teacher teacher) {

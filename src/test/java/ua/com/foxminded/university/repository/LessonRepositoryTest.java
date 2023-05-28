@@ -2,6 +2,7 @@ package ua.com.foxminded.university.repository;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.HashSet;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -55,11 +56,13 @@ class LessonRepositoryTest {
         course = CourseMother.complete().build();
         entityManager.persist(course);
         
-        group = GroupMother.complete().build();
+        group = GroupMother.complete().lessons(new HashSet<>()) .build();
         entityManager.persist(group);
         
         lesson = LessonMother.complete().course(course)
-                                              .group(group).build();
+                                        .groups(new HashSet<>()).build();
+        lesson.addGroup(group);
+       
         entityManager.persist(lesson);
         
         entityManager.getTransaction().commit();
@@ -67,9 +70,11 @@ class LessonRepositoryTest {
     }
     
     void findByDatestampAndGroupIdAndLessonTimingId_ShouldReturnScheduleEntity() {
-        Lesson entity = lessonRepository.findByDatestampAndGroupIdAndTimingId(
+        Lesson persistedLesson = lessonRepository.findByDatestampAndGroupIdAndTimingId(
                 lesson.getDatestamp(), group.getId(), timing.getId());
-        assertEquals(lesson.getGroup().getId(), entity.getGroup().getId());
+        
+        assertEquals(lesson.getGroups().iterator().next().getId(), 
+                     persistedLesson.getGroups().iterator().next().getId());
     }
     
     @Test
@@ -89,7 +94,7 @@ class LessonRepositoryTest {
     void findGroupById_ShouldReturnGroupOwnedByTimetableWithId() {
         Lesson receivedSchedule = lessonRepository.findGroupById(
                 lesson.getId());
-        assertEquals(group.getId(), receivedSchedule.getGroup().getId());
+        assertEquals(group.getId(), receivedSchedule.getGroups().iterator().next().getId());
     }
     
     @Test

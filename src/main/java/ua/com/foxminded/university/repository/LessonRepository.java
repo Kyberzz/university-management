@@ -10,8 +10,8 @@ import ua.com.foxminded.university.entity.Lesson;
 
 public interface LessonRepository extends JpaRepository<Lesson, Integer> {
     
-    @Query("select l from Lesson l left join fetch l.group " + 
-           "where l.datestamp = ?1 and l.lessonOrder =?2 and l.group.id = ?3")
+    @Query("select l from Lesson l left join fetch l.groups lg " + 
+           "where l.datestamp = ?1 and l.lessonOrder =?2 and lg.id = ?3")
     public Lesson findByDatestampAndGroupIdAndTimingId(LocalDate date,
                                                        int lessonOrder,                                                 
                                                        int groupId);

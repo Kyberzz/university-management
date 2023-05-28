@@ -23,12 +23,10 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import ua.com.foxminded.university.dto.GroupDTO;
 import ua.com.foxminded.university.dto.LessonDTO;
 import ua.com.foxminded.university.entity.Authority;
 import ua.com.foxminded.university.entity.Lesson;
 import ua.com.foxminded.university.entitymother.LessonMother;
-import ua.com.foxminded.university.modelmother.GroupDtoMother;
 import ua.com.foxminded.university.modelmother.LessonDtoMother;
 
 @SpringBootTest
@@ -43,7 +41,6 @@ class LessonControllerIntegrationTest extends DefaultControllerTest {
     private LocalDate localDate;
     private Lesson lesson;
     private LessonDTO lessonDto;
-    private GroupDTO groupDto;
     
     @DynamicPropertySource
     public static void configureProperties(DynamicPropertyRegistry registry) {
@@ -64,8 +61,6 @@ class LessonControllerIntegrationTest extends DefaultControllerTest {
         
         lessonDto = LessonDtoMother.complete()
                                    .id(lesson.getId()).build();
-        
-        groupDto = GroupDtoMother.complete().build();
     }
     
     @Test

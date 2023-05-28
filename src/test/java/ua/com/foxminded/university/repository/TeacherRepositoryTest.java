@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -56,6 +57,12 @@ class TeacherRepositoryTest {
         entityManager.persist(teacher);
         entityManager.getTransaction().commit();
         entityManager.close();
+    }
+    
+    @Test
+    void test() {
+        List<Teacher> teachers = teacherRepository.findAll();
+        assertEquals(teachers.size(), 1);
     }
     
     @Test

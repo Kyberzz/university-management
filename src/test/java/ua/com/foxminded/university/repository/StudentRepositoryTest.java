@@ -50,9 +50,9 @@ class StudentRepositoryTest {
         entityManager.persist(user);
         
         student = StudentMother.complete()
-                                     .group(group)
-                                     .user(user)
-                                     .build();
+                               .group(group)
+                               .user(user)
+                               .build();
         entityManager.persist(student);
         entityManager.getTransaction().commit();
         entityManager.close();

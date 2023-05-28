@@ -10,6 +10,8 @@
 		   last_name="Parker"/>
 	<STUDENTS group_id='101' 
 		   	  user_id='101'/>
-	<LESSONS group_id='101' 
+	<LESSONS id='101' 
 			 datestamp='2023-05-03'/>
+    <LESSON_GROUP lesson_id='101'
+                  group_id='101'/>
 </dataset>

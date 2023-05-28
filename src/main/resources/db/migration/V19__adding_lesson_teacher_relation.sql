@@ -1,0 +1,1 @@
+alter table university.lessons add column teacher_id integer references university.teachers(id);

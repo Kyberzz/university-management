@@ -117,7 +117,7 @@ public class LessonServiceImpl implements LessonService {
             persistEntity.setCourse(entity.getCourse());
             persistEntity.setDatestamp(entity.getDatestamp());
             persistEntity.setDescription(entity.getDescription());
-            persistEntity.setGroup(entity.getGroup());
+            persistEntity.setGroups(entity.getGroups());
             lessonRepository.saveAndFlush(persistEntity);
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
             throw new ServiceException("Updating timetable failes", e);

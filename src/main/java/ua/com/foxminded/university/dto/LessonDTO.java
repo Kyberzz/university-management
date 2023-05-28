@@ -3,10 +3,12 @@ package ua.com.foxminded.university.dto;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Set;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
@@ -30,8 +32,14 @@ public class LessonDTO implements Serializable {
     private CourseDTO course;
     
     @ToString.Exclude
-    private GroupDTO group;
+    @EqualsAndHashCode.Exclude
+    private Set<GroupDTO> groups;
     
+    @ToString.Exclude
+    private TeacherDTO teacher;
+    
+    @ToString.Exclude
+    private GroupDTO group;
     private LocalTime startTime;
     private LocalTime endTime;
     

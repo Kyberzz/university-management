@@ -31,5 +31,5 @@ public class GroupDTO implements Serializable {
     
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private Set<LessonDTO> timetables;
+    private Set<LessonDTO> lessons;
 }
