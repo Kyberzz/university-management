@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 import lombok.RequiredArgsConstructor;
 import ua.com.foxminded.university.entity.Authority;
@@ -19,11 +20,13 @@ import ua.com.foxminded.university.entity.Authority;
 @PropertySource("classpath:user-details-manager-config.properties")
 @EnableConfigurationProperties(UserDetailsManagerConfig.class)
 public class SecurityConfig {
-
+    
     public static final String STUDENT = Authority.STUDENT.toString();
     public static final String TEACHER = Authority.TEACHER.toString();
     public static final String STAFF = Authority.STAFF.toString();
     public static final String ADMIN = Authority.ADMIN.toString();
+    
+    public final AuthenticationSuccessHandler successHandler;
     
     @Bean 
     public UserDetailsManager userDetailsManager(DataSource dataSource, 
@@ -44,32 +47,31 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(request -> request
                 .mvcMatchers("/", "/index*", "/images/**").permitAll()
-//                .mvcMatchers("/users/**").hasAnyRole(ADMIN)
-//                .mvcMatchers("/courses/list*").hasAnyRole(ADMIN, STAFF, TEACHER, STUDENT)
-//                .mvcMatchers("/courses/{id:\\d+}").hasAnyRole(ADMIN, STAFF, TEACHER)
-//                .mvcMatchers("/courses/create*").hasAnyRole(ADMIN, STAFF)
-//                .mvcMatchers("/courses/update*").hasAnyRole(ADMIN, STAFF)
-//                .mvcMatchers("/courses/{courseId:\\d+}/assign-teacher*")
-//                    .hasAnyRole(ADMIN, STAFF)
-//                .mvcMatchers("/courses/{courseId:\\d+}/deassign-teacher*")
-//                    .hasAnyRole(ADMIN, STAFF)
-//                .mvcMatchers("/courses/**").hasAnyRole(ADMIN)
-//                .mvcMatchers("/groups/{id:\\d+}/update").hasAnyRole(ADMIN, STAFF)
-//                .mvcMatchers("/groups/{id:\\d+}/delete").hasAnyRole(ADMIN)
-//                .mvcMatchers("/groups/create*").hasAnyRole(ADMIN, STAFF)
-//                .mvcMatchers("/groups/list*").hasAnyRole(ADMIN, STAFF, TEACHER, STUDENT)
-//                .mvcMatchers("/groups/{id:\\d+}").hasAnyRole(ADMIN, STAFF, TEACHER, STUDENT)
-//                .mvcMatchers("/groups/{id:\\d+}/assign-group").hasAnyRole(ADMIN, STAFF)
-//                .mvcMatchers("/groups/{id:\\d+}/deassign-group").hasAnyRole(ADMIN, STAFF)
-//                .mvcMatchers("/students/list*").hasAnyRole(ADMIN)
-//                .mvcMatchers("/students/delete*").hasAnyRole(ADMIN)
-//                .mvcMatchers("/students/{id:\\d+}/update*").hasAnyRole(ADMIN)
-//                .mvcMatchers("/students/create*").hasAnyRole(ADMIN)
-//                .anyRequest().authenticated()
+                .mvcMatchers("/users/**").hasAnyRole(ADMIN)
+                .mvcMatchers("/courses/list*").hasAnyRole(ADMIN, STAFF, TEACHER, STUDENT)
+                .mvcMatchers("/courses/{id:\\d+}").hasAnyRole(ADMIN, STAFF, TEACHER)
+                .mvcMatchers("/courses/create*").hasAnyRole(ADMIN, STAFF)
+                .mvcMatchers("/courses/update*").hasAnyRole(ADMIN, STAFF)
+                .mvcMatchers("/courses/{courseId:\\d+}/assign-teacher*")
+                    .hasAnyRole(ADMIN, STAFF)
+                .mvcMatchers("/courses/{courseId:\\d+}/deassign-teacher*")
+                    .hasAnyRole(ADMIN, STAFF)
+                .mvcMatchers("/courses/**").hasAnyRole(ADMIN)
+                .mvcMatchers("/groups/{id:\\d+}/update").hasAnyRole(ADMIN, STAFF)
+                .mvcMatchers("/groups/{id:\\d+}/delete").hasAnyRole(ADMIN)
+                .mvcMatchers("/groups/create*").hasAnyRole(ADMIN, STAFF)
+                .mvcMatchers("/groups/list*").hasAnyRole(ADMIN, STAFF, TEACHER, STUDENT)
+                .mvcMatchers("/groups/{id:\\d+}").hasAnyRole(ADMIN, STAFF, TEACHER, STUDENT)
+                .mvcMatchers("/groups/{id:\\d+}/assign-group").hasAnyRole(ADMIN, STAFF)
+                .mvcMatchers("/groups/{id:\\d+}/deassign-group").hasAnyRole(ADMIN, STAFF)
+                .mvcMatchers("/students/list*").hasAnyRole(ADMIN)
+                .mvcMatchers("/students/delete*").hasAnyRole(ADMIN)
+                .mvcMatchers("/students/{id:\\d+}/update*").hasAnyRole(ADMIN)
+                .mvcMatchers("/students/create*").hasAnyRole(ADMIN)
+                .anyRequest().authenticated()
                 )
             .formLogin(form -> form.loginPage("/login")
-                                   .permitAll()
-                                   .defaultSuccessUrl("/", true))
+                                   .permitAll().successHandler(successHandler))
             .logout(logout -> logout.logoutUrl("/logout")
                                     .logoutSuccessUrl("/index"));
         return http.build();

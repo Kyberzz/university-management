@@ -2,12 +2,14 @@ package ua.com.foxminded.university.service.impl;
 
 import java.lang.reflect.Type;
 import java.util.List;
+import java.util.Map;
 
 import org.modelmapper.ConfigurationException;
 import org.modelmapper.MappingException;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.modelmapper.convention.MatchingStrategies;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,13 +27,25 @@ public class TeacherServiceImpl implements TeacherService {
     
     public static final Type TEACHER_MODEL_LIST_TYPE = 
             new TypeToken<List<TeacherDTO>>() {}.getType();
-    private final TeacherRepository teacherRepository; 
+    
+    private final TeacherRepository teacherRepository;
+    private final ModelMapper modelMapper;
+    
+    @Override
+    public TeacherDTO getByUserId(int id) throws ServiceException {
+        try {
+            Teacher teacher = teacherRepository.findByUserId(id);
+            return modelMapper.map(teacher, TeacherDTO.class);
+        } catch (DataAccessException | IllegalArgumentException | 
+                 ConfigurationException | MappingException e) {
+            throw new ServiceException("Getting teacher by the user's id fails", e);
+        }
+    }
     
     @Override
     public List<TeacherDTO> getAll() throws ServiceException {
         try {
             List<Teacher> entities = teacherRepository.findAll();
-            ModelMapper modelMapper = new ModelMapper();
             modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
             return modelMapper.map(entities, TEACHER_MODEL_LIST_TYPE);
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
@@ -43,7 +57,6 @@ public class TeacherServiceImpl implements TeacherService {
     public TeacherDTO getByIdWithCourses(int id) throws ServiceException {
         try {
             Teacher entity = teacherRepository.findCoursesById(id);
-            ModelMapper modelMapper = new ModelMapper();
             return modelMapper.map(entity, TeacherDTO.class);
         } catch (IllegalArgumentException | ConfigurationException | 
                  MappingException e) {

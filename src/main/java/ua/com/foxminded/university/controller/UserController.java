@@ -25,7 +25,7 @@ public class UserController extends DefaultController {
     public static final String USERS_PATH = "/users/";
     
     private final UserService userService;
-
+    
     @PostMapping(value = "/delete", params = "email")
     public String delete(@RequestParam String email) throws ServiceException {
         userService.deleteByEmail(email);

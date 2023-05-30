@@ -31,6 +31,7 @@ import ua.com.foxminded.university.modelmother.LessonDtoMother;
 import ua.com.foxminded.university.service.CourseService;
 import ua.com.foxminded.university.service.GroupService;
 import ua.com.foxminded.university.service.LessonService;
+import ua.com.foxminded.university.service.TeacherService;
 import ua.com.foxminded.university.service.TimetableService;
 import ua.com.foxminded.university.service.TimingService;
 
@@ -53,6 +54,9 @@ class LessonControllerTest {
     
     @MockBean
     private TimingService timingService;
+    
+    @MockBean
+    private TeacherService teacherService;
     
     
     private MockMvc mockMvc;

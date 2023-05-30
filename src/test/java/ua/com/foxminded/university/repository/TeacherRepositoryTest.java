@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -21,8 +20,10 @@ import org.springframework.test.context.ActiveProfiles;
 
 import ua.com.foxminded.university.entity.Course;
 import ua.com.foxminded.university.entity.Teacher;
+import ua.com.foxminded.university.entity.User;
 import ua.com.foxminded.university.entitymother.CourseMother;
 import ua.com.foxminded.university.entitymother.TeacherMother;
+import ua.com.foxminded.university.entitymother.UserMother;
 
 @DataJpaTest
 @ActiveProfiles("test")
@@ -42,13 +43,17 @@ class TeacherRepositoryTest {
     
     private Teacher teacher;
     private Course course;
+    private User user;
     
     @BeforeEach
     void setUp() {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
         
-        teacher = TeacherMother.complete().build();
+        user = UserMother.complete().build();
+        entityManager.persist(user);
+        teacher = TeacherMother.complete()
+                               .user(user).build();
         entityManager.persist(teacher);
         course = CourseMother.complete().build();
         course.setTeachers(new HashSet<>(Arrays.asList(teacher)));
@@ -60,9 +65,9 @@ class TeacherRepositoryTest {
     }
     
     @Test
-    void test() {
-        List<Teacher> teachers = teacherRepository.findAll();
-        assertEquals(teachers.size(), 1);
+    void findByUserId_ShouldFindByIdPropertyOfRelatedEntityUser() {
+        Teacher persistedTeacher = teacherRepository.findByUserId(user.getId());
+        assertEquals(user.getId(), persistedTeacher.getUser().getId());
     }
     
     @Test

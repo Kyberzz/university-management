@@ -30,6 +30,9 @@ import ua.com.foxminded.university.service.TimetableService;
 @RequestMapping("/lessons")
 public class LessonController extends DefaultController {
     
+    public static final int STUB = 0;
+    public static final String TEACHER_WEEK_SCHEDULE = "lessons/teacher-week-schedule";
+    public static final String WEEK_LESSONS_ATTRIBUTE = "weekLessons";
     public static final String TIMETABLE_ATTRIBUTE = "timetable";
     public static final String TIMINGS_ATTRIBUTE = "timings";
     public static final String LESSONS_PATH = "/lessons/";
@@ -49,9 +52,22 @@ public class LessonController extends DefaultController {
     private final GroupService groupService;
     private final TimetableService timetableService;
     
+    @GetMapping("/{date}/teacher-week-schedule/{email}")
+    public String getTeacherWeekSchedule(@PathVariable String date, 
+                                         @PathVariable String email, Model model) 
+                                                 throws ServiceException {
+        
+       List<List<LessonDTO>> weekLessons = lessonService.getWeekLessonsOwnedByTeacher(
+               LocalDate.parse(date), email);
+       
+       model.addAttribute(WEEK_LESSONS_ATTRIBUTE, weekLessons);
+       return new StringBuilder().append(TEACHER_WEEK_SCHEDULE).toString();
+    }
+    
     @PostMapping("/{date}/apply-timetable")
     public String applyTimetable(@PathVariable String date, 
-                                 @RequestParam int timetableId) {
+                                 @RequestParam int timetableId) 
+                                         throws ServiceException {
         lessonService.applyTimetable(LocalDate.parse(date), timetableId);
         return new StringBuilder().append(REDIRECT_KEY_WORD)
                                   .append(SLASH)
@@ -119,8 +135,13 @@ public class LessonController extends DefaultController {
         List<CourseDTO> courses = courseService.getAll();
         List<GroupDTO> groups = groupService.getAll();
         List<TimetableDTO> timetables = timetableService.getAll();
-        TimetableDTO timetable = timetableService.getByIdWithTimings(timetableId);
-        timetableService.sortTimingsByStartTime(timetable);
+        
+        TimetableDTO timetable = TimetableDTO.builder().build();
+        
+        if (timetableId != STUB) {
+            timetable = timetableService.getByIdWithTimings(timetableId);
+            timetableService.sortTimingsByStartTime(timetable);
+        } 
         
         model.addAttribute(TIMETABLE_ATTRIBUTE, timetable);
         model.addAttribute(TIMETABLES_ATTRIBUTE, timetables);
@@ -137,9 +158,9 @@ public class LessonController extends DefaultController {
         LocalDate datestamp = lessonService.moveBack(localDate);
         return new StringBuilder().append(REDIRECT_KEY_WORD)
                                   .append(LESSONS_PATH)
-                                  .append(datestamp)
-                                  .append(SLASH)
                                   .append(MONTH_SHEDULE_TEMPLATE)
+                                  .append(SLASH)
+                                  .append(datestamp)
                                   .append("?").toString();
     }
     
@@ -149,9 +170,9 @@ public class LessonController extends DefaultController {
         LocalDate datestamp = lessonService.moveForward(localDate);
         return new StringBuilder().append(REDIRECT_KEY_WORD)
                                   .append(LESSONS_PATH)
-                                  .append(datestamp)
-                                  .append(SLASH)
                                   .append(MONTH_SHEDULE_TEMPLATE)
+                                  .append(SLASH)
+                                  .append(datestamp)
                                   .append("?").toString();
     }
     

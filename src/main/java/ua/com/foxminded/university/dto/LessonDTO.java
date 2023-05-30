@@ -43,6 +43,10 @@ public class LessonDTO implements Serializable {
     private LocalTime startTime;
     private LocalTime endTime;
     
+    public boolean hasTeacher() {
+        return teacher != null;
+    }
+    
     public boolean hasTimetable() {
         return timetable != null;
     }

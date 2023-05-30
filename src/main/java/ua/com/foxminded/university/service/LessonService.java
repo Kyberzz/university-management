@@ -8,7 +8,11 @@ import ua.com.foxminded.university.exception.ServiceException;
 
 public interface LessonService extends GenericService<LessonDTO> {
     
-    public List<LessonDTO> applyTimetable(LocalDate date, int timetableId);
+    public List<List<LessonDTO>> getWeekLessonsOwnedByTeacher(LocalDate date, String email) 
+            throws ServiceException;
+    
+    public List<LessonDTO> applyTimetable(LocalDate date, int timetableId) 
+            throws ServiceException;
     
     public void sortByLessonOrder(List<LessonDTO> lessons);
     

@@ -69,7 +69,7 @@ class LessonServiceImplTest {
     void moveBack_ShouldMoveBackDatestamp() {
         LocalDate localDate = LocalDate.now();
         LocalDate expectedResult = localDate.minusWeeks(
-                LessonServiceImpl.OFFSET_WEEKS_QUANTITY);
+                LessonServiceImpl.WEEKS_OFFSET);
         assertEquals(expectedResult, lessonSerivice.moveBack(localDate));
     }
     
@@ -77,7 +77,7 @@ class LessonServiceImplTest {
     void moveForward_ShouldMoveForwardDatestamp() {
         LocalDate localDate = LocalDate.now();
         LocalDate expectedResult = localDate.plusWeeks(
-                LessonServiceImpl.OFFSET_WEEKS_QUANTITY);
+                LessonServiceImpl.WEEKS_OFFSET);
         assertEquals(expectedResult, lessonSerivice.moveForward(localDate));
     }
     

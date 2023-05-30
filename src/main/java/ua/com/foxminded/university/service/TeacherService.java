@@ -6,6 +6,8 @@ import ua.com.foxminded.university.dto.TeacherDTO;
 import ua.com.foxminded.university.exception.ServiceException;
 
 public interface TeacherService {
+    
+    public TeacherDTO getByUserId(int id) throws ServiceException;
 
     public List<TeacherDTO> getAll() throws ServiceException;
 

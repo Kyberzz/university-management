@@ -37,7 +37,7 @@ class TimingRepositoryTest {
     }
 
     @Test
-    void test() {
+    void findByTimetableId_ShouldReturnTimings() {
         List<Timing> timings = timingRepository.findByTimetableId(timetable.getId());
         assertEquals(timings.iterator().next(), timing);
     }

@@ -55,7 +55,7 @@
       </thead>
       <tbody>
        <tr th:each="weekLessons, iterationStatus : ${monthLessons}">
-        
+
         <th scope="row" style="width: 3%" th:text="${iterationStatus.count}">1</th>
         <td th:each="dayLessons : ${weekLessons}">
          <div class="container">
@@ -63,25 +63,27 @@
            <div class="row">
             <div th:text="${dayLessons[0].datestamp}">2023-04-24</div>
            </div>
-           
+
            <div class="row" th:if="${dayLessons[0].id}">
             <p>
             <div>
              <form th:action="@{/lessons/day-lessons/__${dayLessons[0].datestamp}__}" method="get">
               <button type="submit" class="btn btn-success btn-sm" th:text="#{button.expand}"
                id="expandButton">Expand</button>
-              <input type="hidden" name="timetableId" th:value="${dayLessons[0].timetable.id}"/>
+              <input type="hidden" name="timetableId" th:value="${dayLessons[0].timetable.id}" />
              </form>
             </div>
            </div>
-           
+
            <div class="row" th:if="${dayLessons[0].id == null}">
             <div th:text="#{courses.novalue}">No value</div>
-            <div class="mb-2">
-             <button type="button" class="btn btn-outline-success btn-sm" id="createButton"
+            <form class="mb-2" th:action="@{/lessons/day-lessons/__${dayLessons[0].datestamp}__}"
+             method="get">
+             <button type="submit" class="btn btn-outline-success btn-sm" id="createButton"
               data-bs-toggle="modal" th:data-bs-target="|#create${dayLessons[0].datestamp}|"
               th:text="#{fragments.add}">Create</button>
-            </div>
+             <input type="hidden" name="timetableId" value="0"/>
+            </form>
            </div>
           </div>
          </div>

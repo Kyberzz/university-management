@@ -28,7 +28,7 @@ public class DefaultController {
     public static final String ERROR_TEMPLATE_NAME = "error";
     
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    @ExceptionHandler(ServiceException.class)
+    @ExceptionHandler
     public ModelAndView serviceExceptionHandler(HttpServletRequest request, 
                                                 ServiceException error) {
         ModelAndView modelAndView = new ModelAndView();
@@ -40,7 +40,7 @@ public class DefaultController {
     }
     
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(BindException.class)
+    @ExceptionHandler
     public ModelAndView binding(HttpServletRequest request, BindException error) {
         List<ErrorResponse> errorsResponse = getErrorsResponse(error);
         

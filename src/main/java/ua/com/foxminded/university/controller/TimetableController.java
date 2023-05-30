@@ -40,7 +40,7 @@ public class TimetableController extends DefaultController {
     
     @PostMapping("/delete-timing/{timetableId}/{timingId}")
     public String deleteTiming(@PathVariable int timetableId, 
-                               @PathVariable int timingId) {
+                               @PathVariable int timingId) throws ServiceException {
         timingService.deleteById(timingId);
 
         return new StringBuilder().append(REDIRECT_KEY_WORD)
@@ -52,7 +52,7 @@ public class TimetableController extends DefaultController {
     }
     
     @PostMapping("/delete/{timetableId}")
-    public String delete(@PathVariable int timetableId) {
+    public String delete(@PathVariable int timetableId) throws ServiceException {
         timetableService.deleteById(timetableId);
 
         return new StringBuilder().append(REDIRECT_KEY_WORD)
