@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -22,9 +23,11 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import ua.com.foxminded.university.dto.LessonDTO;
 import ua.com.foxminded.university.entity.Timetable;
+import ua.com.foxminded.university.entity.Group;
 import ua.com.foxminded.university.entity.Lesson;
 import ua.com.foxminded.university.entity.Timing;
 import ua.com.foxminded.university.exception.ServiceException;
+import ua.com.foxminded.university.repository.GroupRepository;
 import ua.com.foxminded.university.repository.LessonRepository;
 import ua.com.foxminded.university.repository.TimetableRepository;
 import ua.com.foxminded.university.repository.TimingRepository;
@@ -47,10 +50,11 @@ public class LessonServiceImpl implements LessonService {
     public static final Type LESSON_MODELS_LIST_TYPE = 
             new TypeToken<List<LessonDTO>>() {}.getType();
     
-            private final ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
     private final LessonRepository lessonRepository;
     private final TimingRepository timingRepository;
     private final TimetableRepository timetableRepository;
+    private final GroupRepository groupRepository;
     
     @Override
     public List<List<LessonDTO>> getWeekLessonsOwnedByTeacher(LocalDate date, String email) 
@@ -134,6 +138,9 @@ public class LessonServiceImpl implements LessonService {
             persistEntity.setCourse(entity.getCourse());
             persistEntity.setDatestamp(entity.getDatestamp());
             persistEntity.setDescription(entity.getDescription());
+            persistEntity.setLessonOrder(entity.getLessonOrder());
+            persistEntity.setTeacher(entity.getTeacher());
+            persistEntity.setTimetable(entity.getTimetable());
             persistEntity.setGroups(entity.getGroups());
             lessonRepository.saveAndFlush(persistEntity);
         } catch (DataAccessException | IllegalArgumentException | 
@@ -143,20 +150,33 @@ public class LessonServiceImpl implements LessonService {
     }
 
     @Override
-    public LessonDTO create(LessonDTO dto) throws ServiceException {
+    public LessonDTO create(LessonDTO lessonDto) throws ServiceException {
         try {
-            Lesson persistEntity = lessonRepository.findByDatestampAndGroupIdAndTimingId(
-                    dto.getDatestamp(),
-                    dto.getLessonOrder(), dto.getGroup().getId());
-
-            if (persistEntity == null) {
-                Lesson entity = modelMapper.map(dto, Lesson.class);
-                Lesson createdEntity = lessonRepository.saveAndFlush(entity);
+            Lesson persistedLesson = lessonRepository.findByDatestampAndLessonOrderAndGroupsId(
+                    lessonDto.getDatestamp(),
+                    lessonDto.getLessonOrder(), 
+                    lessonDto.getGroups().iterator().next().getId());
+            
+            
+            Lesson counterpartLesson = lessonRepository.findByTeacherIdAndLessonOrderAndCourseId(
+                    lessonDto.getTeacher().getId(),
+                    lessonDto.getLessonOrder(),
+                    lessonDto.getCourse().getId());
+            
+            Lesson lesson = modelMapper.map(lessonDto, Lesson.class);
+            
+            if (persistedLesson == null && counterpartLesson == null) {
+                
+                Lesson createdEntity = lessonRepository.saveAndFlush(lesson);
                 return modelMapper.map(createdEntity, LessonDTO.class);
+            } else if (persistedLesson == null) {
+                int groupId = lesson.getGroups().iterator().next().getId();
+                Group group = groupRepository.findById(groupId); 
+                counterpartLesson.addGroup(group);
+                Lesson updatedLesson = lessonRepository.saveAndFlush(counterpartLesson);
+                return modelMapper.map(updatedLesson, LessonDTO.class);
             } else {
-                dto.setId(persistEntity.getId());
-                update(dto);
-                return dto;
+                return modelMapper.map(persistedLesson, LessonDTO.class);
             }
         } catch (DataAccessException | IllegalArgumentException | 
                  ConfigurationException | MappingException e) {

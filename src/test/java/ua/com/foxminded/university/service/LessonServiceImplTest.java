@@ -102,7 +102,7 @@ class LessonServiceImplTest {
         lessonDto.setId(LESSON_ID);
         groupDto.setId(GROUP_ID);
         lessonDto.setGroup(groupDto);
-        when(lessonRepositoryMock.findByDatestampAndGroupIdAndTimingId(
+        when(lessonRepositoryMock.findByDatestampAndLessonOrderAndGroupsId(
                 isA(LocalDate.class), anyInt(), anyInt()))
             .thenReturn(lesson);
         when(modelMapperMock.map(lessonDto, Lesson.class)).thenReturn(
@@ -116,7 +116,7 @@ class LessonServiceImplTest {
     void create_ShouldCallComponents_WhenIfBlockTure() throws ServiceException {
         groupDto.setId(GROUP_ID);
         lessonDto.setGroup(groupDto);
-        when(lessonRepositoryMock.findByDatestampAndGroupIdAndTimingId(
+        when(lessonRepositoryMock.findByDatestampAndLessonOrderAndGroupsId(
                 isA(LocalDate.class), anyInt(), anyInt())).thenReturn(null);
         when(modelMapperMock.map(lessonDto, Lesson.class))
             .thenReturn(lesson);

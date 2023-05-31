@@ -4,17 +4,18 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 
 import ua.com.foxminded.university.entity.Lesson;
 
 public interface LessonRepository extends JpaRepository<Lesson, Integer> {
     
-    @Query("select l from Lesson l left join fetch l.groups lg " + 
-           "where l.datestamp = ?1 and l.lessonOrder =?2 and lg.id = ?3")
-    public Lesson findByDatestampAndGroupIdAndTimingId(LocalDate date,
-                                                       int lessonOrder,                                                 
-                                                       int groupId);
+    public Lesson findByTeacherIdAndLessonOrderAndCourseId(int teacherId, 
+                                                           int lessonOrder, 
+                                                           int courseId);
+    
+    public Lesson findByDatestampAndLessonOrderAndGroupsId(LocalDate date,
+                                                           int lessonOrder,                                                 
+                                                           int groupId);
     
     public List<Lesson> findByDatestamp(LocalDate date);
     

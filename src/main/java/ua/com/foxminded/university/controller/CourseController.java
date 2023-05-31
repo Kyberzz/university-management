@@ -25,6 +25,8 @@ import ua.com.foxminded.university.service.TeacherService;
 @RequestMapping("/courses")
 public class CourseController extends DefaultController {
     
+    
+    public static final String COURSE_ID_PARAMETER_NAME = "courseId=";
     public static final String UPDATED_COURSE_ATTRIBUTE = "updatedCourse";
     public static final String COURSE_TEMPLATE = "course";
     public static final String COURSE_MODEL_ATTRIBUTE = "courseModel";

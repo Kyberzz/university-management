@@ -2,7 +2,6 @@ package ua.com.foxminded.university.service.impl;
 
 import java.lang.reflect.Type;
 import java.util.List;
-import java.util.Map;
 
 import org.modelmapper.ConfigurationException;
 import org.modelmapper.MappingException;
@@ -61,6 +60,61 @@ public class TeacherServiceImpl implements TeacherService {
         } catch (IllegalArgumentException | ConfigurationException | 
                  MappingException e) {
             throw new ServiceException("Getting the courses list by the teacher id failed.", e);
+        }
+    }
+
+    @Override
+    public void deleteById(Integer id) throws ServiceException {
+        try {
+            teacherRepository.deleteById(id);
+        } catch (DataAccessException | IllegalArgumentException e) {
+            throw new ServiceException("Deleting the teacher fails", e);
+        }
+    }
+
+    @Override
+    public TeacherDTO create(TeacherDTO model) throws ServiceException {
+        try {
+            Teacher teacher = modelMapper.map(model, Teacher.class);
+            Teacher persistedTeacher = teacherRepository.saveAndFlush(teacher);
+            return modelMapper.map(persistedTeacher, TeacherDTO.class);
+        } catch (DataAccessException | IllegalArgumentException | ConfigurationException | 
+                 MappingException e) {
+            throw new ServiceException("Creating the teacher fails", e);
+        }
+    }
+
+    @Override
+    public void update(TeacherDTO model) throws ServiceException {
+        try {
+            Teacher persistedTeacher = teacherRepository.findById(model.getId().intValue());
+            Teacher teacher = modelMapper.map(model, Teacher.class);
+            persistedTeacher.setUser(teacher.getUser());
+        } catch (DataAccessException | IllegalArgumentException | ConfigurationException | 
+                 MappingException e) {
+            throw new ServiceException("Updating the teacher fails", e);
+        }
+    }
+
+    @Override
+    public TeacherDTO getById(int id) throws ServiceException {
+        try {
+            Teacher teacher = teacherRepository.findById(id);
+            return modelMapper.map(teacher, TeacherDTO.class);
+        } catch (DataAccessException | IllegalArgumentException | ConfigurationException | 
+                 MappingException e) {
+            throw new ServiceException("Fetching the teacher by its id fails", e);
+        }
+    }
+
+    @Override
+    public List<TeacherDTO> getByCoursesId(int id) throws ServiceException {
+        try {
+            List<Teacher> teachers = teacherRepository.findByCoursesId(id);
+            return modelMapper.map(teachers, TEACHER_MODEL_LIST_TYPE);
+        } catch (DataAccessException | IllegalArgumentException | ConfigurationException | 
+                 MappingException e) {
+            throw new ServiceException("Getting courses owned by the teacher fails", e);
         }
     }
 }

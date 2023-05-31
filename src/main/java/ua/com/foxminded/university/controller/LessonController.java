@@ -1,8 +1,11 @@
 package ua.com.foxminded.university.controller;
 
+import static ua.com.foxminded.university.controller.CourseController.COURSE_ID_PARAMETER_NAME;
 import static ua.com.foxminded.university.controller.TimetableController.TIMETABLE_ID_PARAMETER_NAME;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
@@ -18,11 +21,13 @@ import lombok.RequiredArgsConstructor;
 import ua.com.foxminded.university.dto.CourseDTO;
 import ua.com.foxminded.university.dto.GroupDTO;
 import ua.com.foxminded.university.dto.LessonDTO;
+import ua.com.foxminded.university.dto.TeacherDTO;
 import ua.com.foxminded.university.dto.TimetableDTO;
 import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.service.CourseService;
 import ua.com.foxminded.university.service.GroupService;
 import ua.com.foxminded.university.service.LessonService;
+import ua.com.foxminded.university.service.TeacherService;
 import ua.com.foxminded.university.service.TimetableService;
 
 @Controller
@@ -31,6 +36,9 @@ import ua.com.foxminded.university.service.TimetableService;
 public class LessonController extends DefaultController {
     
     public static final int STUB = 0;
+    public static final String COURSE_ATTRIBUTE = "course";
+    public static final String TEACHERS_ATTRIBUTE = "teachers";
+    public static final String TEACHER_ATTRIBUTE = "teacher";
     public static final String TEACHER_WEEK_SCHEDULE = "lessons/teacher-week-schedule";
     public static final String WEEK_LESSONS_ATTRIBUTE = "weekLessons";
     public static final String TIMETABLE_ATTRIBUTE = "timetable";
@@ -51,6 +59,7 @@ public class LessonController extends DefaultController {
     private final CourseService courseService;
     private final GroupService groupService;
     private final TimetableService timetableService;
+    private final TeacherService teacherService;
     
     @GetMapping("/{date}/teacher-week-schedule/{email}")
     public String getTeacherWeekSchedule(@PathVariable String date, 
@@ -82,10 +91,14 @@ public class LessonController extends DefaultController {
     @PostMapping("/{date}/create")
     public String create(@PathVariable String date,
                          @RequestParam int timetableId,
-                         @ModelAttribute LessonDTO lesson, 
-                         Model model) throws ServiceException {
+                         @RequestParam int courseId,
+                         @RequestParam int groupId,
+                         @ModelAttribute LessonDTO lesson) throws ServiceException {
         lesson.setDatestamp(LocalDate.parse(date));
         lesson.setTimetable(TimetableDTO.builder().id(timetableId).build());
+        lesson.setCourse(CourseDTO.builder().id(courseId).build());
+        lesson.setGroups(new HashSet<>());
+        lesson.getGroups().add(GroupDTO.builder().id(groupId).build());
         lessonService.create(lesson);
         
         return new StringBuilder().append(REDIRECT_KEY_WORD)
@@ -94,61 +107,68 @@ public class LessonController extends DefaultController {
                                   .append("?")
                                   .append(TIMETABLE_ID_PARAMETER_NAME)
                                   .append(lesson.getTimetable().getId())
-                                  .toString();
+                                  .append("&")
+                                  .append(COURSE_ID_PARAMETER_NAME)
+                                  .append(courseId).toString();
     }
     
     @PostMapping("/delete/{lessonId}")
-    public String delete(@ModelAttribute LessonDTO lessonModel, 
+    public String delete(@ModelAttribute LessonDTO lesson,
                          @PathVariable int lessonId) throws ServiceException {
         lessonService.deleteById(lessonId);
         return new StringBuilder().append(REDIRECT_KEY_WORD)
                                   .append(DAY_LESSONS_PATH)
-                                  .append(lessonModel.getDatestamp())
+                                  .append(lesson.getDatestamp())
                                   .append("?")
-                                  .toString();
-    }
-    
-    @PostMapping("/update/{lessonId}")
-    public String update(@PathVariable int lessonId, 
-                         @ModelAttribute LessonDTO lessonModel, 
-                         Model model) throws ServiceException {
-        lessonModel.setId(lessonId);
-        lessonService.update(lessonModel);
-        return new StringBuilder().append(REDIRECT_KEY_WORD)
-                                  .append(DAY_LESSONS_PATH)
-                                  .append(lessonModel.getDatestamp())
-                                  .append("?")
-                                  .toString();
+                                  .append(TIMETABLE_ID_PARAMETER_NAME)
+                                  .append(lesson.getTimetable().getId())
+                                  .append("&")
+                                  .append(COURSE_ID_PARAMETER_NAME)
+                                  .append(STUB).toString();
     }
     
     @GetMapping("/day-lessons/{date}")
     public String getDayLessons(@PathVariable String date,
                                 @RequestParam int timetableId,
+                                @RequestParam int courseId,
                                 Model model) throws ServiceException {
         LocalDate datestamp = LocalDate.parse(date);
         List<LessonDTO> dayLessons = lessonService.getDayLessons(datestamp);
         lessonService.addLessonTiming(dayLessons);
         lessonService.sortByLessonOrder(dayLessons);
-        LessonDTO lessonModel = LessonDTO.builder().datestamp(datestamp)
-                                                   .course(new CourseDTO())
-                                                   .build();
+        LessonDTO lesson = LessonDTO.builder().datestamp(datestamp)
+                                              .timetable(TimetableDTO.builder()
+                                                                     .id(timetableId)
+                                                                     .build())
+                                              .build();
+        
         List<CourseDTO> courses = courseService.getAll();
         List<GroupDTO> groups = groupService.getAll();
         List<TimetableDTO> timetables = timetableService.getAll();
         
-        TimetableDTO timetable = TimetableDTO.builder().build();
+        TimetableDTO timetable = TimetableDTO.builder().id(STUB).build();
         
         if (timetableId != STUB) {
             timetable = timetableService.getByIdWithTimings(timetableId);
-            timetableService.sortTimingsByStartTime(timetable);
+        }
+        
+        List<TeacherDTO> teachers = new ArrayList<>();
+        CourseDTO course = CourseDTO.builder().id(STUB).build();
+        
+        if (courseId != STUB) {
+            teachers = teacherService.getByCoursesId(courseId);
+            course = courseService.getById(courseId);
+            
         } 
         
+        model.addAttribute(COURSE_ATTRIBUTE, course);
+        model.addAttribute(TEACHERS_ATTRIBUTE, teachers);
         model.addAttribute(TIMETABLE_ATTRIBUTE, timetable);
         model.addAttribute(TIMETABLES_ATTRIBUTE, timetables);
         model.addAttribute(GROUPS_ATTRIBUTE, groups);
         model.addAttribute(COURSES_ATTRIBUTE, courses);
         model.addAttribute(DAY_LESSONS_ATTRIBUTE, dayLessons);
-        model.addAttribute(LESSON_ATTRIBUTE, lessonModel);
+        model.addAttribute(LESSON_ATTRIBUTE, lesson);
         return DAY_LESSONS_TEMPLATE;
     }
     
@@ -164,7 +184,7 @@ public class LessonController extends DefaultController {
                                   .append("?").toString();
     }
     
-    @GetMapping(value = "/{date}/next")
+    @GetMapping("/{date}/next")
     public String next(@PathVariable String date) {
         LocalDate localDate = LocalDate.parse(date);
         LocalDate datestamp = lessonService.moveForward(localDate);

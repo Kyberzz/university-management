@@ -19,11 +19,13 @@ import ua.com.foxminded.university.entity.Course;
 import ua.com.foxminded.university.entity.Group;
 import ua.com.foxminded.university.entity.Timing;
 import ua.com.foxminded.university.entity.Lesson;
+import ua.com.foxminded.university.entity.Teacher;
 import ua.com.foxminded.university.entity.Timetable;
 import ua.com.foxminded.university.entitymother.CourseMother;
 import ua.com.foxminded.university.entitymother.GroupMother;
 import ua.com.foxminded.university.entitymother.TimingMother;
 import ua.com.foxminded.university.entitymother.LessonMother;
+import ua.com.foxminded.university.entitymother.TeacherMother;
 import ua.com.foxminded.university.entitymother.TimetableMother;
 
 @DataJpaTest
@@ -41,6 +43,7 @@ class LessonRepositoryTest {
     private Lesson lesson;
     private Timetable timetable;
     private Timing timing;
+    private Teacher teacher;
     
     @BeforeEach
     void init() {
@@ -59,7 +62,11 @@ class LessonRepositoryTest {
         group = GroupMother.complete().lessons(new HashSet<>()) .build();
         entityManager.persist(group);
         
+        teacher = TeacherMother.complete().build();
+        entityManager.persist(teacher);
+        
         lesson = LessonMother.complete().course(course)
+                                        .teacher(teacher)
                                         .groups(new HashSet<>()).build();
         lesson.addGroup(group);
        
@@ -69,8 +76,16 @@ class LessonRepositoryTest {
         entityManager.close();
     }
     
-    void findByDatestampAndGroupIdAndLessonTimingId_ShouldReturnScheduleEntity() {
-        Lesson persistedLesson = lessonRepository.findByDatestampAndGroupIdAndTimingId(
+    void findByTeacherIdAndLessonOrderAndCourseId_ShouldReturnLesson() {
+        Lesson persistedLesson = lessonRepository
+                .findByTeacherIdAndLessonOrderAndCourseId(teacher.getId(), 
+                                                          lesson.getLessonOrder(), 
+                                                          course.getId());
+        assertEquals(lesson, persistedLesson);
+    }
+    
+    void findByDatestampAndGroupIdAndLessonTimingId_ShouldReturnLesson() {
+        Lesson persistedLesson = lessonRepository.findByDatestampAndLessonOrderAndGroupsId(
                 lesson.getDatestamp(), group.getId(), timing.getId());
         
         assertEquals(lesson.getGroups().iterator().next().getId(), 

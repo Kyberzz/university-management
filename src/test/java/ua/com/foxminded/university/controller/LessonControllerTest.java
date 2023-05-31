@@ -68,7 +68,8 @@ class LessonControllerTest {
                 new LessonController(timetableServiceMock, 
                                      courseServiceMock, 
                                      groupServiceMock, 
-                                     timetableService)).build();
+                                     timetableService, 
+                                     teacherService)).build();
 
         lesson = LessonDtoMother.complete().build();
     }

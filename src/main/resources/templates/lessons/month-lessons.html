@@ -70,7 +70,8 @@
              <form th:action="@{/lessons/day-lessons/__${dayLessons[0].datestamp}__}" method="get">
               <button type="submit" class="btn btn-success btn-sm" th:text="#{button.expand}"
                id="expandButton">Expand</button>
-              <input type="hidden" name="timetableId" th:value="${dayLessons[0].timetable.id}" />
+              <input type="hidden" name="timetableId" th:value="${dayLessons[0].timetable.id}"/>
+              <input type="hidden" name="courseId" value="0"/>
              </form>
             </div>
            </div>
@@ -83,6 +84,7 @@
               data-bs-toggle="modal" th:data-bs-target="|#create${dayLessons[0].datestamp}|"
               th:text="#{fragments.add}">Create</button>
              <input type="hidden" name="timetableId" value="0"/>
+             <input type="hidden" name="courseId" value="0"/>
             </form>
            </div>
           </div>

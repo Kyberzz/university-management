@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -30,6 +31,7 @@ import ua.com.foxminded.university.entitymother.UserMother;
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 class TeacherRepositoryTest {
     
+    private static final int TEACHERS_QUANTITY = 1;
     private static final int COURSES_QUANTITY = 1;
     
     @PersistenceContext
@@ -62,6 +64,12 @@ class TeacherRepositoryTest {
         entityManager.persist(teacher);
         entityManager.getTransaction().commit();
         entityManager.close();
+    }
+    
+    @Test
+    void findByCoursesId_ShouldReturnTeachersHavingCourseId() {
+        List<Teacher> teachers = teacherRepository.findByCoursesId(course.getId());
+        assertEquals(TEACHERS_QUANTITY, teachers.size());
     }
     
     @Test

@@ -5,11 +5,11 @@ import java.util.List;
 import ua.com.foxminded.university.dto.TeacherDTO;
 import ua.com.foxminded.university.exception.ServiceException;
 
-public interface TeacherService {
+public interface TeacherService extends GenericService<TeacherDTO> {
+    
+    public List<TeacherDTO> getByCoursesId(int id) throws ServiceException;
     
     public TeacherDTO getByUserId(int id) throws ServiceException;
-
-    public List<TeacherDTO> getAll() throws ServiceException;
 
     public TeacherDTO getByIdWithCourses(int teacherId) throws ServiceException;
 }
