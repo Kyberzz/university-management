@@ -9,9 +9,10 @@ import ua.com.foxminded.university.entity.Lesson;
 
 public interface LessonRepository extends JpaRepository<Lesson, Integer> {
     
-    public Lesson findByTeacherIdAndLessonOrderAndCourseId(int teacherId, 
-                                                           int lessonOrder, 
-                                                           int courseId);
+    public Lesson findByDatestampAndTeacherIdAndLessonOrderAndCourseId(LocalDate date, 
+                                                                       int teacherId, 
+                                                                       int lessonOrder, 
+                                                                       int courseId);
     
     public Lesson findByDatestampAndLessonOrderAndGroupsId(LocalDate date,
                                                            int lessonOrder,                                                 

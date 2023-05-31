@@ -157,11 +157,12 @@ public class LessonServiceImpl implements LessonService {
                     lessonDto.getLessonOrder(), 
                     lessonDto.getGroups().iterator().next().getId());
             
-            
-            Lesson counterpartLesson = lessonRepository.findByTeacherIdAndLessonOrderAndCourseId(
-                    lessonDto.getTeacher().getId(),
-                    lessonDto.getLessonOrder(),
-                    lessonDto.getCourse().getId());
+            Lesson counterpartLesson = lessonRepository
+                    .findByDatestampAndTeacherIdAndLessonOrderAndCourseId(
+                            lessonDto.getDatestamp(),
+                            lessonDto.getTeacher().getId(),
+                            lessonDto.getLessonOrder(),
+                            lessonDto.getCourse().getId());
             
             Lesson lesson = modelMapper.map(lessonDto, Lesson.class);
             

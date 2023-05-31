@@ -8,8 +8,11 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+import javax.validation.constraints.Min;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,6 +36,7 @@ import ua.com.foxminded.university.service.TimetableService;
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/lessons")
+@Validated
 public class LessonController extends DefaultController {
     
     public static final int STUB = 0;
@@ -90,9 +94,9 @@ public class LessonController extends DefaultController {
     
     @PostMapping("/{date}/create")
     public String create(@PathVariable String date,
-                         @RequestParam int timetableId,
-                         @RequestParam int courseId,
-                         @RequestParam int groupId,
+                         @RequestParam @Min(1) int timetableId,
+                         @RequestParam @Min(1) int courseId,
+                         @RequestParam @Min(1) int groupId,
                          @ModelAttribute LessonDTO lesson) throws ServiceException {
         lesson.setDatestamp(LocalDate.parse(date));
         lesson.setTimetable(TimetableDTO.builder().id(timetableId).build());

@@ -5,6 +5,8 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Set;
 
+import javax.validation.constraints.NotBlank;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,6 +25,8 @@ public class LessonDTO implements Serializable {
     private Integer id;
     private LocalDate datestamp;
     private String description;
+    
+    @NotBlank
     private Integer lessonOrder;
     
     @ToString.Exclude
@@ -36,9 +40,11 @@ public class LessonDTO implements Serializable {
     private Set<GroupDTO> groups;
     
     @ToString.Exclude
+    @NotBlank
     private TeacherDTO teacher;
     
     @ToString.Exclude
+    @NotBlank
     private GroupDTO group;
     private LocalTime startTime;
     private LocalTime endTime;

@@ -78,9 +78,10 @@ class LessonRepositoryTest {
     
     void findByTeacherIdAndLessonOrderAndCourseId_ShouldReturnLesson() {
         Lesson persistedLesson = lessonRepository
-                .findByTeacherIdAndLessonOrderAndCourseId(teacher.getId(), 
-                                                          lesson.getLessonOrder(), 
-                                                          course.getId());
+                .findByDatestampAndTeacherIdAndLessonOrderAndCourseId(lesson.getDatestamp(),
+                                                                      teacher.getId(), 
+                                                                      lesson.getLessonOrder(), 
+                                                                      course.getId());
         assertEquals(lesson, persistedLesson);
     }
     
