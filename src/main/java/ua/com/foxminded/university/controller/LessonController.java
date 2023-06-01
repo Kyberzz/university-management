@@ -43,7 +43,7 @@ public class LessonController extends DefaultController {
     public static final String COURSE_ATTRIBUTE = "course";
     public static final String TEACHERS_ATTRIBUTE = "teachers";
     public static final String TEACHER_ATTRIBUTE = "teacher";
-    public static final String TEACHER_WEEK_SCHEDULE = "lessons/teacher-week-schedule";
+    public static final String TEACHER_WEEK_SCHEDULE_TEMPLATE_PATH = "lessons/teacher-week-schedule";
     public static final String WEEK_LESSONS_ATTRIBUTE = "weekLessons";
     public static final String TIMETABLE_ATTRIBUTE = "timetable";
     public static final String TIMINGS_ATTRIBUTE = "timings";
@@ -69,12 +69,13 @@ public class LessonController extends DefaultController {
     public String getTeacherWeekSchedule(@PathVariable String date, 
                                          @PathVariable String email, Model model) 
                                                  throws ServiceException {
-        
+       
+       TeacherDTO teacher = teacherService.getTeacherByEmail(email);
        List<List<LessonDTO>> weekLessons = lessonService.getWeekLessonsOwnedByTeacher(
-               LocalDate.parse(date), email);
+               LocalDate.parse(date), teacher.getId());
        
        model.addAttribute(WEEK_LESSONS_ATTRIBUTE, weekLessons);
-       return new StringBuilder().append(TEACHER_WEEK_SCHEDULE).toString();
+       return new StringBuilder().append(TEACHER_WEEK_SCHEDULE_TEMPLATE_PATH).toString();
     }
     
     @PostMapping("/{date}/apply-timetable")

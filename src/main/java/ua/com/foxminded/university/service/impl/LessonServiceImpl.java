@@ -6,11 +6,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import org.modelmapper.ConfigurationException;
 import org.modelmapper.MappingException;
@@ -38,10 +35,10 @@ import ua.com.foxminded.university.service.LessonService;
 @RequiredArgsConstructor
 public class LessonServiceImpl implements LessonService {
     
+    public static final int NO_LESSONS = 0;
     public static final int DEFFALUT_LESSONS_QUANTITY = 5;
     public static final int OFFSET = 1;
     public static final int FIRST_ELEMENT = 0;
-    public static final int ARRAY_INDEX_OFFSET = 1;
     public static final int WEEKS_OFFSET = 3;
     public static final int WEEKS_QUANTITY = 4;
     public static final int END_WEEK_DAY_NUMBER = 7;
@@ -57,18 +54,43 @@ public class LessonServiceImpl implements LessonService {
     private final GroupRepository groupRepository;
     
     @Override
-    public List<List<LessonDTO>> getWeekLessonsOwnedByTeacher(LocalDate date, String email) 
+    public List<List<LessonDTO>> getWeekLessonsOwnedByTeacher(LocalDate date, int teacherId) 
             throws ServiceException {
-        List<List<LessonDTO>> teacherLessons = getWeekLessons(date).stream().map(dayLessons -> dayLessons.stream()
-                .filter(lesson -> {
-                    if (lesson.hasTeacher()) {
-                        return lesson.getTeacher().getUser().getEmail().equals(email);
+        
+        LocalDate monday = findMondayOfWeek(date);
+        int lessonsQuantity = defineMaxNumberOfDayLessonsInWeekForTeacher(date, teacherId);
+        
+        if (lessonsQuantity < DEFFALUT_LESSONS_QUANTITY) {
+            lessonsQuantity = DEFFALUT_LESSONS_QUANTITY;
+        }
+        
+        List<List<LessonDTO>> lessons = new ArrayList<>();
+       
+        try {
+            for (int i = 0; i < lessonsQuantity; i++) {
+                List<LessonDTO> lessonsOfWeekContainingIdemOrder = new ArrayList<>();
+                
+                for (int j = 0; j < DayOfWeek.values().length; j++) {
+                    LocalDate datestamp = monday.plusDays(j);
+                    Lesson lesson = lessonRepository
+                            .findByDatestampAndTeacherIdAndLessonOrder(datestamp, teacherId, i);
+                    if (lesson == null) {
+                        lessonsOfWeekContainingIdemOrder.add(LessonDTO.builder()
+                                .datestamp(datestamp)
+                                .build());
                     } else {
-                        return false;
+                        LessonDTO lessonDto = modelMapper.map(lesson, LessonDTO.class);
+                        lessonsOfWeekContainingIdemOrder.add(lessonDto);  
                     }
-                }).collect(Collectors.toList())).collect(Collectors.toList());
-//        addEmptyLessons(teacherLessons);
-        return teacherLessons;
+                }
+                addLessonTiming(lessonsOfWeekContainingIdemOrder);
+                lessons.add(lessonsOfWeekContainingIdemOrder);
+            }
+        } catch (DataAccessException e) {
+            throw new ServiceException("Getting lessons owned by the teacher fails", e); 
+        }
+        
+        return lessons;
     }
     
     @Override
@@ -102,7 +124,7 @@ public class LessonServiceImpl implements LessonService {
                     lesson.getTimetable().getId());
             Optional<Timing> timing = timings.stream()
                     .sorted(Comparator.comparing(Timing::getStartTime))
-                    .skip(lesson.getLessonOrder() - ARRAY_INDEX_OFFSET).findFirst();
+                    .skip(lesson.getLessonOrder() - OFFSET).findFirst();
 
             if (timing.isPresent()) {
                 lesson.setStartTime(timing.get().getStartTime());
@@ -241,74 +263,31 @@ public class LessonServiceImpl implements LessonService {
         }
     }
     
-    private void addEmptyLessons(List<List<LessonDTO>> weekLessons) {
-        List<Timing> timings = getLessonTimingsOfBiggestDayOfWeek(weekLessons);
+    private int defineMaxNumberOfDayLessonsInWeekForTeacher(LocalDate datestamp, 
+            int teacherId) throws ServiceException {
         
-        int dayLessonsQuantity;
+        List<List<Lesson>> weekLessons = new ArrayList<>();
         
-        if (timings == null) {
-            dayLessonsQuantity = DEFFALUT_LESSONS_QUANTITY;
-        } else {
-            dayLessonsQuantity = timings.size();
-        }
-        
-        for(List<LessonDTO> dayLessons : weekLessons) {
-            int emptyLessonsNumber = dayLessonsQuantity - dayLessons.size();
-            
-            if (emptyLessonsNumber != 0) {
-                for (int i = 0; i < emptyLessonsNumber; i++) {
-                    dayLessons.add(LessonDTO.builder().build());
-                }
+        try {
+            for (int i = 0; i < DayOfWeek.values().length; i++) {
+                List<Lesson> lessons = lessonRepository.findByDatestampAndTeacherId(
+                        datestamp, teacherId);
+                weekLessons.add(lessons);
             }
+        } catch (DataAccessException e) {
+            throw new ServiceException("Find lessons by date and teacher id failed", e);
         }
         
-        addLessonOrder(weekLessons);
+        Optional<Integer> lessonsNumber = weekLessons.stream()
+                .map(lessons -> lessons.size()).max(Integer::compareTo);
+        
+        if (lessonsNumber.isPresent()) {
+            return lessonsNumber.get();
+        } else {
+            return NO_LESSONS;
+        }
     }
     
-    private void addLessonOrder(List<List<LessonDTO>> weekLessons) {
-        weekLessons.stream().forEach(dayLessons -> {
-            IntStream.range(0, dayLessons.size()).forEach(number -> {
-                Optional<LessonDTO> lessonWithOrder = dayLessons.stream().filter(
-                        lesson -> lesson.getLessonOrder() == (number + OFFSET)).findFirst();
-                
-                if (!lessonWithOrder.isPresent()) {
-                    Optional<LessonDTO> optionalLesson = dayLessons.stream().filter(
-                            lesson -> lesson.getLessonOrder() == null).findFirst();
-                    
-                    if(optionalLesson.isPresent()) {
-                        optionalLesson.get().setLessonOrder(number);
-                    }
-                }
-            });
-        });
-    }
-    
-    private  List<Timing> getLessonTimingsOfBiggestDayOfWeek(
-            List<List<LessonDTO>> weekLessons) {
-       
-        List<List<Timing>> weekTimings = new ArrayList<>();
-
-        for (List<LessonDTO> dayLessons : weekLessons) {
-            if (dayLessons != null) {
-                List<Timing> dayTimings = timingRepository.findByTimetableId(
-                        dayLessons.get(FIRST_ELEMENT).getTimetable().getId());
-                weekTimings.add(dayTimings);
-            }
-        }
-
-        Optional<List<Timing>> optionalTimings = weekTimings.stream().max(
-                Comparator.comparing(List::size));
-        
-        List<Timing> timings;
-        
-        if (optionalTimings.isPresent()) {
-            timings = optionalTimings.get();
-        } else {
-            timings = new ArrayList<>();
-        }
-        return timings;
-    }
-
     private List<List<LessonDTO>> getWeekLessons(LocalDate date) throws ServiceException {
 
         LocalDate startDayOfWeek = findMondayOfWeek(date);

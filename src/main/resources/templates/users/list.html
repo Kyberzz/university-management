@@ -93,7 +93,7 @@
                 th:id="|authorizedAuthority${user.id}|"
                 aria-label="Defalt select example">
                 <option
-                 th:each="authority : ${T(ua.com.foxminded.university.model.Authority).values()}"
+                 th:each="authority : ${T(ua.com.foxminded.university.entity.Authority).values()}"
                  th:value="${authority}"
                  th:text="${authority.representation}">Admin</option>
                </select>
@@ -191,7 +191,7 @@
                 class="form-select" th:id="|selectAuthority${user.id}|"
                 aria-label="Defalt select example">
                 <option
-                 th:each="authority : ${T(ua.com.foxminded.university.model.Authority).values()}"
+                 th:each="authority : ${T(ua.com.foxminded.university.entity.Authority).values()}"
                  th:value="${authority}"
                  th:text="${authority.representation}">Administrator</option>
                </select>

@@ -67,6 +67,13 @@ class TeacherRepositoryTest {
     }
     
     @Test
+    void findByUserEmail_ShouldReturnTeacher() {
+        Teacher persistedTeacher = teacherRepository.findByUserEmail(
+                teacher.getUser().getEmail());
+        assertEquals(teacher, persistedTeacher);
+    }
+    
+    @Test
     void findByCoursesId_ShouldReturnTeachersHavingCourseId() {
         List<Teacher> teachers = teacherRepository.findByCoursesId(course.getId());
         assertEquals(TEACHERS_QUANTITY, teachers.size());

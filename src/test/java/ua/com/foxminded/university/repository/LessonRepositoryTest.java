@@ -59,7 +59,7 @@ class LessonRepositoryTest {
         course = CourseMother.complete().build();
         entityManager.persist(course);
         
-        group = GroupMother.complete().lessons(new HashSet<>()) .build();
+        group = GroupMother.complete().lessons(new HashSet<>()).build();
         entityManager.persist(group);
         
         teacher = TeacherMother.complete().build();
@@ -76,6 +76,24 @@ class LessonRepositoryTest {
         entityManager.close();
     }
     
+    @Test
+    void findByDatestampAndTeacherId() {
+        List<Lesson> lessons = lessonRepository.findByDatestampAndTeacherId(
+                lesson.getDatestamp(), teacher.getId());
+        
+        assertEquals(lesson, lessons.iterator().next());
+    }
+    
+    @Test
+    void findByDatestampAndTeacherIdAndLessonOrder_ShouldReturnLessons() {
+        Lesson lessons = lessonRepository.findByDatestampAndTeacherIdAndLessonOrder(
+                lesson.getDatestamp(), lesson.getTeacher().getId(), lesson.getLessonOrder());
+        
+        assertEquals(lesson, lessons);
+    }
+    
+    
+    @Test
     void findByTeacherIdAndLessonOrderAndCourseId_ShouldReturnLesson() {
         Lesson persistedLesson = lessonRepository
                 .findByDatestampAndTeacherIdAndLessonOrderAndCourseId(lesson.getDatestamp(),
@@ -85,9 +103,12 @@ class LessonRepositoryTest {
         assertEquals(lesson, persistedLesson);
     }
     
+    @Test
     void findByDatestampAndGroupIdAndLessonTimingId_ShouldReturnLesson() {
         Lesson persistedLesson = lessonRepository.findByDatestampAndLessonOrderAndGroupsId(
-                lesson.getDatestamp(), group.getId(), timing.getId());
+                lesson.getDatestamp(),
+                lesson.getLessonOrder(),
+                group.getId());
         
         assertEquals(lesson.getGroups().iterator().next().getId(), 
                      persistedLesson.getGroups().iterator().next().getId());

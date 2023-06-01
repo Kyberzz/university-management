@@ -8,7 +8,7 @@ import ua.com.foxminded.university.exception.ServiceException;
 
 public interface LessonService extends GenericService<LessonDTO> {
     
-    public List<List<LessonDTO>> getWeekLessonsOwnedByTeacher(LocalDate date, String email) 
+    public List<List<LessonDTO>> getWeekLessonsOwnedByTeacher(LocalDate date, int teacherId) 
             throws ServiceException;
     
     public List<LessonDTO> applyTimetable(LocalDate date, int timetableId) 

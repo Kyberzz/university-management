@@ -68,8 +68,8 @@ public class Lesson implements Serializable {
     private Teacher teacher;
     
     public void addGroup(Group group) {
-        this.groups.add(group);
         group.getLessons().add(this);
+        this.groups.add(group);
     }
     
     public void removeGroup(Group group) {

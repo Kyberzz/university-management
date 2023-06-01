@@ -31,6 +31,16 @@ public class TeacherServiceImpl implements TeacherService {
     private final ModelMapper modelMapper;
     
     @Override
+    public TeacherDTO getTeacherByEmail(String email) throws ServiceException {
+        try {
+            Teacher teacher = teacherRepository.findByUserEmail(email);
+            return modelMapper.map(teacher, TeacherDTO.class);
+        } catch (DataAccessException e) {
+            throw new ServiceException("Getting the teacher by his email failed", e);
+        }
+    }
+    
+    @Override
     public TeacherDTO getByUserId(int id) throws ServiceException {
         try {
             Teacher teacher = teacherRepository.findByUserId(id);

@@ -8,6 +8,8 @@ import ua.com.foxminded.university.entity.Teacher;
 
 public interface TeacherRepository extends JpaRepository<Teacher, Integer> {
     
+    public Teacher findByUserEmail(String email);
+    
     public List <Teacher> findByCoursesId(int id);
     
     public Teacher findByUserId(int id);

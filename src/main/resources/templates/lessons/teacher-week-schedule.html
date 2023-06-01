@@ -39,33 +39,46 @@
        <thead>
         <tr class="text-center">
          <th scope="col" rowspan="2" th:text="#{th.lesson.order}">Order</th>
-         <th scope="col" colspan="2" th:each="dayOfWeek : ${T(java.time.DayOfWeek).values()}"
-          th:text="${dayOfWeek}" class="fs-6">MONDAY</th>
+         <div th:each="lesson : ${weekLessons[0]}">
+          <th scope="col" colspan="2">
+           <div th:text="${lesson.datestamp.getDayOfWeek()}">Monday</div>
+           <div th:text="${lesson.datestamp}">2023-06-01</div>
+          </th>
+         </div>
         </tr>
         <tr>
          <div th:each="dayOfWeek : ${T(java.time.DayOfWeek).values()}">
-          <td th:text="#{href.groups}">Group</td>
-          <td th:text="#{thead.lesson}">Name</th>
+          <td th:text="#{href.groups}">Groups</td>
+          <td th:text="#{thead.lesson}">Lesson</th>
          </div>
         </tr>
        </thead>
        <tbody>
-        <tr >
-         <td>1</td>
-         <div th:each="dayLessons : ${weekLessons}">
-          <td></td>
-          <td></td>
+        <tr th:each="lessonsWithIdemOrder, iterationStatus : ${weekLessons}">
+         <td class="text-center" th:text="${iterationStatus.count}">1</td>
+         <div th:each="lesson : ${lessonsWithIdemOrder}">
+          <td>
+           <div th:each="group : ${lesson.groups}" th:text="${group.name}">k-2</div>
+          </td>
+          <td>
+           <div th:if="${lesson.startTime != null}" th:text="|${lesson.startTime}-${lesson.endTime}|">8:00-9:30</div>
+           <div th:text="${lesson} ? ${lesson.course?.name} : 'some'"></div>
+          </td>
          </div>
         </tr>
-
-
-       </tbody>
-      </table>
-
-
      </div>
+
+
+
+
+
+     </tbody>
+     </table>
+
+
     </div>
    </div>
+  </div>
 
   </div>
 
