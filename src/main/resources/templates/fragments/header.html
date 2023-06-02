@@ -54,7 +54,7 @@
           <li>
            <form>
             <button class="dropdown-item" type="submit"
-             th:formaction="@{/lessons/__${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}__/teacher-week-schedule/__${email}__}"
+             th:formaction="@{/lessons/teacher-week-schedule/__${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}__/__${#authentication.name}__}"
              th:text="#{button.my-schedule}">My Schedule</button>
            </form>
           </li>

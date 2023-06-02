@@ -70,7 +70,7 @@ class LessonServiceImplTest {
         LocalDate localDate = LocalDate.now();
         LocalDate expectedResult = localDate.minusWeeks(
                 LessonServiceImpl.WEEKS_OFFSET);
-        assertEquals(expectedResult, lessonSerivice.moveBack(localDate));
+        assertEquals(expectedResult, lessonSerivice.moveMonthBack(localDate));
     }
     
     @Test
@@ -78,7 +78,7 @@ class LessonServiceImplTest {
         LocalDate localDate = LocalDate.now();
         LocalDate expectedResult = localDate.plusWeeks(
                 LessonServiceImpl.WEEKS_OFFSET);
-        assertEquals(expectedResult, lessonSerivice.moveForward(localDate));
+        assertEquals(expectedResult, lessonSerivice.moveMonthForward(localDate));
     }
     
     @Test

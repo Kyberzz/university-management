@@ -35,6 +35,7 @@ import ua.com.foxminded.university.service.LessonService;
 @RequiredArgsConstructor
 public class LessonServiceImpl implements LessonService {
     
+    public static final int ONE_WEEK = 1;
     public static final int NO_LESSONS = 0;
     public static final int DEFFALUT_LESSONS_QUANTITY = 5;
     public static final int OFFSET = 1;
@@ -52,6 +53,16 @@ public class LessonServiceImpl implements LessonService {
     private final TimingRepository timingRepository;
     private final TimetableRepository timetableRepository;
     private final GroupRepository groupRepository;
+    
+    @Override
+    public LocalDate moveWeekBack(LocalDate date) {
+        return date.plusWeeks(ONE_WEEK);
+    }
+
+    @Override
+    public LocalDate moveWeekForward(LocalDate date) {
+        return date.minusWeeks(ONE_WEEK);
+    }
     
     @Override
     public List<List<LessonDTO>> getWeekLessonsOwnedByTeacher(LocalDate date, int teacherId) 
@@ -134,12 +145,12 @@ public class LessonServiceImpl implements LessonService {
     }
 
     @Override
-    public LocalDate moveForward(LocalDate date) {
+    public LocalDate moveMonthForward(LocalDate date) {
         return date.plusWeeks(WEEKS_OFFSET);
     }
 
     @Override
-    public LocalDate moveBack(LocalDate date) {
+    public LocalDate moveMonthBack(LocalDate date) {
         return date.minusWeeks(WEEKS_OFFSET);
     }
 

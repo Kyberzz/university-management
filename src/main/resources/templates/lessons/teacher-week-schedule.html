@@ -28,6 +28,36 @@
       </ol>
      </nav>
 
+     <div class="row mb-3 justify-content-center">
+      <div class="col-2 text-end">
+       <form
+        th:action="@{/lessons/teacher-week-schedule/__${lesson.datestamp}__/__${#authentication.name}__/back}"
+        method="get">
+        <button type="submit" class="btn btn-primary btn-sm w-50"
+         th:text="#{button.previous-week}">Previous week</button>
+       </form>
+      </div>
+      <div class="col-2 text-start">
+       <form
+        th:action="@{/lessons/teacher-week-schedule/__${lesson.datestamp}__/__${#authentication.name}__/next}"
+        method="get">
+        <button type="submit" class="btn btn-primary btn-sm w-50" th:text="#{button.next-week}">Next
+         week</button>
+       </form>
+      </div>
+      <div class="col-2 text-start">
+       <form
+        th:action="@{/lessons/teacher-week-schedule/__${#authentication.name}__}"
+        method="get">
+        <div class="input-group mb-3">
+         <input type="date" class="form-control" placeholder="YYYY MMMM DD"
+          aria-label="Recipient's username" aria-describedby="button-addon2" name="date">
+         <button class="btn btn-primary btn-sm" type="submit" id="button-addon2"
+          th:text="#{button.print}">Print</button>
+        </div>
+       </form>
+      </div>
+     </div>
     </div>
    </div>
 
@@ -61,7 +91,8 @@
            <div th:each="group : ${lesson.groups}" th:text="${group.name}">k-2</div>
           </td>
           <td>
-           <div th:if="${lesson.startTime != null}" th:text="|${lesson.startTime}-${lesson.endTime}|">8:00-9:30</div>
+           <div th:if="${lesson.startTime != null}"
+            th:text="|${lesson.startTime}-${lesson.endTime}|">8:00-9:30</div>
            <div th:text="${lesson} ? ${lesson.course?.name} : 'some'"></div>
           </td>
          </div>

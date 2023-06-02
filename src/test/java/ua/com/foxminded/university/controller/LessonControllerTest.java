@@ -131,7 +131,7 @@ class LessonControllerTest {
     @Test
     void back_ShouldRendirectToList() throws Exception {
         LocalDate localDate = LocalDate.now();
-        when(timetableServiceMock.moveBack(isA(LocalDate.class))).thenReturn(localDate);
+        when(timetableServiceMock.moveMonthBack(isA(LocalDate.class))).thenReturn(localDate);
         mockMvc.perform(get("/timetables/{date}/back", localDate.toString()))
                .andDo(print())
                .andExpect(redirectedUrlPattern("/timetables/*/list?"));
@@ -140,7 +140,7 @@ class LessonControllerTest {
     @Test
     void next_ShouldRedirectToList() throws Exception {
         LocalDate localDate = LocalDate.now();
-        when(timetableServiceMock.moveForward(isA(LocalDate.class))).thenReturn(localDate);
+        when(timetableServiceMock.moveMonthForward(isA(LocalDate.class))).thenReturn(localDate);
         mockMvc.perform(get("/timetables/{date}/next", localDate.toString()))
                .andDo(print())
                .andExpect(redirectedUrlPattern("/timetables/*/list?"));

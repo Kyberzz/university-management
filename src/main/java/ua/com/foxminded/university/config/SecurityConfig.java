@@ -10,7 +10,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 import lombok.RequiredArgsConstructor;
 import ua.com.foxminded.university.entity.Authority;
@@ -25,8 +24,6 @@ public class SecurityConfig {
     public static final String TEACHER = Authority.TEACHER.toString();
     public static final String STAFF = Authority.STAFF.toString();
     public static final String ADMIN = Authority.ADMIN.toString();
-    
-    public final AuthenticationSuccessHandler successHandler;
     
     @Bean 
     public UserDetailsManager userDetailsManager(DataSource dataSource, 
@@ -71,7 +68,7 @@ public class SecurityConfig {
                 .anyRequest().authenticated()
                 )
             .formLogin(form -> form.loginPage("/login")
-                                   .permitAll().successHandler(successHandler))
+                                   .permitAll().defaultSuccessUrl("/", true))
             .logout(logout -> logout.logoutUrl("/logout")
                                     .logoutSuccessUrl("/index"));
         return http.build();
