@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 
@@ -31,8 +32,20 @@ public class DefaultController {
     public static final String URL_ATTRIBUTE = "url";
     public static final String ERROR_TEMPLATE_NAME = "error";
     
+    @ExceptionHandler(ServiceException.class)
+    public ModelAndView serviceExceptionHandler(HttpServletRequest request, 
+                                                HttpServletResponse response, 
+                                                ServiceException error) {
+        ModelAndView modelAndView = new ModelAndView();
+        log.error("The service error has occurred", error);
+        modelAndView.addObject(URL_ATTRIBUTE, request.getRequestURI());
+        modelAndView.addObject(ERROR_MESSAGE_ATTRIBUTE, error.getErrorCode().getDescription());
+        response.setStatus(error.getErrorCode().getCode());
+        modelAndView.setViewName(ERROR_TEMPLATE_NAME);
+        return modelAndView;
+    }
     
-    @ExceptionHandler
+    @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ModelAndView handleModelAttributeFieldValueViolation(
             HttpServletRequest request, ConstraintViolationException error) {
@@ -45,14 +58,14 @@ public class DefaultController {
                                violation.getMessage()));
         }
         
-        log.error("The argument violation of the controller method was occured");
+        log.error("The argument value violation of the controller method was occured");
         modelAndView.addObject(URL_ATTRIBUTE, request.getRequestURI());
         modelAndView.addObject(ERRORS_RESPONCE, errorsResponse);
         modelAndView.setViewName(ERROR_TEMPLATE_NAME);
         return modelAndView;
     }
     
-    @ExceptionHandler
+    @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ModelAndView handleMethodArgumanViolation(HttpServletRequest request, 
                                                      MethodArgumentNotValidException error) {
@@ -65,20 +78,8 @@ public class DefaultController {
         return modelAndView;
     }
     
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    @ExceptionHandler
-    public ModelAndView serviceExceptionHandler(HttpServletRequest request, 
-                                                ServiceException error) {
-        ModelAndView modelAndView = new ModelAndView();
-        log.error("The service error has occurred", error);
-        modelAndView.addObject(URL_ATTRIBUTE, request.getRequestURI());
-        modelAndView.addObject(ERROR_MESSAGE_ATTRIBUTE, error.getMessage());
-        modelAndView.setViewName(ERROR_TEMPLATE_NAME);
-        return modelAndView;
-    }
-    
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler
+    @ExceptionHandler(BindException.class)
     public ModelAndView binding(HttpServletRequest request, BindException error) {
         List<ErrorResponse> errorsResponse = getErrorsResponse(error);
         

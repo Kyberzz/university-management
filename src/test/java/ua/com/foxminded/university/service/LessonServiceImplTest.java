@@ -66,7 +66,7 @@ class LessonServiceImplTest {
     }
     
     @Test
-    void moveBack_ShouldMoveBackDatestamp() {
+    void moveBack_ShouldMoveBackDatestamp() throws ServiceException {
         LocalDate localDate = LocalDate.now();
         LocalDate expectedResult = localDate.minusWeeks(
                 LessonServiceImpl.WEEKS_OFFSET);
@@ -74,7 +74,7 @@ class LessonServiceImplTest {
     }
     
     @Test
-    void moveForward_ShouldMoveForwardDatestamp() {
+    void moveForward_ShouldMoveForwardDatestamp() throws ServiceException {
         LocalDate localDate = LocalDate.now();
         LocalDate expectedResult = localDate.plusWeeks(
                 LessonServiceImpl.WEEKS_OFFSET);

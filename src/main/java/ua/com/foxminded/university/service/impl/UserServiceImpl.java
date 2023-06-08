@@ -1,5 +1,7 @@
 package ua.com.foxminded.university.service.impl;
 
+import static ua.com.foxminded.university.exception.ServiceErrorCode.*;
+
 import java.lang.reflect.Type;
 import java.util.List;
 
@@ -10,6 +12,7 @@ import org.modelmapper.ConfigurationException;
 import org.modelmapper.MappingException;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
+import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -35,35 +38,36 @@ public class UserServiceImpl implements UserService {
     private final UserDetailsManager userDetailsManager;
     private final ModelMapper modelMapper;
     
-    public UserDTO getById(int id) throws ServiceException {
+    public UserDTO getById(int id) {
         try {
             User entity = userRepository.findById(id);
             return modelMapper.map(entity, UserDTO.class);
-        } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
-            throw new ServiceException("Getting user by its id fails.", e);
+        } catch (DataAccessException | IllegalArgumentException | 
+                 ConfigurationException | MappingException e) {
+            throw new ServiceException(USER_FETCH_ERROR, e);
         }
     }
     
     @Override
-    public void deleteById(Integer id) throws ServiceException {
+    public void deleteById(Integer id) {
         try {
             userRepository.deleteById(id);
-        } catch (IllegalArgumentException e) {
-            throw new ServiceException("Deleting the user fails", e);
+        } catch (DataAccessException | IllegalArgumentException e) {
+            throw new ServiceException(USER_DELETE_ERROR, e);
         }
     }
     
     @Override
-    public void deleteByEmail(String email) throws ServiceException {
+    public void deleteByEmail(String email) {
         try {
             userDetailsManager.deleteUser(email);
         } catch (IllegalArgumentException e) {
-            throw new ServiceException("Deleting the user fails.", e);
+            throw new ServiceException(USER_DELETE_ERROR, e);
         }
     }
     
     @Override
-    public void create(UserDTO dto) throws ServiceException {
+    public void create(UserDTO dto) {
         try {
             PasswordEncoder encoder = PasswordEncoderFactories
                     .createDelegatingPasswordEncoder();
@@ -77,37 +81,41 @@ public class UserServiceImpl implements UserService {
                     .build();
             userDetailsManager.createUser(user);
         } catch (ConstraintViolationException e) {
-            throw new ServiceException("Creating the user fails.", e);
+            throw new ServiceException(USER_EMAIL_DUPLICATION_ERROR, e);
+        } catch (RuntimeException e) {
+            throw new ServiceException(USER_CREATE_ERROR, e);
         }
     }
     
     @Override
-    public List<UserDTO> getNotAuthorizedUsers() throws ServiceException {
+    public List<UserDTO> getNotAuthorizedUsers() {
         try {
             List<User> entities = userRepository.findByUserAuthorityIsNull();
             return modelMapper.map(entities, USER_MODEL_LIST_TYPE);
-        } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
-            throw new ServiceException("Getting not authrized users fails.", e);
+        } catch (DataAccessException | IllegalArgumentException | 
+                 ConfigurationException | MappingException e) {
+            throw new ServiceException(USER_FETCH_ERROR, e);
         }
     }
     
     @Override
-    public UserDTO getByEmail(String email) throws ServiceException {
+    public UserDTO getByEmail(String email) {
         try {
             User entity = userRepository.findByEmail(email);
             return modelMapper.map(entity, UserDTO.class);
-        } catch (IllegalArgumentException e) {
-            throw new ServiceException("Getting the email fails", e);
+        } catch (DataAccessException | IllegalArgumentException e) {
+            throw new ServiceException(USER_FETCH_ERROR, e);
         }
     }
     
     @Override
-    public List<UserDTO> getAll() throws ServiceException {
+    public List<UserDTO> getAll() {
         try {
             List<User> entities = userRepository.findAll();
             return modelMapper.map(entities, USER_MODEL_LIST_TYPE);
-        } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
-            throw new ServiceException("Getting all students fails", e);
+        } catch (DataAccessException | IllegalArgumentException | 
+                 ConfigurationException | MappingException e) {
+            throw new ServiceException(USERS_FETCH_ERROR, e);
         }
     }
     
@@ -123,8 +131,10 @@ public class UserServiceImpl implements UserService {
                     .roles(String.valueOf(dto.getUserAuthority().getAuthority()))
                     .disabled(!dto.getEnabled()).build();
             userDetailsManager.updateUser(entity);
-        } catch (ConstraintViolationException  e) {
-            throw new ServiceException("Updating user object fails.", e);
+        } catch (ConstraintViolationException e) {
+            throw new ServiceException(USER_EMAIL_DUPLICATION_ERROR, e);
+        } catch (RuntimeException  e) {
+            throw new ServiceException(USER_UPDATE_ERROR, e);
         }
     }
 }

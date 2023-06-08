@@ -1,5 +1,7 @@
 package ua.com.foxminded.university.service.impl;
 
+import static ua.com.foxminded.university.exception.ServiceErrorCode.*;
+
 import java.lang.reflect.Type;
 import java.time.LocalTime;
 import java.util.Comparator;
@@ -10,6 +12,7 @@ import org.modelmapper.TypeToken;
 import org.modelmapper.ConfigurationException;
 import org.modelmapper.MappingException;
 import org.modelmapper.ModelMapper;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,12 +37,13 @@ public class TimingServiceImpl implements TimingService {
     private final TimingRepository timingRepository;
     
     @Override
-    public List<TimingDTO> getByTimetableId(int id) throws ServiceException {
+    public List<TimingDTO> getByTimetableId(int id) {
         try {
             List<Timing> timings = timingRepository.findByTimetableId(id);
             return modelMapper.map(timings, LESSON_TIMING_LIST_TYPE );
-        } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
-            throw new ServiceException("Getting timing of lessons fails", e);
+        } catch (DataAccessException | IllegalArgumentException | 
+                 ConfigurationException | MappingException e) {
+            throw new ServiceException(API_ERROR, e);
         }
     }
 

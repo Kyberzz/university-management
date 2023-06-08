@@ -1,10 +1,13 @@
 package ua.com.foxminded.university.service.impl;
 
+import static ua.com.foxminded.university.exception.ServiceErrorCode.*;
+
 import javax.transaction.Transactional;
 
 import org.modelmapper.ConfigurationException;
 import org.modelmapper.MappingException;
 import org.modelmapper.ModelMapper;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -22,15 +25,15 @@ public class UserAuthorityServiceImpl implements UserAuthorityService {
     private final UserAuthorityRepository userAuthorityRepository;
     
     @Override
-    public UserAuthorityDTO saveUserAuthority(UserAuthorityDTO model) 
-            throws ServiceException {
+    public UserAuthorityDTO saveUserAuthority(UserAuthorityDTO model) {
         try {
             ModelMapper modelMapper = new ModelMapper();
             UserAuthority entity = modelMapper.map(model, UserAuthority.class);
             UserAuthority persistedEntity = userAuthorityRepository.saveAndFlush(entity);
             return modelMapper.map(persistedEntity, UserAuthorityDTO.class);
-        } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
-            throw new ServiceException("Persisting UserAuthority object fais.", e);
-        }
+        } catch (DataAccessException | IllegalArgumentException | 
+                 ConfigurationException | MappingException e) {
+            throw new ServiceException(USER_AUTHORITY_CREATE_ERROR, e);
+        } 
     }
 }

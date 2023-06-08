@@ -10,7 +10,6 @@ import java.util.List;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -70,7 +69,7 @@ public class LessonController extends DefaultController {
     @GetMapping("/teacher-week-schedule/{email}")
     public String getScheduleForDate(@PathVariable String email, 
                                      @RequestParam @NotBlank String date) {
-        
+
         return new StringBuilder().append(REDIRECT_KEY_WORD)
                 .append(SLASH)
                 .append(TEACHER_WEEK_SCHEDULE_TEMPLATE_PATH)
@@ -83,7 +82,7 @@ public class LessonController extends DefaultController {
     
     @GetMapping("/teacher-week-schedule/{date}/{email}/back")
     public String getPreviousWeekSchedule(@PathVariable String date, 
-                                          @PathVariable String email) {
+                                          @PathVariable String email) throws ServiceException {
         
         LocalDate datestamp = lessonService.moveWeekBack(LocalDate.parse(date));
         
@@ -99,7 +98,7 @@ public class LessonController extends DefaultController {
     
     @GetMapping("/teacher-week-schedule/{date}/{email}/next")
     public String getNextWeejSchedule(@PathVariable String date, 
-                                      @PathVariable String email) {
+                                      @PathVariable String email) throws ServiceException {
         
         LocalDate datestamp = lessonService.moveWeekForward(LocalDate.parse(date));
         
@@ -228,7 +227,7 @@ public class LessonController extends DefaultController {
     }
     
     @GetMapping("/{date}/back")
-    public String back(@PathVariable String date) {
+    public String back(@PathVariable String date) throws ServiceException {
         LocalDate localDate = LocalDate.parse(date);
         LocalDate datestamp = lessonService.moveMonthBack(localDate);
         return new StringBuilder().append(REDIRECT_KEY_WORD)
@@ -240,7 +239,7 @@ public class LessonController extends DefaultController {
     }
     
     @GetMapping("/{date}/next")
-    public String next(@PathVariable String date) {
+    public String next(@PathVariable String date) throws ServiceException {
         LocalDate localDate = LocalDate.parse(date);
         LocalDate datestamp = lessonService.moveMonthForward(localDate);
         return new StringBuilder().append(REDIRECT_KEY_WORD)

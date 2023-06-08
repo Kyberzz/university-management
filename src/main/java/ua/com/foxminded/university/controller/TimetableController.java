@@ -98,7 +98,7 @@ public class TimetableController extends DefaultController {
     
     @PostMapping("/create")
     public String create(@ModelAttribute @Valid TimetableDTO timetable) 
-            throws ServiceException{
+            throws ServiceException {
         
         TimetableDTO createdTimetable = timetableService.create(timetable);
         return new StringBuilder().append(REDIRECT_KEY_WORD)

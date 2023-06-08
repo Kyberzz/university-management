@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 import ua.com.foxminded.university.dto.LessonDTO;
-import ua.com.foxminded.university.exception.ServiceException;
 
 public interface LessonService extends GenericService<LessonDTO> {
     
@@ -12,11 +11,9 @@ public interface LessonService extends GenericService<LessonDTO> {
     
     public LocalDate moveWeekForward(LocalDate date);
     
-    public List<List<LessonDTO>> getWeekLessonsOwnedByTeacher(LocalDate date, int teacherId) 
-            throws ServiceException;
+    public List<List<LessonDTO>> getWeekLessonsOwnedByTeacher(LocalDate date, int teacherId);
     
-    public List<LessonDTO> applyTimetable(LocalDate date, int timetableId) 
-            throws ServiceException;
+    public List<LessonDTO> applyTimetable(LocalDate date, int timetableId);
     
     public void sortByLessonOrder(List<LessonDTO> lessons);
     
@@ -28,8 +25,7 @@ public interface LessonService extends GenericService<LessonDTO> {
     
     public LocalDate moveMonthBack(LocalDate date);
     
-    public List<List<List<LessonDTO>>> getMonthLessons(LocalDate date) 
-            throws ServiceException;
+    public List<List<List<LessonDTO>>> getMonthLessons(LocalDate date);
     
-    public List<LessonDTO> getDayLessons(LocalDate date) throws ServiceException;
+    public List<LessonDTO> getDayLessons(LocalDate date);
 }

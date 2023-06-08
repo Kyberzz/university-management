@@ -1,6 +1,9 @@
 package ua.com.foxminded.university.service.impl;
 
+import static ua.com.foxminded.university.exception.ServiceErrorCode.*;
+
 import java.lang.reflect.Type;
+import java.time.DateTimeException;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -65,8 +68,7 @@ public class LessonServiceImpl implements LessonService {
     }
     
     @Override
-    public List<List<LessonDTO>> getWeekLessonsOwnedByTeacher(LocalDate date, int teacherId) 
-            throws ServiceException {
+    public List<List<LessonDTO>> getWeekLessonsOwnedByTeacher(LocalDate date, int teacherId) {
         
         LocalDate monday = findMondayOfWeek(date);
         int lessonsQuantity = defineMaxNumberOfDayLessonsInWeekForTeacher(date, teacherId);
@@ -98,15 +100,14 @@ public class LessonServiceImpl implements LessonService {
                 lessons.add(lessonsOfWeekContainingIdemOrder);
             }
         } catch (DataAccessException e) {
-            throw new ServiceException("Getting lessons owned by the teacher fails", e); 
+            throw new ServiceException(LESSON_FETCH_ERROR, e); 
         }
         
         return lessons;
     }
     
     @Override
-    public List<LessonDTO> applyTimetable(LocalDate date, int timetableId) 
-            throws ServiceException {
+    public List<LessonDTO> applyTimetable(LocalDate date, int timetableId) {
         Timetable timetable = timetableRepository.findById(timetableId);
         List<Lesson> lessons = lessonRepository.findByDatestamp(date);
         lessons.stream().forEach(lesson -> lesson.setTimetable(timetable));
@@ -114,7 +115,7 @@ public class LessonServiceImpl implements LessonService {
             lessonRepository.saveAllAndFlush(lessons);
             return modelMapper.map(lessons, LESSON_MODELS_LIST_TYPE);
         } catch (DataAccessException e) {
-            throw new ServiceException("Applying timetable for lessons fails", e);
+            throw new ServiceException(LESSON_UPDATE_ERROR, e);
         }
     }
 
@@ -139,32 +140,41 @@ public class LessonServiceImpl implements LessonService {
 
             if (timing.isPresent()) {
                 lesson.setStartTime(timing.get().getStartTime());
-                lesson.setEndTime(timing.get().getStartTime().plus(timing.get().getLessonDuration()));
+                lesson.setEndTime(timing.get().getStartTime().plus(
+                        timing.get().getLessonDuration()));
             }
         }
     }
 
     @Override
     public LocalDate moveMonthForward(LocalDate date) {
-        return date.plusWeeks(WEEKS_OFFSET);
-    }
-
-    @Override
-    public LocalDate moveMonthBack(LocalDate date) {
-        return date.minusWeeks(WEEKS_OFFSET);
-    }
-
-    @Override
-    public void deleteById(Integer id) throws ServiceException {
         try {
-            lessonRepository.deleteById(id);
-        } catch (DataAccessException | IllegalArgumentException e) {
-            throw new ServiceException("Deleting timetable with id = " + id + "", e);
+            return date.plusWeeks(WEEKS_OFFSET);
+        } catch (DateTimeException e) {
+            throw new ServiceException(API_ERROR, e);
         }
     }
 
     @Override
-    public void update(LessonDTO model) throws ServiceException {
+    public LocalDate moveMonthBack(LocalDate date) {
+        try {
+            return date.minusWeeks(WEEKS_OFFSET);
+        } catch (DateTimeException e) {
+            throw new ServiceException(API_ERROR, e);
+        }
+    }
+
+    @Override
+    public void deleteById(Integer id) {
+        try {
+            lessonRepository.deleteById(id);
+        } catch (DataAccessException | IllegalArgumentException e) {
+            throw new ServiceException(LESSON_DELETE_ERROR, e);
+        }
+    }
+
+    @Override
+    public void update(LessonDTO model) {
         try {
             Lesson entity = modelMapper.map(model, Lesson.class);
             Lesson persistEntity = lessonRepository.findById(model.getId().intValue());
@@ -178,12 +188,12 @@ public class LessonServiceImpl implements LessonService {
             lessonRepository.saveAndFlush(persistEntity);
         } catch (DataAccessException | IllegalArgumentException | 
                  ConfigurationException | MappingException e) {
-            throw new ServiceException("Updating timetable failes", e);
+            throw new ServiceException(LESSON_UPDATE_ERROR, e);
         }
     }
 
     @Override
-    public LessonDTO create(LessonDTO lessonDto) throws ServiceException {
+    public LessonDTO create(LessonDTO lessonDto) {
         try {
             Lesson persistedLesson = lessonRepository.findByDatestampAndLessonOrderAndGroupsId(
                     lessonDto.getDatestamp(),
@@ -200,7 +210,6 @@ public class LessonServiceImpl implements LessonService {
             Lesson lesson = modelMapper.map(lessonDto, Lesson.class);
             
             if (persistedLesson == null && counterpartLesson == null) {
-                
                 Lesson createdEntity = lessonRepository.saveAndFlush(lesson);
                 return modelMapper.map(createdEntity, LessonDTO.class);
             } else if (persistedLesson == null) {
@@ -212,26 +221,25 @@ public class LessonServiceImpl implements LessonService {
             } else {
                 return modelMapper.map(persistedLesson, LessonDTO.class);
             }
-        } catch (DataAccessException | IllegalArgumentException | 
-                 ConfigurationException | MappingException e) {
-            throw new ServiceException("Creating a timetable fails", e);
+        } catch (DataAccessException | IllegalArgumentException | ConfigurationException | 
+                 MappingException e) {
+            throw new ServiceException(LESSON_PERSISTENCE_ERROR, e);
         }
     }
 
     @Override
-    public LessonDTO getById(int id) throws ServiceException {
+    public LessonDTO getById(int id) {
         try {
             Lesson entity = lessonRepository.findById(id);
             return modelMapper.map(entity, LessonDTO.class);
         } catch (DataAccessException | IllegalArgumentException | 
                  ConfigurationException | MappingException e) {
-            throw new ServiceException("Getting timetable by ID fails", e);
+            throw new ServiceException(LESSON_FETCH_ERROR, e);
         }
     }
 
     @Override
-    public List<List<List<LessonDTO>>> getMonthLessons(LocalDate date) 
-            throws ServiceException {
+    public List<List<List<LessonDTO>>> getMonthLessons(LocalDate date) {
 
         List<List<List<LessonDTO>>> monthTimetable = new ArrayList<>();
 
@@ -244,7 +252,7 @@ public class LessonServiceImpl implements LessonService {
     }
 
     @Override
-    public List<LessonDTO> getDayLessons(LocalDate date) throws ServiceException {
+    public List<LessonDTO> getDayLessons(LocalDate date) {
         try {
             List<Lesson> entities = lessonRepository.findByDatestamp(date);
             List<LessonDTO> models = modelMapper.map(entities, LESSON_MODELS_LIST_TYPE);
@@ -259,23 +267,23 @@ public class LessonServiceImpl implements LessonService {
             return models;
         } catch (DataAccessException | IllegalArgumentException | 
                  ConfigurationException | MappingException e) {
-            throw new ServiceException("Getting timetables of day fails", e);
+            throw new ServiceException(LESSON_FETCH_ERROR, e);
         }
     }
 
     @Override
-    public List<LessonDTO> getAll() throws ServiceException {
+    public List<LessonDTO> getAll() {
         try {
             List<Lesson> timetableEntities = lessonRepository.findAll();
             return modelMapper.map(timetableEntities, LESSON_MODELS_LIST_TYPE);
         } catch (DataAccessException | IllegalArgumentException | 
                  ConfigurationException | MappingException e) {
-            throw new ServiceException("Getting all timetables was failed", e);
+            throw new ServiceException(LESSONS_FETCH_ERROR, e);
         }
     }
     
     private int defineMaxNumberOfDayLessonsInWeekForTeacher(LocalDate datestamp, 
-            int teacherId) throws ServiceException {
+            int teacherId) {
         
         List<List<Lesson>> weekLessons = new ArrayList<>();
         
@@ -286,7 +294,7 @@ public class LessonServiceImpl implements LessonService {
                 weekLessons.add(lessons);
             }
         } catch (DataAccessException e) {
-            throw new ServiceException("Find lessons by date and teacher id failed", e);
+            throw new ServiceException(LESSONS_FETCH_ERROR, e);
         }
         
         Optional<Integer> lessonsNumber = weekLessons.stream()
@@ -299,7 +307,7 @@ public class LessonServiceImpl implements LessonService {
         }
     }
     
-    private List<List<LessonDTO>> getWeekLessons(LocalDate date) throws ServiceException {
+    private List<List<LessonDTO>> getWeekLessons(LocalDate date) {
 
         LocalDate startDayOfWeek = findMondayOfWeek(date);
         List<List<LessonDTO>> weekTimetables = new ArrayList<>();

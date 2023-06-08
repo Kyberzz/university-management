@@ -1,5 +1,7 @@
 package ua.com.foxminded.university.service.impl;
 
+import static ua.com.foxminded.university.exception.ServiceErrorCode.*;
+
 import java.lang.reflect.Type;
 import java.util.List;
 
@@ -10,6 +12,7 @@ import org.modelmapper.ConfigurationException;
 import org.modelmapper.MappingException;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -55,58 +58,61 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public CourseDTO getByIdWithLessonsAndTeachers(int id) throws ServiceException {
+    public CourseDTO getByIdWithLessonsAndTeachers(int id) {
         try {
             Course entity = courseRepository.getCourseRelationsById(id);
             return modelMapper.map(entity, CourseDTO.class);
-        } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
-            throw new ServiceException("Fetching the course with related "
-                    + "timetables and teachers fails", e);
+        } catch (DataAccessException | IllegalArgumentException | 
+                 ConfigurationException | MappingException e) {
+            throw new ServiceException(COURSE_FETCH_ERROR, e);
         }
     }
     
     @Override
-    public CourseDTO getById(int id) throws ServiceException {
+    public CourseDTO getById(int id) {
         try {
             Course entity = courseRepository.findById(id);
             return modelMapper.map(entity, CourseDTO.class); 
-        } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
-            throw new ServiceException("Getting a course by its id fails", e);
+        } catch (DataAccessException | IllegalArgumentException | 
+                 ConfigurationException | MappingException e) {
+            throw new ServiceException(COURSE_FETCH_ERROR, e);
         }
     }
     
     @Override
-    public void deleteById(Integer id) throws ServiceException {
+    public void deleteById(Integer id) {
         try {
             courseRepository.deleteById(id);
-        } catch (IllegalArgumentException e) {
-            throw new ServiceException("Deleting the course fails", e);
+        } catch (DataAccessException | IllegalArgumentException e) {
+            throw new ServiceException(COURSE_DELETE_ERROR, e);
         }
     }
     
     @Override
-    public CourseDTO create(CourseDTO model) throws ServiceException {
+    public CourseDTO create(CourseDTO model) {
         try {
             Course entity = modelMapper.map(model, Course.class);
             Course createdEntity = courseRepository.saveAndFlush(entity);
             return modelMapper.map(createdEntity, CourseDTO.class);
-        } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
-            throw new ServiceException("Creating the course fails", e);
+        } catch (DataAccessException | IllegalArgumentException | 
+                 ConfigurationException | MappingException e) {
+            throw new ServiceException(COURSE_CREATE_ERROR, e);
         }
     }
     
     @Override
-    public List<CourseDTO> getAll() throws ServiceException {
+    public List<CourseDTO> getAll() {
         try {
             List<Course> courseEntities = courseRepository.findAll();
             return modelMapper.map(courseEntities, COURSE_MODEL_LIST_TYPE);
-        } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
-            throw new ServiceException("Getting all courses was failed.", e); 
+        } catch (DataAccessException | IllegalArgumentException | 
+                 ConfigurationException | MappingException e) {
+            throw new ServiceException(COURSES_FETCH_ERROR, e); 
         }
     }
     
     @Override
-    public void update(CourseDTO model) throws ServiceException {
+    public void update(CourseDTO model) {
         try {
             Course entity = modelMapper.map(model, Course.class);
             Course persistedEntity = courseRepository.findById(entity.getId()
@@ -114,18 +120,20 @@ public class CourseServiceImpl implements CourseService {
             persistedEntity.setDescription(entity.getDescription());
             persistedEntity.setName(entity.getName());
             courseRepository.saveAndFlush(persistedEntity);
-        } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
-            throw new ServiceException("Updating the course was failed", e);
+        } catch (DataAccessException | IllegalArgumentException | 
+                 ConfigurationException | MappingException e) {
+            throw new ServiceException(COURSE_UPDATE_ERROR, e);
         }
     }
    
     @Override
-    public CourseDTO getByIdWithLessons(int id) throws ServiceException {
+    public CourseDTO getByIdWithLessons(int id) {
         try {
             Course courseEntity = courseRepository.findTimetablesById(id);
             return modelMapper.map(courseEntity, CourseDTO.class);
-        } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
-            throw new ServiceException("Getting timetable list of the course id was failed", e);
+        } catch (DataAccessException | IllegalArgumentException | 
+                 ConfigurationException | MappingException e) {
+            throw new ServiceException(COURSE_FETCH_ERROR, e);
         }
     }
 }
