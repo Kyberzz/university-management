@@ -54,7 +54,7 @@ public class LessonController extends DefaultController {
     public static final String COURSES_ATTRIBUTE = "courses";
     public static final String GROUPS_ATTRIBUTE = "groups";
     public static final String DAY_LESSONS_PATH = "/lessons/day-lessons/";
-    public static final String DAY_LESSONS_TEMPLATE = "lessons/day-lessons";
+    public static final String DAY_LESSONS_TEMPLATE_PATH = "lessons/day-lessons";
     public static final String LESSON_ATTRIBUTE = "lesson";
     public static final String DAY_LESSONS_ATTRIBUTE = "dayLessons";
     public static final String MONTH_LESSONS_ATTRIBUTE = "monthLessons";
@@ -134,7 +134,7 @@ public class LessonController extends DefaultController {
         lessonService.applyTimetable(LocalDate.parse(date), timetableId);
         return new StringBuilder().append(REDIRECT_KEY_WORD)
                                   .append(SLASH)
-                                  .append(DAY_LESSONS_TEMPLATE)
+                                  .append(DAY_LESSONS_TEMPLATE_PATH)
                                   .append(SLASH)
                                   .append(date)
                                   .append(QUESTION_MARK)
@@ -223,7 +223,7 @@ public class LessonController extends DefaultController {
         model.addAttribute(COURSES_ATTRIBUTE, courses);
         model.addAttribute(DAY_LESSONS_ATTRIBUTE, dayLessons);
         model.addAttribute(LESSON_ATTRIBUTE, lesson);
-        return DAY_LESSONS_TEMPLATE;
+        return DAY_LESSONS_TEMPLATE_PATH;
     }
     
     @GetMapping("/{date}/back")

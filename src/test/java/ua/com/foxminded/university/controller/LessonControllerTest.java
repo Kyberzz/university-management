@@ -121,7 +121,7 @@ class LessonControllerTest {
                                                   COURSES_ATTRIBUTE, 
                                                   DAY_LESSONS_ATTRIBUTE,
                                                   LESSON_ATTRIBUTE))
-               .andExpect(view().name(DAY_LESSONS_TEMPLATE));
+               .andExpect(view().name(DAY_LESSONS_TEMPLATE_PATH));
         
         verify(timetableServiceMock).getDayLessons(isA(LocalDate.class));
         verify(courseServiceMock).getAll();
@@ -156,7 +156,7 @@ class LessonControllerTest {
                .andExpect(model().attributeExists(COURSES_ATTRIBUTE))
                .andExpect(model().attributeExists(MONTH_LESSONS_ATTRIBUTE))
                .andExpect(model().attributeExists(LESSON_ATTRIBUTE))
-               .andExpect(MockMvcResultMatchers.view().name(DAY_LESSONS_TEMPLATE));
+               .andExpect(MockMvcResultMatchers.view().name(DAY_LESSONS_TEMPLATE_PATH));
         
         verify(timetableServiceMock).getMonthLessons(LocalDate.now());
         verify(courseServiceMock).getAll();

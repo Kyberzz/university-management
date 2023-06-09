@@ -19,14 +19,6 @@
      <div class="ms-2" th:insert="~{fragments/logo::foxmindedLogo}"></div>
     </div>
 
-    <div class="col justify-content-center"
-     th:if="${#execInfo.processedTemplateName matches 'courses/list|timetables/day-timetable|groups/list|students/list|teachers/list'}">
-     <div class="container-fluid gap-2">
-      <button type="button" class="btn btn-success btn-lg" id="createButton" data-bs-toggle="modal"
-       data-bs-target="#add" th:text="#{fragments.add}">Create</button>
-     </div>
-    </div>
-
     <div class="col-2 text-end">
      <div th:if="${#execInfo.processedTemplateName} == index">
       <form action="#" th:action="@{/login}" sec:authorize="!isAuthenticated()">
@@ -47,18 +39,18 @@
       <div class="row gx-2 me-2 justify-content-end">
 
        <div class="col text-end">
-        <div class="dropdown">
-         <button class="btn btn-primary btn-sm dropdown-toggle d-inline" type="button"
-          data-bs-toggle="dropdown" aria-expanded="false" th:text="#{button.menu}">Menu</button>
-         <ul class="dropdown-menu">
-          <li>
-           <form>
-            <button class="dropdown-item" type="submit"
-             th:formaction="@{/lessons/teacher-week-schedule/__${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}__/__${#authentication.name}__}"
-             th:text="#{button.my-schedule}">My Schedule</button>
-           </form>
-          </li>
-         </ul>
+        <div class="dropdown" sec:authorize="hasAnyRole('TEACHER', 'STUDENT')">
+          <button class="btn btn-primary btn-sm dropdown-toggle d-inline" type="button"
+           data-bs-toggle="dropdown" aria-expanded="false" th:text="#{button.menu}">Menu</button>
+          <ul class="dropdown-menu">
+           <li>
+            <form>
+             <button class="dropdown-item" type="submit"
+              th:formaction="@{/lessons/teacher-week-schedule/__${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}__/__${#authentication.name}__}"
+              th:text="#{button.my-schedule}">My Schedule</button>
+            </form>
+           </li>
+          </ul>
         </div>
        </div>
 

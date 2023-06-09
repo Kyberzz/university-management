@@ -25,7 +25,7 @@ import ua.com.foxminded.university.service.StudentService;
 public class GroupController extends DefaultController {
     
     public static final String STUDENTS_MODEL_ATTRIBUTE = "students";
-    public static final String GROUP_MODEL_ATTRIBUTE = "groupModel";
+    public static final String GROUP_MODEL_ATTRIBUTE = "group";
     public static final String GROUPS_PATH = "/groups/";
 
     private final GroupService groupService;
@@ -78,12 +78,12 @@ public class GroupController extends DefaultController {
 
     @GetMapping("/{groupId}")
     public String getById(@PathVariable int groupId, Model model) throws ServiceException {
-        GroupDTO groupModel = groupService.getGroupRelationsById(groupId);
-        groupService.sortContainedStudentsByLastName(groupModel);
+        GroupDTO group = groupService.getGroupRelationsById(groupId);
+        groupService.sortContainedStudentsByLastName(group);
         List<StudentDTO> students = studentService.getAll();
         studentService.sortByLastName(students);
         model.addAttribute(STUDENTS_MODEL_ATTRIBUTE, students);
-        model.addAttribute(GROUP_MODEL_ATTRIBUTE, groupModel);
+        model.addAttribute(GROUP_MODEL_ATTRIBUTE, group);
         return "groups/group";
     }
 

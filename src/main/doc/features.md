@@ -20,6 +20,9 @@ task 3.7
 + + + User 'A' can assign/ reassign Students to Group
 + + + User 'B' should be able to list all students in a group (read access)
 
+task 3.9
+- - -  User 'A' should be able to create/read/update/delete new schedule
+
 ## Student flow
 
 task 3.5:
@@ -30,6 +33,9 @@ task 3.6
 
 task 3.7
 + + + User 'B' should be able to list all students in a group (read access)
+
+task 3.9
+- - - User 'B' should be able to list all its schedules
 
 ## Teacher flow
 
@@ -47,7 +53,10 @@ task 3.7
 + + + User 'B' should be able to list all students in a group (read access)
 
 task 3.8
-- - - User 'B' should be able to list all its courses.
+- - - User 'B' should be able to list all its courses
+
+taks 3.9
++ - - User 'B' should be able to list all its schedules
 
 ## Staff flow
 
@@ -62,3 +71,6 @@ task 3.6
 task 3.7
 + + + User 'A' can assign/ reassign Students to Group
 + + + User 'B' should be able to list all students in a group (read access)_task_3.6 
+
+taks 3.9
+- - - User 'A' should be able to create/read/update/delete new schedule
