@@ -46,7 +46,7 @@ public class Teacher implements Serializable {
     @ToString.Exclude
     private Set<Course> courses;
     
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "user_id")
     private User user;
     

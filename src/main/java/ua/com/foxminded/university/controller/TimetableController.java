@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import lombok.RequiredArgsConstructor;
 import ua.com.foxminded.university.dto.TimetableDTO;
 import ua.com.foxminded.university.dto.TimingDTO;
-import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.service.TimetableService;
 import ua.com.foxminded.university.service.TimingService;
 
@@ -40,7 +39,7 @@ public class TimetableController extends DefaultController {
     
     @PostMapping("/delete-timing/{timetableId}/{timingId}")
     public String deleteTiming(@PathVariable int timetableId, 
-                               @PathVariable int timingId) throws ServiceException {
+                               @PathVariable int timingId) {
         timingService.deleteById(timingId);
 
         return new StringBuilder().append(REDIRECT_KEY_WORD)
@@ -52,7 +51,7 @@ public class TimetableController extends DefaultController {
     }
     
     @PostMapping("/delete/{timetableId}")
-    public String delete(@PathVariable int timetableId) throws ServiceException {
+    public String delete(@PathVariable int timetableId) {
         timetableService.deleteById(timetableId);
 
         return new StringBuilder().append(REDIRECT_KEY_WORD)
@@ -65,8 +64,7 @@ public class TimetableController extends DefaultController {
     
     @PostMapping("/add-timing/{timetableId}")
     public String addTiming(@PathVariable int timetableId,                            
-                            @Valid @ModelAttribute TimingDTO timing) 
-                                    throws ServiceException {
+                            @Valid @ModelAttribute TimingDTO timing) {
         
         timing.setTimetable(TimetableDTO.builder().id(timetableId).build());
         timingService.create(timing);
@@ -82,8 +80,7 @@ public class TimetableController extends DefaultController {
     
     @PostMapping("/update-name/{timetableId}")
     public String updateName(@PathVariable int timetableId,
-                             @ModelAttribute @Valid TimetableDTO timetable) 
-                                     throws ServiceException {
+                             @ModelAttribute @Valid TimetableDTO timetable) {
         
         TimetableDTO persistedTimetable = timetableService.getById(timetableId);
         persistedTimetable.setName(timetable.getName());
@@ -97,8 +94,7 @@ public class TimetableController extends DefaultController {
     }
     
     @PostMapping("/create")
-    public String create(@ModelAttribute @Valid TimetableDTO timetable) 
-            throws ServiceException {
+    public String create(@ModelAttribute @Valid TimetableDTO timetable) {
         
         TimetableDTO createdTimetable = timetableService.create(timetable);
         return new StringBuilder().append(REDIRECT_KEY_WORD)
@@ -110,8 +106,7 @@ public class TimetableController extends DefaultController {
     }
     
     @GetMapping("/list")
-    public String getAll(@RequestParam int timetableId,
-                         Model model) throws ServiceException {
+    public String getAll(@RequestParam int timetableId, Model model) {
         
         List<TimetableDTO> timetables = timetableService.getAll();
         timetableService.sortByName(timetables);

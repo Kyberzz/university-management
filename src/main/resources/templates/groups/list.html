@@ -33,10 +33,10 @@
 
    <div class="row flex-fill" style="min-height: 0;">
 
-    <div class="col-2 ps-4">
+    <div class="col-2 ps-4" style="border-right: 1px solid #ddd;">
 
-     <div class="row">
-      <button type="button" class="btn btn-success w-50" id="createButton" data-bs-toggle="modal"
+     <div class="row justify-content-end">
+      <button type="button" class="btn btn-success w-50 me-2" id="createButton" data-bs-toggle="modal"
        data-bs-target="#add" th:text="#{fragments.add}">Create</button>
 
       <div class="modal fade" id="add" tabindex="-1" aria-labelledby="addCourse" aria-hidden="true">
@@ -71,7 +71,7 @@
 
     </div>
 
-    <div class="col-10 mh-100" style="overflow-y: scroll;">
+    <div class="col-10 mh-100 ps-4" style="overflow-y: scroll;">
 
      <div class="row">
       <table style="width: 70%" class="table">
@@ -85,7 +85,7 @@
        </thead>
        <tbody>
         <tr
-         th:each="group, iterationStatus : ${#lists.sort(groups, new ua.com.foxminded.university.comparator.GroupModelComparator())}">
+         th:each="group, iterationStatus : ${#lists.sort(groups, new ua.com.foxminded.university.comparator.GroupDTOComparator())}">
          <th scope="row" th:text="${iterationStatus.count}">1</th>
          <td><a th:text="${group.name}" th:href="@{/groups/__${group.id}__}">kt-93</a></td>
          <td th:text="${group.id}">1</td>

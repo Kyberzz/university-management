@@ -30,16 +30,16 @@
 
    <div class="row flex-fill" style="min-height: 0;">
 
-    <div class="col-2 ps-4">
+    <div class="col-2 ps-4" style="border-right: 1px solid #ddd;">
 
-     <div class="row">
-      <button type="button" class="btn btn-success w-50" id="createButton" data-bs-toggle="modal"
+     <div class="row justify-content-end">
+      <button type="button" class="btn btn-success w-50 me-2" id="createButton" data-bs-toggle="modal"
        data-bs-target="#add" th:text="#{fragments.add}">Create</button>
 
       <div class="modal fade" id="add" tabindex="-1" aria-labelledby="addStudent"
        aria-hidden="true">
        <div class="modal-dialog">
-        <form class="modal-content" th:action="@{/students/create}" th:object="${studentModel}"
+        <form class="modal-content" th:action="@{/students/create}" th:object="${student}"
          method="post">
          <div class="modal-header">
           <h1 class="modal-title fs-6" id="addStudent" th:text="#{students.addStudent}">Add a
@@ -116,7 +116,7 @@
 
          <form class="modal fade" th:id="|edit${student.id}|" tabindex="-1"
           aria-labelledby="editStudent" aria-hidden="true"
-          th:action="@{/students/__${student.id}__/update}" th:object="${studentModel}"
+          th:action="@{/students/__${student.id}__/update}" th:object="${student}"
           method="post">
           <div class="modal-dialog">
            <div class="modal-content">

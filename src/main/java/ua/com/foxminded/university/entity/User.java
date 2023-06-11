@@ -36,7 +36,7 @@ public class User implements Serializable {
     private Boolean enabled;
 
     @Embedded
-    private Person person;
+    private UserPerson person;
     
     @OneToOne(mappedBy = "user")
     @EqualsAndHashCode.Exclude

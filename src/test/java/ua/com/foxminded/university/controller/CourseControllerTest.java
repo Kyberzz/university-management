@@ -20,6 +20,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import ua.com.foxminded.university.dto.CourseDTO;
 import ua.com.foxminded.university.modelmother.CourseDtoMother;
 import ua.com.foxminded.university.service.CourseService;
+import ua.com.foxminded.university.service.LessonService;
 import ua.com.foxminded.university.service.TeacherService;
 
 @ExtendWith(SpringExtension.class)
@@ -34,6 +35,9 @@ class CourseControllerTest {
     @MockBean
     private CourseService courseServiceMock;
     
+    @MockBean
+    private LessonService lessonService;
+    
     private MockMvc mockMvc;
     
     private CourseDTO course;
@@ -41,7 +45,7 @@ class CourseControllerTest {
     @BeforeEach
     void init() {
         mockMvc = MockMvcBuilders.standaloneSetup(new CourseController(
-                teacherServiceMock, courseServiceMock)).build();
+                teacherServiceMock, courseServiceMock, lessonService)).build();
         course = CourseDtoMother.complete().build();
     }
     

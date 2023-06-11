@@ -11,6 +11,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import ua.com.foxminded.university.service.TeacherService;
+import ua.com.foxminded.university.service.UserService;
 
 @ExtendWith(SpringExtension.class)
 class TeacherControllerTest {
@@ -18,11 +19,15 @@ class TeacherControllerTest {
     @MockBean
     private TeacherService teacherServiceMock;
     
+    @MockBean
+    private UserService userService;
+    
     private MockMvc mockMvc;
     
     @BeforeEach
     void setup() {
-        mockMvc = MockMvcBuilders.standaloneSetup(new TeacherController(teacherServiceMock))
+        mockMvc = MockMvcBuilders.standaloneSetup(new TeacherController(teacherServiceMock, 
+                                                                        userService))
                                  .build();
     }
 

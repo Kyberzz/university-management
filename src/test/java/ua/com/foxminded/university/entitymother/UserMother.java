@@ -3,7 +3,7 @@ package ua.com.foxminded.university.entitymother;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import ua.com.foxminded.university.entity.Person;
+import ua.com.foxminded.university.entity.UserPerson;
 import ua.com.foxminded.university.entity.User;
 
 public class UserMother {
@@ -12,7 +12,7 @@ public class UserMother {
     public static final String EMAIL = "email@com";
     
     public static User.UserBuilder complete() {
-        Person person = PersonMother.complete().build();
+        UserPerson person = PersonMother.complete().build();
         PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
         
         return User.builder().email(EMAIL)

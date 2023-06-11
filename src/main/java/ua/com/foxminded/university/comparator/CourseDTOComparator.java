@@ -4,7 +4,7 @@ import java.util.Comparator;
 
 import ua.com.foxminded.university.dto.CourseDTO;
 
-public class CourseModelComparator implements Comparator<CourseDTO> {
+public class CourseDTOComparator implements Comparator<CourseDTO> {
     
     @Override
     public int compare(CourseDTO firstCourse, CourseDTO secondCourse) {

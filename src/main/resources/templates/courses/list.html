@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" xmlns:th="https://www.thymeleaf.org" style="height: 100%;">
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
 
  <head>
   <meta charset="utf-8">
@@ -9,9 +9,10 @@
    rel="stylesheet"
    integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
    crossorigin="anonymous">
+  <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/styles.css}">
  </head>
 
- <body style="height: 100%;">
+ <body>
 
   <div class="container-fluid h-100 d-flex flex-column">
 
@@ -29,44 +30,47 @@
     </div>
    </div>
 
-   <div class="row flex-fill" style="min-height: 0%;">
+   <div class="row flex-fill" style="min-height: 0;">
 
-    <div class="col-2">
-     
-     <button type="button" class="btn btn-success w-50" id="createButton" data-bs-toggle="modal"
-       data-bs-target="#add" th:text="#{fragments.add}">Create</button>
+    <div class="col-2 border-right">
 
-     <div class="modal fade" id="add" tabindex="-1" aria-labelledby="addCourse" aria-hidden="true">
-      <div class="modal-dialog">
-       <form class="modal-content" th:action="@{/courses/create}" th:object="${courseModel}"
-        method="post">
-        <div class="modal-header">
-         <h1 class="modal-title fs-5" id="addCourse" th:text="#{courses.addCourse}">Add
-          a course</h1>
-         <button type="button" class="btn-close" data-bs-dismiss="modal"
-          aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-         <div class="container-fluid">
-          <div class="row form-floating mb-3">
-           <input type="text" class="form-control" id="createCourseNameInput" placeholder="#"
-            th:field="*{name}"> <label for="createCourseNameInput"
-            th:text="|#{thead.courseName}:|">Course name:</label>
-          </div>
-          <div class="row from-floating mb-3">
-           <textarea id="createDescriptionInput" class="form-control" th:field="*{description}"
-            th:placeholder="|#{thead.description}...|"></textarea>
+     <div class="row justify-content-end">
+      <button type="button" class="btn btn-success w-50 me-2" id="createButton"
+       data-bs-toggle="modal" data-bs-target="#add" th:text="#{fragments.add}">Create</button>
+
+      <div class="modal fade" id="add" tabindex="-1" aria-labelledby="addCourse" aria-hidden="true">
+       <div class="modal-dialog">
+        <form class="modal-content" th:action="@{/courses/create}" th:object="${course}"
+         method="post">
+         <div class="modal-header">
+          <h1 class="modal-title fs-5" id="addCourse" th:text="#{courses.addCourse}">Add
+           a course</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"
+           aria-label="Close"></button>
+         </div>
+         <div class="modal-body">
+          <div class="container-fluid">
+           <div class="row form-floating mb-3">
+            <input type="text" class="form-control" id="createCourseNameInput" placeholder="#"
+             th:field="*{name}"> <label for="createCourseNameInput"
+             th:text="|#{thead.courseName}:|">Course name:</label>
+           </div>
+           <div class="row from-floating mb-3">
+            <textarea id="createDescriptionInput" class="form-control" th:field="*{description}"
+             th:placeholder="|#{thead.description}...|"></textarea>
+           </div>
           </div>
          </div>
-        </div>
-        <div class="modal-footer">
-         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-         <button type="submit" class="btn btn-primary" id="createSubmitButton"
-          th:text="#{button.saveChange}">Save changes</button>
-        </div>
-       </form>
+         <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary" id="createSubmitButton"
+           th:text="#{button.saveChange}">Save changes</button>
+         </div>
+        </form>
+       </div>
       </div>
      </div>
+
     </div>
 
     <div class="col-10 mh-100">
@@ -84,7 +88,7 @@
        </thead>
        <tbody>
         <tr
-         th:each="course, iterationStatus : ${#lists.sort(courses, new ua.com.foxminded.university.comparator.CourseModelComparator())}">
+         th:each="course, iterationStatus : ${#lists.sort(courses, new ua.com.foxminded.university.comparator.CourseDTOComparator())}">
          <th scope="row" th:text="${iterationStatus.count}">1</th>
          <td><a th:href="@{/courses/__${course.id}__}" th:text="${course.name}">Programming</a>
          </td>

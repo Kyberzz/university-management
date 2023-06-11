@@ -6,6 +6,8 @@ import ua.com.foxminded.university.dto.TeacherDTO;
 
 public interface TeacherService extends GenericService<TeacherDTO> {
     
+    public void sortByLastName(List<TeacherDTO> teachers);
+    
     public TeacherDTO getTeacherByEmail(String email);
     
     public List<TeacherDTO> getByCoursesId(int id);

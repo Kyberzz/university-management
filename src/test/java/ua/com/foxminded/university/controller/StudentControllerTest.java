@@ -57,7 +57,7 @@ class StudentControllerTest {
     void create_ShouldCallServiceAndRedirectToList() throws Exception {
         mockMvc.perform(post("/students/create").flashAttr("studentModel", studentDto))
                .andDo(print())
-               .andExpect(redirectedUrl(new StringBuilder().append(STUDENTS_PATH)
+               .andExpect(redirectedUrl(new StringBuilder().append(STUDENTS_LIST_TEMPLATE_PATH)
                                                            .append(LIST_TEMPLATE).toString()));
         verify(studentServiceMock).create(isA(StudentDTO.class));
     }
@@ -91,7 +91,7 @@ class StudentControllerTest {
         mockMvc.perform(post("/students/{studentId}/update", STUDENT_ID)
                     .flashAttr("studentModel", studentDto))
                .andDo(print())
-               .andExpect(redirectedUrl(new StringBuilder().append(STUDENTS_PATH)
+               .andExpect(redirectedUrl(new StringBuilder().append(STUDENTS_LIST_TEMPLATE_PATH)
                                                            .append(LIST_TEMPLATE).toString()));
         verify(studentServiceMock).update(isA(StudentDTO.class));
     }
@@ -100,7 +100,7 @@ class StudentControllerTest {
     void delete_ShouldCallStudentServiceAndRedirect() throws Exception {
         mockMvc.perform(post("/students/delete").param("studentId", String.valueOf(STUDENT_ID)))
                .andDo(print())
-               .andExpect(redirectedUrl(new StringBuilder().append(STUDENTS_PATH)
+               .andExpect(redirectedUrl(new StringBuilder().append(STUDENTS_LIST_TEMPLATE_PATH)
                                                            .append(LIST_TEMPLATE).toString()));
         verify(studentServiceMock).deleteById(anyInt());
     }

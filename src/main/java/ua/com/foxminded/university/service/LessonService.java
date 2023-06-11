@@ -2,10 +2,13 @@ package ua.com.foxminded.university.service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 import ua.com.foxminded.university.dto.LessonDTO;
 
 public interface LessonService extends GenericService<LessonDTO> {
+    
+    public Set<LessonDTO> sortByDatestamp(Set<LessonDTO> lessons);
     
     public LocalDate moveWeekBack(LocalDate date);
     

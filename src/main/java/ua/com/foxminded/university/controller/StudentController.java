@@ -1,5 +1,7 @@
 package ua.com.foxminded.university.controller;
 
+import static ua.com.foxminded.university.controller.GroupController.GROUPS_MODEL_ATTRIBUTE;
+
 import java.util.List;
 
 import javax.validation.Valid;
@@ -15,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import lombok.RequiredArgsConstructor;
 import ua.com.foxminded.university.dto.GroupDTO;
 import ua.com.foxminded.university.dto.StudentDTO;
-import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.service.GroupService;
 import ua.com.foxminded.university.service.StudentService;
 
@@ -24,49 +25,49 @@ import ua.com.foxminded.university.service.StudentService;
 @RequiredArgsConstructor
 public class StudentController extends DefaultController {
     
-    public static final String STUDENTS_PATH = "/students/";
+    public static final String STUDENTS_MODEL_ATTRIBUTE = "students";
+    public static final String STUDENT_MODEL_ATTRIBUTE = "student";
+    public static final String STUDENTS_LIST_TEMPLATE_PATH = "students/list";
     
     private final StudentService studentService;
     private final GroupService groupService;
     
     @PostMapping("/create")
-    public String create(@Valid @ModelAttribute StudentDTO studentModel) 
-            throws ServiceException {
+    public String create(@Valid @ModelAttribute StudentDTO student) {
         
-        studentService.create(studentModel);
+        studentService.create(student);
         return new StringBuilder().append(REDIRECT_KEY_WORD)
-                                  .append(STUDENTS_PATH)
-                                  .append(LIST_TEMPLATE)
+                                  .append(SLASH)
+                                  .append(STUDENTS_LIST_TEMPLATE_PATH)
                                   .toString();
     }
 
     @RequestMapping("/list")
-    public String list(Model model) throws ServiceException {
+    public String list(Model model) {
         List<StudentDTO> students = studentService.getAll();
         List<GroupDTO> groups = groupService.getAll();
         StudentDTO student = new StudentDTO();
-        model.addAttribute("studentModel", student);
-        model.addAttribute("students", students);
-        model.addAttribute("groups", groups);
-        return "students/list";
+        model.addAttribute(STUDENT_MODEL_ATTRIBUTE, student);
+        model.addAttribute(STUDENTS_MODEL_ATTRIBUTE, students);
+        model.addAttribute(GROUPS_MODEL_ATTRIBUTE, groups);
+        return STUDENTS_LIST_TEMPLATE_PATH;
     }
     
     @PostMapping("/{studentId}/update")
     public String update(@PathVariable int studentId, 
-                         @Valid @ModelAttribute StudentDTO studentModel) 
-                                 throws ServiceException {
+                         @Valid @ModelAttribute StudentDTO studentModel) {
         studentModel.setId(studentId);
         studentService.update(studentModel);
         return new StringBuilder().append(REDIRECT_KEY_WORD)
-                                  .append(STUDENTS_PATH)
-                                  .append(LIST_TEMPLATE).toString();
+                                  .append(SLASH)
+                                  .append(STUDENTS_LIST_TEMPLATE_PATH).toString();
     }
     
     @PostMapping("/delete")
-    public String delete(@RequestParam int studentId) throws ServiceException {
+    public String delete(@RequestParam int studentId) {
         studentService.deleteById(studentId);
         return new StringBuilder().append(REDIRECT_KEY_WORD)
-                                  .append(STUDENTS_PATH)
-                                  .append(LIST_TEMPLATE).toString();
+                                  .append(SLASH)
+                                  .append(STUDENTS_LIST_TEMPLATE_PATH).toString();
     }
 }

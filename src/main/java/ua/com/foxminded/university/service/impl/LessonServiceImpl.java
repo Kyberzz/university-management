@@ -9,8 +9,10 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.modelmapper.ConfigurationException;
 import org.modelmapper.MappingException;
@@ -21,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import ua.com.foxminded.university.comparator.LessonDTOComparator;
 import ua.com.foxminded.university.dto.LessonDTO;
 import ua.com.foxminded.university.entity.Timetable;
 import ua.com.foxminded.university.entity.Group;
@@ -56,6 +59,14 @@ public class LessonServiceImpl implements LessonService {
     private final TimingRepository timingRepository;
     private final TimetableRepository timetableRepository;
     private final GroupRepository groupRepository;
+    
+    @Override
+    public Set<LessonDTO> sortByDatestamp(Set<LessonDTO> lessons) {
+        LessonDTOComparator comparator = new LessonDTOComparator();
+        List<LessonDTO> list = new ArrayList<>(lessons);
+        Collections.sort(list, comparator);
+        return new LinkedHashSet<>(list);
+    }
     
     @Override
     public LocalDate moveWeekBack(LocalDate date) {

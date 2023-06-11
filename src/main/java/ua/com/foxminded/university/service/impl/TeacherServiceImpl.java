@@ -3,6 +3,8 @@ package ua.com.foxminded.university.service.impl;
 import static ua.com.foxminded.university.exception.ServiceErrorCode.*;
 
 import java.lang.reflect.Type;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.modelmapper.ConfigurationException;
@@ -31,6 +33,13 @@ public class TeacherServiceImpl implements TeacherService {
     
     private final TeacherRepository teacherRepository;
     private final ModelMapper modelMapper;
+    
+    @Override
+    public void sortByLastName(List<TeacherDTO> teachers) {
+        Collections.sort(teachers, Comparator.comparing(teacher -> teacher.getUser()
+                                                                          .getPerson()
+                                                                          .getLastName()));
+    }
     
     @Override
     public TeacherDTO getTeacherByEmail(String email) {
@@ -86,7 +95,7 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public TeacherDTO create(TeacherDTO model) throws ServiceException {
+    public TeacherDTO create(TeacherDTO model) {
         try {
             Teacher teacher = modelMapper.map(model, Teacher.class);
             Teacher persistedTeacher = teacherRepository.saveAndFlush(teacher);

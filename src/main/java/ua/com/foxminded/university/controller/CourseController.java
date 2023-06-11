@@ -1,5 +1,7 @@
 package ua.com.foxminded.university.controller;
 
+import static ua.com.foxminded.university.controller.TeacherController.TEACHERS_MODEL_ATTRIBUTE;
+
 import java.util.List;
 
 import javax.validation.Valid;
@@ -16,8 +18,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import lombok.RequiredArgsConstructor;
 import ua.com.foxminded.university.dto.CourseDTO;
 import ua.com.foxminded.university.dto.TeacherDTO;
-import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.service.CourseService;
+import ua.com.foxminded.university.service.LessonService;
 import ua.com.foxminded.university.service.TeacherService;
 
 @Controller
@@ -29,12 +31,13 @@ public class CourseController extends DefaultController {
     public static final String COURSE_ID_PARAMETER_NAME = "courseId=";
     public static final String UPDATED_COURSE_ATTRIBUTE = "updatedCourse";
     public static final String COURSE_TEMPLATE = "course";
-    public static final String COURSE_MODEL_ATTRIBUTE = "courseModel";
+    public static final String COURSE_MODEL_ATTRIBUTE = "course";
     public static final String COURSES_ATTRIBUTE = "courses";
     public static final String COURSES_PATH = "/courses/";
     
     private final TeacherService teacherService;
     private final CourseService courseService;
+    private final LessonService lessonService;
     
     @PostMapping(value = "/{courseId}/deassign-teacher", params = "teacherId")
     public String deassignTeacherToCourse(@PathVariable int courseId, 
@@ -55,19 +58,22 @@ public class CourseController extends DefaultController {
     }
     
     @GetMapping("/{id}")
-    public String getById(@PathVariable int id, Model model) throws ServiceException {
-        CourseDTO courseModel = courseService.getByIdWithLessonsAndTeachers(id);
-        CourseDTO updatedCourse = new CourseDTO();
-        List<TeacherDTO> allTeachers = teacherService.getAll();
+    public String getById(@PathVariable int id, Model model) {
+        CourseDTO course = courseService.getByIdWithLessonsAndTeachers(id);
+        course.setLessons(lessonService.sortByDatestamp(course.getLessons()));
         
-        model.addAttribute("allTeachers", allTeachers);
+        CourseDTO updatedCourse = new CourseDTO();
+        List<TeacherDTO> teachers = teacherService.getAll();
+        teacherService.sortByLastName(teachers);
+        
+        model.addAttribute(TEACHERS_MODEL_ATTRIBUTE, teachers);
         model.addAttribute(UPDATED_COURSE_ATTRIBUTE, updatedCourse);
-        model.addAttribute(COURSE_MODEL_ATTRIBUTE, courseModel);
+        model.addAttribute(COURSE_MODEL_ATTRIBUTE, course);
         return "courses/course";
     }
     
     @PostMapping(value = "/delete", params = "courseId")
-    public String delete(@RequestParam Integer courseId) throws ServiceException {
+    public String delete(@RequestParam Integer courseId) {
         courseService.deleteById(courseId);
         return new StringBuilder().append(REDIRECT_KEY_WORD)
                                   .append(COURSES_PATH)
@@ -76,8 +82,7 @@ public class CourseController extends DefaultController {
     
     @PostMapping(value = "/update", params = "courseId")
     public String update(@RequestParam Integer courseId,
-                         @Valid @ModelAttribute CourseDTO updatedCourse) 
-                                 throws ServiceException {
+                         @Valid @ModelAttribute CourseDTO updatedCourse) {
         updatedCourse.setId(courseId);
         courseService.update(updatedCourse);
         return new StringBuilder().append(REDIRECT_KEY_WORD)
@@ -86,8 +91,7 @@ public class CourseController extends DefaultController {
     }
     
     @PostMapping(value = "/create")
-    public String create(@Valid @ModelAttribute CourseDTO courseModel) 
-            throws ServiceException {
+    public String create(@Valid @ModelAttribute CourseDTO courseModel) {
         courseService.create(courseModel);   
         return new StringBuilder().append(REDIRECT_KEY_WORD)
                                   .append(COURSES_PATH)
@@ -95,7 +99,7 @@ public class CourseController extends DefaultController {
     }
     
     @GetMapping("/list")
-    public String list(Model model) throws ServiceException {
+    public String list(Model model) {
         CourseDTO course = new CourseDTO();
         List<CourseDTO> courses = courseService.getAll();
         model.addAttribute(COURSES_ATTRIBUTE, courses);

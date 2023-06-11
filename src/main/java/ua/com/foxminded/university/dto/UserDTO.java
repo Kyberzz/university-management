@@ -48,6 +48,10 @@ public class UserDTO implements Serializable {
     @ToString.Exclude
     private StaffDTO staff;
     
+    public boolean hasEmail() {
+        return email != null && !email.equals("");
+    }
+    
     public boolean hasStaff() {
         return staff != null;
     }

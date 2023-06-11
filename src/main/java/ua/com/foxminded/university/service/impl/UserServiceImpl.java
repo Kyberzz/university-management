@@ -13,6 +13,7 @@ import org.modelmapper.MappingException;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -38,6 +39,64 @@ public class UserServiceImpl implements UserService {
     private final UserDetailsManager userDetailsManager;
     private final ModelMapper modelMapper;
     
+    @Override
+    public UserDTO updateUserPerson(UserDTO userDto) {
+        try {
+            User user = userRepository.findById(userDto.getId().intValue());
+            user.getPerson().setFirstName(userDto.getPerson().getFirstName());
+            user.getPerson().setLastName(userDto.getPerson().getLastName());
+            User updatedUser = userRepository.saveAndFlush(user);
+            return modelMapper.map(updatedUser, UserDTO.class);
+        } catch (DataAccessException e) {
+            throw new ServiceException(USER_UPDATE_ERROR, e);
+        }
+    }
+    
+    @Override
+    public UserDTO updateEmail(int userId, String email) {
+        try {
+            User user = userRepository.findById(userId);
+            user.setEmail(email);
+            User updatedUser = userRepository.saveAndFlush(user);
+            return modelMapper.map(updatedUser, UserDTO.class);
+        } catch (DataIntegrityViolationException e) {
+            throw new ServiceException(USER_EMAIL_DUPLICATION_ERROR, e);
+        } catch (DataAccessException | IllegalArgumentException | 
+                 ConfigurationException | MappingException e) {
+            throw new ServiceException(USER_UPDATE_ERROR, e);
+        }
+    }
+    
+    @Override
+    public UserDTO addEmail(int userId, String email) {
+        try {
+            User entity = userRepository.findById(userId);
+            entity.setEmail(email);
+            User persistedEntity = userRepository.saveAndFlush(entity);
+            return modelMapper.map(persistedEntity, UserDTO.class);
+        } catch (DataIntegrityViolationException e) {
+            throw new ServiceException(USER_EMAIL_DUPLICATION_ERROR, e);
+        } catch (DataAccessException | IllegalArgumentException | 
+                 ConfigurationException | MappingException e) {
+           throw new ServiceException(USER_UPDATE_ERROR, e);
+       }
+    }
+    
+    @Override
+    public UserDTO createUserPerson(UserDTO dto) {
+        try {
+            User user = modelMapper.map(dto, User.class);
+            User persistedUser = userRepository.saveAndFlush(User.builder()
+                                                                 .person(user.getPerson())
+                                                                 .build());
+            return modelMapper.map(persistedUser, UserDTO.class);
+        } catch (DataAccessException | IllegalArgumentException | 
+                 ConfigurationException | MappingException e) {
+            throw new ServiceException(PERSON_CREATE_ERROR, e);
+        }
+    }
+    
+    @Override
     public UserDTO getById(int id) {
         try {
             User entity = userRepository.findById(id);
@@ -67,7 +126,7 @@ public class UserServiceImpl implements UserService {
     }
     
     @Override
-    public void create(UserDTO dto) {
+    public void createNonPersonalizedUser(UserDTO dto) {
         try {
             PasswordEncoder encoder = PasswordEncoderFactories
                     .createDelegatingPasswordEncoder();
@@ -120,7 +179,7 @@ public class UserServiceImpl implements UserService {
     }
     
     @Override
-    public void update(UserDTO dto) throws ServiceException {
+    public void updateUser(UserDTO dto) throws ServiceException {
         try {
             PasswordEncoder encoder = PasswordEncoderFactories
                     .createDelegatingPasswordEncoder();

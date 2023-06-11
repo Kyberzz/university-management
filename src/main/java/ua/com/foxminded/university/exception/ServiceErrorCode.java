@@ -8,6 +8,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Getter
 public enum ServiceErrorCode {
+    PERSON_DELETE_ERROR(SC_INTERNAL_SERVER_ERROR, "Failed to delete the person data"),
+    PERSON_CREATE_ERROR(SC_INTERNAL_SERVER_ERROR, "Failed to create the database person data"),
+    PERSON_UPDATE_ERROR(SC_INTERNAL_SERVER_ERROR, "Failed to update the database person data"),
+    PERSON_FETCH_ERROR(SC_INTERNAL_SERVER_ERROR, "Failed to fetch the database person data"),
+    
     USER_DELETE_ERROR(SC_INTERNAL_SERVER_ERROR, "Failed to delete the user data"),
     USERS_FETCH_ERROR(SC_INTERNAL_SERVER_ERROR, "Failed to fetch the users data"),
     USER_FETCH_ERROR(SC_INTERNAL_SERVER_ERROR, "Failed to fetch the user data"),
@@ -16,19 +21,23 @@ public enum ServiceErrorCode {
     USER_EMAIL_DUPLICATION_ERROR(SC_BAD_REQUEST, "This email address already exists"),
     USER_AUTHORITY_CREATE_ERROR(SC_BAD_REQUEST, 
             "Failed to database persist the user authority data"),
+    
     TIMING_CREATE_ERROR(SC_INTERNAL_SERVER_ERROR, "Failed to database persist the timing"),
     TIMING_UPDATE_ERROR(SC_INTERNAL_SERVER_ERROR, "Failed to update the database timing data"),
     TIMING_FETCH_ERROR(SC_INTERNAL_SERVER_ERROR, "Failed to fetch the database timing data"),
+    
     TEACHER_UPDATE_ERORR(SC_INTERNAL_SERVER_ERROR, "Failed to update the database teacher data"),
-    TEACHER_CREATE_ERROR(SC_INTERNAL_SERVER_ERROR, "Failed to database persist the teacher data"),
+    TEACHER_CREATE_ERROR(SC_INTERNAL_SERVER_ERROR, "Failed to persist teacher data to the database"),
     TEACHER_DELETE_ERROR(SC_INTERNAL_SERVER_ERROR, "Failed to delete the database teacher data"),
     TEACHERS_FETCH_ERROR(SC_INTERNAL_SERVER_ERROR, "Failed to fetch database teachers data"),
     TEACHER_FETCH_ERROR(SC_INTERNAL_SERVER_ERROR, "Failed to fetch the database teacher data"),
+    
     STUDETNS_FETCH_ERROR(SC_INTERNAL_SERVER_ERROR, "Failed to fetch the database students data"),
     STUDETN_FETCH_ERROR(SC_INTERNAL_SERVER_ERROR, "Failed to fetch the database student data"),
     STUDENT_CREATE_ERROR(SC_INTERNAL_SERVER_ERROR, "Failed to database persist the student data"),
     STUDENT_UPDATE_ERROR(SC_INTERNAL_SERVER_ERROR, "Failed to update the database student data"),
     STUDENT_DELETE_ERROR(SC_INTERNAL_SERVER_ERROR, "Failed to delete the database student data"),
+    
     LESSON_PERSISTENCE_ERROR(SC_INTERNAL_SERVER_ERROR, 
             "Failed to database persiste the timetable data"),
     LESSON_DELETE_ERROR(SC_INTERNAL_SERVER_ERROR, "Failed to delete the database lesson data"),
@@ -36,8 +45,9 @@ public enum ServiceErrorCode {
     LESSONS_FETCH_ERROR(SC_INTERNAL_SERVER_ERROR, "Failed to fetch database lessons data"), 
     LESSON_FETCH_ERROR(SC_INTERNAL_SERVER_ERROR, 
             "Failed to fetch the lesson data from the database"),
+    
     GROUP_UPDATE_ERROR(SC_INTERNAL_SERVER_ERROR, 
-            "Failed to update data of the grouip in the database"),
+            "Failed to update data of the group in the database"),
     GROUP_CREATE_ERROR(SC_INTERNAL_SERVER_ERROR, 
             "Failed to create data of the group in the database"),
     GROUP_DELETE_ERROR(SC_INTERNAL_SERVER_ERROR, 

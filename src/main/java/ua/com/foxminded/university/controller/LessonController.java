@@ -27,7 +27,6 @@ import ua.com.foxminded.university.dto.GroupDTO;
 import ua.com.foxminded.university.dto.LessonDTO;
 import ua.com.foxminded.university.dto.TeacherDTO;
 import ua.com.foxminded.university.dto.TimetableDTO;
-import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.service.CourseService;
 import ua.com.foxminded.university.service.GroupService;
 import ua.com.foxminded.university.service.LessonService;
@@ -82,7 +81,7 @@ public class LessonController extends DefaultController {
     
     @GetMapping("/teacher-week-schedule/{date}/{email}/back")
     public String getPreviousWeekSchedule(@PathVariable String date, 
-                                          @PathVariable String email) throws ServiceException {
+                                          @PathVariable String email) {
         
         LocalDate datestamp = lessonService.moveWeekBack(LocalDate.parse(date));
         
@@ -98,7 +97,7 @@ public class LessonController extends DefaultController {
     
     @GetMapping("/teacher-week-schedule/{date}/{email}/next")
     public String getNextWeejSchedule(@PathVariable String date, 
-                                      @PathVariable String email) throws ServiceException {
+                                      @PathVariable String email) {
         
         LocalDate datestamp = lessonService.moveWeekForward(LocalDate.parse(date));
         
@@ -114,8 +113,7 @@ public class LessonController extends DefaultController {
     
     @GetMapping("/teacher-week-schedule/{date}/{email}")
     public String getTeacherWeekSchedule(@PathVariable String date, 
-                                         @PathVariable String email, Model model) 
-                                                 throws ServiceException {
+                                         @PathVariable String email, Model model) {
        
        TeacherDTO teacher = teacherService.getTeacherByEmail(email);
        List<List<LessonDTO>> weekLessons = lessonService.getWeekLessonsOwnedByTeacher(
@@ -129,8 +127,7 @@ public class LessonController extends DefaultController {
     
     @PostMapping("/{date}/apply-timetable")
     public String applyTimetable(@PathVariable String date, 
-                                 @RequestParam int timetableId) 
-                                         throws ServiceException {
+                                 @RequestParam int timetableId) {
         lessonService.applyTimetable(LocalDate.parse(date), timetableId);
         return new StringBuilder().append(REDIRECT_KEY_WORD)
                                   .append(SLASH)
@@ -147,7 +144,7 @@ public class LessonController extends DefaultController {
                          @RequestParam @Min(1) int timetableId,
                          @RequestParam @Min(1) int courseId,
                          @RequestParam @Min(1) int groupId,
-                         @ModelAttribute LessonDTO lesson) throws ServiceException {
+                         @ModelAttribute LessonDTO lesson) {
         lesson.setDatestamp(LocalDate.parse(date));
         lesson.setTimetable(TimetableDTO.builder().id(timetableId).build());
         lesson.setCourse(CourseDTO.builder().id(courseId).build());
@@ -168,7 +165,7 @@ public class LessonController extends DefaultController {
     
     @PostMapping("/delete/{lessonId}")
     public String delete(@ModelAttribute LessonDTO lesson,
-                         @PathVariable int lessonId) throws ServiceException {
+                         @PathVariable int lessonId) {
         lessonService.deleteById(lessonId);
         return new StringBuilder().append(REDIRECT_KEY_WORD)
                                   .append(DAY_LESSONS_PATH)
@@ -185,7 +182,7 @@ public class LessonController extends DefaultController {
     public String getDayLessons(@PathVariable String date,
                                 @RequestParam int timetableId,
                                 @RequestParam int courseId,
-                                Model model) throws ServiceException {
+                                Model model) {
         LocalDate datestamp = LocalDate.parse(date);
         List<LessonDTO> dayLessons = lessonService.getDayLessons(datestamp);
         lessonService.addLessonTiming(dayLessons);
@@ -227,7 +224,7 @@ public class LessonController extends DefaultController {
     }
     
     @GetMapping("/{date}/back")
-    public String back(@PathVariable String date) throws ServiceException {
+    public String back(@PathVariable String date) {
         LocalDate localDate = LocalDate.parse(date);
         LocalDate datestamp = lessonService.moveMonthBack(localDate);
         return new StringBuilder().append(REDIRECT_KEY_WORD)
@@ -239,7 +236,7 @@ public class LessonController extends DefaultController {
     }
     
     @GetMapping("/{date}/next")
-    public String next(@PathVariable String date) throws ServiceException {
+    public String next(@PathVariable String date) {
         LocalDate localDate = LocalDate.parse(date);
         LocalDate datestamp = lessonService.moveMonthForward(localDate);
         return new StringBuilder().append(REDIRECT_KEY_WORD)
@@ -252,7 +249,7 @@ public class LessonController extends DefaultController {
     
     @GetMapping("/month-lessons/{date}")
     public String getMonthLessons(@PathVariable String date,
-                                  Model model) throws ServiceException {
+                                  Model model) {
         LocalDate datestamp = LocalDate.parse(date);
         List<List<List<LessonDTO>>> monthLessons = lessonService.getMonthLessons(datestamp);
         LessonDTO lesson = LessonDTO.builder()

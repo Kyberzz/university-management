@@ -4,7 +4,7 @@ import java.util.Comparator;
 
 import ua.com.foxminded.university.dto.TeacherDTO;
 
-public class TeacherModelComparator implements Comparator<TeacherDTO>{
+public class TeacherDTOComparator implements Comparator<TeacherDTO>{
 
     @Override
     public int compare(TeacherDTO firstTeacher, TeacherDTO secondTeacher) {

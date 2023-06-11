@@ -89,7 +89,7 @@ class UserControllerTest {
                                                 .param("passwordConfirm", userDto.getPassword())
                                                 .flashAttr("userModel", userDto))
                .andExpect(redirectedUrl("/users/list"));
-        verify(userServiceMock, times(1)).update(isA(UserDTO.class));
+        verify(userServiceMock, times(1)).updateUser(isA(UserDTO.class));
     }
     
     @Test
@@ -124,7 +124,7 @@ class UserControllerTest {
         
         InOrder inOrder = Mockito.inOrder(userServiceMock);
         inOrder.verify(userServiceMock).getById(anyInt());
-        inOrder.verify(userServiceMock).update(isA(UserDTO.class));
+        inOrder.verify(userServiceMock).updateUser(isA(UserDTO.class));
     }
     
     @Test

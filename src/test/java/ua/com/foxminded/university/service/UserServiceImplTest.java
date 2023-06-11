@@ -88,7 +88,7 @@ class UserServiceImplTest {
 
     @Test
     void createUser_shouldExecuteCorrectNumberCalls() throws ServiceException {
-        userService.create(userDto);
+        userService.createNonPersonalizedUser(userDto);
         verify(userDetailsManagerMock).createUser(isA(UserDetails.class));
     }
 
@@ -120,7 +120,7 @@ class UserServiceImplTest {
     
     @Test
     void updateUser() throws ServiceException {
-        userService.update(userDto);
+        userService.updateUser(userDto);
         verify(userDetailsManagerMock).updateUser(isA(UserDetails.class));
     }
 }
