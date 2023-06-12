@@ -103,7 +103,7 @@
              <select class="form-select" aria-label="Lesson selection" name="teacherId"
               id="teacherSelect">
               <option th:each="teacher : ${teachers}" th:value="${teacher.id}"
-               th:text="|${teacher.user.person.firstName} ${teacher.user.person.lastName}|">Dennis
+               th:text="|${teacher.user?.person?.firstName} ${teacher.user?.person?.lastName}|">Dennis
                Ritchie</option>
              </select>
             </div>
@@ -137,7 +137,7 @@
        </thead>
        <tbody>
         <tr
-         th:each="teacher,iterationStatus : ${#lists.sort(course.teachers, new ua.com.foxminded.university.comparator.TeacherDTOComparator())}">
+         th:each="teacher,iterationStatus : ${course.teachers}">
          <th scope="row" th:text="${iterationStatus.count}">1</th>
          <td th:text="${teacher.user.person?.firstName}">Dennis</td>
          <td th:text="${teacher.user.person?.lastName}">Ritchie</td>

@@ -46,6 +46,7 @@ public class SecurityConfig {
                 .mvcMatchers("/", "/index*", "/images/**").permitAll()
                 .mvcMatchers("/users/**").hasAnyRole(ADMIN)
                 .mvcMatchers("/courses/list*").hasAnyRole(ADMIN, STAFF, TEACHER, STUDENT)
+                .mvcMatchers("/courses/list/{email:\\S+}").hasAnyRole(TEACHER, STUDENT)
                 .mvcMatchers("/courses/{id:\\d+}").hasAnyRole(ADMIN, STAFF, TEACHER)
                 .mvcMatchers("/courses/create*").hasAnyRole(ADMIN, STAFF)
                 .mvcMatchers("/courses/update*").hasAnyRole(ADMIN, STAFF)

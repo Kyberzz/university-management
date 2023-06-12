@@ -5,9 +5,6 @@ import static ua.com.foxminded.university.exception.ServiceErrorCode.*;
 import java.lang.reflect.Type;
 import java.util.List;
 
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.PersistenceUnit;
-
 import org.modelmapper.ConfigurationException;
 import org.modelmapper.MappingException;
 import org.modelmapper.ModelMapper;
@@ -37,8 +34,16 @@ public class CourseServiceImpl implements CourseService {
     private final TeacherRepository teacherRepository;
     private final ModelMapper modelMapper;
     
-    @PersistenceUnit
-    private  EntityManagerFactory entityManagerFactory;
+    @Override
+    public List<CourseDTO> getByTeacherId(int teacherId) {
+        try {
+            List<Course> courses = courseRepository.findByTeachersId(teacherId);
+            return modelMapper.map(courses, COURSE_MODEL_LIST_TYPE);
+        } catch (DataAccessException | IllegalArgumentException | 
+                 ConfigurationException | MappingException e) {
+            throw new ServiceException(COURSE_FETCH_ERROR, e);
+        }
+    }
     
     @Override
     public void deassignTeacherToCourse(int teacherId, int courseId) {
@@ -60,7 +65,7 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public CourseDTO getByIdWithLessonsAndTeachers(int id) {
         try {
-            Course entity = courseRepository.getCourseRelationsById(id);
+            Course entity = courseRepository.findTeachersAndLessonsById(id);
             return modelMapper.map(entity, CourseDTO.class);
         } catch (DataAccessException | IllegalArgumentException | 
                  ConfigurationException | MappingException e) {

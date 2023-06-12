@@ -3,9 +3,10 @@ package ua.com.foxminded.university.service.impl;
 import static ua.com.foxminded.university.exception.ServiceErrorCode.*;
 
 import java.lang.reflect.Type;
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.modelmapper.ConfigurationException;
 import org.modelmapper.MappingException;
@@ -28,6 +29,7 @@ import ua.com.foxminded.university.service.TeacherService;
 @RequiredArgsConstructor
 public class TeacherServiceImpl implements TeacherService {
     
+    public static final int LESS = -1;
     public static final Type TEACHER_MODEL_LIST_TYPE = 
             new TypeToken<List<TeacherDTO>>() {}.getType();
     
@@ -35,10 +37,28 @@ public class TeacherServiceImpl implements TeacherService {
     private final ModelMapper modelMapper;
     
     @Override
+    public void sortByLastName(Set<TeacherDTO> teachers) {
+        List<TeacherDTO> list = new ArrayList<>(teachers);
+        teachers = new LinkedHashSet<>();
+        sortByLastName(list);
+        teachers.addAll(list);
+    }
+    
+    @Override
     public void sortByLastName(List<TeacherDTO> teachers) {
-        Collections.sort(teachers, Comparator.comparing(teacher -> teacher.getUser()
-                                                                          .getPerson()
-                                                                          .getLastName()));
+        teachers.sort((teacherOne, teacherTwo) -> {
+            if (teacherOne.hasUser() && teacherTwo.hasUser()) {
+                if (teacherOne.getUser().hasPerson() && teacherTwo.getUser().hasPerson()) {
+                    String nameOne = teacherOne.getUser().getPerson().getLastName().toLowerCase();
+                    String nameTwo = teacherTwo.getUser().getPerson().getLastName().toLowerCase();
+                    return nameOne.compareTo(nameTwo); 
+                } else {
+                    return LESS;
+                }
+            } else {
+                return LESS;
+            }
+        });
     }
     
     @Override

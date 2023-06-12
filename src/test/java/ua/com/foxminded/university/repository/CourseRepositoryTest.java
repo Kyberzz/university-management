@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.EntityManager;
@@ -72,8 +73,14 @@ class CourseRepositoryTest {
     }
     
     @Test
+    void findByTeachersId_ShouldReturnCoursesOwnedByTeacher() {
+        List<Course> courses = courseRepository.findByTeachersId(teacher.getId());
+        assertEquals(course, courses.iterator().next());
+    }
+    
+    @Test
     void getCourseRelationsById_ShouldContainAllDependencies() {
-        Course persistedCourse = courseRepository.getCourseRelationsById(course.getId());
+        Course persistedCourse = courseRepository.findTeachersAndLessonsById(course.getId());
         LocalDate persistedDate = persistedCourse.getLessons()
                                                  .iterator().next().getDatestamp();
         

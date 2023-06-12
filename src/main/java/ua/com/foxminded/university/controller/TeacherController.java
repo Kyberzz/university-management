@@ -25,7 +25,7 @@ import ua.com.foxminded.university.service.UserService;
 public class TeacherController extends DefaultController {
     
     public static final String TEACHERS_LIST_TEMPATE_PATH = "teachers/list";
-    public static final String TEACHERS_MODEL_ATTRIBUTE = "teachers";
+    public static final String TEACHERS_ATTRIBUTE = "teachers";
     public static final String TEACHER_MODEL_ATTRIBUTE = "teacher";
 
     private final TeacherService teacherService;
@@ -86,7 +86,7 @@ public class TeacherController extends DefaultController {
         teacherService.sortByLastName(teachers);
         TeacherDTO teacher = TeacherDTO.builder().build();
         model.addAttribute(TEACHER_MODEL_ATTRIBUTE, teacher);
-        model.addAttribute(TEACHERS_MODEL_ATTRIBUTE, teachers);
+        model.addAttribute(TEACHERS_ATTRIBUTE, teachers);
         return TEACHERS_LIST_TEMPATE_PATH;
     }
 }

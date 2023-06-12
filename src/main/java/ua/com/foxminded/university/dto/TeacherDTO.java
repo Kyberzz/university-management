@@ -30,4 +30,8 @@ public class TeacherDTO implements Serializable {
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private Set<CourseDTO> courses;
+    
+    public boolean hasUser() {
+        return user != null;
+    }
 }

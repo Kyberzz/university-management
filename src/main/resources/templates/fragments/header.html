@@ -50,6 +50,14 @@
               th:text="#{button.my-schedule}">My Schedule</button>
             </form>
            </li>
+           
+           <li>
+            <form>
+             <button class="dropdown-item" type="submit"
+              th:formaction="@{/courses/list/__${#authentication.name}__}"
+              th:text="#{button.my-courses}">My Schedule</button>
+            </form>
+           </li>
           </ul>
         </div>
        </div>

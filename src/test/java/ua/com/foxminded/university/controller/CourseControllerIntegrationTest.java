@@ -6,6 +6,14 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static ua.com.foxminded.university.controller.CourseController.COURSE_ATTRIBUTE;
+import static ua.com.foxminded.university.controller.CourseController.UPDATED_COURSE_ATTRIBUTE;
+import static ua.com.foxminded.university.entity.Authority.ADMIN;
+import static ua.com.foxminded.university.entity.Authority.TEACHER;
+import static ua.com.foxminded.university.entity.RoleAuthority.ROLE_ADMIN;
+import static ua.com.foxminded.university.entity.RoleAuthority.ROLE_TEACHER;
+
+import java.util.HashSet;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -17,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithUserDetails;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
@@ -29,9 +38,8 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import ua.com.foxminded.university.dto.CourseDTO;
-import ua.com.foxminded.university.entity.Authority;
 import ua.com.foxminded.university.entity.Course;
-import ua.com.foxminded.university.entity.RoleAuthority;
+import ua.com.foxminded.university.entity.Teacher;
 import ua.com.foxminded.university.entity.UserAuthority;
 import ua.com.foxminded.university.entity.User;
 import ua.com.foxminded.university.entitymother.CourseMother;
@@ -45,11 +53,13 @@ import ua.com.foxminded.university.repository.UserRepository;
 @Testcontainers
 @ActiveProfiles("prod")
 @Transactional
+@DirtiesContext
 class CourseControllerIntegrationTest {
     
     public static final int COURSE_ID = 1;
     public static final int TEACHER_ID = 1;
-    public static final String AUTHORIZED_EMAIL = "authorized@email";
+    public static final String ADMIN_EMAIL = "admin@email";
+    public static final String TEACHER_EMAIL = "teacher@email";
 
     @Container
     public static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:14");
@@ -67,8 +77,10 @@ class CourseControllerIntegrationTest {
     private EntityManagerFactory entityManagerFactory;
 
     private Course course;
-    private User authorizedUser;
+    private User adminUser;
+    private User teacherUser;
     private CourseDTO courseDto;
+    private Teacher teacher;
     
     @DynamicPropertySource
     public static void configureProperties(DynamicPropertyRegistry registry) {
@@ -79,18 +91,25 @@ class CourseControllerIntegrationTest {
     
     @BeforeTransaction
     void init() {
-        User user = UserMother.complete().email(AUTHORIZED_EMAIL).build();
-        authorizedUser = userRepository.saveAndFlush(user);
-        UserAuthority userAuthority = UserAuthority.builder()
-                .roleAuthority(RoleAuthority.ROLE_ADMIN)
-                .user(authorizedUser)
-                .build();
-        userAuthorityRepository.saveAndFlush(userAuthority);
+        User admin = UserMother.complete().email(ADMIN_EMAIL).build();
+        adminUser = userRepository.saveAndFlush(admin);
+        UserAuthority adminUserAuthority = UserAuthority.builder()
+                                                        .roleAuthority(ROLE_ADMIN)
+                                                        .user(adminUser).build();
+        userAuthorityRepository.saveAndFlush(adminUserAuthority);
+        
+        User teacher = UserMother.complete().email("teacher@email").build();
+        teacherUser = userRepository.saveAndFlush(teacher);
+        UserAuthority teacherUserAuthority = UserAuthority.builder()
+                                                          .roleAuthority(ROLE_TEACHER)
+                                                          .user(teacherUser).build();
+        userAuthorityRepository.saveAndFlush(teacherUserAuthority);
     }
     
     @AfterTransaction
     void cleanUp() {
-        userRepository.deleteAll();
+        userRepository.delete(adminUser);
+        userRepository.delete(teacherUser);
     }
     
     @BeforeEach
@@ -99,6 +118,11 @@ class CourseControllerIntegrationTest {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
         entityManager.persist(course);
+        teacher = Teacher.builder().user(teacherUser)
+                                   .courses(new HashSet<>()).build();
+        course.setTeachers(new HashSet<>());
+        teacher.addCourse(course);
+        entityManager.persist(teacher);
         entityManager.getTransaction().commit();
         entityManager.close();
         
@@ -106,38 +130,47 @@ class CourseControllerIntegrationTest {
     }
     
     @Test
-    @WithUserDetails(AUTHORIZED_EMAIL)
+    @WithUserDetails(TEACHER_EMAIL)
+    void getByTeacherId_ShouldAuthenticateCredentialsAndReturnStatusIsOk() throws Exception {
+        mockMvc.perform(get("/courses/list/{teacherEmail}", teacher.getUser().getEmail()))
+               .andDo(print())
+               .andExpect(authenticated().withRoles(TEACHER.toString()))
+               .andExpect(status().is2xxSuccessful());
+    }
+    
+    @Test
+    @WithUserDetails(ADMIN_EMAIL)
     void deassignTeacherToCourse_ShouldAuthenticateCredentialsAndRedirect() throws Exception {
         mockMvc.perform(post("/courses/{courseId}/deassign-teacher", COURSE_ID)
                     .param("teacherId", String.valueOf(TEACHER_ID))
                     .with(csrf()))
         .andDo(print())
-        .andExpect(authenticated().withRoles(Authority.ADMIN.toString()))
+        .andExpect(authenticated().withRoles(ADMIN.toString()))
         .andExpect(status().is3xxRedirection());
     }
     
     @Test
-    @WithUserDetails(AUTHORIZED_EMAIL)
+    @WithUserDetails(ADMIN_EMAIL)
     void assignTeacherToCourse_ShouldAuthenticateCredentialsAndRedirect() throws Exception {
         mockMvc.perform(post("/courses/{courseId}/assign-teacher", COURSE_ID)
                     .param("teacherId", String.valueOf(TEACHER_ID))
                     .with(csrf()))
                .andDo(print())
-               .andExpect(authenticated().withRoles(Authority.ADMIN.toString()))
+               .andExpect(authenticated().withRoles(ADMIN.toString()))
                .andExpect(status().is3xxRedirection());
     }
     
     @Test
-    @WithUserDetails(AUTHORIZED_EMAIL)
+    @WithUserDetails(ADMIN_EMAIL)
     void getById_ShouldAuthenticateCredentialsAndReturnStatusIsOk() throws Exception {
-        mockMvc.perform(get("/courses/{id}", course.getId()))
-               .andExpect(authenticated().withRoles(Authority.ADMIN.toString()))
+        mockMvc.perform(get("/courses/{courseId}", course.getId()))
+               .andExpect(authenticated().withRoles(ADMIN.toString()))
                .andExpect(status().isOk());
     }
     
     @Test
-    @WithUserDetails(AUTHORIZED_EMAIL)
-    void delete_ShouldAuthenticateCredentialsAndRedirect() throws Exception {
+    @WithUserDetails(ADMIN_EMAIL)
+    void deleteById_ShouldAuthenticateCredentialsAndRedirect() throws Exception {
         String courseId = course.getId().toString();
         
         mockMvc.perform(post("/courses/delete").param("courseId", courseId)
@@ -146,29 +179,29 @@ class CourseControllerIntegrationTest {
     }
     
     @Test
-    @WithUserDetails(AUTHORIZED_EMAIL)
+    @WithUserDetails(ADMIN_EMAIL)
     void update_ShouldAuthenticateCredentialsAndRedirect() throws Exception {
         mockMvc.perform(post("/courses/update").param("courseId", course.getId().toString())
-                                               .flashAttr("courseModel", courseDto)
+                                               .flashAttr(UPDATED_COURSE_ATTRIBUTE, courseDto)
                                                .with(csrf()))
-               .andExpect(authenticated().withRoles(Authority.ADMIN.toString()))
+               .andExpect(authenticated().withRoles(ADMIN.toString()))
                .andExpect(status().is3xxRedirection());
     }
 
     @Test
-    @WithUserDetails(AUTHORIZED_EMAIL)
+    @WithUserDetails(ADMIN_EMAIL)
     void create_ShouldAuthenticateCredentialsAndReternStatusIsOk() throws Exception {
-        mockMvc.perform(post("/courses/create").flashAttr("courseModel", courseDto)
+        mockMvc.perform(post("/courses/create").flashAttr(COURSE_ATTRIBUTE, courseDto)
                                                .with(csrf()))
-        .andExpect(authenticated().withRoles(Authority.ADMIN.toString()))
+        .andExpect(authenticated().withRoles(ADMIN.toString()))
         .andExpect(status().is3xxRedirection());
     }
     
     @Test
-    @WithUserDetails(AUTHORIZED_EMAIL)
-    void list_ShouldAuthenticateCredentialsAndReturnStatusIsOk() throws Exception {
+    @WithUserDetails(ADMIN_EMAIL)
+    void getAll_ShouldAuthenticateCredentialsAndReturnStatusIsOk() throws Exception {
         mockMvc.perform(get("/courses/list"))
-               .andExpect(authenticated().withRoles(Authority.ADMIN.toString()))
+               .andExpect(authenticated().withRoles(ADMIN.toString()))
                .andExpect(status().isOk());
     }
 }
