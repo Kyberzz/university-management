@@ -23,7 +23,6 @@ import ua.com.foxminded.university.entity.Course;
 import ua.com.foxminded.university.entity.Teacher;
 import ua.com.foxminded.university.entity.User;
 import ua.com.foxminded.university.entitymother.CourseMother;
-import ua.com.foxminded.university.entitymother.TeacherMother;
 import ua.com.foxminded.university.entitymother.UserMother;
 
 @DataJpaTest
@@ -54,8 +53,7 @@ class TeacherRepositoryTest {
         
         user = UserMother.complete().build();
         entityManager.persist(user);
-        teacher = TeacherMother.complete()
-                               .user(user).build();
+        teacher = Teacher.builder().user(user).build();
         entityManager.persist(teacher);
         course = CourseMother.complete().build();
         course.setTeachers(new HashSet<>(Arrays.asList(teacher)));

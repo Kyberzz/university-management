@@ -25,7 +25,6 @@ import ua.com.foxminded.university.dto.CourseDTO;
 import ua.com.foxminded.university.entity.Course;
 import ua.com.foxminded.university.entity.Teacher;
 import ua.com.foxminded.university.entitymother.CourseMother;
-import ua.com.foxminded.university.entitymother.TeacherMother;
 import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.modelmother.CourseDtoMother;
 import ua.com.foxminded.university.repository.CourseRepository;
@@ -59,7 +58,7 @@ class CourseServiceImplTest {
     void setUp() {
         courseDto = CourseDtoMother.complete().build();
         course = CourseMother.complete().teachers(new HashSet<>()).build();
-        teacher = TeacherMother.complete().courses(new HashSet<>()).build();
+        teacher = Teacher.builder().courses(new HashSet<>()).build();
     }
     
     @Test

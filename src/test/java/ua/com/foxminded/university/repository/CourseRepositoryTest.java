@@ -21,10 +21,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ua.com.foxminded.university.entity.Course;
 import ua.com.foxminded.university.entity.Teacher;
+import ua.com.foxminded.university.entity.User;
 import ua.com.foxminded.university.entity.Lesson;
 import ua.com.foxminded.university.entitymother.CourseMother;
-import ua.com.foxminded.university.entitymother.TeacherMother;
 import ua.com.foxminded.university.entitymother.LessonMother;
+import ua.com.foxminded.university.entitymother.UserMother;
 
 @DataJpaTest
 @ActiveProfiles("test")
@@ -44,21 +45,27 @@ class CourseRepositoryTest {
     private Course course;
     private Lesson lesson;
     private Teacher teacher;
+    private User user;
     
     @BeforeEach
     void init() {
         course = CourseMother.complete().build();
-        teacher = TeacherMother.complete().build();
+        user = UserMother.complete().build();
+        teacher = Teacher.builder().build();
         
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
         entityManager.persist(course);
+        entityManager.persist(user);
+        
+        teacher.setUser(user);
         teacher.setCourses(new HashSet<>());
         teacher.getCourses().add(course);
-        
         entityManager.persist(teacher);
+
         lesson = LessonMother.complete()
-                                         .course(course).build();
+                             .course(course)
+                             .teacher(teacher).build();
         entityManager.persist(lesson);
         entityManager.getTransaction().commit();
         entityManager.close();

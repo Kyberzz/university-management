@@ -18,14 +18,15 @@ import org.springframework.test.context.ActiveProfiles;
 import ua.com.foxminded.university.entity.Course;
 import ua.com.foxminded.university.entity.Group;
 import ua.com.foxminded.university.entity.Timing;
+import ua.com.foxminded.university.entity.User;
 import ua.com.foxminded.university.entity.Lesson;
 import ua.com.foxminded.university.entity.Teacher;
 import ua.com.foxminded.university.entity.Timetable;
 import ua.com.foxminded.university.entitymother.CourseMother;
 import ua.com.foxminded.university.entitymother.GroupMother;
 import ua.com.foxminded.university.entitymother.TimingMother;
+import ua.com.foxminded.university.entitymother.UserMother;
 import ua.com.foxminded.university.entitymother.LessonMother;
-import ua.com.foxminded.university.entitymother.TeacherMother;
 import ua.com.foxminded.university.entitymother.TimetableMother;
 
 @DataJpaTest
@@ -44,6 +45,7 @@ class LessonRepositoryTest {
     private Timetable timetable;
     private Timing timing;
     private Teacher teacher;
+    private User user;
     
     @BeforeEach
     void init() {
@@ -62,7 +64,10 @@ class LessonRepositoryTest {
         group = GroupMother.complete().lessons(new HashSet<>()).build();
         entityManager.persist(group);
         
-        teacher = TeacherMother.complete().build();
+        user = UserMother.complete().build();
+        entityManager.persist(user);
+        
+        teacher = Teacher.builder().user(user).build();
         entityManager.persist(teacher);
         
         lesson = LessonMother.complete().course(course)
