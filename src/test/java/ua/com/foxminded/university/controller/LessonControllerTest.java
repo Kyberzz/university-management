@@ -27,7 +27,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import ua.com.foxminded.university.dto.LessonDTO;
-import ua.com.foxminded.university.modelmother.LessonDtoMother;
+import ua.com.foxminded.university.modelmother.LessonDTOMother;
 import ua.com.foxminded.university.service.CourseService;
 import ua.com.foxminded.university.service.GroupService;
 import ua.com.foxminded.university.service.LessonService;
@@ -71,13 +71,13 @@ class LessonControllerTest {
                                      timetableService, 
                                      teacherService)).build();
 
-        lesson = LessonDtoMother.complete().build();
+        lesson = LessonDTOMother.complete().build();
     }
     
     @Test
     void create_ShouldRedirectToGetDayTimetable() throws Exception {
         LocalDate localDate = LocalDate.now();
-        LessonDTO lessonDto = LessonDtoMother.complete().build();
+        LessonDTO lessonDto = LessonDTOMother.complete().build();
         mockMvc.perform(post("/timetables/create/timetable/{date}", localDate.toString())
                     .flashAttr(LESSON_ATTRIBUTE, lessonDto))
                .andDo(print())

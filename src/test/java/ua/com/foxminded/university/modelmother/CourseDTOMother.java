@@ -2,7 +2,7 @@ package ua.com.foxminded.university.modelmother;
 
 import ua.com.foxminded.university.dto.CourseDTO;
 
-public class CourseDtoMother {
+public class CourseDTOMother {
     
     public static final String DESCRIPTION = "some description";
     public static final String NAME = "k-2";

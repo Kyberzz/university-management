@@ -28,8 +28,8 @@ import ua.com.foxminded.university.entity.Authority;
 import ua.com.foxminded.university.entity.User;
 import ua.com.foxminded.university.entitymother.UserMother;
 import ua.com.foxminded.university.exception.ServiceException;
-import ua.com.foxminded.university.modelmother.PersonDtoMother;
-import ua.com.foxminded.university.modelmother.UserDtoMother;
+import ua.com.foxminded.university.modelmother.PersonDTOMother;
+import ua.com.foxminded.university.modelmother.UserDTOMother;
 import ua.com.foxminded.university.repository.UserRepository;
 import ua.com.foxminded.university.service.impl.UserServiceImpl;
 
@@ -62,10 +62,10 @@ class UserServiceImplTest {
     @BeforeEach
     void init() {
         user = UserMother.complete().build();
-        PersonDTO personModel = PersonDtoMother.complete().build();
+        PersonDTO personModel = PersonDTOMother.complete().build();
         UserAuthorityDTO userAuthorityModel = UserAuthorityDTO.builder()
                 .authority(Authority.ADMIN).build();
-        userDto = UserDtoMother.complete()
+        userDto = UserDTOMother.complete()
                                .person(personModel)
                                .userAuthority(userAuthorityModel).build();
         users = new ArrayList<>();

@@ -32,7 +32,7 @@ import ua.com.foxminded.university.entity.UserAuthority;
 import ua.com.foxminded.university.entity.User;
 import ua.com.foxminded.university.entitymother.StudentMother;
 import ua.com.foxminded.university.entitymother.UserMother;
-import ua.com.foxminded.university.modelmother.StudentDtoMother;
+import ua.com.foxminded.university.modelmother.StudentDTOMother;
 import ua.com.foxminded.university.repository.StudentRepository;
 import ua.com.foxminded.university.repository.UserAuthorityRepository;
 import ua.com.foxminded.university.repository.UserRepository;
@@ -66,7 +66,7 @@ class StudentControllerIntegrationTest {
     
     @BeforeTransaction
     void init() {
-        studentDto = StudentDtoMother.complete().build();
+        studentDto = StudentDTOMother.complete().build();
         student = StudentMother.complete().build();
         
         new TransactionTemplate(transactionManager).execute(transactionStatus -> {

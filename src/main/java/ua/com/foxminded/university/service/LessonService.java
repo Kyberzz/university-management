@@ -10,9 +10,9 @@ public interface LessonService extends GenericService<LessonDTO> {
     
     public Set<LessonDTO> sortByDatestamp(Set<LessonDTO> lessons);
     
-    public LocalDate moveWeekBack(LocalDate date);
-    
     public LocalDate moveWeekForward(LocalDate date);
+    
+    public LocalDate moveWeekBack(LocalDate date);
     
     public List<List<LessonDTO>> getWeekLessonsOwnedByTeacher(LocalDate date, int teacherId);
     

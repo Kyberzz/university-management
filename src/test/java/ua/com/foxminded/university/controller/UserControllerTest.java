@@ -23,7 +23,7 @@ import ua.com.foxminded.university.dto.UserAuthorityDTO;
 import ua.com.foxminded.university.dto.UserDTO;
 import ua.com.foxminded.university.entity.Authority;
 import ua.com.foxminded.university.exception.ServiceException;
-import ua.com.foxminded.university.modelmother.UserDtoMother;
+import ua.com.foxminded.university.modelmother.UserDTOMother;
 import ua.com.foxminded.university.service.UserService;
 
 @ExtendWith(SpringExtension.class)
@@ -46,7 +46,7 @@ class UserControllerTest {
                                  .build();
         userAuthorityDto = UserAuthorityDTO.builder()
                                            .authority(Authority.ADMIN).build();
-        userDto = UserDtoMother.complete().id(USER_ID)
+        userDto = UserDTOMother.complete().id(USER_ID)
                                           .userAuthority(userAuthorityDto).build();
     }
     

@@ -51,7 +51,7 @@ public class LessonServiceImpl implements LessonService {
     public static final int END_WEEK_DAY_NUMBER = 7;
     public static final int START_WEEK_DAY_NUMBER = 0;
     public static final int ONE_DAY = 1;
-    public static final Type LESSON_MODELS_LIST_TYPE = 
+    public static final Type LESSON_LIST_TYPE = 
             new TypeToken<List<LessonDTO>>() {}.getType();
     
     private final ModelMapper modelMapper;
@@ -70,12 +70,12 @@ public class LessonServiceImpl implements LessonService {
     
     @Override
     public LocalDate moveWeekBack(LocalDate date) {
-        return date.plusWeeks(ONE_WEEK);
+        return date.minusWeeks(ONE_WEEK);
     }
 
     @Override
     public LocalDate moveWeekForward(LocalDate date) {
-        return date.minusWeeks(ONE_WEEK);
+        return date.plusWeeks(ONE_WEEK);
     }
     
     @Override
@@ -124,7 +124,7 @@ public class LessonServiceImpl implements LessonService {
         lessons.stream().forEach(lesson -> lesson.setTimetable(timetable));
         try {
             lessonRepository.saveAllAndFlush(lessons);
-            return modelMapper.map(lessons, LESSON_MODELS_LIST_TYPE);
+            return modelMapper.map(lessons, LESSON_LIST_TYPE);
         } catch (DataAccessException e) {
             throw new ServiceException(LESSON_UPDATE_ERROR, e);
         }
@@ -266,7 +266,7 @@ public class LessonServiceImpl implements LessonService {
     public List<LessonDTO> getDayLessons(LocalDate date) {
         try {
             List<Lesson> entities = lessonRepository.findByDatestamp(date);
-            List<LessonDTO> models = modelMapper.map(entities, LESSON_MODELS_LIST_TYPE);
+            List<LessonDTO> models = modelMapper.map(entities, LESSON_LIST_TYPE);
 
             if (models.isEmpty()) {
                 models = new ArrayList<>();
@@ -286,7 +286,7 @@ public class LessonServiceImpl implements LessonService {
     public List<LessonDTO> getAll() {
         try {
             List<Lesson> timetableEntities = lessonRepository.findAll();
-            return modelMapper.map(timetableEntities, LESSON_MODELS_LIST_TYPE);
+            return modelMapper.map(timetableEntities, LESSON_LIST_TYPE);
         } catch (DataAccessException | IllegalArgumentException | 
                  ConfigurationException | MappingException e) {
             throw new ServiceException(LESSONS_FETCH_ERROR, e);

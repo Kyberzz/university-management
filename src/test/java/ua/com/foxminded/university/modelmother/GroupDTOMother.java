@@ -2,7 +2,7 @@ package ua.com.foxminded.university.modelmother;
 
 import ua.com.foxminded.university.dto.GroupDTO;
 
-public class GroupDtoMother {
+public class GroupDTOMother {
     
     public static final String groupName = "k-2";
     

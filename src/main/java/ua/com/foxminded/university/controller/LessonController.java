@@ -96,7 +96,7 @@ public class LessonController extends DefaultController {
     }
     
     @GetMapping("/teacher-week-schedule/{date}/{email}/next")
-    public String getNextWeejSchedule(@PathVariable String date, 
+    public String getNextWeekSchedule(@PathVariable String date, 
                                       @PathVariable String email) {
         
         LocalDate datestamp = lessonService.moveWeekForward(LocalDate.parse(date));

@@ -28,10 +28,10 @@ import ua.com.foxminded.university.entitymother.GroupMother;
 import ua.com.foxminded.university.entitymother.StudentMother;
 import ua.com.foxminded.university.entitymother.UserMother;
 import ua.com.foxminded.university.exception.ServiceException;
-import ua.com.foxminded.university.modelmother.GroupDtoMother;
-import ua.com.foxminded.university.modelmother.PersonDtoMother;
-import ua.com.foxminded.university.modelmother.StudentDtoMother;
-import ua.com.foxminded.university.modelmother.UserDtoMother;
+import ua.com.foxminded.university.modelmother.GroupDTOMother;
+import ua.com.foxminded.university.modelmother.PersonDTOMother;
+import ua.com.foxminded.university.modelmother.StudentDTOMother;
+import ua.com.foxminded.university.modelmother.UserDTOMother;
 import ua.com.foxminded.university.repository.GroupRepository;
 import ua.com.foxminded.university.repository.StudentRepository;
 import ua.com.foxminded.university.repository.UserRepository;
@@ -68,19 +68,19 @@ class StudentServiceImplTest {
     
     @BeforeEach
     void setUp() {
-        studentDto = StudentDtoMother.complete().build();
+        studentDto = StudentDTOMother.complete().build();
         student = StudentMother.complete().build();
         user = UserMother.complete().build();
-        groupDto = GroupDtoMother.complete().id(GROUP_ID).build();
+        groupDto = GroupDTOMother.complete().id(GROUP_ID).build();
         group = GroupMother.complete().build();
     }
     
     @Test
     void sortByLastName_ShouldSortCorrectly() {
         studentDto.getUser().getPerson().setLastName(LAST_NAME_A);
-        PersonDTO person = PersonDtoMother.complete().lastName(LAST_NAME_B).build();
-        UserDTO user = UserDtoMother.complete().person(person).build();
-        StudentDTO studentB = StudentDtoMother.complete().user(user).build();
+        PersonDTO person = PersonDTOMother.complete().lastName(LAST_NAME_B).build();
+        UserDTO user = UserDTOMother.complete().person(person).build();
+        StudentDTO studentB = StudentDTOMother.complete().user(user).build();
         List<StudentDTO> list = Arrays.asList(studentB, studentDto);
         studentService.sortByLastName(list);
         List<StudentDTO> expectedList = Arrays.asList(studentDto, studentB);

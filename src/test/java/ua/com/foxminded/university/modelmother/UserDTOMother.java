@@ -2,7 +2,7 @@ package ua.com.foxminded.university.modelmother;
 
 import ua.com.foxminded.university.dto.UserDTO;
 
-public class UserDtoMother {
+public class UserDTOMother {
     
     public static final String PASSWORD = "pass";
     public static final String EMAIL = "my@email";

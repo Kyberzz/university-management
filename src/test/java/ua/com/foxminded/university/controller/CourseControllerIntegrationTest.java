@@ -44,7 +44,7 @@ import ua.com.foxminded.university.entity.UserAuthority;
 import ua.com.foxminded.university.entity.User;
 import ua.com.foxminded.university.entitymother.CourseMother;
 import ua.com.foxminded.university.entitymother.UserMother;
-import ua.com.foxminded.university.modelmother.CourseDtoMother;
+import ua.com.foxminded.university.modelmother.CourseDTOMother;
 import ua.com.foxminded.university.repository.UserAuthorityRepository;
 import ua.com.foxminded.university.repository.UserRepository;
 
@@ -126,7 +126,7 @@ class CourseControllerIntegrationTest {
         entityManager.getTransaction().commit();
         entityManager.close();
         
-        courseDto = CourseDtoMother.complete().build();
+        courseDto = CourseDTOMother.complete().build();
     }
     
     @Test

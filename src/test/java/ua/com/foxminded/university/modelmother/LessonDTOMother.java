@@ -4,7 +4,7 @@ import static ua.com.foxminded.university.entitymother.LessonMother.*;
 
 import ua.com.foxminded.university.dto.LessonDTO;
 
-public class LessonDtoMother {
+public class LessonDTOMother {
 
     public static final int FIRST_LESSON = 1;
     public static LessonDTO.LessonDTOBuilder complete() {

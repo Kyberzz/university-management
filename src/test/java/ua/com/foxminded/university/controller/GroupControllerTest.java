@@ -22,7 +22,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import ua.com.foxminded.university.dto.GroupDTO;
 import ua.com.foxminded.university.dto.StudentDTO;
-import ua.com.foxminded.university.modelmother.GroupDtoMother;
+import ua.com.foxminded.university.modelmother.GroupDTOMother;
 import ua.com.foxminded.university.service.GroupService;
 import ua.com.foxminded.university.service.StudentService;
 
@@ -44,7 +44,7 @@ class GroupControllerTest {
     void setup() {
         mockMvc = MockMvcBuilders.standaloneSetup(new GroupController(
                 groupServiceMock, studentServiceMock)).build();
-        group = GroupDtoMother.complete().build();
+        group = GroupDTOMother.complete().build();
     }
     
     @Test

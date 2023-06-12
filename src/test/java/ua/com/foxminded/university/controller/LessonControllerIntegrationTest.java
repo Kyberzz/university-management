@@ -27,7 +27,7 @@ import ua.com.foxminded.university.dto.LessonDTO;
 import ua.com.foxminded.university.entity.Authority;
 import ua.com.foxminded.university.entity.Lesson;
 import ua.com.foxminded.university.entitymother.LessonMother;
-import ua.com.foxminded.university.modelmother.LessonDtoMother;
+import ua.com.foxminded.university.modelmother.LessonDTOMother;
 
 @SpringBootTest
 @ActiveProfiles("prod")
@@ -59,7 +59,7 @@ class LessonControllerIntegrationTest extends DefaultControllerTest {
         entityManager.getTransaction().commit();
         entityManager.close();
         
-        lessonDto = LessonDtoMother.complete()
+        lessonDto = LessonDTOMother.complete()
                                    .id(lesson.getId()).build();
     }
     

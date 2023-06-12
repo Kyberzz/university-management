@@ -19,7 +19,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import ua.com.foxminded.university.dto.StudentDTO;
-import ua.com.foxminded.university.modelmother.StudentDtoMother;
+import ua.com.foxminded.university.modelmother.StudentDTOMother;
 import ua.com.foxminded.university.service.GroupService;
 import ua.com.foxminded.university.service.StudentService;
 
@@ -41,7 +41,7 @@ class StudentControllerTest {
     void setup() {
         mockMvc = MockMvcBuilders.standaloneSetup(new StudentController(
                 studentServiceMock, groupServiceMock)).build();
-        studentDto = StudentDtoMother.complete().build();
+        studentDto = StudentDTOMother.complete().build();
     }
     
     @Test
