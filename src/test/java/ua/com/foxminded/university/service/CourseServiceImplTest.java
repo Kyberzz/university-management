@@ -22,10 +22,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 
 import ua.com.foxminded.university.dto.CourseDTO;
+import ua.com.foxminded.university.dtomother.CourseDTOMother;
 import ua.com.foxminded.university.entity.Course;
 import ua.com.foxminded.university.entity.Teacher;
 import ua.com.foxminded.university.entitymother.CourseMother;
-import ua.com.foxminded.university.modelmother.CourseDTOMother;
 import ua.com.foxminded.university.repository.CourseRepository;
 import ua.com.foxminded.university.repository.TeacherRepository;
 import ua.com.foxminded.university.service.impl.CourseServiceImpl;

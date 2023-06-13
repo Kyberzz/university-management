@@ -30,7 +30,7 @@ import ua.com.foxminded.university.service.TeacherService;
 public class CourseController extends DefaultController {
     
     public static final String COURSES_LIST_TEMPLATE_PATH = "courses/list";
-    public static final String COURSE_ID_PARAMETER_NAME = "courseId=";
+    public static final String COURSE_ID_PARAMETER_NAME = "courseId";
     public static final String UPDATED_COURSE_ATTRIBUTE = "updatedCourse";
     public static final String COURSE_TEMPLATE_PATH = "courses/course";
     public static final String COURSE_TEMPLATE = "course";

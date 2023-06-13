@@ -49,7 +49,7 @@
       </thead>
       <tbody>
        <tr
-        th:each="user, iterationStatus : ${#lists.sort(allUsers, new ua.com.foxminded.university.comparator.UserModelComparator())}">
+        th:each="user, iterationStatus : ${#lists.sort(allUsers, new ua.com.foxminded.university.comparator.UserDTOComparator())}">
         <th scope="row" th:text="${iterationStatus.count}">1</th>
         <td th:text="${user.person?.firstName}">Linus</td>
         <td th:text="${user.person?.lastName}">Torvalds</td>

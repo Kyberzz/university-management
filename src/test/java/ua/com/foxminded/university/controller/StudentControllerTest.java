@@ -19,7 +19,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import ua.com.foxminded.university.dto.StudentDTO;
-import ua.com.foxminded.university.modelmother.StudentDTOMother;
+import ua.com.foxminded.university.dtomother.StudentDTOMother;
 import ua.com.foxminded.university.service.GroupService;
 import ua.com.foxminded.university.service.StudentService;
 

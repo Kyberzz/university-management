@@ -28,7 +28,7 @@ import ua.com.foxminded.university.service.TimingService;
 public class TimetableController extends DefaultController {
     
     public static final String TIMING_ATTRIBUTE = "timing";
-    public static final String TIMETABLE_ID_PARAMETER_NAME = "timetableId=";
+    public static final String TIMETABLE_ID_PARAMETER_NAME = "timetableId";
     public static final String TIMETABLE_ATTRIBUTE = "timetable";
     public static final int STUB = 0;
     public static final String TIMETABLES_ATTRIBUTE = "timetables"; 
@@ -47,6 +47,7 @@ public class TimetableController extends DefaultController {
                                   .append(TIMETABLES_LIST_TEMPLATE_PATH)
                                   .append(QUESTION_MARK)
                                   .append(TIMETABLE_ID_PARAMETER_NAME)
+                                  .append(EQUAL_SIGN)
                                   .append(timetableId).toString();
     }
     
@@ -59,6 +60,7 @@ public class TimetableController extends DefaultController {
                                   .append(TIMETABLES_LIST_TEMPLATE_PATH)
                                   .append(QUESTION_MARK)
                                   .append(TIMETABLE_ID_PARAMETER_NAME)
+                                  .append(EQUAL_SIGN)
                                   .append(STUB).toString();
     }
     
@@ -74,6 +76,7 @@ public class TimetableController extends DefaultController {
                                   .append(TIMETABLES_LIST_TEMPLATE_PATH)
                                   .append(QUESTION_MARK)
                                   .append(TIMETABLE_ID_PARAMETER_NAME)
+                                  .append(EQUAL_SIGN)
                                   .append(timetableId)
                                   .toString();
     }
@@ -90,6 +93,7 @@ public class TimetableController extends DefaultController {
                                   .append(TIMETABLES_LIST_TEMPLATE_PATH)
                                   .append(QUESTION_MARK)
                                   .append(TIMETABLE_ID_PARAMETER_NAME)
+                                  .append(EQUAL_SIGN)
                                   .append(timetableId).toString();
     }
     

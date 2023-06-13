@@ -10,6 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static ua.com.foxminded.university.controller.CourseController.COURSES_ATTRIBUTE;
 import static ua.com.foxminded.university.controller.CourseController.COURSE_ATTRIBUTE;
+import static ua.com.foxminded.university.controller.CourseController.COURSE_TEMPLATE_PATH;
 import static ua.com.foxminded.university.controller.CourseController.UPDATED_COURSE_ATTRIBUTE;
 import static ua.com.foxminded.university.controller.DefaultControllerTest.*;
 import static ua.com.foxminded.university.controller.TeacherController.TEACHERS_ATTRIBUTE;
@@ -24,7 +25,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import ua.com.foxminded.university.dto.CourseDTO;
 import ua.com.foxminded.university.dto.TeacherDTO;
-import ua.com.foxminded.university.modelmother.CourseDTOMother;
+import ua.com.foxminded.university.dtomother.CourseDTOMother;
 import ua.com.foxminded.university.service.CourseService;
 import ua.com.foxminded.university.service.LessonService;
 import ua.com.foxminded.university.service.TeacherService;
@@ -101,7 +102,7 @@ class CourseControllerTest {
                .andExpect(model().attributeExists(COURSE_ATTRIBUTE, 
                                                   TEACHERS_ATTRIBUTE, 
                                                   UPDATED_COURSE_ATTRIBUTE))
-               .andExpect(view().name(CourseController.COURSES_LIST_TEMPLATE_PATH));
+               .andExpect(view().name(COURSE_TEMPLATE_PATH));
     }
     
     @Test

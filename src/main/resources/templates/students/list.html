@@ -104,8 +104,8 @@
       <tbody>
        <tr th:each="student,iterationStatus : ${students}">
         <th scope="row" th:text="${iterationStatus.count}">1</th>
-        <td th:text="${student.user.person.firstName}">John</td>
-        <td th:text="${student.user.person.lastName}">Snow</td>
+        <td th:text="${student.user?.person?.firstName}">John</td>
+        <td th:text="${student.user?.person?.lastName}">Snow</td>
         <td th:text="${student.id}">1</td>
         <td th:text="${student.group != null} ? ${student.group.name} : '---'">5</td>
         <td th:text="${student.user != null} ? ${student.user.email} : '---'">email@com</td>
@@ -136,7 +136,7 @@
               <div class="row text-start mt-2">
                <div class="col-3" th:text="|#{thead.firstName}: |">Fist
                 name:</div>
-               <div class="col-4" th:text="${student.user.person.firstName}">Dennis</div>
+               <div class="col-4" th:text="${student.user?.person?.firstName}">Dennis</div>
                <div class="col-5">
                 <input class="form-control form-control-sm" type="text"
                  th:field="*{user.person.firstName}">
@@ -145,7 +145,7 @@
               <div class="row text-start mt-2">
                <div class="col-3" th:text="|#{thead.lastName}: |">Last
                 name:</div>
-               <div class="col-4" th:text="${student.user.person.lastName}">Ritchie</div>
+               <div class="col-4" th:text="${student.user?.person?.lastName}">Ritchie</div>
                <div class="col-5">
                 <input class="form-control form-control-sm" type="text"
                  th:field="*{user.person.lastName}">
@@ -187,10 +187,10 @@
 
         <td class="text-start">
          <button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal"
-          th:data-bs-target="|#delete${iterationStatus.index}|"
+          th:data-bs-target="|#delete${student.id}|"
           th:text="#{button.delete}">Delete</button>
 
-         <div class="modal fade" th:id="|delete${iterationStatus.index}|" tabindex="-1"
+         <div class="modal fade" th:id="|delete${student.id}|" tabindex="-1"
           aria-labelledby="deleteStudent" aria-hidden="true">
           <div class="modal-dialog">
            <form th:action="@{/students/delete}" class="modal-content" method="post">
@@ -198,9 +198,11 @@
              <h1 class="modal-title fs-5" id="deleteStudent" th:text="#{students.delete}">Delete
               the
               student</h1>
+             
              <button type="button" class="btn-close" data-bs-dismiss="modal"
               aria-label="Close"></button>
             </div>
+            
             <div class="modal-body">
              <div class="container-fluid">
               <div class="row text-start">
@@ -213,13 +215,13 @@
                <div class="row">
                 <div class="col-4" th:text="|#{thead.firstName}: |">Fist
                  name:</div>
-                <div class="col" th:text="${student.user.person.firstName}">First
+                <div class="col" th:text="${student.user?.person?.firstName}">First
                  name</div>
                </div>
                <div class="row">
                 <div class="col-4" th:text="|#{thead.lastName}: |">Last
                  name:</div>
-                <div class="col" th:text="${student.user.person.lastName}">Last
+                <div class="col" th:text="${student.user?.person?.lastName}">Last
                  name</div>
                </div>
                <div class="row">
@@ -231,16 +233,19 @@
               </div>
              </div>
             </div>
+            
             <div class="modal-footer">
              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
               th:text="#{button.close}">Close</button>
              <button type="submit" class="btn btn-primary" th:text="#{button.confirm}">Confirm
               deleting</button>
             </div>
+           
            </form>
           </div>
          </div>
         </td>
+       
        </tr>
       </tbody>
      </table>

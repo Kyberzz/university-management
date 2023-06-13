@@ -27,12 +27,12 @@ import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.web.context.WebApplicationContext;
 
 import ua.com.foxminded.university.dto.StudentDTO;
+import ua.com.foxminded.university.dtomother.StudentDTOMother;
 import ua.com.foxminded.university.entity.Student;
 import ua.com.foxminded.university.entity.UserAuthority;
 import ua.com.foxminded.university.entity.User;
 import ua.com.foxminded.university.entitymother.StudentMother;
 import ua.com.foxminded.university.entitymother.UserMother;
-import ua.com.foxminded.university.modelmother.StudentDTOMother;
 import ua.com.foxminded.university.repository.StudentRepository;
 import ua.com.foxminded.university.repository.UserAuthorityRepository;
 import ua.com.foxminded.university.repository.UserRepository;

@@ -74,3 +74,9 @@ task 3.7
 
 taks 3.9
 - - - User 'A' should be able to create/read/update/delete new schedule
+
+## Anonimous flow
+
+task 3.10
+- - - User 'D' should be able to list all courses with basic info 
+	  (without schedule, teacher, groups and student information)

@@ -24,12 +24,12 @@ import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import ua.com.foxminded.university.dto.PersonDTO;
 import ua.com.foxminded.university.dto.UserAuthorityDTO;
 import ua.com.foxminded.university.dto.UserDTO;
+import ua.com.foxminded.university.dtomother.PersonDTOMother;
+import ua.com.foxminded.university.dtomother.UserDTOMother;
 import ua.com.foxminded.university.entity.Authority;
 import ua.com.foxminded.university.entity.User;
 import ua.com.foxminded.university.entitymother.UserMother;
 import ua.com.foxminded.university.exception.ServiceException;
-import ua.com.foxminded.university.modelmother.PersonDTOMother;
-import ua.com.foxminded.university.modelmother.UserDTOMother;
 import ua.com.foxminded.university.repository.UserRepository;
 import ua.com.foxminded.university.service.impl.UserServiceImpl;
 

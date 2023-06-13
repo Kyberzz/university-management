@@ -1,4 +1,4 @@
-package ua.com.foxminded.university.modelmother;
+package ua.com.foxminded.university.dtomother;
 
 import ua.com.foxminded.university.dto.GroupDTO;
 

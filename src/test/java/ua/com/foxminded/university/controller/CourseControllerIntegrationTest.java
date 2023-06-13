@@ -38,13 +38,13 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import ua.com.foxminded.university.dto.CourseDTO;
+import ua.com.foxminded.university.dtomother.CourseDTOMother;
 import ua.com.foxminded.university.entity.Course;
 import ua.com.foxminded.university.entity.Teacher;
 import ua.com.foxminded.university.entity.UserAuthority;
 import ua.com.foxminded.university.entity.User;
 import ua.com.foxminded.university.entitymother.CourseMother;
 import ua.com.foxminded.university.entitymother.UserMother;
-import ua.com.foxminded.university.modelmother.CourseDTOMother;
 import ua.com.foxminded.university.repository.UserAuthorityRepository;
 import ua.com.foxminded.university.repository.UserRepository;
 

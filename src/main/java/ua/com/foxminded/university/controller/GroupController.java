@@ -23,6 +23,8 @@ import ua.com.foxminded.university.service.StudentService;
 @RequestMapping("/groups")
 public class GroupController extends DefaultController {
     
+    public static final int GROUP_ID = 1;
+    public static final String GROUP_ID_PARAMETER_NAME = "groupId";
     public static final String STUDENTS_MODEL_ATTRIBUTE = "students";
     public static final String GROUPS_MODEL_ATTRIBUTE = "groups";
     public static final String GROUP_MODEL_ATTRIBUTE = "group";

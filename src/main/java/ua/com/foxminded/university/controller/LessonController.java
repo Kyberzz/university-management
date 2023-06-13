@@ -39,7 +39,6 @@ import ua.com.foxminded.university.service.TimetableService;
 @Validated
 public class LessonController extends DefaultController {
     
-    public static final int STUB = 0;
     public static final String COURSE_ATTRIBUTE = "course";
     public static final String TEACHERS_ATTRIBUTE = "teachers";
     public static final String TEACHER_ATTRIBUTE = "teacher";
@@ -70,13 +69,13 @@ public class LessonController extends DefaultController {
                                      @RequestParam @NotBlank String date) {
 
         return new StringBuilder().append(REDIRECT_KEY_WORD)
-                .append(SLASH)
-                .append(TEACHER_WEEK_SCHEDULE_TEMPLATE_PATH)
-                .append(SLASH)
-                .append(LocalDate.parse(date))
-                .append(SLASH)
-                .append(email)
-                .toString();
+                                  .append(SLASH)
+                                  .append(TEACHER_WEEK_SCHEDULE_TEMPLATE_PATH)
+                                  .append(SLASH)
+                                  .append(LocalDate.parse(date))
+                                  .append(SLASH)
+                                  .append(email)
+                                  .toString();
     }
     
     @GetMapping("/teacher-week-schedule/{date}/{email}/back")
@@ -122,7 +121,7 @@ public class LessonController extends DefaultController {
        
        model.addAttribute(WEEK_LESSONS_ATTRIBUTE, weekLessons);
        model.addAttribute(LESSON_ATTRIBUTE, lesson);
-       return new StringBuilder().append(TEACHER_WEEK_SCHEDULE_TEMPLATE_PATH).toString();
+       return TEACHER_WEEK_SCHEDULE_TEMPLATE_PATH;
     }
     
     @PostMapping("/{date}/apply-timetable")
@@ -136,6 +135,7 @@ public class LessonController extends DefaultController {
                                   .append(date)
                                   .append(QUESTION_MARK)
                                   .append(TIMETABLE_ID_PARAMETER_NAME)
+                                  .append(EQUAL_SIGN)
                                   .append(timetableId).toString();
     }
     
@@ -157,24 +157,28 @@ public class LessonController extends DefaultController {
                                   .append(lesson.getDatestamp())
                                   .append("?")
                                   .append(TIMETABLE_ID_PARAMETER_NAME)
+                                  .append(EQUAL_SIGN)
                                   .append(lesson.getTimetable().getId())
                                   .append("&")
                                   .append(COURSE_ID_PARAMETER_NAME)
+                                  .append(EQUAL_SIGN)
                                   .append(courseId).toString();
     }
     
     @PostMapping("/delete/{lessonId}")
-    public String delete(@ModelAttribute LessonDTO lesson,
-                         @PathVariable int lessonId) {
+    public String deleteById(@ModelAttribute(LESSON_ATTRIBUTE) LessonDTO lesson,
+                             @PathVariable int lessonId) {
         lessonService.deleteById(lessonId);
         return new StringBuilder().append(REDIRECT_KEY_WORD)
                                   .append(DAY_LESSONS_PATH)
                                   .append(lesson.getDatestamp())
-                                  .append("?")
+                                  .append(QUESTION_MARK)
                                   .append(TIMETABLE_ID_PARAMETER_NAME)
+                                  .append(EQUAL_SIGN)
                                   .append(lesson.getTimetable().getId())
                                   .append("&")
                                   .append(COURSE_ID_PARAMETER_NAME)
+                                  .append(EQUAL_SIGN)
                                   .append(STUB).toString();
     }
     
@@ -209,7 +213,6 @@ public class LessonController extends DefaultController {
         if (courseId != STUB) {
             teachers = teacherService.getByCoursesId(courseId);
             course = courseService.getById(courseId);
-            
         } 
         
         model.addAttribute(COURSE_ATTRIBUTE, course);

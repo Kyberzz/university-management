@@ -21,9 +21,9 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import ua.com.foxminded.university.dto.UserAuthorityDTO;
 import ua.com.foxminded.university.dto.UserDTO;
+import ua.com.foxminded.university.dtomother.UserDTOMother;
 import ua.com.foxminded.university.entity.Authority;
 import ua.com.foxminded.university.exception.ServiceException;
-import ua.com.foxminded.university.modelmother.UserDTOMother;
 import ua.com.foxminded.university.service.UserService;
 
 @ExtendWith(SpringExtension.class)

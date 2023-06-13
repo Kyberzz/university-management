@@ -24,6 +24,7 @@ import ua.com.foxminded.university.service.UserService;
 @Validated
 public class TeacherController extends DefaultController {
     
+    public static final int TEACHER_ID = 1;
     public static final String TEACHERS_LIST_TEMPATE_PATH = "teachers/list";
     public static final String TEACHERS_ATTRIBUTE = "teachers";
     public static final String TEACHER_MODEL_ATTRIBUTE = "teacher";
