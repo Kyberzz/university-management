@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -22,12 +23,51 @@ import ua.com.foxminded.university.service.UserService;
 @RequiredArgsConstructor
 public class UserController extends DefaultController {
     
+    public static final String USERS_LIST_TEMPLATE_PATH = "users/list";
+    public static final String USERS_ATTRIBUTE = "users";
+    public static final String USER_ATTRIBUTE = "user";
     public static final String USERS_PATH = "/users/";
     
     private final UserService userService;
     
+    @PostMapping("/{userId}/delete")
+    public String delete(@PathVariable int userId) {
+        userService.deleteById(userId);
+        
+        return new StringBuilder().append(REDIRECT_KEY_WORD)
+                                  .append(SLASH)
+                                  .append(USERS_LIST_TEMPLATE_PATH)
+                                  .toString();
+    }
+    
+    @PostMapping("/{userId}/edit-email")
+    public String editEmail(@PathVariable int userId, 
+                            @ModelAttribute UserDTO user) {
+        
+        userService.updateEmail(userId, user.getEmail());
+        
+        return new StringBuilder().append(REDIRECT_KEY_WORD)
+                                  .append(SLASH)
+                                  .append(USERS_LIST_TEMPLATE_PATH)
+                                  .toString();
+    }
+    
+    @PostMapping("/create-user-person")
+    public String createPerson(@ModelAttribute UserDTO user) {
+        UserDTO createdUser = userService.createUserPerson(user);
+        
+        if (user.hasEmail()) {
+            userService.updateEmail(createdUser.getId(), user.getEmail());
+        }
+        
+        return new StringBuilder().append(REDIRECT_KEY_WORD)
+                                  .append(SLASH)
+                                  .append(USERS_LIST_TEMPLATE_PATH)
+                                  .toString();
+    }
+    
     @PostMapping(value = "/delete", params = "email")
-    public String delete(@RequestParam String email) {
+    public String deleteAuthority(@RequestParam String email) {
         userService.deleteByEmail(email);
         
         return new StringBuilder().append(REDIRECT_KEY_WORD)
@@ -50,12 +90,12 @@ public class UserController extends DefaultController {
 
     @GetMapping("/list")
     public String getAll(Model model) {
-        List<UserDTO> allUsers = userService.getAll();
+        List<UserDTO> users = userService.getAll();
         List<UserDTO> notAuthorizedUsers = userService.getNotAuthorizedUsers();
         model.addAttribute("notAuthorizedUsers", notAuthorizedUsers);
-        model.addAttribute("allUsers", allUsers);
-        model.addAttribute("userModel", new UserDTO());
-        return "users/list";
+        model.addAttribute(USERS_ATTRIBUTE, users);
+        model.addAttribute(USER_ATTRIBUTE, new UserDTO());
+        return USERS_LIST_TEMPLATE_PATH;
     }
 
     @PostMapping(value = "/authorize", params = {"email", "password", "passwordConfirm"})

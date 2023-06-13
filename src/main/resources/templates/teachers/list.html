@@ -97,14 +97,14 @@
        <tbody>
         <tr th:each="teacher,iterationStatus : ${teachers}">
          <th scope="row" th:text="${iterationStatus.count}">1</th>
-         <td th:text="${teacher.user.person.firstName}">Dennis</td>
-         <td th:text="${teacher.user.person.lastName}">Ritchie</td>
-         <td th:text="${teacher.user.email}">email@com</td>
+         <td th:text="${teacher.user?.person?.firstName}">Dennis</td>
+         <td th:text="${teacher.user?.person?.lastName}">Ritchie</td>
+         <td th:text="${teacher.user?.email}">email@com</td>
          <td th:text="${teacher.id}" class="text-center">1</td>
          <td class="text-end">
 
           <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal"
-           th:data-bs-target="|#update${teacher.id}|">Edid</button>
+           th:data-bs-target="|#update${teacher.id}|" th:text="#{button.edit}">Edit</button>
 
           <form class="modal fade" th:id="|update${teacher.id}|" tabindex="-1"
            aria-labelledby="exampleModalLabel" aria-hidden="true"
@@ -120,7 +120,7 @@
 
               <div class="row mb-3">
                <span
-                th:text="|${teacher.user.person.firstName} ${teacher.user.person.lastName}, ID = ${teacher.id}|">Isaac
+                th:text="|${teacher.user?.person?.firstName} ${teacher.user?.person?.lastName}, ID = ${teacher.id}|">Isaac
                 Newton, ID = 1
                </span>
               </div>
@@ -177,7 +177,7 @@
              <div class="modal-body">
               <div class="row mb-3">
                <span
-                th:text="|${teacher.user.person.firstName} ${teacher.user.person.lastName}, ID = ${teacher.id}|">Isaac
+                th:text="|${teacher.user?.person?.firstName} ${teacher.user?.person?.lastName}, ID = ${teacher.id}|">Isaac
                 Newton, ID = 1
                </span>
               </div>

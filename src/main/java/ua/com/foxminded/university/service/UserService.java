@@ -10,8 +10,6 @@ public interface UserService {
     
     public UserDTO updateEmail(int userId, String email);
     
-    public UserDTO addEmail(int userId, String email);
-    
     public UserDTO createUserPerson(UserDTO dto);
     
     public void deleteById(Integer id); 

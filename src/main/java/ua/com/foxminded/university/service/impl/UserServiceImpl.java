@@ -55,9 +55,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTO updateEmail(int userId, String email) {
         try {
-            User user = userRepository.findById(userId);
-            user.setEmail(email);
-            User updatedUser = userRepository.saveAndFlush(user);
+            User persistedUser = userRepository.findById(userId);
+            persistedUser.setEmail(email);
+            User updatedUser = userRepository.saveAndFlush(persistedUser);
             return modelMapper.map(updatedUser, UserDTO.class);
         } catch (DataIntegrityViolationException e) {
             throw new ServiceException(USER_EMAIL_DUPLICATION_ERROR, e);
@@ -65,21 +65,6 @@ public class UserServiceImpl implements UserService {
                  ConfigurationException | MappingException e) {
             throw new ServiceException(USER_UPDATE_ERROR, e);
         }
-    }
-    
-    @Override
-    public UserDTO addEmail(int userId, String email) {
-        try {
-            User entity = userRepository.findById(userId);
-            entity.setEmail(email);
-            User persistedEntity = userRepository.saveAndFlush(entity);
-            return modelMapper.map(persistedEntity, UserDTO.class);
-        } catch (DataIntegrityViolationException e) {
-            throw new ServiceException(USER_EMAIL_DUPLICATION_ERROR, e);
-        } catch (DataAccessException | IllegalArgumentException | 
-                 ConfigurationException | MappingException e) {
-           throw new ServiceException(USER_UPDATE_ERROR, e);
-       }
     }
     
     @Override

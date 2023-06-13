@@ -34,6 +34,19 @@ public class DefaultController {
     public static final String URL_ATTRIBUTE = "url";
     public static final String ERROR_TEMPLATE_NAME = "error";
     
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(RuntimeException.class) 
+    public ModelAndView handlRuntimeException(HttpServletRequest request, 
+                                              HttpServletResponse response, 
+                                              RuntimeException exception) {
+        ModelAndView modelAndView = new ModelAndView();
+        log.error("API error", exception);
+        modelAndView.addObject(URL_ATTRIBUTE, request.getRequestURI());
+        modelAndView.addObject(ERROR_MESSAGE_ATTRIBUTE, exception.getMessage());
+        modelAndView.setViewName(ERROR_TEMPLATE_NAME);
+        return modelAndView;
+    }
+    
     @ExceptionHandler(ServiceException.class)
     public ModelAndView serviceExceptionHandler(HttpServletRequest request, 
                                                 HttpServletResponse response, 

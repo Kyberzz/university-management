@@ -68,8 +68,8 @@ public class TeacherController extends DefaultController {
         UserDTO user = userService.createUserPerson(teacher.getUser());
         
         if (teacher.getUser().hasEmail()) {
-            user = userService.addEmail(user.getId(), 
-                                        teacher.getUser().getEmail());
+            user = userService.updateEmail(user.getId(), 
+                                           teacher.getUser().getEmail());
         } 
         
         teacher.setUser(user);

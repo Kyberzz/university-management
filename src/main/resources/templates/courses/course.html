@@ -139,8 +139,8 @@
         <tr
          th:each="teacher,iterationStatus : ${course.teachers}">
          <th scope="row" th:text="${iterationStatus.count}">1</th>
-         <td th:text="${teacher.user.person?.firstName}">Dennis</td>
-         <td th:text="${teacher.user.person?.lastName}">Ritchie</td>
+         <td th:text="${teacher.user?.person?.firstName}">Dennis</td>
+         <td th:text="${teacher.user?.person?.lastName}">Ritchie</td>
          <td th:text="${teacher.id}">1</td>
          <td>
           <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal"

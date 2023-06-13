@@ -7,7 +7,12 @@ import ua.com.foxminded.university.dto.UserDTO;
 public class UserDTOComparator implements Comparator<UserDTO> {
     
     @Override
-    public int compare(UserDTO userA, UserDTO userB) {
-        return Integer.compare(userA.getId(), userB.getId());
+    public int compare(UserDTO firstUser, UserDTO secondUser) {
+        if (firstUser.hasPerson() && secondUser.hasPerson()) {
+            return firstUser.getPerson().getLastName().toLowerCase().compareTo(
+                    secondUser.getPerson().getLastName().toLowerCase());
+        } else {
+            return Integer.compare(firstUser.getId(), secondUser.getId());
+        }
     }
 }
