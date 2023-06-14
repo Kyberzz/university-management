@@ -132,8 +132,8 @@
               <div class="modal-body">
 
                <div class="form-floating mb-3">
-                <input type="email" class="form-control" id="floatingInput"
-                 placeholder="#" th:field="*{email}">
+                <input type="email" class="form-control" id="floatingInput" placeholder="#"
+                 th:field="*{email}">
                 <label for="floatingInput" th:text="|#{thead.email}:|">Email: </label>
                </div>
 
@@ -143,6 +143,48 @@
                 data-bs-dismiss="modal">Close</button>
                <button type="submit" class="btn btn-primary" th:text="#{button.save-changes}">Save
                 changes</button>
+              </div>
+             </div>
+            </div>
+           </form>
+          </div>
+         </td>
+
+         <td style="width: 0;">
+          <div>
+           <button type="button" style="white-space: nowrap;"
+            class="btn btn-outline-secondary btn-sm" th:text="#{button.delete-email}"
+            data-bs-toggle="modal"
+            th:data-bs-target="|#deleteAuthority${iterationStatus.index}|">Delete email</button>
+
+           <form class="modal fade" method="post" th:id="|deleteAuthority${iterationStatus.index}|"
+            th:action="@{/users/delete}" data-bs-backdrop="static" data-bs-keyboard="false"
+            tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+             <div class="modal-content">
+              <div class="modal-header">
+               <h1 class="modal-title fs-5" id="staticBackdropLabel">
+                <span
+                 th:text="${user.email != null} ? #{sers.delete-email} : #{users.noDataDelete}">Delete
+                 authentication data of </span> <span th:text="${user.email}">email@com</span>
+               </h1>
+               <button type="button" class="btn-close" data-bs-dismiss="modal"
+                aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+               <div class="container-fluid">
+                <div class="row text-start mt-2">
+                 <div class="col-3" th:text="|#{thead.email}: |">Email:</div>
+                 <div class="col-9" th:text="${user.email != null} ? ${user.email} : '---'">
+                  Admin</div>
+                </div>
+               </div>
+              </div>
+              <div class="modal-footer">
+               <button type="button" class="btn btn-secondary"
+                data-bs-dismiss="modal">Close</button>
+               <button type="submit" class="btn btn-primary" name="email" th:text="#{button.delete}"
+                th:value="${user.email}">Delete</button>
               </div>
              </div>
             </div>
@@ -314,56 +356,6 @@
           </div>
          </td>
 
-         <td style="width: 0;">
-          <div>
-           <button type="button" style="white-space: nowrap;"
-            class="btn btn-outline-secondary btn-sm" th:text="#{button.delete-authority}"
-            data-bs-toggle="modal"
-            th:data-bs-target="|#deleteAuthority${iterationStatus.index}|">Delete
-            atuthority</button>
-
-           <form class="modal fade" method="post" th:id="|deleteAuthority${iterationStatus.index}|"
-            th:action="@{/users/delete}" data-bs-backdrop="static" data-bs-keyboard="false"
-            tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-            <div class="modal-dialog">
-             <div class="modal-content">
-              <div class="modal-header">
-               <h1 class="modal-title fs-5" id="staticBackdropLabel">
-                <span
-                 th:text="${user.email != null} ? #{users.deleteUser} : #{users.noDataDelete}">Delete
-                 authentication data of </span> <span th:text="${user.email}">email@com</span>
-               </h1>
-               <button type="button" class="btn-close" data-bs-dismiss="modal"
-                aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-               <div class="container-fluid">
-                <div class="row text-start mt-2">
-                 <div class="col-3" th:text="|#{users.authority}: |">Authority</div>
-                 <div class="col-9"
-                  th:text="${user.userAuthority != null} ? ${user.userAuthority.roleAuthority.representation} : '---'">
-                  Admin</div>
-                </div>
-                <div class="row text-start mt-2">
-                 <div class="col-3" th:text="|#{thead.active}: |">Active
-                  status:</div>
-                 <div class="col-9"
-                  th:text="${user.enabled != null} ? (${user.enabled} ? #{users.enableStatus} : #{users.disableStatus}) : '---'">
-                  Enabled</div>
-                </div>
-               </div>
-              </div>
-              <div class="modal-footer">
-               <button type="button" class="btn btn-secondary"
-                data-bs-dismiss="modal">Close</button>
-               <button type="submit" class="btn btn-primary" name="email" th:text="#{button.delete}"
-                th:value="${user.email}">Delete</button>
-              </div>
-             </div>
-            </div>
-           </form>
-          </div>
-         </td>
          <td style="width: 0;">
           <div>
            <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal"

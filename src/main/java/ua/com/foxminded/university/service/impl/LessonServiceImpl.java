@@ -61,6 +61,17 @@ public class LessonServiceImpl implements LessonService {
     private final GroupRepository groupRepository;
     
     @Override
+    public List<LessonDTO> getLessonsByTeacherId(int teacherId) {
+        try {
+            List<Lesson> lessons = lessonRepository.findByTeacherId(teacherId);
+            return modelMapper.map(lessons, LESSON_LIST_TYPE);
+        } catch (DataAccessException | IllegalArgumentException | 
+                 ConfigurationException | MappingException e) {
+            throw new ServiceException(LESSONS_FETCH_ERROR, e);
+        }
+    }
+    
+    @Override
     public Set<LessonDTO> sortByDatestamp(Set<LessonDTO> lessons) {
         LessonDTOComparator comparator = new LessonDTOComparator();
         List<LessonDTO> list = new ArrayList<>(lessons);
@@ -125,7 +136,8 @@ public class LessonServiceImpl implements LessonService {
         try {
             lessonRepository.saveAllAndFlush(lessons);
             return modelMapper.map(lessons, LESSON_LIST_TYPE);
-        } catch (DataAccessException e) {
+        } catch (DataAccessException | IllegalArgumentException | 
+                 ConfigurationException | MappingException e) {
             throw new ServiceException(LESSON_UPDATE_ERROR, e);
         }
     }

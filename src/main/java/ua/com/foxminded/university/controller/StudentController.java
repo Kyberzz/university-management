@@ -43,7 +43,7 @@ public class StudentController extends DefaultController {
     }
 
     @RequestMapping("/list")
-    public String list(Model model) {
+    public String getAll(Model model) {
         List<StudentDTO> students = studentService.getAll();
         List<GroupDTO> groups = groupService.getAll();
         StudentDTO student = new StudentDTO();
@@ -55,9 +55,9 @@ public class StudentController extends DefaultController {
     
     @PostMapping("/{studentId}/update")
     public String update(@PathVariable int studentId, 
-                         @Valid @ModelAttribute StudentDTO studentModel) {
-        studentModel.setId(studentId);
-        studentService.update(studentModel);
+                         @Valid @ModelAttribute StudentDTO student) {
+        student.setId(studentId);
+        studentService.update(student);
         return new StringBuilder().append(REDIRECT_KEY_WORD)
                                   .append(SLASH)
                                   .append(STUDENTS_LIST_TEMPLATE_PATH).toString();

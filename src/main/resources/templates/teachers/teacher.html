@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+
+ <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bootstrap demo</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+   rel="stylesheet"
+   integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM"
+   crossorigin="anonymous">
+  <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/styles.css}">
+ </head>
+
+ <body>
+
+  <div class="container-fluid h-100 d-flex flex-column">
+   <div class="row flex-shrink-0">
+    <div th:replace="~{fragments/header::navigationBar}">Navigation bar</div>
+    <div class="col-12">
+
+     <nav class="ms-2" aria-label="breadcrumb" th:fragment="page-path">
+      <ol class="breadcrumb container-fluid">
+       <li class="breadcrumb-item"><a th:href="@{/}" th:text="#{href.home}">Home</a></li>
+       <li class="breadcrumb-item"><a th:href="@{/teachers/list}"
+         th:text="#{index.menu.teachers}">Teachers</a></li>
+       <li class="breadcrumb-item active" aria-current="page" th:text="__${teacher.id}__">
+        Teachers</li>
+      </ol>
+     </nav>
+
+    </div>
+   </div>
+
+   <div class="row flex-fill" style="min-height: 0;">
+
+    <div class="col-3" style="border-right: 1px solid #ddd;">
+
+     <div class="row mt-2">
+      <div class="col-4 fw-bold text-end" th:text="|#{teachers.teacherId}:|">Teacher ID:</div>
+      <div class="col-8 text-start" th:text="${teacher.id}">1</div>
+     </div>
+
+     <div class="row mt-2">
+      <div class="col-4 fw-bold text-end" th:text="|#{thead.firstName}:|">First name:</div>
+      <div class="col-8 text-start" th:text="${teacher.user?.person?.firstName}">Dennis</div>
+     </div>
+
+     <div class="row mt-2">
+      <div class="col-4 fw-bold text-end" th:text="|#{thead.lastName}:|">Last name:</div>
+      <div class="col-8 text-start" th:text="${teacher.user?.person?.lastName}">Mask</div>
+     </div>
+
+     <div class="row mt-2">
+      <div class="col-4 fw-bold text-end" th:text="|#{thead.email}:|">Email:</div>
+      <div class="col-8 text-start" th:text="${teacher.user?.email}">email@com</div>
+     </div>
+
+     <div class="row mt-2">
+      <div class="col-4 fw-bold text-end" th:text="|#{thead.active}:|">Active status:</div>
+      <div class="col-8 text-start"
+       th:text="${teacher.user?.enabled} ? #{users.enableStatus} : #{users.disableStatus}">
+       Enabled</div>
+     </div>
+
+     <div class="row mt-2">
+      <div class="col-4 fw-bold text-end" th:text="|#{users.authority}:|">Authority:</div>
+      <div class="col-8 text-start"
+       th:text="${teacher.user?.userAuthority?.roleAuthority?.representation}">Teacher</div>
+     </div>
+
+     <form th:action="@{/teachers/__${teacher.id}__/update}" th:object="${teacher}" method="post">
+      <div class="row mt-3">
+       <div class="col fw-bold text-center" th:text="|#{update}:|">Update:</div>
+      </div>
+
+      <div class="row mt-3">
+       <div class="col text-start">
+        <div class="form-floating mb-3">
+         <input type="text" class="form-control" id="firstNameUpdate" placeholder="#"
+          th:field="*{user.person.firstName}">
+         <label for="firstNameUpdate" th:text="|#{thead.firstName}: |">First name:</label>
+        </div>
+        <div class="form-floating mb-3">
+         <input type="text" class="form-control" id="firstNameUpdate" placeholder="#"
+          th:field="*{user.person.lastName}">
+         <label for="firstNameUpdate" th:text="|#{thead.lastName}: |">Last name:</label>
+        </div>
+        <div class="form-floating mb-3">
+         <input type="email" class="form-control" id="firstNameUpdate" placeholder="#"
+          th:field="*{user.email}">
+         <label for="firstNameUpdate" th:text="|#{thead.email}: |">Email:</label>
+        </div>
+       </div>
+      </div>
+
+      <div class="row mt-3 ms-1 me-1">
+       <button type="button" class="btn btn-primary" th:text="#{button.save-changes}">Save
+        changes</button>
+      </div>
+     </form>
+
+
+    </div>
+
+    <div class="col-9 mh-100" style="overflow-y: scroll;">
+
+     <table class="table">
+      <thead>
+       <tr>
+        <th scope="col" th:text="#{thead.date}">Date</th>
+        <th scope="col" th:text="#{thead.dayOfWeek}">Day of week</th>
+        <th scope="col" style="width: 5%" th:text="#{thead.lesson-order}">
+         Lesson order</th>
+        <th scope="col" style="width: 12%" th:text="#{thead.start-time}">Start
+         time</th>
+        <th scope="col" style="width: 10%" th:text="#{thead.end-time}">End
+         time</th>
+        <th scope="col" style="width: 10%" th:text="#{thead.group}">k-2</th>
+        <th scope="col" style="width: 15%" th:text="#{thead.lesson}">
+         Electrodynamics</th>
+        <th scope="col" th:text="#{thead.description}" class="text-center">
+         Description</th>
+       </tr>
+      </thead>
+      <tbody>
+       <tr th:each="lesson, iterationStatus : ${lessons}" th:if="${lesson.id}">
+        <td th:text="${lesson.datestamp}">2023-06-14</td>
+        <td th:text="${lesson.datestamp.dayOfWeek}">Sunday</td>
+        <td th:text="|${lesson.lessonOrder}#{tr.order-suffix}|">1</td>
+        <td th:text="${lesson.startTime}">8:00</td>
+        <td th:text="${lesson.endTime}">9:30</td>
+        <td>
+         <div th:each="group : ${lesson.groups}" th:text="${group.name}">k-2</div>
+        </td>
+        <td th:text="${lesson.course?.name}">Programming</td>
+        <td></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+
+   </div>
+  </div>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+   integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+   crossorigin="anonymous"></script>
+ </body>
+
+</html>

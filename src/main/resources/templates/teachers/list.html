@@ -101,61 +101,14 @@
          <td th:text="${teacher.user?.person?.lastName}">Ritchie</td>
          <td th:text="${teacher.user?.email}">email@com</td>
          <td th:text="${teacher.id}" class="text-center">1</td>
-         <td class="text-end">
-
-          <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal"
-           th:data-bs-target="|#update${teacher.id}|" th:text="#{button.edit}">Edit</button>
-
-          <form class="modal fade" th:id="|update${teacher.id}|" tabindex="-1"
-           aria-labelledby="exampleModalLabel" aria-hidden="true"
-           th:action="@{/teachers/update/__${teacher.id}__}" method="post" th:object="${teacher}">
-           <div class="modal-dialog">
-            <div class="modal-content">
-             <div class="modal-header">
-              <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
-              <button type="button" class="btn-close" data-bs-dismiss="modal"
-               aria-label="Close"></button>
-             </div>
-             <div class="modal-body">
-
-              <div class="row mb-3">
-               <span
-                th:text="|${teacher.user?.person?.firstName} ${teacher.user?.person?.lastName}, ID = ${teacher.id}|">Isaac
-                Newton, ID = 1
-               </span>
-              </div>
-
-              <div class="form-floating mb-3">
-               <input type="text" class="form-control" id="firstNameUpdate" placeholder="#"
-                th:field="*{user.person.firstName}">
-               <label for="firstNameUpdate" th:text="|#{thead.firstName}: |">First name:</label>
-              </div>
-
-              <div class="form-floating mb-3">
-               <input type="text" class="form-control" id="lastNameUpdate" placeholder="#"
-                th:field="*{user.person.lastName}">
-               <label for="lastNameUpdate" th:text="|#{thead.lastName}: |">Last name:</label>
-              </div>
-
-              <div class="form-floating mb-3">
-               <input type="text" class="form-control" id="emailUpdate" placeholder="#"
-                th:field="*{user.email}">
-               <label for="emailUpdate" th:text="|#{thead.email}: |">Email:</label>
-              </div>
-
-             </div>
-             <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              <button type="submit" class="btn btn-primary" th:text="#{button.save-changes}">Save
-               changes</button>
-             </div>
-            </div>
-           </div>
+         <td class="text-end" style="width: 0%;">
+          <form th:action="@{/teachers/details/__${teacher.id}__}" method="get">
+           <button type="submit" class="btn btn-outline-secondary btn-sm"
+            th:text="#{button.details}">Details</button>
           </form>
-         
          </td>
 
-         <td class="text-start">
+         <td style="width: 0%;">
           <button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal"
            th:data-bs-target="|#delete${teacher.id}|" th:text="#{button.delete}">
            Delete

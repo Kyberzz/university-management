@@ -56,26 +56,30 @@ public class StudentServiceImpl implements StudentService {
     }
     
     @Override
-    public void update(StudentDTO studentModel) {
+    public void update(StudentDTO studentDto) {
         try {
-            Student studentEntity = modelMapper.map(studentModel, Student.class);
+            Student studentEntity = modelMapper.map(studentDto, Student.class);
             Student persistedStudent = studentRepository.findById(studentEntity.getId());
             
-            if (studentModel.hasGroup()) {
-                int groupId = studentModel.getGroup().getId();
+            if (studentDto.hasGroup()) {
+                int groupId = studentDto.getGroup().getId();
                 Group persistedGroup = groupRepository.findById(groupId);
                 persistedStudent.setGroup(persistedGroup);
             } else {
                 persistedStudent.setGroup(null);
             }
             
-            User persistedUser = userRepository.findById(
-                    persistedStudent.getUser().getId().intValue());
-            String firstName = studentModel.getUser().getPerson().getFirstName();
+            int studentId = persistedStudent.getUser().getId().intValue();
+            
+            User persistedUser = userRepository.findById(studentId);
+            
+            String firstName = studentDto.getUser().getPerson().getFirstName();
+            String lastName = studentDto.getUser().getPerson().getLastName();
+            
             persistedUser.getPerson().setFirstName(firstName);
-            String lastName = studentModel.getUser().getPerson().getLastName();
             persistedUser.getPerson().setLastName(lastName);
-            persistedUser.setEmail(studentModel.getUser().getEmail());
+            
+            persistedUser.setEmail(studentDto.getUser().getEmail());
             persistedStudent.setUser(persistedUser);
             studentRepository.saveAndFlush(persistedStudent);
         } catch (DataAccessException | IllegalArgumentException | ConfigurationException | MappingException e) {

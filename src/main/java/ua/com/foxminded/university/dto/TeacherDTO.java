@@ -3,6 +3,8 @@ package ua.com.foxminded.university.dto;
 import java.io.Serializable;
 import java.util.Set;
 
+import javax.validation.constraints.NotNull;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,6 +23,7 @@ public class TeacherDTO implements Serializable {
     private Integer id;
     
     @ToString.Exclude
+    @NotNull
     private UserDTO user;
     
     @ToString.Exclude

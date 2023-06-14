@@ -56,7 +56,7 @@ task 3.8
 + + - User 'B' should be able to list all its courses
 
 taks 3.9
-+ - - User 'B' should be able to list all its schedules
++ + - User 'B' should be able to list all its schedules
 
 ## Staff flow
 

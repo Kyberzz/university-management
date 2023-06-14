@@ -82,7 +82,13 @@ class LessonRepositoryTest {
     }
     
     @Test
-    void findByDatestampAndTeacherId() {
+    void findByTeacherId_ShouldReturnLessonsOwnedByTeacher() {
+        List<Lesson> lessons = lessonRepository.findByTeacherId(teacher.getId());
+        assertEquals(lesson, lessons.iterator().next());
+    }
+    
+    @Test
+    void findByDatestampAndTeacherId_ShouldReturnLessons() {
         List<Lesson> lessons = lessonRepository.findByDatestampAndTeacherId(
                 lesson.getDatestamp(), teacher.getId());
         

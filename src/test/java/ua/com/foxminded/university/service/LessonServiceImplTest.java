@@ -109,7 +109,14 @@ class LessonServiceImplTest {
     }
     
     @Test
-    void sortByDatestamp() {
+    void getLessonsByTeacherId_ShouldReturnLessonsOwnedByTeacher() {
+        when(lessonRepositoryMock.findByTeacherId(anyInt())).thenReturn(lessons);
+        lessonSerivice.getLessonsByTeacherId(TEACHER_ID);
+        verify(modelMapperMock).map(lessons, LESSON_LIST_TYPE);
+    }
+    
+    @Test
+    void sortByDatestamp_ShouldSortLessons() {
         LessonDTO lessonOne = LessonDTO.builder().datestamp(LocalDate.of(2023, 1, 1)).build();
         LessonDTO lessonTwo = LessonDTO.builder().datestamp(LocalDate.of(2023, 1, 2)).build();
         Set<LessonDTO> lessons = new HashSet<>();

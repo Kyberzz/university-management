@@ -10,6 +10,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import ua.com.foxminded.university.service.LessonService;
 import ua.com.foxminded.university.service.TeacherService;
 import ua.com.foxminded.university.service.UserService;
 
@@ -20,14 +21,18 @@ class TeacherControllerTest {
     private TeacherService teacherServiceMock;
     
     @MockBean
-    private UserService userService;
+    private UserService userServiceMock;
+    
+    @MockBean
+    private LessonService lessonServiceMock;
     
     private MockMvc mockMvc;
     
     @BeforeEach
     void setup() {
         mockMvc = MockMvcBuilders.standaloneSetup(new TeacherController(teacherServiceMock, 
-                                                                        userService))
+                                                                        userServiceMock,
+                                                                        lessonServiceMock))
                                  .build();
     }
 
