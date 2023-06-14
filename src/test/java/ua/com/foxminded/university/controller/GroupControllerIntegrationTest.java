@@ -76,7 +76,7 @@ class GroupControllerIntegrationTest extends DefaultControllerTest {
     }
     
     @Test
-    @WithUserDetails(AUTHORIZED_EMAIL)
+    @WithUserDetails(ADMIN_EMAIL)
     void deassignGroup_ShouldAuthorizeCredentialsAndRedirect() throws Exception {
         mockMvc.perform(post("/groups/{groupId}/deassign-group", group.getId())
                     .param("studentId", String.valueOf(student.getId()))
@@ -86,7 +86,7 @@ class GroupControllerIntegrationTest extends DefaultControllerTest {
     }
     
     @Test
-    @WithUserDetails(AUTHORIZED_EMAIL)
+    @WithUserDetails(ADMIN_EMAIL)
     void assignGroup_ShouldAuthorizeCredentialsAndRedirect() throws Exception {
         mockMvc.perform(post("/groups/{groupId}/assign-group", group.getId())
                     .param("studentId", new StringBuilder().append(firstStudent.getId())
@@ -99,7 +99,7 @@ class GroupControllerIntegrationTest extends DefaultControllerTest {
     }
     
     @Test
-    @WithUserDetails(AUTHORIZED_EMAIL)
+    @WithUserDetails(ADMIN_EMAIL)
     void delete_ShouldAuthenticateCredantialsAndRedirect() throws Exception {
         mockMvc.perform(post("/groups/{groupId}/delete", group.getId()).with(csrf()))
                .andExpect(authenticated().withRoles(Authority.ADMIN.toString()))
@@ -107,7 +107,7 @@ class GroupControllerIntegrationTest extends DefaultControllerTest {
     }
     
     @Test
-    @WithUserDetails(AUTHORIZED_EMAIL)
+    @WithUserDetails(ADMIN_EMAIL)
     void create_ShouldAuthenticateCredantialsAndRedirect() throws Exception {
         mockMvc.perform(post("/groups/create").param("name", GROUP_NAME)
                                               .with(csrf()))
@@ -116,7 +116,7 @@ class GroupControllerIntegrationTest extends DefaultControllerTest {
     }
     
     @Test
-    @WithUserDetails(AUTHORIZED_EMAIL)
+    @WithUserDetails(ADMIN_EMAIL)
     void update() throws Exception {
         mockMvc.perform(post("/groups/{groupId}/update", group.getId())
                     .param("name", GROUP_NAME)
@@ -126,7 +126,7 @@ class GroupControllerIntegrationTest extends DefaultControllerTest {
     }
     
     @Test
-    @WithUserDetails(AUTHORIZED_EMAIL)
+    @WithUserDetails(ADMIN_EMAIL)
     void getById_ShouldAuthoriseCredentialsAndReturnStatusIsOk() throws Exception {
         mockMvc.perform(get("/groups/{groupId}", group.getId()))
                .andExpect(authenticated().withRoles(Authority.ADMIN.toString()))
@@ -134,7 +134,7 @@ class GroupControllerIntegrationTest extends DefaultControllerTest {
     }
     
     @Test
-    @WithUserDetails(AUTHORIZED_EMAIL)
+    @WithUserDetails(ADMIN_EMAIL)
     void getAllGroups_ShouldAuthenticateCredentialsAndReternStatusIsOk() throws Exception {
         mockMvc.perform(get("/groups/list"))
                .andExpect(authenticated().withRoles(Authority.ADMIN.toString()))

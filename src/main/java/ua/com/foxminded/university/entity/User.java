@@ -42,7 +42,7 @@ public class User implements Serializable {
     @EqualsAndHashCode.Exclude
     private Teacher teacher;
     
-    @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
+    @OneToOne(mappedBy = "user")
     @EqualsAndHashCode.Exclude
     private Student student;
     
@@ -50,7 +50,7 @@ public class User implements Serializable {
     @EqualsAndHashCode.Exclude
     private Staff staff;
     
-    @OneToOne(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE, 
+    @OneToOne(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL, 
               orphanRemoval = true)
     @EqualsAndHashCode.Exclude
     private UserAuthority userAuthority;

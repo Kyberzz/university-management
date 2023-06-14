@@ -23,6 +23,7 @@ import ua.com.foxminded.university.exception.ServiceException;
 @Slf4j
 public class DefaultController {
     
+    public static final String AMPERSAND_SIGN = "&";
     public static final int STUB = 0;
     public static final String EQUAL_SIGN = "=";
     public static final String ERRORS_RESPONCE = "errorsResponse";

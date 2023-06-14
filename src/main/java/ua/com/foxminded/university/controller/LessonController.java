@@ -51,7 +51,6 @@ public class LessonController extends DefaultController {
     public static final String MONTH_SHEDULE_TEMPLATE_PATH = "lessons/month-lessons";
     public static final String COURSES_ATTRIBUTE = "courses";
     public static final String GROUPS_ATTRIBUTE = "groups";
-    public static final String DAY_LESSONS_PATH = "/lessons/day-lessons/";
     public static final String DAY_LESSONS_TEMPLATE_PATH = "lessons/day-lessons";
     public static final String LESSON_ATTRIBUTE = "lesson";
     public static final String DAY_LESSONS_ATTRIBUTE = "dayLessons";
@@ -144,7 +143,7 @@ public class LessonController extends DefaultController {
                          @RequestParam @Min(1) int timetableId,
                          @RequestParam @Min(1) int courseId,
                          @RequestParam @Min(1) int groupId,
-                         @ModelAttribute LessonDTO lesson) {
+                         @ModelAttribute(LESSON_ATTRIBUTE) LessonDTO lesson) {
         lesson.setDatestamp(LocalDate.parse(date));
         lesson.setTimetable(TimetableDTO.builder().id(timetableId).build());
         lesson.setCourse(CourseDTO.builder().id(courseId).build());
@@ -153,9 +152,11 @@ public class LessonController extends DefaultController {
         lessonService.create(lesson);
         
         return new StringBuilder().append(REDIRECT_KEY_WORD)
-                                  .append(DAY_LESSONS_PATH)
+                                  .append(SLASH)
+                                  .append(DAY_LESSONS_TEMPLATE_PATH)
+                                  .append(SLASH)
                                   .append(lesson.getDatestamp())
-                                  .append("?")
+                                  .append(QUESTION_MARK)
                                   .append(TIMETABLE_ID_PARAMETER_NAME)
                                   .append(EQUAL_SIGN)
                                   .append(lesson.getTimetable().getId())
@@ -170,7 +171,9 @@ public class LessonController extends DefaultController {
                              @PathVariable int lessonId) {
         lessonService.deleteById(lessonId);
         return new StringBuilder().append(REDIRECT_KEY_WORD)
-                                  .append(DAY_LESSONS_PATH)
+                                  .append(SLASH)
+                                  .append(DAY_LESSONS_TEMPLATE_PATH)
+                                  .append(SLASH)
                                   .append(lesson.getDatestamp())
                                   .append(QUESTION_MARK)
                                   .append(TIMETABLE_ID_PARAMETER_NAME)

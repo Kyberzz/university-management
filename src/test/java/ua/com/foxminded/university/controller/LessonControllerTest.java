@@ -2,6 +2,7 @@ package ua.com.foxminded.university.controller;
 
 import static ua.com.foxminded.university.controller.CourseController.COURSE_ID_PARAMETER_NAME;
 import static ua.com.foxminded.university.controller.CourseControllerIntegrationTest.COURSE_ID;
+import static ua.com.foxminded.university.controller.DefaultController.AMPERSAND_SIGN;
 import static ua.com.foxminded.university.controller.DefaultController.STUB;
 import static ua.com.foxminded.university.controller.GroupController.GROUP_ID;
 import static ua.com.foxminded.university.controller.GroupController.GROUP_ID_PARAMETER_NAME;
@@ -187,14 +188,15 @@ class LessonControllerTest {
                     .flashAttr(LESSON_ATTRIBUTE, lessonDto))
                .andDo(print())
                .andExpect(model().attributeExists(LESSON_ATTRIBUTE))
-               .andExpect(redirectedUrl(new StringBuffer().append(DAY_LESSONS_PATH)
-                                                          .append(lessonDto.getDatestamp())
+               .andExpect(redirectedUrl(new StringBuffer().append(SLASH)
+                                                          .append(DAY_LESSONS_TEMPLATE_PATH)
+                                                          .append(SLASH)                                                          .append(lessonDto.getDatestamp())
                                                           .append(QUESTION_MARK)
                                                           .append(TIMETABLE_ID_PARAMETER_NAME)
                                                           .append(EQUAL_SIGN)
                                                           .append(lessonDto.getTimetable()
                                                                            .getId())
-                                                          .append("&")
+                                                          .append(AMPERSAND_SIGN)
                                                           .append(COURSE_ID_PARAMETER_NAME)
                                                           .append(EQUAL_SIGN)
                                                           .append(COURSE_ID)
@@ -210,13 +212,15 @@ class LessonControllerTest {
         mockMvc.perform(post("/lessons/delete/{lessonId}", TIMETABLE_ID)
                .flashAttr(LESSON_ATTRIBUTE, lesson))
         .andDo(print())
-        .andExpect(redirectedUrl(new StringBuilder().append(DAY_LESSONS_PATH)
+        .andExpect(redirectedUrl(new StringBuilder().append(SLASH)
+                                                    .append(DAY_LESSONS_TEMPLATE_PATH)
+                                                    .append(SLASH)
                                                     .append(lesson.getDatestamp())
                                                     .append(QUESTION_MARK)
                                                     .append(TIMETABLE_ID_PARAMETER_NAME)
                                                     .append(EQUAL_SIGN)
                                                     .append(TIMETABLE_ID)
-                                                    .append("&")
+                                                    .append(AMPERSAND_SIGN)
                                                     .append(COURSE_ID_PARAMETER_NAME)
                                                     .append(EQUAL_SIGN)
                                                     .append(STUB)

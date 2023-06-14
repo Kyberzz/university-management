@@ -6,7 +6,7 @@ import static org.springframework.security.test.web.servlet.setup.SecurityMockMv
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static ua.com.foxminded.university.controller.DefaultControllerTest.AUTHORIZED_EMAIL;
+import static ua.com.foxminded.university.controller.DefaultControllerTest.ADMIN_EMAIL;
 import static ua.com.foxminded.university.entity.Authority.ADMIN;
 import static ua.com.foxminded.university.entity.RoleAuthority.ROLE_ADMIN;
 
@@ -71,7 +71,7 @@ class StudentControllerIntegrationTest {
         
         new TransactionTemplate(transactionManager).execute(transactionStatus -> {
             userRepository.deleteAll();
-            User user = UserMother.complete().email(AUTHORIZED_EMAIL).build();
+            User user = UserMother.complete().email(ADMIN_EMAIL).build();
             userRepository.saveAndFlush(user);
             UserAuthority userAuthority = UserAuthority.builder()
                     .roleAuthority(ROLE_ADMIN)
@@ -94,7 +94,7 @@ class StudentControllerIntegrationTest {
     }
     
     @Test
-    @WithUserDetails(AUTHORIZED_EMAIL)
+    @WithUserDetails(ADMIN_EMAIL)
     void create_ShouldAuthorizeCredentialsAndRedirect() throws Exception {
         mockMvc.perform(post("/students/create").flashAttr("studentModel", studentDto)
                                                 .with(csrf()))
@@ -103,7 +103,7 @@ class StudentControllerIntegrationTest {
     }
     
     @Test
-    @WithUserDetails(AUTHORIZED_EMAIL)
+    @WithUserDetails(ADMIN_EMAIL)
     void list_ShouldAuthenticateCredentialsAndReturnStatusIsOk() throws Exception {
         mockMvc.perform(get("/students/list"))
                .andExpect(authenticated().withRoles(ADMIN.toString()))
@@ -111,7 +111,7 @@ class StudentControllerIntegrationTest {
     }
     
     @Test
-    @WithUserDetails(AUTHORIZED_EMAIL)
+    @WithUserDetails(ADMIN_EMAIL)
     void update_ShouldAuthorizeCredentialsAndRedirect() throws Exception {
         mockMvc.perform(post("/students/{studentId}/update", 
                              String.valueOf(student.getId()))
@@ -122,7 +122,7 @@ class StudentControllerIntegrationTest {
     }
     
     @Test
-    @WithUserDetails(AUTHORIZED_EMAIL)
+    @WithUserDetails(ADMIN_EMAIL)
     void delete_ShouldAuthenticateCredentialsAndRedirect() throws Exception {
         mockMvc.perform(post("/students/delete")
                     .param("studentId", String.valueOf(student.getId()))

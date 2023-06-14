@@ -78,5 +78,4 @@ taks 3.9
 ## Anonimous flow
 
 task 3.10
-- - - User 'D' should be able to list all courses with basic info 
-	  (without schedule, teacher, groups and student information)
+- - - User 'D' should be able to list all courses with basic info (without schedule, teacher, groups and student information)
