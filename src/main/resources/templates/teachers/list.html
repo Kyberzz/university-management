@@ -34,12 +34,13 @@
     <div class="col-2" style="border-right: 1px solid #ddd;">
 
      <div class="row justify-content-end">
-      <button type="button" class="btn btn-success w-50 me-2" data-bs-toggle="modal"
-       data-bs-target="#exampleModal">Create</button>
 
-      <form class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-       aria-hidden="true" th:action="@{/teachers/create}" th:object="${teacher}" method="post">
-       <div class="modal-dialog">
+      <button type="button" class="btn btn-success w-50 me-2" data-bs-toggle="modal"
+       data-bs-target="#createTeacher">Create</button>
+
+      <form class="modal fade" id="createTeacher" tabindex="-1" aria-labelledby="exampleModalLabel"
+       aria-hidden="true" th:action="@{/teachers/create}" method="post">
+       <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
          <div class="modal-header">
           <h1 class="modal-title fs-5" id="exampleModalLabel" th:text="#{teacher.new}">A new teacher
@@ -49,23 +50,36 @@
          </div>
          <div class="modal-body">
 
-          <div class="row form-floating mb-3">
-           <input type="text" class="form-control" id="firstNameInput" placeholder="#"
-            th:field="*{user.person.firstName}">
-           <label for="firstNameInput" th:text="|#{thead.firstName}:|">First name:</label>
-          </div>
-
-          <div class="row form-floating mb-3">
-           <input type="text" class="form-control" id="lastNameInput" placeholder="#"
-            th:field="*{user.person.lastName}">
-           <label for="lastNameInput" th:text="|#{thead.lastName}:|">Last name:</label>
-          </div>
-
-          <div class="row form-floating mb-3">
-           <input type="text" class="form-control" id="emailInput" placeholder="#"
-            th:field="*{user.email}">
-           <label for="emailInput" th:text="|#{thead.email}:|">Last name:</label>
-          </div>
+          <table class="table">
+           <thead>
+            <tr>
+             <th scope="col">#</th>
+             <th scope="col" th:text="#{thead.name}">Name</th>
+             <th scope="col" th:text="#{thead.status}">Status</th>
+             <th scope="col" th:text="#{thead.userId}">User ID</th>
+             <th scope="col"></th>
+            </tr>
+           </thead>
+           <tbody>
+            <tr th:each="user, iterationStatus : ${users}">
+             <th scope="row" th:text="${iterationStatus.count}">1</th>
+             <td th:text="|${user.person?.firstName} ${user.person?.lastName}|">Cassius Clay</td>
+             <td>
+              <div th:if="${user.teacher != null}" th:text="#{thead.teacher}">Teacher</div>
+              <div th:if="${user.student != null}" th:text="#{thead.student}">Student</div>
+              <div th:if="${user.staff != null}" th:text="#{thead.staff}">Staff</div>
+             </td>
+             <td th:text="${user.id}">7</td>
+             <td>
+              <div class="form-check"
+               th:if="${user.teacher} == null and ${user.student} == null and ${user.staff} == null">
+               <input class="form-check-input" type="radio" name="userId" id="userId"
+                th:value="${user.id}">
+              </div>
+             </td>
+            </tr>
+           </tbody>
+          </table>
 
          </div>
          <div class="modal-footer">
@@ -102,49 +116,10 @@
          <td th:text="${teacher.user?.email}">email@com</td>
          <td th:text="${teacher.id}" class="text-center">1</td>
          <td class="text-end" style="width: 0%;">
-          <form th:action="@{/teachers/details/__${teacher.id}__}" method="get">
+          <form th:action="@{/teachers/teacher/__${teacher.id}__}" method="get">
            <button type="submit" class="btn btn-outline-secondary btn-sm"
             th:text="#{button.details}">Details</button>
           </form>
-         </td>
-
-         <td style="width: 0%;">
-          <button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal"
-           th:data-bs-target="|#delete${teacher.id}|" th:text="#{button.delete}">
-           Delete
-          </button>
-
-          <form class="modal fade" th:id="|delete${teacher.id}|" tabindex="-1"
-           aria-labelledby="exampleModalLabel" aria-hidden="true"
-           th:action="@{/teachers/delete/__${teacher.id}__}" method="post">
-           <div class="modal-dialog">
-            <div class="modal-content">
-             <div class="modal-header">
-              <h1 class="modal-title fs-5" id="exampleModalLabel"
-               th:text="#{teachers.delete-teacher}">
-               Delete the teacher</h1>
-              <button type="button" class="btn-close" data-bs-dismiss="modal"
-               aria-label="Close"></button>
-             </div>
-
-             <div class="modal-body">
-              <div class="row mb-3">
-               <span
-                th:text="|${teacher.user?.person?.firstName} ${teacher.user?.person?.lastName}, ID = ${teacher.id}|">Isaac
-                Newton, ID = 1
-               </span>
-              </div>
-             </div>
-
-             <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              <button type="submit" class="btn btn-primary"
-               th:text="#{button.confirm}">Confirm</button>
-             </div>
-            </div>
-           </div>
-          </form>
-
          </td>
 
         </tr>
