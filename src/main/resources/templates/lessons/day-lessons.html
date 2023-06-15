@@ -93,21 +93,20 @@
               <div class="container-fluid">
                <div>
                 <input type="hidden" th:field="*{datestamp}">
-                <input type="hidden" th:field="*{timetable.id}"
+                <input type="hidden" th:field="*{timetable.id}" </div>
+                <div th:text="#{lessons.delete-lesson}">The
+                 lesson will be deleted</div>
                </div>
-               <div th:text="#{lessons.delete-lesson}">The
-                lesson will be deleted</div>
+              </div>
+              <div class="modal-footer">
+               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                th:text="#{button.close}">Close</button>
+               <button type="submit" class="btn btn-primary" id="confirmDeletingButton"
+                th:text="#{button.confirm}">Confirm
+                deleting</button>
               </div>
              </div>
-             <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
-               th:text="#{button.close}">Close</button>
-              <button type="submit" class="btn btn-primary" id="confirmDeletingButton"
-               th:text="#{button.confirm}">Confirm
-               deleting</button>
-             </div>
             </div>
-           </div>
           </form>
          </td>
         </tr>
@@ -122,7 +121,7 @@
 
       <form class="row mt-2" th:action="@{/lessons/day-lessons/__${lesson.datestamp}__}"
        method="get">
-       <div class="col-3" th:text="|#{thead.lesson}: |">Lesson:</div>
+       <div class="col-4" th:text="|#{courses.course}: |">Course:</div>
        <div class="col-5">
         <select class="form-select form-select-sm" aria-label="Lesson selection"
          id="lessonSelection" name="courseId">
@@ -136,6 +135,12 @@
        </span>
       </form>
 
+      <div class="row mt-2">
+       <div class="col-4 fw-bold" th:text="|#{courses.selected-course}:|">Selected course:</div>
+       <div class="col-5" th:text="${course.name} != null ? ${course.name} : '---'">Programming
+       </div>
+      </div>
+
       <form class="col" th:action="@{/lessons/__${lesson.datestamp}__/create}" method="post"
        th:object="${lesson}">
 
@@ -143,7 +148,7 @@
        <input type="hidden" name="timetableId" th:value="${timetable.id}">
 
        <div class="row mt-2 text-start">
-        <div class="col-3" th:text="|#{thead.teacher}:|">Teacher</div>
+        <div class="col-4" th:text="|#{thead.teacher}:|">Teacher</div>
         <div class="col-5">
          <select class="form-select form-select-sm" aria-label="Teacher selection"
           th:field="*{teacher.id}" id="teacherSelection">
@@ -156,7 +161,7 @@
        </div>
 
        <div class="row mt-2 text-start">
-        <div class="col-3" th:text="|#{thead.group}: |">Group:</div>
+        <div class="col-4" th:text="|#{thead.group}: |">Group:</div>
         <div class="col-5">
          <select class="form-select form-select-sm" aria-label="Group selection" name="groupId"
           id="groupSelection">
@@ -168,7 +173,7 @@
        </div>
 
        <div class="row mt-2 text-start">
-        <div class="col-3" th:text="|#{div.lesson-order}: |">Lesson order:</div>
+        <div class="col-4" th:text="|#{div.lesson-order}: |">Lesson order:</div>
         <div class="col-5">
          <select class="form-select form-select-sm" aria-label="Group selection"
           th:field="*{lessonOrder}" id="groupSelection">
@@ -181,6 +186,7 @@
        <div class="row mb-3 mt-2">
         <button type="submit" class="btn btn-primary btn-sm">Create lesson</button>
        </div>
+
       </form>
 
       <div class="row mb-3">
