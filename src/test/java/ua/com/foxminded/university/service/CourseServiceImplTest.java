@@ -33,9 +33,9 @@ import ua.com.foxminded.university.service.impl.CourseServiceImpl;
 @ExtendWith(MockitoExtension.class)
 class CourseServiceImplTest {
     
-    private static final int ID = 1;
-    private static final int TEACHER_ID = 1;
-    private static final int COURSE_ID = 1;
+    public static final int ID = 1;
+    public static final int TEACHER_ID = 1;
+    public static final int COURSE_ID = 1;
     
     @InjectMocks
     private CourseServiceImpl courseService;

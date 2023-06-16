@@ -1,5 +1,6 @@
 package ua.com.foxminded.university.controller;
 
+import static ua.com.foxminded.university.controller.LessonController.LESSONS_ATTRIBUTE;
 import static ua.com.foxminded.university.controller.UserController.USERS_ATTRIBUTE;
 
 import java.util.List;
@@ -60,7 +61,7 @@ public class TeacherController extends DefaultController {
         List<UserDTO> users = userService.getAll();
         
         model.addAttribute(USERS_ATTRIBUTE, users);
-        model.addAttribute(LessonController.LESSONS_ATTRIBUTE, lessons);
+        model.addAttribute(LESSONS_ATTRIBUTE, lessons);
         model.addAttribute(TEACHER_ATTRIBUTE, teacher);
         return TEACHER_TEMPLATE_PATH;
     }
@@ -104,11 +105,11 @@ public class TeacherController extends DefaultController {
                                   .toString();
     }
 
-    @RequestMapping("/list")
-    public String getAllTeachers(Model model) {
+    @GetMapping("/list")
+    public String getAll(Model model) {
         List<TeacherDTO> teachers = teacherService.getAll();
         teacherService.sortByLastName(teachers);
-        TeacherDTO teacher = TeacherDTO.builder().build();
+        TeacherDTO teacher = new TeacherDTO();
         List<UserDTO> users = userService.getAll();
         
         model.addAttribute(USERS_ATTRIBUTE, users);

@@ -54,6 +54,7 @@ import ua.com.foxminded.university.service.TimingService;
 @ExtendWith(SpringExtension.class)
 class LessonControllerTest {
     
+    public static final int LESSON_ID = 1;
     public static final int TIMETABLE_ID = 1;
     
     @MockBean
@@ -302,7 +303,7 @@ class LessonControllerTest {
 
     @Test
     void getMonthLessons_ShouldRenderListTemplate() throws Exception {
-        LocalDate localDate = LocalDate.now();
+        LocalDate localDate = lesson.getDatestamp();
         mockMvc.perform(MockMvcRequestBuilders.get("/lessons/month-lessons/{date}", 
                         localDate.toString()))
                .andExpect(status().isOk())
