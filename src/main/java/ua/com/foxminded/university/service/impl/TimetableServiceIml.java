@@ -32,12 +32,13 @@ import ua.com.foxminded.university.service.TimetableService;
 @RequiredArgsConstructor
 public class TimetableServiceIml implements TimetableService {
     
-    public static final Type TIMETABLE_MODELS_LIST_TYPE = 
+    public static final Type TIMETABLES_LIST_TYPE = 
             new TypeToken<List<TimetableDTO>>() {}.getType();
     
     private final TimetableRepository timetableRepository;
     private final ModelMapper modelMapper;
     
+    @Override
     public void sortByName(List<TimetableDTO> timetables) {
         Collections.sort(timetables, Comparator.comparing(TimetableDTO::getName));
     }
@@ -65,7 +66,7 @@ public class TimetableServiceIml implements TimetableService {
     public List<TimetableDTO> getAllWithTimings() {
         try {
             List<Timetable> entities = timetableRepository.getAllWithTimings();
-            return modelMapper.map(entities, TIMETABLE_MODELS_LIST_TYPE);
+            return modelMapper.map(entities, TIMETABLES_LIST_TYPE);
         } catch (DataAccessException | IllegalArgumentException | 
                  ConfigurationException | MappingException e) {
             throw new ServiceException(TIMETABLE_FETCH_ERROR, e);
@@ -82,10 +83,10 @@ public class TimetableServiceIml implements TimetableService {
     }
 
     @Override
-    public TimetableDTO create(TimetableDTO timetable) {
+    public TimetableDTO create(TimetableDTO timetableDto) {
         try {
-            Timetable entity = modelMapper.map(timetable, Timetable.class);
-            Timetable createdEntity = timetableRepository.saveAndFlush(entity);
+            Timetable timetable = modelMapper.map(timetableDto, Timetable.class);
+            Timetable createdEntity = timetableRepository.saveAndFlush(timetable);
             return modelMapper.map(createdEntity, TimetableDTO.class);
         } catch (DataIntegrityViolationException e) {
             throw new ServiceException(TIMETABLE_NAME_DUPLICATION, e);
@@ -96,12 +97,12 @@ public class TimetableServiceIml implements TimetableService {
     }
 
     @Override
-    public void update(TimetableDTO model) {
+    public void update(TimetableDTO dto) {
         try {
             Timetable persistedEntity = timetableRepository.findById(
-                    model.getId().intValue());
-            Timetable entity = modelMapper.map(model, Timetable.class);
-            persistedEntity.setName(model.getName());
+                    dto.getId().intValue());
+            Timetable entity = modelMapper.map(dto, Timetable.class);
+            persistedEntity.setName(dto.getName());
             timetableRepository.saveAndFlush(entity);
         } catch (DataAccessException | IllegalArgumentException | 
                  ConfigurationException | MappingException e) {
@@ -124,7 +125,7 @@ public class TimetableServiceIml implements TimetableService {
     public List<TimetableDTO> getAll() {
         try {
             List<Timetable> entities = timetableRepository.findAll();
-            return modelMapper.map(entities, TIMETABLE_MODELS_LIST_TYPE);
+            return modelMapper.map(entities, TIMETABLES_LIST_TYPE);
         } catch (DataAccessException | IllegalArgumentException | ConfigurationException | 
                  MappingException e) {
             throw new ServiceException(TIMETABLES_FETCH_ERROR, e);

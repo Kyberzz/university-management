@@ -66,7 +66,7 @@ public class TimetableController extends DefaultController {
     
     @PostMapping("/add-timing/{timetableId}")
     public String addTiming(@PathVariable int timetableId,                            
-                            @Valid @ModelAttribute TimingDTO timing) {
+                            @Valid @ModelAttribute(TIMING_ATTRIBUTE) TimingDTO timing) {
         
         timing.setTimetable(TimetableDTO.builder().id(timetableId).build());
         timingService.create(timing);
@@ -83,7 +83,7 @@ public class TimetableController extends DefaultController {
     
     @PostMapping("/update-name/{timetableId}")
     public String updateName(@PathVariable int timetableId,
-                             @ModelAttribute @Valid TimetableDTO timetable) {
+                             @ModelAttribute (TIMETABLE_ATTRIBUTE)@Valid TimetableDTO timetable) {
         
         TimetableDTO persistedTimetable = timetableService.getById(timetableId);
         persistedTimetable.setName(timetable.getName());
@@ -98,7 +98,7 @@ public class TimetableController extends DefaultController {
     }
     
     @PostMapping("/create")
-    public String create(@ModelAttribute @Valid TimetableDTO timetable) {
+    public String create(@ModelAttribute(TIMETABLE_ATTRIBUTE) @Valid TimetableDTO timetable) {
         
         TimetableDTO createdTimetable = timetableService.create(timetable);
         return new StringBuilder().append(REDIRECT_KEY_WORD)
@@ -111,7 +111,6 @@ public class TimetableController extends DefaultController {
     
     @GetMapping("/list")
     public String getAll(@RequestParam int timetableId, Model model) {
-        
         List<TimetableDTO> timetables = timetableService.getAll();
         timetableService.sortByName(timetables);
         
