@@ -5,7 +5,8 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static ua.com.foxminded.university.service.StudentServiceImplTest.*;
+import static ua.com.foxminded.university.service.StudentServiceImplTest.LAST_NAME_A;
+import static ua.com.foxminded.university.service.StudentServiceImplTest.LAST_NAME_B;
 
 import java.util.Arrays;
 import java.util.LinkedHashSet;
@@ -29,7 +30,6 @@ import ua.com.foxminded.university.dtomother.StudentDTOMother;
 import ua.com.foxminded.university.entity.Group;
 import ua.com.foxminded.university.entity.Student;
 import ua.com.foxminded.university.entitymother.GroupMother;
-import ua.com.foxminded.university.entitymother.StudentMother;
 import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.repository.GroupRepository;
 import ua.com.foxminded.university.repository.StudentRepository;
@@ -63,7 +63,7 @@ class GroupServiceImplTest {
         group = GroupMother.complete().build();
         groups = Arrays.asList(group);
         groupDto = GroupDTOMother.complete().build();
-        student = StudentMother.complete().build();
+        student = new Student();
     }
     
     @Test

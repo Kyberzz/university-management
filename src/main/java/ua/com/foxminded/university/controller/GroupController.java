@@ -1,5 +1,7 @@
 package ua.com.foxminded.university.controller;
 
+import static ua.com.foxminded.university.controller.StudentController.STUDENTS_ATTRIBUTE;
+
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -24,11 +26,13 @@ import ua.com.foxminded.university.service.StudentService;
 public class GroupController extends DefaultController {
     
     public static final int GROUP_ID = 1;
+    public static final String GROUP_NAME_PARAMETER = "name";
     public static final String GROUP_ID_PARAMETER_NAME = "groupId";
-    public static final String STUDENTS_MODEL_ATTRIBUTE = "students";
-    public static final String GROUPS_MODEL_ATTRIBUTE = "groups";
-    public static final String GROUP_MODEL_ATTRIBUTE = "group";
+    public static final String GROUPS_ATTRIBUTE = "groups";
+    public static final String GROUP_ATTRIBUTE = "group";
     public static final String GROUPS_PATH = "/groups/";
+    public static final String GROUPS_LIST_TEMPLATE_PATH = "groups/list";
+    public static final String GROUP_TEMPLATE_PATH = "groups/group";
 
     private final GroupService groupService;
     private final StudentService studentService;
@@ -54,22 +58,26 @@ public class GroupController extends DefaultController {
     @PostMapping("/{groupId}/delete")
     public String delete(@PathVariable int groupId) {
         groupService.deleteById(groupId);
+        
         return new StringBuilder().append(REDIRECT_KEY_WORD)
-                                  .append(GROUPS_PATH)
-                                  .append(LIST_TEMPLATE).toString();
+                                  .append(SLASH)
+                                  .append(GROUPS_LIST_TEMPLATE_PATH)
+                                  .toString();
     }
 
-    @PostMapping(value = "/create", params = "name")
+    @PostMapping("/create")
     public String create(@RequestParam String name) {
         GroupDTO group = GroupDTO.builder().name(name).build();
         groupService.create(group);
         return new StringBuilder().append(REDIRECT_KEY_WORD)
-                                  .append(GROUPS_PATH)
-                                  .append(LIST_TEMPLATE).toString();
+                                  .append(SLASH)
+                                  .append(GROUPS_LIST_TEMPLATE_PATH)
+                                  .toString();
     }
 
-    @PostMapping(value = "/{groupId}/update", params = "name")
-    public String update(@PathVariable int groupId, @RequestParam String name) {
+    @PostMapping("/{groupId}/update")
+    public String update(@PathVariable int groupId, 
+                         @RequestParam(GROUP_NAME_PARAMETER) String name) {
         GroupDTO group = GroupDTO.builder().id(groupId).name(name).build();
         groupService.update(group);
         return new StringBuilder().append(REDIRECT_KEY_WORD)
@@ -83,16 +91,16 @@ public class GroupController extends DefaultController {
         groupService.sortContainedStudentsByLastName(group);
         List<StudentDTO> students = studentService.getAll();
         studentService.sortByLastName(students);
-        model.addAttribute(STUDENTS_MODEL_ATTRIBUTE, students);
-        model.addAttribute(GROUP_MODEL_ATTRIBUTE, group);
-        return "groups/group";
+        model.addAttribute(STUDENTS_ATTRIBUTE, students);
+        model.addAttribute(GROUP_ATTRIBUTE, group);
+        return GROUP_TEMPLATE_PATH;
     }
 
     @GetMapping("/list")
-    public String getAllGroups(Model model) {
+    public String getAll(Model model) {
         List<GroupDTO> groups = groupService.getAll();
         Collections.sort(groups, Comparator.comparing(GroupDTO::getName));
-        model.addAttribute("groups", groups);
-        return "groups/list";
+        model.addAttribute(GROUPS_ATTRIBUTE, groups);
+        return GROUPS_LIST_TEMPLATE_PATH;
     }
 }

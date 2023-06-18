@@ -5,10 +5,12 @@ import static org.springframework.security.test.web.servlet.response.SecurityMoc
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ua.com.foxminded.university.controller.DefaultControllerTest.ADMIN_EMAIL;
+import static ua.com.foxminded.university.controller.DefaultControllerTest.STUDENT_EMAIL;
 import static ua.com.foxminded.university.entity.Authority.ADMIN;
 import static ua.com.foxminded.university.entity.RoleAuthority.ROLE_ADMIN;
+import static ua.com.foxminded.university.entity.RoleAuthority.ROLE_STUDENT;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,9 +31,8 @@ import org.springframework.web.context.WebApplicationContext;
 import ua.com.foxminded.university.dto.StudentDTO;
 import ua.com.foxminded.university.dtomother.StudentDTOMother;
 import ua.com.foxminded.university.entity.Student;
-import ua.com.foxminded.university.entity.UserAuthority;
 import ua.com.foxminded.university.entity.User;
-import ua.com.foxminded.university.entitymother.StudentMother;
+import ua.com.foxminded.university.entity.UserAuthority;
 import ua.com.foxminded.university.entitymother.UserMother;
 import ua.com.foxminded.university.repository.StudentRepository;
 import ua.com.foxminded.university.repository.UserAuthorityRepository;
@@ -67,7 +68,6 @@ class StudentControllerIntegrationTest {
     @BeforeTransaction
     void init() {
         studentDto = StudentDTOMother.complete().build();
-        student = StudentMother.complete().build();
         
         new TransactionTemplate(transactionManager).execute(transactionStatus -> {
             userRepository.deleteAll();
@@ -77,6 +77,15 @@ class StudentControllerIntegrationTest {
                     .roleAuthority(ROLE_ADMIN)
                     .user(user).build();
             userAuthorityRepository.save(userAuthority);
+            
+            User studentUser = UserMother.complete().email(STUDENT_EMAIL).build();
+            userRepository.saveAndFlush(studentUser);
+            
+            UserAuthority studentUserAuthority = UserAuthority.builder()
+                    .roleAuthority(ROLE_STUDENT)
+                    .user(studentUser).build();
+            userAuthorityRepository.saveAndFlush(studentUserAuthority);
+            student = Student.builder().user(studentUser).build();
             studentRepository.saveAndFlush(student);
             return null;
         });

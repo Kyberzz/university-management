@@ -30,7 +30,6 @@ public class DefaultController {
     public static final String ERROR_MESSAGE_ATTRIBUTE = "errorMessage";
     public static final String QUESTION_MARK = "?";
     public static final String SLASH = "/";
-    public static final String LIST_TEMPLATE = "list";
     public static final String REDIRECT_KEY_WORD = "redirect:";
     public static final String URL_ATTRIBUTE = "url";
     public static final String ERROR_TEMPLATE_NAME = "error";

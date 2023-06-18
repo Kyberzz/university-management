@@ -4,10 +4,12 @@ import static org.mockito.Mockito.*;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static ua.com.foxminded.university.controller.UserController.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -51,76 +53,74 @@ class UserControllerTest {
     }
     
     @Test
-    void authorize_ShouldReturnBadRequestStatus() throws Exception {
+    void delete_ShouldRedirectToGetAll() throws Exception {
+        mockMvc.perform(post("/users/{userId}/delete", USER_ID))
+               .andDo(print())
+               .andExpect(redirectedUrl(new StringBuilder().append(SLASH)
+                                                           .append(USERS_LIST_TEMPLATE_PATH)
+                                                           .toString()));
+        verify(userServiceMock).deleteById(anyInt());
+    }
+    
+    @Test
+    void createPerson_ShouldRedirectToUsersListTemplate_WhenUserHasEmail() throws Exception {
+        when(userServiceMock.createUserPerson(isA(UserDTO.class))).thenReturn(userDto);
         
-        mockMvc.perform(post("/users/authorize").param("email", userDto.getEmail())
-                                                .param("password", userDto.getPassword())
-                                                .param("passwordConfirm", userDto.getPassword())
-                                                .content(BAD_CONTENT))
-               .andExpect(status().is4xxClientError())
-               .andExpect(view().name("error"));
-    }
-    
-    @Test
-    void authorize_ShouldRednderNoConfirmView() throws Exception {
-        mockMvc.perform(post("/users/authorize").param("email", userDto.getEmail())
-                                                .param("password", userDto.getPassword())
-                                                .param("passwordConfirm", NON_CONFIRM_PASSWORD)
-                                                .flashAttr("userModel", userDto))
-               .andExpect(view().name("users/no-confirm"));
-    }
-    
-    @Test
-    void authorize_ShouldRenderNotFoundView() throws Exception {
-        when(userServiceMock.getByEmail(anyString())).thenThrow(new ServiceException());
-        mockMvc.perform(post("/users/authorize").param("email", userDto.getEmail())
-                                                .param("password", userDto.getPassword())
-                                                .param("passwordConfirm", userDto.getPassword())
-                                                .flashAttr("userModel", userDto))
-               .andExpect(view().name("users/not-found"));
-    }
-    
-    @Test
-    void authorize_ShouldAuthorizeUserAndRedirectToListView() throws Exception {
-        when(userServiceMock.getByEmail(anyString())).thenReturn(userDto);
+        mockMvc.perform(post("/users/create-user-person")
+                    .flashAttr(USER_ATTRIBUTE, userDto))
+               .andDo(print())
+               .andExpect(redirectedUrl(new StringBuilder().append(SLASH)
+                                                           .append(USERS_LIST_TEMPLATE_PATH)
+                                                           .toString()));
         
-        mockMvc.perform(post("/users/authorize").param("email", userDto.getEmail())
-                                                .param("password", userDto.getPassword())
-                                                .param("passwordConfirm", userDto.getPassword())
-                                                .flashAttr("userModel", userDto))
-               .andExpect(redirectedUrl("/users/list"));
-        verify(userServiceMock, times(1)).updateUser(isA(UserDTO.class));
+        verify(userServiceMock).updateEmail(anyInt(), anyString());
+        verify(userServiceMock).createUserPerson(isA(UserDTO.class));
+    }
+   
+    @Test
+    void createPerson_ShouldRedirectToUsersListTemplate_WhenUserHasNoEmail() throws Exception {
+        userDto.setEmail(null);
+        
+        mockMvc.perform(post("/users/create-user-person")
+                    .flashAttr(USERS_ATTRIBUTE, userDto))
+               .andDo(print())
+               .andExpect(redirectedUrl(new StringBuilder().append(SLASH)
+                                                           .append(USERS_LIST_TEMPLATE_PATH)
+                                                           .toString()));
+        
+        verify(userServiceMock).createUserPerson(isA(UserDTO.class));
     }
     
     @Test
-    void listAll_ShouldAddAttributesAndRenderToListView() throws Exception {
-        mockMvc.perform(get("/users/list"))
-               .andExpect(status().isOk())
-               .andExpect(model().attributeExists("notAuthorizedUsers"))
-               .andExpect(model().attributeExists("allUsers"))
-               .andExpect(view().name("users/list"));
+    void deleteAuthority_ShouldRedirectToUsersListTemplate() throws Exception {
+        mockMvc.perform(post("/users/delete").param(EMAIL_PARAMETER, userDto.getEmail()))
+               .andExpect(redirectedUrl(new StringBuilder().append(SLASH)
+                                                           .append(USERS_LIST_TEMPLATE_PATH)
+                                                           .toString()));
         
-        verify(userServiceMock).getAll();
-        verify(userServiceMock).getNotAuthorizedUsers();
+        verify(userServiceMock).deleteByEmail(userDto.getEmail());
     }
     
     @Test
     void update_ShouldReturnBadRequestStatus() throws Exception {
         userDto.setUserAuthority(userAuthorityDto);
-        when(userServiceMock.getById(anyInt())).thenReturn(userDto);
-        mockMvc.perform(post("/users/edit").param("userId", userDto.getId().toString())
+        
+        mockMvc.perform(post("/users/edit").param(USER_ID_PARAMETER, String.valueOf(USER_ID))
                                            .content(BAD_CONTENT))
                .andExpect(status().is4xxClientError())
-               .andExpect(view().name("error"));
+               .andExpect(view().name(ERROR_TEMPLATE_NAME));
     }
     
     @Test
-    void edit_ShouldEditUserAndRediredtToListView() throws Exception {
+    void update_ShouldEditUserAndRediredtToListView() throws Exception {
         userDto.setUserAuthority(userAuthorityDto);
         when(userServiceMock.getById(anyInt())).thenReturn(userDto);
-        mockMvc.perform(post("/users/edit").param("userId", userDto.getId().toString())
-                                           .flashAttr("userModel", userDto))
-               .andExpect(redirectedUrl("/users/list"));
+        
+        mockMvc.perform(post("/users/edit").param(USER_ID_PARAMETER, String.valueOf(USER_ID))
+                                           .flashAttr(USER_ATTRIBUTE, userDto))
+               .andExpect(redirectedUrl(new StringBuilder().append(SLASH)
+                                                           .append(USERS_LIST_TEMPLATE_PATH)
+                                                           .toString()));
         
         InOrder inOrder = Mockito.inOrder(userServiceMock);
         inOrder.verify(userServiceMock).getById(anyInt());
@@ -128,10 +128,49 @@ class UserControllerTest {
     }
     
     @Test
-    void delete_ShouldDeleteUserAndRedirectToListView() throws Exception {
-        mockMvc.perform(post("/users/delete").param("email", userDto.getEmail()))
-               .andExpect(redirectedUrl("/users/list"));
+    void authorize_ShouldRednderNoConfirmTemplate() throws Exception {
+        mockMvc.perform(post("/users/authorize").param(EMAIL_PARAMETER, userDto.getEmail())
+                                                .param(PASSWORD_PARAMETER, userDto.getPassword())
+                                                .param(CONFIRMATION_PASSWORD_PARAMETER, 
+                                                       NON_CONFIRM_PASSWORD)
+                                                .flashAttr(USER_ATTRIBUTE, userDto))
+               .andExpect(view().name(NO_CONFRIM_TEMPLATE_PATH));
+    }
+    
+    @Test
+    void authorize_ShouldRenderNotFoundTemplate() throws Exception {
+        when(userServiceMock.getByEmail(anyString())).thenThrow(new ServiceException());
+        mockMvc.perform(post("/users/authorize").param(EMAIL_PARAMETER, userDto.getEmail())
+                                                .param(PASSWORD_PARAMETER, userDto.getPassword())
+                                                .param(CONFIRMATION_PASSWORD_PARAMETER, 
+                                                       userDto.getPassword())
+                                                .flashAttr(USER_ATTRIBUTE, userDto))
+               .andExpect(view().name(NOT_FOUND_USER_TEMPLATE_PATH));
+    }
+    
+    @Test
+    void authorize_ShouldRedirectToGetAll() throws Exception {
+        mockMvc.perform(post("/users/authorize").param(EMAIL_PARAMETER, userDto.getEmail())
+                                                .param(PASSWORD_PARAMETER, userDto.getPassword())
+                                                .param(CONFIRMATION_PASSWORD_PARAMETER, 
+                                                       userDto.getPassword())
+                                                .flashAttr(USER_ATTRIBUTE, userDto))
+               .andExpect(redirectedUrl(new StringBuilder().append(SLASH)
+                                                           .append(USERS_LIST_TEMPLATE_PATH)
+                                                           .toString()));
         
-        verify(userServiceMock).deleteByEmail(userDto.getEmail());
+        verify(userServiceMock).getByEmail(anyString());
+        verify(userServiceMock).updateUser(isA(UserDTO.class));
+    }
+    
+    @Test
+    void getAll_ShouldRenderUsesrsListTemplate() throws Exception {
+        mockMvc.perform(get("/users/list"))
+               .andExpect(model().attributeExists(NOT_AUTHORIZED_USERS_ATTRIBUTE, 
+                                                  USERS_ATTRIBUTE))
+               .andExpect(view().name(USERS_LIST_TEMPLATE_PATH));
+        
+        verify(userServiceMock).getAll();
+        verify(userServiceMock).getNotAuthorizedUsers();
     }
 }

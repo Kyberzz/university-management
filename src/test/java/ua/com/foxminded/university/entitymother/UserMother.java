@@ -16,8 +16,8 @@ public class UserMother {
         PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
         
         return User.builder().email(EMAIL)
-                                   .enabled(true)
-                                   .password(encoder.encode(PASSWORD))
-                                   .person(person);
+                             .enabled(true)
+                             .password(encoder.encode(PASSWORD))
+                             .person(person);
     }
 }

@@ -109,6 +109,7 @@ class TimetableControllerIntegrationTest {
                              timing.getId())
                     .with(csrf()))
                .andDo(print())
+               .andExpect(authenticated().withRoles(ADMIN.toString()))
                .andExpect(status().is3xxRedirection());
     }
     
@@ -117,6 +118,7 @@ class TimetableControllerIntegrationTest {
     void delete_ShouldReturnStatusIsOk() throws Exception {
         mockMvc.perform(post("/timetables/delete/{timetableId}", timetable.getId())
                     .with(csrf()))
+               .andExpect(authenticated().withRoles(ADMIN.toString()))
                .andExpect(status().is3xxRedirection());
     }
     
@@ -129,6 +131,7 @@ class TimetableControllerIntegrationTest {
         mockMvc.perform(post("/timetables/add-timing/{timetableId}", timetable.getId())
                     .with(csrf())
                     .flashAttr(TIMING_ATTRIBUTE, timingDto))
+               .andExpect(authenticated().withRoles(ADMIN.toString()))
                .andExpect(status().is3xxRedirection());
     }
     

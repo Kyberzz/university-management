@@ -95,8 +95,9 @@ public class CourseController extends DefaultController {
     public String deleteById(@RequestParam Integer courseId) {
         courseService.deleteById(courseId);
         return new StringBuilder().append(REDIRECT_KEY_WORD)
-                                  .append(COURSES_PATH)
-                                  .append(LIST_TEMPLATE).toString();
+                                  .append(SLASH)
+                                  .append(COURSES_LIST_TEMPLATE_PATH)
+                                  .toString();
     }
     
     @PostMapping(value = "/update", params = "courseId")
@@ -112,9 +113,11 @@ public class CourseController extends DefaultController {
     @PostMapping("/create")
     public String create(@Valid @ModelAttribute(COURSE_ATTRIBUTE) CourseDTO course) {
         courseService.create(course);   
+        
         return new StringBuilder().append(REDIRECT_KEY_WORD)
-                                  .append(COURSES_PATH)
-                                  .append(LIST_TEMPLATE).toString();
+                                  .append(SLASH)
+                                  .append(COURSES_LIST_TEMPLATE_PATH)
+                                  .toString();
     }
     
     @GetMapping("/list")

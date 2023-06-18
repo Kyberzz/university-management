@@ -1,6 +1,6 @@
 package ua.com.foxminded.university.controller;
 
-import static ua.com.foxminded.university.controller.GroupController.GROUPS_MODEL_ATTRIBUTE;
+import static ua.com.foxminded.university.controller.GroupController.GROUPS_ATTRIBUTE;
 
 import java.util.List;
 
@@ -25,15 +25,15 @@ import ua.com.foxminded.university.service.StudentService;
 @RequiredArgsConstructor
 public class StudentController extends DefaultController {
     
-    public static final String STUDENTS_MODEL_ATTRIBUTE = "students";
-    public static final String STUDENT_MODEL_ATTRIBUTE = "student";
+    public static final String STUDENTS_ATTRIBUTE = "students";
+    public static final String STUDENT_ATTRIBUTE = "student";
     public static final String STUDENTS_LIST_TEMPLATE_PATH = "students/list";
     
     private final StudentService studentService;
     private final GroupService groupService;
     
     @PostMapping("/create")
-    public String create(@Valid @ModelAttribute StudentDTO student) {
+    public String create(@Valid @ModelAttribute (STUDENT_ATTRIBUTE) StudentDTO student) {
         
         studentService.create(student);
         return new StringBuilder().append(REDIRECT_KEY_WORD)
@@ -47,15 +47,15 @@ public class StudentController extends DefaultController {
         List<StudentDTO> students = studentService.getAll();
         List<GroupDTO> groups = groupService.getAll();
         StudentDTO student = new StudentDTO();
-        model.addAttribute(STUDENT_MODEL_ATTRIBUTE, student);
-        model.addAttribute(STUDENTS_MODEL_ATTRIBUTE, students);
-        model.addAttribute(GROUPS_MODEL_ATTRIBUTE, groups);
+        model.addAttribute(STUDENT_ATTRIBUTE, student);
+        model.addAttribute(STUDENTS_ATTRIBUTE, students);
+        model.addAttribute(GROUPS_ATTRIBUTE, groups);
         return STUDENTS_LIST_TEMPLATE_PATH;
     }
     
     @PostMapping("/{studentId}/update")
     public String update(@PathVariable int studentId, 
-                         @Valid @ModelAttribute StudentDTO student) {
+                         @Valid @ModelAttribute(STUDENT_ATTRIBUTE) StudentDTO student) {
         student.setId(studentId);
         studentService.update(student);
         return new StringBuilder().append(REDIRECT_KEY_WORD)

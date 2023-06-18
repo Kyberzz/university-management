@@ -18,7 +18,6 @@ import ua.com.foxminded.university.entity.Group;
 import ua.com.foxminded.university.entity.Student;
 import ua.com.foxminded.university.entity.User;
 import ua.com.foxminded.university.entitymother.GroupMother;
-import ua.com.foxminded.university.entitymother.StudentMother;
 import ua.com.foxminded.university.entitymother.UserMother;
 
 @DataJpaTest
@@ -49,10 +48,10 @@ class StudentRepositoryTest {
         user = UserMother.complete().build();
         entityManager.persist(user);
         
-        student = StudentMother.complete()
-                               .group(group)
-                               .user(user)
-                               .build();
+        student = Student.builder()
+                         .group(group)
+                         .user(user)
+                         .build();
         entityManager.persist(student);
         entityManager.getTransaction().commit();
         entityManager.close();

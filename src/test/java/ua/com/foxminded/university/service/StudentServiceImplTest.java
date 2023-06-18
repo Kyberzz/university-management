@@ -29,7 +29,6 @@ import ua.com.foxminded.university.entity.Group;
 import ua.com.foxminded.university.entity.Student;
 import ua.com.foxminded.university.entity.User;
 import ua.com.foxminded.university.entitymother.GroupMother;
-import ua.com.foxminded.university.entitymother.StudentMother;
 import ua.com.foxminded.university.entitymother.UserMother;
 import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.repository.GroupRepository;
@@ -69,7 +68,7 @@ class StudentServiceImplTest {
     @BeforeEach
     void setUp() {
         studentDto = StudentDTOMother.complete().build();
-        student = StudentMother.complete().build();
+        student = new Student();
         user = UserMother.complete().build();
         groupDto = GroupDTOMother.complete().id(GROUP_ID).build();
         group = GroupMother.complete().build();

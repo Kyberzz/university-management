@@ -313,7 +313,7 @@ class LessonControllerTest {
                .andExpect(model().attributeExists(LESSON_ATTRIBUTE))
                .andExpect(MockMvcResultMatchers.view().name(MONTH_SHEDULE_TEMPLATE_PATH));
         
-        verify(lessonServiceMock).getMonthLessons(LocalDate.now());
+        verify(lessonServiceMock).getMonthLessons(isA(LocalDate.class));
         verify(courseServiceMock).getAll();
         verify(groupServiceMock).getAll();
     }
