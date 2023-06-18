@@ -57,10 +57,10 @@ public class TimingServiceImpl implements TimingService {
     }
 
     @Override
-    public TimingDTO create(TimingDTO model) throws ServiceException {
+    public TimingDTO create(TimingDTO dto) throws ServiceException {
         try {
-            checkTimingConsistency(model);
-            Timing entity = modelMapper.map(model, Timing.class);
+            checkTimingConsistency(dto);
+            Timing entity = modelMapper.map(dto, Timing.class);
             Timing createdEntity = timingRepository.saveAndFlush(entity);
             return modelMapper.map(createdEntity, TimingDTO.class);
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
@@ -134,13 +134,13 @@ public class TimingServiceImpl implements TimingService {
     }
     
     private void checkTimingConsistency(TimingDTO timingDto) {
-        List<Timing> timings = timingRepository.findByTimetableId(timingDto.getTimetable()
-                                                                           .getId());
+        int timetableId = timingDto.getTimetable().getId();
+        List<Timing> timings = timingRepository.findByTimetableId(timetableId);
         Optional<Timing> counterpartLesson = timings.stream()
                 .filter(timing -> timing.getStartTime().equals(timingDto.getStartTime()))
                 .findFirst();
         if (counterpartLesson.isPresent()) {
-            throw new IllegalArgumentException("A lesson with the same start time is present");
+            throw new IllegalArgumentException("A lesson with the same start time presents");
         }
         
         Optional<Timing> lessonBefore = timings.stream()

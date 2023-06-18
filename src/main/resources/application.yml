@@ -38,8 +38,8 @@ spring:
 logging:
   level:
     root: warn
-    org.springframework.web: warn
-    org.springframework.security: warn
+    '[org.springframework.web]': warn
+    '[org.springframework.security]': warn
 #    org.hibernate: error
 #    org.hibernate.sql: debug
 #    org.hibernate.type.descriptor.sql.BasicBinder: trace

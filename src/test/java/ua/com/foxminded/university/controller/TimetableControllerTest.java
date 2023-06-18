@@ -143,6 +143,7 @@ class TimetableControllerTest {
                                           .append(TIMETABLES_LIST_TEMPLATE_PATH)
                                           .append(QUESTION_MARK)
                                           .append(TIMETABLE_ID_PARAMETER_NAME)
+                                          .append(EQUAL_SIGN)
                                           .append(TIMETABLE_ID)
                                           .toString()));
         

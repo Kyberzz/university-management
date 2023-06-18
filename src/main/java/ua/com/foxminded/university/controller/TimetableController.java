@@ -99,13 +99,13 @@ public class TimetableController extends DefaultController {
     
     @PostMapping("/create")
     public String create(@ModelAttribute(TIMETABLE_ATTRIBUTE) @Valid TimetableDTO timetable) {
-        
         TimetableDTO createdTimetable = timetableService.create(timetable);
         return new StringBuilder().append(REDIRECT_KEY_WORD)
                                   .append(SLASH)
                                   .append(TIMETABLES_LIST_TEMPLATE_PATH)
                                   .append(QUESTION_MARK)
                                   .append(TIMETABLE_ID_PARAMETER_NAME)
+                                  .append(EQUAL_SIGN)
                                   .append(createdTimetable.getId()).toString();
     }
     
