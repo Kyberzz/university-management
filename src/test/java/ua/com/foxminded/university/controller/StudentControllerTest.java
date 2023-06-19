@@ -3,13 +3,19 @@ package ua.com.foxminded.university.controller;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.verify;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static ua.com.foxminded.university.controller.DefaultController.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static ua.com.foxminded.university.controller.DefaultController.SLASH;
 import static ua.com.foxminded.university.controller.DefaultControllerTest.ERROR_VIEW;
 import static ua.com.foxminded.university.controller.GroupController.GROUPS_ATTRIBUTE;
-import static ua.com.foxminded.university.controller.StudentController.*;
+import static ua.com.foxminded.university.controller.StudentController.STUDENTS_ATTRIBUTE;
+import static ua.com.foxminded.university.controller.StudentController.STUDENTS_LIST_TEMPLATE_PATH;
+import static ua.com.foxminded.university.controller.StudentController.STUDENT_ATTRIBUTE;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,7 +26,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import ua.com.foxminded.university.dto.StudentDTO;
-import ua.com.foxminded.university.dtomother.StudentDTOMother;
+import ua.com.foxminded.university.dto.UserDTO;
+import ua.com.foxminded.university.dtomother.UserDTOMother;
 import ua.com.foxminded.university.service.GroupService;
 import ua.com.foxminded.university.service.StudentService;
 
@@ -37,12 +44,14 @@ class StudentControllerTest {
     
     private MockMvc mockMvc;
     private StudentDTO studentDto;
+    private UserDTO studentUserDto;
     
     @BeforeEach
     void setup() {
         mockMvc = MockMvcBuilders.standaloneSetup(new StudentController(
                 studentServiceMock, groupServiceMock)).build();
-        studentDto = StudentDTOMother.complete().build();
+        studentUserDto = UserDTOMother.complete().build();
+        studentDto = StudentDTO.builder().user(studentUserDto).build();
     }
     
     @Test

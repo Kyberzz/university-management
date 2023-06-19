@@ -5,6 +5,7 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static ua.com.foxminded.university.service.UserServiceImplTest.USER_ID;
 
 import java.util.Arrays;
 import java.util.List;
@@ -23,7 +24,6 @@ import ua.com.foxminded.university.dto.StudentDTO;
 import ua.com.foxminded.university.dto.UserDTO;
 import ua.com.foxminded.university.dtomother.GroupDTOMother;
 import ua.com.foxminded.university.dtomother.PersonDTOMother;
-import ua.com.foxminded.university.dtomother.StudentDTOMother;
 import ua.com.foxminded.university.dtomother.UserDTOMother;
 import ua.com.foxminded.university.entity.Group;
 import ua.com.foxminded.university.entity.Student;
@@ -67,9 +67,11 @@ class StudentServiceImplTest {
     
     @BeforeEach
     void setUp() {
-        studentDto = StudentDTOMother.complete().build();
-        student = new Student();
+        PersonDTO personDto = PersonDTOMother.complete().build();
+        UserDTO userDto = UserDTOMother.complete().person(personDto).build();
+        studentDto = StudentDTO.builder().user(userDto).build();
         user = UserMother.complete().build();
+        student = Student.builder().user(user).build();
         groupDto = GroupDTOMother.complete().id(GROUP_ID).build();
         group = GroupMother.complete().build();
     }
@@ -79,7 +81,7 @@ class StudentServiceImplTest {
         studentDto.getUser().getPerson().setLastName(LAST_NAME_A);
         PersonDTO person = PersonDTOMother.complete().lastName(LAST_NAME_B).build();
         UserDTO user = UserDTOMother.complete().person(person).build();
-        StudentDTO studentB = StudentDTOMother.complete().user(user).build();
+        StudentDTO studentB = StudentDTO.builder().user(user).build();
         List<StudentDTO> list = Arrays.asList(studentB, studentDto);
         studentService.sortByLastName(list);
         List<StudentDTO> expectedList = Arrays.asList(studentDto, studentB);
@@ -94,23 +96,13 @@ class StudentServiceImplTest {
     }
     
     @Test
-    void update_ShouldExecuteCorrectCallsQuantity_WhenStudentHasGroup() 
+    void update_ShouldUpdateGroupAndUserRelationships() 
             throws ServiceException {
         student.getUser().setId(STUDENT_ID);
         groupDto.setId(GROUP_ID);
         studentDto.setGroup(groupDto);
+        studentDto.setUser(UserDTO.builder().id(USER_ID).build());
         when(groupRepository.findById(anyInt())).thenReturn(group);
-        when(modelMapperMock.map(studentDto, Student.class)).thenReturn(student);
-        when(studentRepositoryMock.findById(anyInt())).thenReturn(student);
-        when(userRepositoryMock.findById(anyInt())).thenReturn(user);
-        studentService.update(studentDto);
-        verify(studentRepositoryMock).saveAndFlush(isA(Student.class));
-    }
-    
-    @Test
-    void update_ShouldExecuteCorrectCallsQuantity_WhenStudentHasNoGroup() 
-            throws ServiceException {
-        student.getUser().setId(STUDENT_ID);
         when(modelMapperMock.map(studentDto, Student.class)).thenReturn(student);
         when(studentRepositoryMock.findById(anyInt())).thenReturn(student);
         when(userRepositoryMock.findById(anyInt())).thenReturn(user);

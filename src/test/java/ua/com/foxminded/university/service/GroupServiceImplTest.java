@@ -26,7 +26,6 @@ import ua.com.foxminded.university.dto.PersonDTO;
 import ua.com.foxminded.university.dto.StudentDTO;
 import ua.com.foxminded.university.dto.UserDTO;
 import ua.com.foxminded.university.dtomother.GroupDTOMother;
-import ua.com.foxminded.university.dtomother.StudentDTOMother;
 import ua.com.foxminded.university.entity.Group;
 import ua.com.foxminded.university.entity.Student;
 import ua.com.foxminded.university.entitymother.GroupMother;
@@ -80,8 +79,8 @@ class GroupServiceImplTest {
         UserDTO firstUser = UserDTO.builder().person(firstPerson).build();
         UserDTO secondUser = UserDTO.builder().person(secondPerson).build();
         
-        StudentDTO firstStudent = StudentDTOMother.complete().user(firstUser).build();
-        StudentDTO secondStudent = StudentDTOMother.complete().user(secondUser).build();
+        StudentDTO firstStudent = StudentDTO.builder().user(firstUser).build();
+        StudentDTO secondStudent = StudentDTO.builder().user(secondUser).build();
         Set<StudentDTO> students = new LinkedHashSet<>();
         students.add(secondStudent);
         students.add(firstStudent);

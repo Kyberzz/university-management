@@ -25,6 +25,7 @@ import ua.com.foxminded.university.service.StudentService;
 @RequiredArgsConstructor
 public class StudentController extends DefaultController {
     
+    public static final String STUDENT_ID_PARAMETER =  "studentId";
     public static final String STUDENTS_ATTRIBUTE = "students";
     public static final String STUDENT_ATTRIBUTE = "student";
     public static final String STUDENTS_LIST_TEMPLATE_PATH = "students/list";
@@ -33,8 +34,7 @@ public class StudentController extends DefaultController {
     private final GroupService groupService;
     
     @PostMapping("/create")
-    public String create(@Valid @ModelAttribute (STUDENT_ATTRIBUTE) StudentDTO student) {
-        
+    public String create(@Valid @ModelAttribute(STUDENT_ATTRIBUTE) StudentDTO student) {
         studentService.create(student);
         return new StringBuilder().append(REDIRECT_KEY_WORD)
                                   .append(SLASH)

@@ -1,6 +1,10 @@
 package ua.com.foxminded.university.service.impl;
 
-import static ua.com.foxminded.university.exception.ServiceErrorCode.*;
+import static ua.com.foxminded.university.exception.ServiceErrorCode.STUDENT_CREATE_ERROR;
+import static ua.com.foxminded.university.exception.ServiceErrorCode.STUDENT_DELETE_ERROR;
+import static ua.com.foxminded.university.exception.ServiceErrorCode.STUDENT_UPDATE_ERROR;
+import static ua.com.foxminded.university.exception.ServiceErrorCode.STUDETNS_FETCH_ERROR;
+import static ua.com.foxminded.university.exception.ServiceErrorCode.STUDETN_FETCH_ERROR;
 
 import java.lang.reflect.Type;
 import java.util.Collections;
@@ -69,20 +73,17 @@ public class StudentServiceImpl implements StudentService {
                 persistedStudent.setGroup(null);
             }
             
-            int studentId = persistedStudent.getUser().getId().intValue();
+            if (studentDto.hasUser()) {
+                int userId = studentDto.getUser().getId().intValue();
+                User user = userRepository.findById(userId);
+                persistedStudent.setUser(user);
+            } else {
+                persistedStudent.setUser(null);
+            }
             
-            User persistedUser = userRepository.findById(studentId);
-            
-            String firstName = studentDto.getUser().getPerson().getFirstName();
-            String lastName = studentDto.getUser().getPerson().getLastName();
-            
-            persistedUser.getPerson().setFirstName(firstName);
-            persistedUser.getPerson().setLastName(lastName);
-            
-            persistedUser.setEmail(studentDto.getUser().getEmail());
-            persistedStudent.setUser(persistedUser);
             studentRepository.saveAndFlush(persistedStudent);
-        } catch (DataAccessException | IllegalArgumentException | ConfigurationException | MappingException e) {
+        } catch (DataAccessException | IllegalArgumentException | 
+                 ConfigurationException | MappingException e) {
             throw new ServiceException(STUDENT_UPDATE_ERROR, e);
         }
     }
