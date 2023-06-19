@@ -50,7 +50,6 @@ class UserControllerIntegrationTest {
     public static final String ADMIN = "ADMIN";
     public static final String PASSWORD = "pass";
     public static final String EMAIL = "email@com";
-//    public static final String AUTHORIZED_EMAIL = "authorized@email";
     
     @Autowired
     private WebApplicationContext context;

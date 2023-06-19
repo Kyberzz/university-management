@@ -41,7 +41,6 @@ public class TimetableController extends DefaultController {
     public String deleteTiming(@PathVariable int timetableId, 
                                @PathVariable int timingId) {
         timingService.deleteById(timingId);
-
         return new StringBuilder().append(REDIRECT_KEY_WORD)
                                   .append(SLASH)
                                   .append(TIMETABLES_LIST_TEMPLATE_PATH)
@@ -54,7 +53,6 @@ public class TimetableController extends DefaultController {
     @PostMapping("/delete/{timetableId}")
     public String delete(@PathVariable int timetableId) {
         timetableService.deleteById(timetableId);
-
         return new StringBuilder().append(REDIRECT_KEY_WORD)
                                   .append(SLASH)
                                   .append(TIMETABLES_LIST_TEMPLATE_PATH)
@@ -70,7 +68,6 @@ public class TimetableController extends DefaultController {
         
         timing.setTimetable(TimetableDTO.builder().id(timetableId).build());
         timingService.create(timing);
-        
         return new StringBuilder().append(REDIRECT_KEY_WORD)
                                   .append(SLASH)
                                   .append(TIMETABLES_LIST_TEMPLATE_PATH)
@@ -83,8 +80,7 @@ public class TimetableController extends DefaultController {
     
     @PostMapping("/update-name/{timetableId}")
     public String updateName(@PathVariable int timetableId,
-                             @ModelAttribute (TIMETABLE_ATTRIBUTE)@Valid TimetableDTO timetable) {
-        
+                             @Valid @ModelAttribute(TIMETABLE_ATTRIBUTE) TimetableDTO timetable) {
         TimetableDTO persistedTimetable = timetableService.getById(timetableId);
         persistedTimetable.setName(timetable.getName());
         timetableService.update(persistedTimetable);
@@ -113,7 +109,6 @@ public class TimetableController extends DefaultController {
     public String getAll(@RequestParam int timetableId, Model model) {
         List<TimetableDTO> timetables = timetableService.getAll();
         timetableService.sortByName(timetables);
-        
         TimetableDTO timetable;
         
         if (timetableId == STUB) {

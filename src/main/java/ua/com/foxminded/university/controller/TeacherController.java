@@ -43,7 +43,6 @@ public class TeacherController extends DefaultController {
     public String deleteTeacherLesson(@PathVariable int teacherId, 
                                       @RequestParam int lessonId) {
         lessonService.deleteById(lessonId);
-        
         return new StringBuilder().append(REDIRECT_KEY_WORD)
                                   .append(SLASH)
                                   .append(TEACHER_TEMPLATE_PATH)
@@ -69,12 +68,10 @@ public class TeacherController extends DefaultController {
     @PostMapping("/{teacherId}/update")
     public String update(@PathVariable int teacherId, 
                          @RequestParam int userId) {
-        
         TeacherDTO persistedTeacher = teacherService.getById(teacherId);
         persistedTeacher.setUser(new UserDTO());
         persistedTeacher.getUser().setId(userId);
         teacherService.update(persistedTeacher);
-        
         return new StringBuilder().append(REDIRECT_KEY_WORD)
                                   .append(SLASH)
                                   .append(TEACHER_TEMPLATE_PATH)
@@ -85,7 +82,6 @@ public class TeacherController extends DefaultController {
     @PostMapping("/delete/{teacherId}")
     public String deleteById(@PathVariable int teacherId) {
         teacherService.deleteById(teacherId);
-        
         return new StringBuilder().append(REDIRECT_KEY_WORD)
                                   .append(SLASH)
                                   .append(TEACHERS_LIST_TEMLPATE_PATH)
@@ -98,7 +94,6 @@ public class TeacherController extends DefaultController {
                                        .user(new UserDTO()).build();
         teacher.getUser().setId(userId);
         teacherService.create(teacher);
-        
         return new StringBuilder().append(REDIRECT_KEY_WORD)
                                   .append(SLASH)
                                   .append(TEACHERS_LIST_TEMLPATE_PATH)

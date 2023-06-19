@@ -26,16 +26,12 @@ public class TimingDTO implements Serializable {
     
     @NotNull
     private LocalTime startTime;
-    
     private Duration lessonDuration;
-    
     private Duration breakDuration;
-    
     private TimetableDTO timetable;
     
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private Set<LessonDTO> schedules;
-    
     private LocalTime endTime;
 }

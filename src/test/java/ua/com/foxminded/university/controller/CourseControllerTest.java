@@ -68,6 +68,7 @@ class CourseControllerTest {
                .andExpect(model().attributeExists(COURSE_ATTRIBUTE, COURSES_ATTRIBUTE))
                .andExpect(status().isOk());
         
+        verify(teacherServiceMock).getTeacherByEmail(anyString());
         verify(courseServiceMock).getByTeacherId(anyInt());
     }
     
@@ -103,12 +104,15 @@ class CourseControllerTest {
                                                   TEACHERS_ATTRIBUTE, 
                                                   UPDATED_COURSE_ATTRIBUTE))
                .andExpect(view().name(COURSE_TEMPLATE_PATH));
+        
+        verify(courseServiceMock).getByIdWithLessonsAndTeachers(anyInt());
     }
     
     @Test
     void deleteById_ShouldDeleteCourseAndRedirectToListView() throws Exception {
         mockMvc.perform(post("/courses/delete").param("courseId", String.valueOf(COURSE_ID)))
                .andExpect(redirectedUrl("/courses/list"));
+        
         verify(courseServiceMock).deleteById(anyInt());
     }
     
@@ -122,8 +126,6 @@ class CourseControllerTest {
     
     @Test
     void update_ShouldUpdateCourseAndRedirectToCourseView() throws Exception {
-        when(courseServiceMock.getById(anyInt())).thenReturn(course);
-        
         mockMvc.perform(post("/courses/update").param("courseId", String.valueOf(COURSE_ID))
                                                .flashAttr(UPDATED_COURSE_ATTRIBUTE, course))
                .andExpect(redirectedUrl(new StringBuilder().append(CourseController.COURSES_PATH)

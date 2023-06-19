@@ -151,7 +151,8 @@ public class GroupServiceImpl implements GroupService {
         try {
             Group groupEntity = groupRepository.findTimetablesById(id);
             return modelMapper.map(groupEntity, GroupDTO.class);
-        } catch (DataAccessException | IllegalArgumentException | ConfigurationException | MappingException e) {
+        } catch (DataAccessException | IllegalArgumentException | 
+                 ConfigurationException | MappingException e) {
             throw new ServiceException(GROUP_FETCH_ERROR, e);
         }
     }

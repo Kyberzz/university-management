@@ -67,7 +67,6 @@ public class LessonController extends DefaultController {
     @GetMapping("/teacher-week-schedule/{email}")
     public String getScheduleForDate(@PathVariable String email, 
                                      @RequestParam @NotBlank String date) {
-
         return new StringBuilder().append(REDIRECT_KEY_WORD)
                                   .append(SLASH)
                                   .append(TEACHER_WEEK_SCHEDULE_TEMPLATE_PATH)
@@ -81,9 +80,7 @@ public class LessonController extends DefaultController {
     @GetMapping("/teacher-week-schedule/{date}/{email}/back")
     public String getPreviousWeekSchedule(@PathVariable String date, 
                                           @PathVariable String email) {
-        
         LocalDate datestamp = lessonService.moveWeekBack(LocalDate.parse(date));
-        
         return new StringBuilder().append(REDIRECT_KEY_WORD)
                                   .append(SLASH)
                                   .append(TEACHER_WEEK_SCHEDULE_TEMPLATE_PATH)
@@ -97,9 +94,7 @@ public class LessonController extends DefaultController {
     @GetMapping("/teacher-week-schedule/{date}/{email}/next")
     public String getNextWeekSchedule(@PathVariable String date, 
                                       @PathVariable String email) {
-        
         LocalDate datestamp = lessonService.moveWeekForward(LocalDate.parse(date));
-        
         return new StringBuilder().append(REDIRECT_KEY_WORD)
                                   .append(SLASH)
                                   .append(TEACHER_WEEK_SCHEDULE_TEMPLATE_PATH)
@@ -113,7 +108,6 @@ public class LessonController extends DefaultController {
     @GetMapping("/teacher-week-schedule/{date}/{email}")
     public String getTeacherWeekSchedule(@PathVariable String date, 
                                          @PathVariable String email, Model model) {
-       
        TeacherDTO teacher = teacherService.getTeacherByEmail(email);
        List<List<LessonDTO>> weekLessons = lessonService.getWeekLessonsOwnedByTeacher(
                LocalDate.parse(date), teacher.getId());
@@ -151,7 +145,6 @@ public class LessonController extends DefaultController {
         lesson.setGroups(new HashSet<>());
         lesson.getGroups().add(GroupDTO.builder().id(groupId).build());
         lessonService.create(lesson);
-        
         return new StringBuilder().append(REDIRECT_KEY_WORD)
                                   .append(SLASH)
                                   .append(DAY_LESSONS_TEMPLATE_PATH)

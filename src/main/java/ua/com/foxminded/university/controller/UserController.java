@@ -39,7 +39,6 @@ public class UserController extends DefaultController {
     @PostMapping("/{userId}/delete")
     public String delete(@PathVariable int userId) {
         userService.deleteById(userId);
-        
         return new StringBuilder().append(REDIRECT_KEY_WORD)
                                   .append(SLASH)
                                   .append(USERS_LIST_TEMPLATE_PATH)
@@ -49,9 +48,7 @@ public class UserController extends DefaultController {
     @PostMapping("/{userId}/edit-email")
     public String editEmail(@PathVariable int userId, 
                             @ModelAttribute UserDTO user) {
-        
         userService.updateEmail(userId, user.getEmail());
-        
         return new StringBuilder().append(REDIRECT_KEY_WORD)
                                   .append(SLASH)
                                   .append(USERS_LIST_TEMPLATE_PATH)
@@ -75,7 +72,6 @@ public class UserController extends DefaultController {
     @PostMapping(value = "/delete", params = "email")
     public String deleteAuthority(@RequestParam String email) {
         userService.deleteByEmail(email);
-        
         return new StringBuilder().append(REDIRECT_KEY_WORD)
                                   .append(SLASH)
                                   .append(USERS_LIST_TEMPLATE_PATH)
@@ -90,7 +86,6 @@ public class UserController extends DefaultController {
         persistedUser.setEnabled(user.getEnabled());
         persistedUser.setUserAuthority(user.getUserAuthority());
         userService.updateUser(persistedUser);
-        
         return new StringBuilder().append(REDIRECT_KEY_WORD)
                                   .append(SLASH)
                                   .append(USERS_LIST_TEMPLATE_PATH)

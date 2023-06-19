@@ -165,7 +165,6 @@ class LessonControllerIntegrationTest extends DefaultControllerTest {
                .andExpect(status().is3xxRedirection());
     }
     
-    
     @Test
     @WithUserDetails(ADMIN_EMAIL)
     void create_ShouldAuthorizeCredentialsAndRedirect() throws Exception {

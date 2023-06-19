@@ -9,6 +9,6 @@ public class PersonMother {
     
     public static final UserPerson.UserPersonBuilder complete() {
         return UserPerson.builder().firstName(FIRST_NAME)
-                                     .lastName(LAST_NAME);
+                                   .lastName(LAST_NAME);
     }
 }

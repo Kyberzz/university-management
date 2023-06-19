@@ -113,7 +113,6 @@ public class CourseController extends DefaultController {
     @PostMapping("/create")
     public String create(@Valid @ModelAttribute(COURSE_ATTRIBUTE) CourseDTO course) {
         courseService.create(course);   
-        
         return new StringBuilder().append(REDIRECT_KEY_WORD)
                                   .append(SLASH)
                                   .append(COURSES_LIST_TEMPLATE_PATH)

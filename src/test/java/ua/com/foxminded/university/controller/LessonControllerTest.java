@@ -123,6 +123,8 @@ class LessonControllerTest {
                                           .append(SLASH)
                                           .append(user.getEmail())
                                           .toString()));
+        
+        verify(lessonServiceMock).moveWeekBack(isA(LocalDate.class));
     }
     
     @Test
@@ -155,6 +157,7 @@ class LessonControllerTest {
                .andExpect(model().attributeExists(WEEK_LESSONS_ATTRIBUTE, LESSON_ATTRIBUTE))
                .andExpect(view().name(TEACHER_WEEK_SCHEDULE_TEMPLATE_PATH));
         
+        verify(teacherServiceMock).getTeacherByEmail(anyString());
         verify(lessonServiceMock).getWeekLessonsOwnedByTeacher(isA(LocalDate.class), anyInt());
     }
     
@@ -290,6 +293,8 @@ class LessonControllerTest {
         mockMvc.perform(get("/lessons/{date}/back", localDate.toString()))
                .andDo(print())
                .andExpect(redirectedUrlPattern("/lessons/month-lessons/*"));
+        
+        verify(lessonServiceMock).moveMonthBack(isA(LocalDate.class));
     }
     
     @Test
@@ -299,6 +304,8 @@ class LessonControllerTest {
         mockMvc.perform(get("/lessons/{date}/next", localDate.toString()))
                .andDo(print())
                .andExpect(redirectedUrlPattern("/lessons/month-lessons/*"));
+        
+        verify(lessonServiceMock).moveMonthForward(isA(LocalDate.class));
     }
 
     @Test
