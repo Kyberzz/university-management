@@ -135,6 +135,8 @@ class LessonServiceImplTest {
     void getByTeacherId_ShouldReturnLessonsOwnedByTeacher() {
         when(lessonRepositoryMock.findByTeacherId(anyInt())).thenReturn(lessons);
         lessonSerivice.getByTeacherId(TEACHER_ID);
+        
+        verify(lessonRepositoryMock).findByTeacherId(anyInt());
         verify(modelMapperMock).map(lessons, LESSON_LIST_TYPE);
     }
     
@@ -171,8 +173,14 @@ class LessonServiceImplTest {
         when(modelMapperMock.map(lesson, LessonDTO.class)).thenReturn(lessonDto);     
         
         lessonSerivice.getWeekLessonsOwnedByTeacher(lesson.getDatestamp(), TEACHER_ID);
+        
+        verify(lessonRepositoryMock, atLeastOnce()).findByDatestampAndTeacherIdAndLessonOrder(
+                isA(LocalDate.class), anyInt(), anyInt());
+        verify(lessonRepositoryMock, atLeastOnce()).findByDatestampAndTeacherId(
+                isA(LocalDate.class), anyInt());
         verify(lessonRepositoryMock, times(DayOfWeek.values().length))
-            .findByDatestampAndTeacherId(isA(LocalDate.class), anyInt()); 
+            .findByDatestampAndTeacherId(isA(LocalDate.class), anyInt());
+        verify(modelMapperMock, atLeastOnce()).map(lesson, LessonDTO.class);
     }
     
     @Test
@@ -185,6 +193,10 @@ class LessonServiceImplTest {
             .thenReturn(lessons);
        
         lessonSerivice.applyTimetable(lesson.getDatestamp(), TIMETABLE_ID);
+        
+        verify(timetableRepositoryMock).findById(anyInt());
+        verify(lessonRepositoryMock).findByDatestamp(isA(LocalDate.class));
+        verify(lessonRepositoryMock).saveAllAndFlush(ArgumentMatchers.<Lesson>anyList());
         verify(modelMapperMock).map(lessons, LESSON_LIST_TYPE);
     }
     
@@ -249,6 +261,8 @@ class LessonServiceImplTest {
         when(modelMapperMock.map(model, Lesson.class)).thenReturn(lesson);
         when(lessonRepositoryMock.findById(anyInt())).thenReturn(lesson);
         lessonSerivice.update(model);
+        
+        verify(modelMapperMock).map(model, Lesson.class);
         verify(lessonRepositoryMock).saveAndFlush(isA(Lesson.class));
     }
     
@@ -274,6 +288,12 @@ class LessonServiceImplTest {
         when(modelMapperMock.map(lessonDto, Lesson.class)).thenReturn(lesson);
         when(modelMapperMock.map(lesson, LessonDTO.class)).thenReturn(lessonDto);
         lessonSerivice.create(lessonDto);
+        
+        verify(lessonRepositoryMock).findByDatestampAndLessonOrderAndGroupsId(
+                isA(LocalDate.class), anyInt(), anyInt());
+        verify(lessonRepositoryMock).findByDatestampAndTeacherIdAndLessonOrderAndCourseId(
+                isA(LocalDate.class), anyInt(), anyInt(), anyInt());
+        verify(modelMapperMock).map(lessonDto, Lesson.class);
         verify(modelMapperMock).map(lesson, LessonDTO.class);
     }
     
@@ -306,6 +326,14 @@ class LessonServiceImplTest {
         when(lessonRepositoryMock.saveAndFlush(lesson)).thenReturn(lesson);
         
         lessonSerivice.create(lessonDto);
+        
+        verify(lessonRepositoryMock).findByDatestampAndLessonOrderAndGroupsId(
+                isA(LocalDate.class), anyInt(), anyInt());
+        verify(lessonRepositoryMock).findByDatestampAndTeacherIdAndLessonOrderAndCourseId(
+                isA(LocalDate.class), anyInt(), anyInt(), anyInt());
+        verify(modelMapperMock).map(lessonDto, Lesson.class);
+        verify(groupRepositoryMock).findById(anyInt());
+        verify(lessonRepositoryMock).saveAndFlush(isA(Lesson.class));
         verify(modelMapperMock).map(lesson, LessonDTO.class);
     }
     
@@ -332,6 +360,12 @@ class LessonServiceImplTest {
         when(lessonRepositoryMock.saveAndFlush(isA(Lesson.class))).thenReturn(lesson);
         
         lessonSerivice.create(lessonDto);
+        
+        verify(lessonRepositoryMock).findByDatestampAndTeacherIdAndLessonOrderAndCourseId(
+                isA(LocalDate.class), anyInt(), anyInt(), anyInt());
+        verify(lessonRepositoryMock).findByDatestampAndLessonOrderAndGroupsId(
+                isA(LocalDate.class), anyInt(), anyInt());
+        verify(lessonRepositoryMock).saveAndFlush(isA(Lesson.class));
         verify(modelMapperMock).map(lesson, LessonDTO.class);
     }
     
@@ -339,6 +373,8 @@ class LessonServiceImplTest {
     void getById_ShouldExecuteCorrectCallsQuantity() {
         when(lessonRepositoryMock.findById(anyInt())).thenReturn(lesson);
         lessonSerivice.getById(LESSON_ID);
+        
+        verify(lessonRepositoryMock).findById(anyInt());
         verify(modelMapperMock).map(lesson, LessonDTO.class);
     }
     
@@ -349,6 +385,8 @@ class LessonServiceImplTest {
         when(modelMapperMock.map(lessons, LESSON_LIST_TYPE))
         .thenReturn(lessonsDto);
         lessonSerivice.getMonthLessons(LocalDate.now());
+        
+        verify(lessonRepositoryMock, atLeastOnce()).findByDatestamp(isA(LocalDate.class));
         verify(modelMapperMock, atLeastOnce()).map(lessons, LESSON_LIST_TYPE);
     }
     
@@ -359,6 +397,8 @@ class LessonServiceImplTest {
         when(modelMapperMock.map(lessons, LessonServiceImpl.LESSON_LIST_TYPE))
             .thenReturn(lessonsDto);
         lessonSerivice.getDayLessons(LocalDate.now());
+        
+        verify(lessonRepositoryMock).findByDatestamp(isA(LocalDate.class));
         verify(modelMapperMock).map(lessons, LessonServiceImpl.LESSON_LIST_TYPE);
     }
     

@@ -40,36 +40,36 @@
 
        <div class="col text-end">
         <div class="dropdown" sec:authorize="hasAnyRole('TEACHER', 'STUDENT')">
-          <button class="btn btn-primary btn-sm dropdown-toggle d-inline" type="button"
-           data-bs-toggle="dropdown" aria-expanded="false" th:text="#{button.menu}">Menu</button>
-          <ul class="dropdown-menu">
-           <li sec:authorize="hasAnyRole('TEACHER')">
-            <form>
-             <button class="dropdown-item" type="submit"
-              th:formaction="@{/lessons/teacher-week-schedule/__${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}__/__${#authentication.name}__}"
-              th:text="#{button.my-schedule}">My Schedule</button>
-            </form>
-           </li>
-           
-           <li sec:authorize="hasAnyRole('TEACHER')">
-            <form>
-             <button class="dropdown-item" type="submit"
-              th:formaction="@{/courses/list/__${#authentication.name}__}"
-              th:text="#{button.my-courses}">My Schedule</button>
-            </form>
-           </li>
-           
-           <li sec:authorize="hasAnyRole('STUDENT')">
-            <form>
-             <button class="dropdown-item" type="submit"
-              th:formaction="@{/lessons/group-week-schedule/__${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}__/__${#authentication.name}__}"
-              th:text="#{button.my-schedule}">My Schedule</button>
-            </form>
-           </li>
-           
-           
-           
-          </ul>
+         <button class="btn btn-primary btn-sm dropdown-toggle d-inline" type="button"
+          data-bs-toggle="dropdown" aria-expanded="false" th:text="#{button.menu}">Menu</button>
+         <ul class="dropdown-menu">
+          <li sec:authorize="hasAnyRole('TEACHER')">
+           <form>
+            <button class="dropdown-item" type="submit"
+             th:formaction="@{/lessons/teacher-week-schedule/__${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}__/__${#authentication.name}__}"
+             th:text="#{button.my-schedule}">My Schedule</button>
+           </form>
+          </li>
+
+          <li sec:authorize="hasAnyRole('TEACHER')">
+           <form>
+            <button class="dropdown-item" type="submit"
+             th:formaction="@{/courses/list/__${#authentication.name}__}"
+             th:text="#{button.my-courses}">My Schedule</button>
+           </form>
+          </li>
+
+          <li sec:authorize="hasAnyRole('STUDENT')">
+           <form>
+            <button class="dropdown-item" type="submit"
+             th:formaction="@{/lessons/group-week-schedule/__${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}__/__${#authentication.name}__}"
+             th:text="#{button.my-schedule}">My Schedule</button>
+           </form>
+          </li>
+
+
+
+         </ul>
         </div>
        </div>
 

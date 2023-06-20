@@ -53,7 +53,7 @@ import ua.com.foxminded.university.entitymother.LessonMother;
 class LessonControllerIntegrationTest extends DefaultControllerTest {
     
     @Container
-    private static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:14");
+    private static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres");
     
     private Lesson lesson;
     private LessonDTO lessonDto;

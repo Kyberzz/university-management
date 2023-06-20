@@ -43,7 +43,7 @@ class GroupControllerIntegrationTest extends DefaultControllerTest {
     public static final String GROUP_NAME = "kt-156";
     
     @Container
-    private static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:14");
+    private static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres");
     
     @Autowired
     private GroupRepository groupRepository;

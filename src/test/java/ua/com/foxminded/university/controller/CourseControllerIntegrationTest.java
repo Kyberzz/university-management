@@ -60,7 +60,7 @@ class CourseControllerIntegrationTest {
     public static final String TEACHER_EMAIL = "teacher@email";
 
     @Container
-    public static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:14");
+    public static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres");
     
     @Autowired
     private MockMvc mockMvc;
