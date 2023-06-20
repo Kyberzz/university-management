@@ -1,18 +1,21 @@
 package ua.com.foxminded.university.controller;
 
-import static ua.com.foxminded.university.controller.CourseController.COURSE_ID_PARAMETER_NAME;
-import static ua.com.foxminded.university.controller.GroupController.GROUP_ID_PARAMETER_NAME;
-import static ua.com.foxminded.university.controller.LessonController.*;
-import static ua.com.foxminded.university.controller.TimetableController.TIMETABLE_ID_PARAMETER_NAME;
-import static ua.com.foxminded.university.entity.Authority.ADMIN;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static ua.com.foxminded.university.controller.CourseController.COURSE_ID_PARAMETER_NAME;
+import static ua.com.foxminded.university.controller.GroupController.GROUP_ID_PARAMETER_NAME;
+import static ua.com.foxminded.university.controller.LessonController.DATE_PARAMETER;
+import static ua.com.foxminded.university.controller.LessonController.LESSON_ATTRIBUTE;
+import static ua.com.foxminded.university.controller.TimetableController.TIMETABLE_ID_PARAMETER_NAME;
+import static ua.com.foxminded.university.entity.Authority.ADMIN;
+import static ua.com.foxminded.university.entity.Authority.STUDENT;
+import static ua.com.foxminded.university.entity.Authority.TEACHER;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 
 import javax.persistence.EntityManager;
 
@@ -33,10 +36,10 @@ import ua.com.foxminded.university.dto.LessonDTO;
 import ua.com.foxminded.university.dto.TeacherDTO;
 import ua.com.foxminded.university.dto.TimetableDTO;
 import ua.com.foxminded.university.dtomother.LessonDTOMother;
-import ua.com.foxminded.university.entity.Authority;
 import ua.com.foxminded.university.entity.Course;
 import ua.com.foxminded.university.entity.Group;
 import ua.com.foxminded.university.entity.Lesson;
+import ua.com.foxminded.university.entity.Student;
 import ua.com.foxminded.university.entity.Teacher;
 import ua.com.foxminded.university.entity.Timetable;
 import ua.com.foxminded.university.entitymother.CourseMother;
@@ -59,6 +62,7 @@ class LessonControllerIntegrationTest extends DefaultControllerTest {
     private Course course;
     private Group group;
     private Teacher teacher;
+    private Student student;
     
     @DynamicPropertySource
     public static void configureProperties(DynamicPropertyRegistry registry) {
@@ -72,18 +76,27 @@ class LessonControllerIntegrationTest extends DefaultControllerTest {
         teacher = Teacher.builder().user(teacherUser).build();
         course = CourseMother.complete().build();
         timetable = Timetable.builder().name(TIMETABLE_NAME).build();
-        lesson = LessonMother.complete().build();
-        group = GroupMother.complete().build();
+        lesson = LessonMother.complete().groups(new HashSet<>()).build();
+        group = GroupMother.complete()
+                           .lessons(new HashSet<>()).build();
+        student = new Student();
+        
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
         
         entityManager.persist(timetable);
         entityManager.persist(course);
+        entityManager.persist(group);
         lesson.setTimetable(timetable);
         lesson.setCourse(course);
-        entityManager.persist(group);
+        lesson.addGroup(group);
+       
+        student.setUser(studentUser);
+        student.setGroup(group);
+        
         entityManager.persist(lesson);
         entityManager.persist(teacher);
+        entityManager.persist(student);
         
         entityManager.getTransaction().commit();
         entityManager.close();
@@ -106,6 +119,7 @@ class LessonControllerIntegrationTest extends DefaultControllerTest {
         Timetable persistedTimetabe = entityManager.find(Timetable.class, timetable.getId());
         Group persistedGroup = entityManager.find(Group.class, group.getId());
         Lesson persistedLesson = entityManager.find(Lesson.class, lesson.getId());
+        Student persistedStudent = entityManager.find(Student.class, student.getId());
         
         if (persistedTimetabe != null) {
             entityManager.remove(persistedTimetabe);
@@ -119,31 +133,74 @@ class LessonControllerIntegrationTest extends DefaultControllerTest {
             entityManager.remove(persistedGroup);
         }
         
+        if (persistedStudent != null) {
+            entityManager.remove(persistedStudent);
+        }
+        
         entityManager.getTransaction().commit();
         entityManager.close();
     }
     
     @Test
+    @WithUserDetails(STUDENT_EMAIL)
+    void getGroupScheduleForDate_ShouldRedirect() throws Exception {
+        mockMvc.perform(get("/lessons/group-week-schedule/{email}", studentUser.getEmail())
+                    .param(DATE_PARAMETER, lesson.getDatestamp().toString()))
+               .andExpect(authenticated().withRoles(STUDENT.toString()))
+               .andExpect(status().is3xxRedirection());
+    }
+    
+    @Test
+    @WithUserDetails(STUDENT_EMAIL)
+    void getPreviousWeekGroupSchedule_ShouldRedirect() throws Exception {
+        mockMvc.perform(get("/lessons/group-week-schedule/{date}/{email}/back", 
+                            lesson.getDatestamp(), studentUser.getEmail()))
+               .andExpect(authenticated().withRoles(STUDENT.toString()))
+               .andExpect(status().is3xxRedirection());
+    }
+    
+    @Test
+    @WithUserDetails(STUDENT_EMAIL)
+    void getNextWeekGroupSchedule_ShouldReturnStatusIsOk() throws Exception {
+        mockMvc.perform(get("/lessons/group-week-schedule/{date}/{email}/next", 
+                            lesson.getDatestamp(), studentUser.getEmail()))
+               .andExpect(authenticated().withRoles(STUDENT.toString()))
+               .andExpect(status().is3xxRedirection());
+    }
+    
+    @Test
+    @WithUserDetails(STUDENT_EMAIL)
+    void getGroupWeekSchedule_ShouldReturnStatusIsOk() throws Exception {
+        mockMvc.perform(get("/lessons/group-week-schedule/{date}/{email}", 
+                            lesson.getDatestamp(), studentUser.getEmail()))
+               .andExpect(authenticated().withRoles(STUDENT.toString()))
+               .andExpect(status().isOk());
+    }
+    
+    @Test
     @WithUserDetails(TEACHER_EMAIL)
-    void getScheduleForDate_ShouldAuthorizeCredentialsAndRedirect() throws Exception {
+    void getTeacherScheduleForDate_ShouldAuthorizeCredentialsAndRedirect() throws Exception {
         mockMvc.perform(get("/lessons/teacher-week-schedule/{email}", teacherUser.getEmail())
                     .param("date", lesson.getDatestamp().toString()))
+               .andExpect(authenticated().withRoles(TEACHER.toString()))
                .andExpect(status().is3xxRedirection());
     }
     
     @Test
     @WithUserDetails(TEACHER_EMAIL)
-    void getPreviousWeekSchedule_ShouldAuthorizeCredentialsAndRedirect() throws Exception {
+    void getPreviousTeacherWeekSchedule_ShouldAuthorizeCredentialsAndRedirect() throws Exception {
         mockMvc.perform(get("/lessons/teacher-week-schedule/{date}/{email}/back", 
                     lesson.getDatestamp(), teacherUser.getEmail()))
+               .andExpect(authenticated().withRoles(TEACHER.toString()))
                .andExpect(status().is3xxRedirection());
     }
     
     @Test
     @WithUserDetails(TEACHER_EMAIL)
-    void getNextWeekSchedule_ShouldAuthorizeCredentialsAndRedirect() throws Exception {
+    void getNextWeekTeacherSchedule_ShouldAuthorizeCredentialsAndRedirect() throws Exception {
         mockMvc.perform(get("/lessons/teacher-week-schedule/{date}/{email}/next", 
                     lesson.getDatestamp(), teacherUser.getEmail()))
+               .andExpect(authenticated().withRoles(TEACHER.toString()))
                .andExpect(status().is3xxRedirection());
     }
     
@@ -152,6 +209,7 @@ class LessonControllerIntegrationTest extends DefaultControllerTest {
     void getTeacherWeekSchedule_ShouldAuthorizeCredentialsAndReturnStatusIsOk() throws Exception {
         mockMvc.perform(get("/lessons/teacher-week-schedule/{date}/{email}", 
                             lesson.getDatestamp(), teacherUser.getEmail()))
+               .andExpect(authenticated().withRoles(TEACHER.toString()))
                .andExpect(status().isOk());
     }
     
@@ -161,7 +219,7 @@ class LessonControllerIntegrationTest extends DefaultControllerTest {
         mockMvc.perform(post("/lessons/{date}/apply-timetable", lesson.getDatestamp())
                     .param(TIMETABLE_ID_PARAMETER_NAME, String.valueOf(timetable.getId()))
                     .with(csrf()))
-               .andDo(print())
+               .andExpect(authenticated().withRoles(ADMIN.toString()))
                .andExpect(status().is3xxRedirection());
     }
     
@@ -177,7 +235,6 @@ class LessonControllerIntegrationTest extends DefaultControllerTest {
                     .param(GROUP_ID_PARAMETER_NAME, String.valueOf(group.getId()))
                     .flashAttr(LESSON_ATTRIBUTE, lessonDto)
                     .with(csrf()))
-               .andDo(print())
                .andExpect(authenticated().withRoles(ADMIN.toString()))
                .andExpect(status().is3xxRedirection());
     }
@@ -189,7 +246,7 @@ class LessonControllerIntegrationTest extends DefaultControllerTest {
         mockMvc.perform(post("/lessons/delete/{lessonId}", lesson.getId())
                     .flashAttr(LESSON_ATTRIBUTE, lessonDto)
                     .with(csrf()))
-               .andExpect(authenticated().withRoles(Authority.ADMIN.toString()))
+               .andExpect(authenticated().withRoles(ADMIN.toString()))
                .andExpect(status().is3xxRedirection());
     }
     

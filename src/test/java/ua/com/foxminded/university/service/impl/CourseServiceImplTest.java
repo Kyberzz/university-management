@@ -1,4 +1,4 @@
-package ua.com.foxminded.university.service;
+package ua.com.foxminded.university.service.impl;
 
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.isA;
@@ -28,7 +28,6 @@ import ua.com.foxminded.university.entity.Teacher;
 import ua.com.foxminded.university.entitymother.CourseMother;
 import ua.com.foxminded.university.repository.CourseRepository;
 import ua.com.foxminded.university.repository.TeacherRepository;
-import ua.com.foxminded.university.service.impl.CourseServiceImpl;
 
 @ExtendWith(MockitoExtension.class)
 class CourseServiceImplTest {

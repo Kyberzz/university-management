@@ -1,6 +1,11 @@
 package ua.com.foxminded.university.service.impl;
 
-import static ua.com.foxminded.university.exception.ServiceErrorCode.*;
+import static ua.com.foxminded.university.exception.ServiceErrorCode.API_ERROR;
+import static ua.com.foxminded.university.exception.ServiceErrorCode.LESSONS_FETCH_ERROR;
+import static ua.com.foxminded.university.exception.ServiceErrorCode.LESSON_DELETE_ERROR;
+import static ua.com.foxminded.university.exception.ServiceErrorCode.LESSON_FETCH_ERROR;
+import static ua.com.foxminded.university.exception.ServiceErrorCode.LESSON_PERSISTENCE_ERROR;
+import static ua.com.foxminded.university.exception.ServiceErrorCode.LESSON_UPDATE_ERROR;
 
 import java.lang.reflect.Type;
 import java.time.DateTimeException;
@@ -25,9 +30,9 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import ua.com.foxminded.university.comparator.LessonDTOComparator;
 import ua.com.foxminded.university.dto.LessonDTO;
-import ua.com.foxminded.university.entity.Timetable;
 import ua.com.foxminded.university.entity.Group;
 import ua.com.foxminded.university.entity.Lesson;
+import ua.com.foxminded.university.entity.Timetable;
 import ua.com.foxminded.university.entity.Timing;
 import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.repository.GroupRepository;
@@ -61,7 +66,53 @@ public class LessonServiceImpl implements LessonService {
     private final GroupRepository groupRepository;
     
     @Override
-    public List<LessonDTO> getLessonsByTeacherId(int teacherId) {
+    public List<LessonDTO> getByGroupId(int groupId) {
+        try {
+            List<Lesson> lessons = lessonRepository.findByGroupsId(groupId);
+            return modelMapper.map(lessons, LESSON_LIST_TYPE);
+        } catch (DataAccessException | IllegalArgumentException | 
+                 ConfigurationException | MappingException e) {
+            throw new ServiceException(LESSONS_FETCH_ERROR, e);
+        }
+    }
+    
+    @Override
+    public List<List<LessonDTO>> getWeekLessonsOwnedByGroup(LocalDate date, int groupId) {
+        LocalDate monday = findMondayOfWeek(date);
+        int maxLessonsQuantityInDay = defineMaxLessonsQuantityInDayForGroup(date, groupId);
+        
+        List<List<LessonDTO>> lessons = new ArrayList<>();
+        
+        try {
+            for (int i = 0; i < maxLessonsQuantityInDay; i++) {
+                List<LessonDTO> lessonsHavingTheSameOrder = new ArrayList<>();
+                
+                for (int j = 0; j < DayOfWeek.values().length; j++) {
+                    LocalDate datestamp = monday.plusDays(j);
+                    Lesson lesson = lessonRepository.findByDatestampAndGroupsIdAndLessonOrder(
+                            datestamp, groupId, i);
+                    
+                    if (lesson == null) {
+                        lessonsHavingTheSameOrder.add(LessonDTO.builder()
+                                                 .datestamp(datestamp)
+                                                 .build());
+                    } else {
+                        LessonDTO lessonDto = modelMapper.map(lesson, LessonDTO.class);
+                        lessonsHavingTheSameOrder.add(lessonDto);  
+                    }
+                }
+                
+                addLessonTiming(lessonsHavingTheSameOrder);
+                lessons.add(lessonsHavingTheSameOrder);
+            }
+        } catch (DataAccessException e) {
+            throw new ServiceException(LESSON_FETCH_ERROR, e); 
+        }
+        return lessons;
+    }
+    
+    @Override
+    public List<LessonDTO> getByTeacherId(int teacherId) {
         try {
             List<Lesson> lessons = lessonRepository.findByTeacherId(teacherId);
             return modelMapper.map(lessons, LESSON_LIST_TYPE);
@@ -93,33 +144,30 @@ public class LessonServiceImpl implements LessonService {
     public List<List<LessonDTO>> getWeekLessonsOwnedByTeacher(LocalDate date, int teacherId) {
         
         LocalDate monday = findMondayOfWeek(date);
-        int lessonsQuantity = defineMaxNumberOfDayLessonsInWeekForTeacher(date, teacherId);
-        
-        if (lessonsQuantity < DEFFALUT_LESSONS_QUANTITY) {
-            lessonsQuantity = DEFFALUT_LESSONS_QUANTITY;
-        }
+        int maxLessonsQuantityInDay = defineMaxLessonsQuantityInDayForTeacher(date, teacherId);
         
         List<List<LessonDTO>> lessons = new ArrayList<>();
        
         try {
-            for (int i = 0; i < lessonsQuantity; i++) {
-                List<LessonDTO> lessonsOfWeekContainingIdemOrder = new ArrayList<>();
+            for (int i = 0; i < maxLessonsQuantityInDay; i++) {
+                List<LessonDTO> lessonsHavingTheSameOrder = new ArrayList<>();
                 
                 for (int j = 0; j < DayOfWeek.values().length; j++) {
                     LocalDate datestamp = monday.plusDays(j);
                     Lesson lesson = lessonRepository
                             .findByDatestampAndTeacherIdAndLessonOrder(datestamp, teacherId, i);
                     if (lesson == null) {
-                        lessonsOfWeekContainingIdemOrder.add(LessonDTO.builder()
+                        lessonsHavingTheSameOrder.add(LessonDTO.builder()
                                 .datestamp(datestamp)
                                 .build());
                     } else {
                         LessonDTO lessonDto = modelMapper.map(lesson, LessonDTO.class);
-                        lessonsOfWeekContainingIdemOrder.add(lessonDto);  
+                        lessonsHavingTheSameOrder.add(lessonDto);  
                     }
                 }
-                addLessonTiming(lessonsOfWeekContainingIdemOrder);
-                lessons.add(lessonsOfWeekContainingIdemOrder);
+                
+                addLessonTiming(lessonsHavingTheSameOrder);
+                lessons.add(lessonsHavingTheSameOrder);
             }
         } catch (DataAccessException e) {
             throw new ServiceException(LESSON_FETCH_ERROR, e); 
@@ -263,7 +311,6 @@ public class LessonServiceImpl implements LessonService {
 
     @Override
     public List<List<List<LessonDTO>>> getMonthLessons(LocalDate date) {
-
         List<List<List<LessonDTO>>> monthTimetable = new ArrayList<>();
 
         for (int i = 0; i < WEEKS_QUANTITY; i++) {
@@ -305,9 +352,21 @@ public class LessonServiceImpl implements LessonService {
         }
     }
     
-    private int defineMaxNumberOfDayLessonsInWeekForTeacher(LocalDate datestamp, 
-            int teacherId) {
+    private int defineMaxLessonsQuantityInDayForGroup(LocalDate date, int groupId) {
+        List<List<Lesson>> weekLessons = new ArrayList<>();
         
+        try {
+            for (int i = 0; i < DayOfWeek.values().length; i++) {
+                List<Lesson> lessons = lessonRepository.findByDatestampAndGroupsId(date, groupId);
+                weekLessons.add(lessons);
+            }
+        } catch (DataAccessException e) {
+            throw new ServiceException(LESSON_FETCH_ERROR, e);
+        }
+        return defineMaxLessonsQuantityInDay(weekLessons);
+    }
+    
+    private int defineMaxLessonsQuantityInDayForTeacher(LocalDate datestamp, int teacherId) {
         List<List<Lesson>> weekLessons = new ArrayList<>();
         
         try {
@@ -319,14 +378,21 @@ public class LessonServiceImpl implements LessonService {
         } catch (DataAccessException e) {
             throw new ServiceException(LESSONS_FETCH_ERROR, e);
         }
-        
+        return defineMaxLessonsQuantityInDay(weekLessons);
+    }
+    
+    private int defineMaxLessonsQuantityInDay(List<List<Lesson>> weekLessons) {
         Optional<Integer> lessonsNumber = weekLessons.stream()
                 .map(lessons -> lessons.size()).max(Integer::compareTo);
         
         if (lessonsNumber.isPresent()) {
-            return lessonsNumber.get();
+            if (lessonsNumber.get() > DEFFALUT_LESSONS_QUANTITY) {
+                return lessonsNumber.get();
+            } else {
+                return DEFFALUT_LESSONS_QUANTITY;
+            }
         } else {
-            return NO_LESSONS;
+            return DEFFALUT_LESSONS_QUANTITY;
         }
     }
     

@@ -54,7 +54,7 @@ public class TeacherController extends DefaultController {
     @GetMapping("/teacher/{teacherId}")
     public String getById(@PathVariable int teacherId, Model model) {
         TeacherDTO teacher = teacherService.getById(teacherId);
-        List<LessonDTO> lessons = lessonService.getLessonsByTeacherId(teacherId);
+        List<LessonDTO> lessons = lessonService.getByTeacherId(teacherId);
         lessonService.addLessonTiming(lessons);
         lessons.sort(new LessonDTOComparator());
         List<UserDTO> users = userService.getAll();

@@ -1,12 +1,12 @@
-package ua.com.foxminded.university.service;
+package ua.com.foxminded.university.service.impl;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static ua.com.foxminded.university.service.CourseServiceImplTest.COURSE_ID;
+import static ua.com.foxminded.university.service.impl.CourseServiceImplTest.COURSE_ID;
 import static ua.com.foxminded.university.service.impl.TeacherServiceImpl.TEACHER_DTO_LIST_TYPE;
 
 import java.util.Arrays;
@@ -29,7 +29,6 @@ import ua.com.foxminded.university.entity.Teacher;
 import ua.com.foxminded.university.entity.User;
 import ua.com.foxminded.university.entitymother.UserMother;
 import ua.com.foxminded.university.repository.TeacherRepository;
-import ua.com.foxminded.university.service.impl.TeacherServiceImpl;
 
 @ExtendWith(MockitoExtension.class)
 class TeacherServiceImplTest {

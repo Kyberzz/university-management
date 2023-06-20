@@ -1,9 +1,9 @@
-package ua.com.foxminded.university.service;
+package ua.com.foxminded.university.service.impl;
 
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.mockito.ArgumentMatchers.isA;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -31,7 +31,6 @@ import ua.com.foxminded.university.entity.User;
 import ua.com.foxminded.university.entitymother.UserMother;
 import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.repository.UserRepository;
-import ua.com.foxminded.university.service.impl.UserServiceImpl;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceImplTest {

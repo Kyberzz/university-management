@@ -19,6 +19,7 @@ insert into university.users(first_name, last_name, email)
 insert into university.users(first_name, last_name) values('Dennis', 'Ritchie');
 insert into university.users(first_name, last_name) values('Isaac', 'Barrow');
 
+insert into university.teachers(user_id) values(3);
 insert into university.teachers(user_id) values(6);
 insert into university.teachers(user_id) values(7);
 insert into university.teachers(user_id) values(8);
@@ -45,6 +46,7 @@ insert into university.users(first_name, last_name) values('Margaret', 'Thatcher
 insert into university.users(first_name, last_name) values('Sansa', 'Stark');
 insert into university.users(first_name, last_name) values('Rhaenyra', 'Targaryen');
 
+insert into university.students(user_id, group_id) values(4, 1);
 insert into university.students(user_id, group_id) values(9, 1);
 insert into university.students(user_id, group_id) values(10, 1);
 insert into university.students(user_id, group_id) values(11, 1);

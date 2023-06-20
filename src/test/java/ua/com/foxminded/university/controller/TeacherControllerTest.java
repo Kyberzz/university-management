@@ -92,7 +92,7 @@ class TeacherControllerTest {
    @Test
    void getById() throws Exception {
        when(teacherServiceMock.getById(anyInt())).thenReturn(teacherDto);
-       when(lessonServiceMock.getLessonsByTeacherId(anyInt())).thenReturn(lessonsDtoList);
+       when(lessonServiceMock.getByTeacherId(anyInt())).thenReturn(lessonsDtoList);
        when(userServiceMock.getAll()).thenReturn(usersDtoList);
        
        mockMvc.perform(get("/teachers/teacher/{teacherId}", TEACHER_ID))
@@ -103,7 +103,7 @@ class TeacherControllerTest {
               .andExpect(view().name(TEACHER_TEMPLATE_PATH));
        
        verify(teacherServiceMock).getById(anyInt());
-       verify(lessonServiceMock).getLessonsByTeacherId(anyInt());
+       verify(lessonServiceMock).getByTeacherId(anyInt());
        verify(userServiceMock).getAll();
        verify(lessonServiceMock).addLessonTiming(ArgumentMatchers.<LessonDTO>anyList());
    }

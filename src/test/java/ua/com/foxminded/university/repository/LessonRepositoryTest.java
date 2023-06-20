@@ -1,6 +1,6 @@
 package ua.com.foxminded.university.repository;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.HashSet;
 import java.util.List;
@@ -13,24 +13,27 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ActiveProfiles;
 
 import ua.com.foxminded.university.entity.Course;
 import ua.com.foxminded.university.entity.Group;
-import ua.com.foxminded.university.entity.Timing;
-import ua.com.foxminded.university.entity.User;
 import ua.com.foxminded.university.entity.Lesson;
 import ua.com.foxminded.university.entity.Teacher;
 import ua.com.foxminded.university.entity.Timetable;
+import ua.com.foxminded.university.entity.Timing;
+import ua.com.foxminded.university.entity.User;
 import ua.com.foxminded.university.entitymother.CourseMother;
 import ua.com.foxminded.university.entitymother.GroupMother;
-import ua.com.foxminded.university.entitymother.TimingMother;
-import ua.com.foxminded.university.entitymother.UserMother;
 import ua.com.foxminded.university.entitymother.LessonMother;
 import ua.com.foxminded.university.entitymother.TimetableMother;
+import ua.com.foxminded.university.entitymother.TimingMother;
+import ua.com.foxminded.university.entitymother.UserMother;
 
 @DataJpaTest
 @ActiveProfiles("test")
+@DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 class LessonRepositoryTest {
     
     @PersistenceUnit
@@ -61,7 +64,7 @@ class LessonRepositoryTest {
         course = CourseMother.complete().build();
         entityManager.persist(course);
         
-        group = GroupMother.complete().lessons(new HashSet<>()).build();
+        group = GroupMother.complete().build();
         entityManager.persist(group);
         
         user = UserMother.complete().build();
@@ -73,12 +76,33 @@ class LessonRepositoryTest {
         lesson = LessonMother.complete().course(course)
                                         .teacher(teacher)
                                         .groups(new HashSet<>()).build();
+        group.setLessons(new HashSet<>());
         lesson.addGroup(group);
        
         entityManager.persist(lesson);
         
         entityManager.getTransaction().commit();
         entityManager.close();
+    }
+    
+    @Test
+    void findByGroupsId_ShouldReturnLessonsOfGroup() {
+        List<Lesson> lessons = lessonRepository.findByGroupsId(group.getId());
+        assertEquals(lesson.getId(), lessons.iterator().next().getId());
+    }
+    
+    @Test
+    void findByDatestampAndGroupsIdAndLessonOrder_ShouldReturnLessons() {
+        Lesson persistedLesson = lessonRepository.findByDatestampAndGroupsIdAndLessonOrder(
+                lesson.getDatestamp(), group.getId(), lesson.getLessonOrder());
+        assertEquals(lesson.getId(), persistedLesson.getId());
+    }
+    
+    @Test
+    void  findByGroupId_ShouldReturenLessonsOwnedByGroup() {
+        List<Lesson> lessons = lessonRepository.findByDatestampAndGroupsId(
+                lesson.getDatestamp(), group.getId());
+        assertEquals(group.getId(), lessons.iterator().next().getId());
     }
     
     @Test

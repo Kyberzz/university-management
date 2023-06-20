@@ -1,6 +1,7 @@
 package ua.com.foxminded.university.controller;
 
 import static ua.com.foxminded.university.controller.CourseController.COURSE_ID_PARAMETER_NAME;
+import static ua.com.foxminded.university.controller.GroupController.GROUPS_ATTRIBUTE;
 import static ua.com.foxminded.university.controller.TimetableController.TIMETABLE_ID_PARAMETER_NAME;
 
 import java.time.LocalDate;
@@ -25,11 +26,13 @@ import lombok.RequiredArgsConstructor;
 import ua.com.foxminded.university.dto.CourseDTO;
 import ua.com.foxminded.university.dto.GroupDTO;
 import ua.com.foxminded.university.dto.LessonDTO;
+import ua.com.foxminded.university.dto.StudentDTO;
 import ua.com.foxminded.university.dto.TeacherDTO;
 import ua.com.foxminded.university.dto.TimetableDTO;
 import ua.com.foxminded.university.service.CourseService;
 import ua.com.foxminded.university.service.GroupService;
 import ua.com.foxminded.university.service.LessonService;
+import ua.com.foxminded.university.service.StudentService;
 import ua.com.foxminded.university.service.TeacherService;
 import ua.com.foxminded.university.service.TimetableService;
 
@@ -39,11 +42,13 @@ import ua.com.foxminded.university.service.TimetableService;
 @Validated
 public class LessonController extends DefaultController {
     
+    
+    public static final String DATE_PARAMETER = "date";
     public static final String LESSONS_ATTRIBUTE = "lessons";
     public static final String COURSE_ATTRIBUTE = "course";
     public static final String TEACHERS_ATTRIBUTE = "teachers";
     public static final String TEACHER_ATTRIBUTE = "teacher";
-    public static final String TEACHER_WEEK_SCHEDULE_TEMPLATE_PATH = "lessons/teacher-week-schedule";
+    public static final String WEEK_SCHEDULE_TEMPLATE_PATH = "lessons/week-schedule";
     public static final String WEEK_LESSONS_ATTRIBUTE = "weekLessons";
     public static final String TIMETABLE_ATTRIBUTE = "timetable";
     public static final String TIMINGS_ATTRIBUTE = "timings";
@@ -51,25 +56,84 @@ public class LessonController extends DefaultController {
     public static final String MONTH_SHEDULE_TEMPLATE = "month-lessons";
     public static final String MONTH_SHEDULE_TEMPLATE_PATH = "lessons/month-lessons";
     public static final String COURSES_ATTRIBUTE = "courses";
-    public static final String GROUPS_ATTRIBUTE = "groups";
     public static final String DAY_LESSONS_TEMPLATE_PATH = "lessons/day-lessons";
     public static final String LESSON_ATTRIBUTE = "lesson";
     public static final String DAY_LESSONS_ATTRIBUTE = "dayLessons";
     public static final String MONTH_LESSONS_ATTRIBUTE = "monthLessons";
     public static final String TIMETABLES_ATTRIBUTE = "timetables";
+    public static final String TEACHER_WEEK_SCHEDULE_PATH = "lessons/teacher-week-schedule";
+    public static final String GROUP_WEEK_SCHEDULE_PATH = "lessons/group-week-schedule";
     
     private final LessonService lessonService;
     private final CourseService courseService;
     private final GroupService groupService;
     private final TimetableService timetableService;
     private final TeacherService teacherService;
+    private final StudentService studentService;
     
-    @GetMapping("/teacher-week-schedule/{email}")
-    public String getScheduleForDate(@PathVariable String email, 
-                                     @RequestParam @NotBlank String date) {
+    @GetMapping("/group-week-schedule/{email}")
+    public String getGroupScheduleForDate(@PathVariable String email, 
+                                          @RequestParam @NotBlank String date) {
         return new StringBuilder().append(REDIRECT_KEY_WORD)
                                   .append(SLASH)
-                                  .append(TEACHER_WEEK_SCHEDULE_TEMPLATE_PATH)
+                                  .append(GROUP_WEEK_SCHEDULE_PATH)
+                                  .append(SLASH)
+                                  .append(LocalDate.parse(date))
+                                  .append(SLASH)
+                                  .append(email)
+                                  .toString();
+    }
+    
+    @GetMapping("/group-week-schedule/{date}/{email}/back") 
+    public String getPreviousWeekGroupSchedule(@PathVariable String date, 
+                                               @PathVariable String email){
+        LocalDate datestamp = lessonService.moveWeekBack(LocalDate.parse(date));
+        return new StringBuilder().append(REDIRECT_KEY_WORD)
+                                  .append(SLASH)
+                                  .append(GROUP_WEEK_SCHEDULE_PATH)
+                                  .append(SLASH)
+                                  .append(datestamp)
+                                  .append(SLASH)
+                                  .append(email)
+                                  .toString();
+    }
+    
+    @GetMapping("/group-week-schedule/{date}/{email}/next")
+    public String getNextWeekGroupSchedule(@PathVariable String date, 
+                                           @PathVariable String email) {
+        LocalDate datestamp = lessonService.moveWeekForward(LocalDate.parse(date));
+        return new StringBuilder().append(REDIRECT_KEY_WORD)
+                                  .append(SLASH)
+                                  .append(GROUP_WEEK_SCHEDULE_PATH)
+                                  .append(SLASH)
+                                  .append(datestamp)
+                                  .append(SLASH)
+                                  .append(email)
+                                  .toString();
+    }
+    
+    @GetMapping("/group-week-schedule/{date}/{email}")
+    public String getGroupWeekSchedule(@PathVariable String date, 
+                                       @PathVariable String email,
+                                       Model model) {
+        StudentDTO student = studentService.getByEmail(email);
+        LocalDate datestamp = LocalDate.parse(date);
+        int groupId = student.getGroup().getId();
+        List<List<LessonDTO>> weekLessons = lessonService.getWeekLessonsOwnedByGroup(datestamp, 
+                                                                                     groupId);
+        LessonDTO lesson = LessonDTO.builder().datestamp(LocalDate.parse(date)).build();
+        
+        model.addAttribute(WEEK_LESSONS_ATTRIBUTE, weekLessons);
+        model.addAttribute(LESSON_ATTRIBUTE, lesson);
+        return WEEK_SCHEDULE_TEMPLATE_PATH;
+    }
+    
+    @GetMapping("/teacher-week-schedule/{email}")
+    public String getTeacherScheduleForDate(@PathVariable String email, 
+                                            @RequestParam @NotBlank String date) {
+        return new StringBuilder().append(REDIRECT_KEY_WORD)
+                                  .append(SLASH)
+                                  .append(TEACHER_WEEK_SCHEDULE_PATH)
                                   .append(SLASH)
                                   .append(LocalDate.parse(date))
                                   .append(SLASH)
@@ -78,12 +142,12 @@ public class LessonController extends DefaultController {
     }
     
     @GetMapping("/teacher-week-schedule/{date}/{email}/back")
-    public String getPreviousWeekSchedule(@PathVariable String date, 
-                                          @PathVariable String email) {
+    public String getPreviousWeekTeacherSchedule(@PathVariable String date, 
+                                                 @PathVariable String email) {
         LocalDate datestamp = lessonService.moveWeekBack(LocalDate.parse(date));
         return new StringBuilder().append(REDIRECT_KEY_WORD)
                                   .append(SLASH)
-                                  .append(TEACHER_WEEK_SCHEDULE_TEMPLATE_PATH)
+                                  .append(TEACHER_WEEK_SCHEDULE_PATH)
                                   .append(SLASH)
                                   .append(datestamp)
                                   .append(SLASH)
@@ -92,12 +156,12 @@ public class LessonController extends DefaultController {
     }
     
     @GetMapping("/teacher-week-schedule/{date}/{email}/next")
-    public String getNextWeekSchedule(@PathVariable String date, 
-                                      @PathVariable String email) {
+    public String getNextWeekTeacherSchedule(@PathVariable String date, 
+                                             @PathVariable String email) {
         LocalDate datestamp = lessonService.moveWeekForward(LocalDate.parse(date));
         return new StringBuilder().append(REDIRECT_KEY_WORD)
                                   .append(SLASH)
-                                  .append(TEACHER_WEEK_SCHEDULE_TEMPLATE_PATH)
+                                  .append(TEACHER_WEEK_SCHEDULE_PATH)
                                   .append(SLASH)
                                   .append(datestamp)
                                   .append(SLASH)
@@ -115,7 +179,7 @@ public class LessonController extends DefaultController {
        
        model.addAttribute(WEEK_LESSONS_ATTRIBUTE, weekLessons);
        model.addAttribute(LESSON_ATTRIBUTE, lesson);
-       return TEACHER_WEEK_SCHEDULE_TEMPLATE_PATH;
+       return WEEK_SCHEDULE_TEMPLATE_PATH;
     }
     
     @PostMapping("/{date}/apply-timetable")
@@ -130,7 +194,12 @@ public class LessonController extends DefaultController {
                                   .append(QUESTION_MARK)
                                   .append(TIMETABLE_ID_PARAMETER_NAME)
                                   .append(EQUAL_SIGN)
-                                  .append(timetableId).toString();
+                                  .append(timetableId)
+                                  .append(AMPERSAND_SIGN)
+                                  .append(COURSE_ID_PARAMETER_NAME)
+                                  .append(EQUAL_SIGN)
+                                  .append(STUB)
+                                  .toString();
     }
     
     @PostMapping("/{date}/create")

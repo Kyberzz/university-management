@@ -1,4 +1,4 @@
-package ua.com.foxminded.university.service;
+package ua.com.foxminded.university.service.impl;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -18,6 +18,7 @@ import ua.com.foxminded.university.entitymother.TimingMother;
 import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.repository.TimetableRepository;
 import ua.com.foxminded.university.repository.TimingRepository;
+import ua.com.foxminded.university.service.TimingService;
 
 @SpringBootTest
 @ActiveProfiles("test")

@@ -44,7 +44,6 @@ class DefaultControllerTest {
         teacherUser = UserMother.complete().email(TEACHER_EMAIL).build();
         studentUser = UserMother.complete().email(STUDENT_EMAIL).build();
         
-        
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
         entityManager.persist(adminUser);

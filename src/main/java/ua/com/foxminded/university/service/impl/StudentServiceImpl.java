@@ -4,7 +4,7 @@ import static ua.com.foxminded.university.exception.ServiceErrorCode.STUDENT_CRE
 import static ua.com.foxminded.university.exception.ServiceErrorCode.STUDENT_DELETE_ERROR;
 import static ua.com.foxminded.university.exception.ServiceErrorCode.STUDENT_UPDATE_ERROR;
 import static ua.com.foxminded.university.exception.ServiceErrorCode.STUDETNS_FETCH_ERROR;
-import static ua.com.foxminded.university.exception.ServiceErrorCode.STUDETN_FETCH_ERROR;
+import static ua.com.foxminded.university.exception.ServiceErrorCode.STUDENT_FETCH_ERROR;
 
 import java.lang.reflect.Type;
 import java.util.Collections;
@@ -42,6 +42,17 @@ public class StudentServiceImpl implements StudentService {
     private final StudentRepository studentRepository;
     private final GroupRepository groupRepository;
     private final UserRepository userRepository;
+    
+    @Override
+    public StudentDTO getByEmail(String email) {
+        try {
+            Student student = studentRepository.findByUserEmail(email);
+            return modelMapper.map(student, StudentDTO.class);
+        } catch (DataAccessException | IllegalArgumentException | 
+                 ConfigurationException | MappingException e) {
+            throw new ServiceException(STUDENT_FETCH_ERROR, e);
+        }
+    }
     
     @Override 
     public void sortByLastName(List<StudentDTO> students) {
@@ -94,7 +105,7 @@ public class StudentServiceImpl implements StudentService {
             Student studentEntity = studentRepository.findById(id);
             return modelMapper.map(studentEntity, StudentDTO.class);
         } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
-            throw new ServiceException(STUDETN_FETCH_ERROR, e);
+            throw new ServiceException(STUDENT_FETCH_ERROR, e);
         }
     }
     

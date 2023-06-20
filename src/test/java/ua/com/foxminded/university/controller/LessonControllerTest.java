@@ -1,14 +1,5 @@
 package ua.com.foxminded.university.controller;
 
-import static ua.com.foxminded.university.controller.CourseController.COURSE_ID_PARAMETER_NAME;
-import static ua.com.foxminded.university.controller.CourseControllerIntegrationTest.COURSE_ID;
-import static ua.com.foxminded.university.controller.DefaultController.AMPERSAND_SIGN;
-import static ua.com.foxminded.university.controller.DefaultController.STUB;
-import static ua.com.foxminded.university.controller.GroupController.GROUP_ID;
-import static ua.com.foxminded.university.controller.GroupController.GROUP_ID_PARAMETER_NAME;
-import static ua.com.foxminded.university.controller.LessonController.*;
-import static ua.com.foxminded.university.controller.TeacherController.TEACHER_ID;
-import static ua.com.foxminded.university.controller.TimetableController.TIMETABLE_ID_PARAMETER_NAME;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.isA;
@@ -22,6 +13,20 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrlPattern;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static ua.com.foxminded.university.controller.CourseController.COURSE_ID_PARAMETER_NAME;
+import static ua.com.foxminded.university.controller.CourseControllerIntegrationTest.COURSE_ID;
+import static ua.com.foxminded.university.controller.DefaultController.AMPERSAND_SIGN;
+import static ua.com.foxminded.university.controller.DefaultController.EQUAL_SIGN;
+import static ua.com.foxminded.university.controller.DefaultController.QUESTION_MARK;
+import static ua.com.foxminded.university.controller.DefaultController.SLASH;
+import static ua.com.foxminded.university.controller.DefaultController.STUB;
+import static ua.com.foxminded.university.controller.GroupController.GROUPS_ATTRIBUTE;
+import static ua.com.foxminded.university.controller.GroupController.GROUP_ID;
+import static ua.com.foxminded.university.controller.GroupController.GROUP_ID_PARAMETER_NAME;
+import static ua.com.foxminded.university.controller.LessonController.*;
+import static ua.com.foxminded.university.controller.StudentControllerTest.STUDENT_ID;
+import static ua.com.foxminded.university.controller.TeacherController.TEACHER_ID;
+import static ua.com.foxminded.university.controller.TimetableController.TIMETABLE_ID_PARAMETER_NAME;
 
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -38,15 +43,19 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import ua.com.foxminded.university.dto.GroupDTO;
 import ua.com.foxminded.university.dto.LessonDTO;
+import ua.com.foxminded.university.dto.StudentDTO;
 import ua.com.foxminded.university.dto.TeacherDTO;
 import ua.com.foxminded.university.dto.TimetableDTO;
 import ua.com.foxminded.university.dto.UserDTO;
+import ua.com.foxminded.university.dtomother.GroupDTOMother;
 import ua.com.foxminded.university.dtomother.LessonDTOMother;
 import ua.com.foxminded.university.dtomother.UserDTOMother;
 import ua.com.foxminded.university.service.CourseService;
 import ua.com.foxminded.university.service.GroupService;
 import ua.com.foxminded.university.service.LessonService;
+import ua.com.foxminded.university.service.StudentService;
 import ua.com.foxminded.university.service.TeacherService;
 import ua.com.foxminded.university.service.TimetableService;
 import ua.com.foxminded.university.service.TimingService;
@@ -75,10 +84,16 @@ class LessonControllerTest {
     @MockBean
     private TeacherService teacherServiceMock;
     
+    @MockBean
+    private StudentService studentServiceMock;
+    
     private MockMvc mockMvc;
     private LessonDTO lesson;
     private UserDTO user;
     private TeacherDTO teacher;
+    private StudentDTO student;
+    private List<LessonDTO> lessons;
+    private GroupDTO group;
     
     @BeforeEach
     void setup() {
@@ -87,21 +102,99 @@ class LessonControllerTest {
                                      courseServiceMock, 
                                      groupServiceMock, 
                                      timetableServiceMock, 
-                                     teacherServiceMock)).build();
+                                     teacherServiceMock, 
+                                     studentServiceMock)).build();
 
         lesson = LessonDTOMother.complete().build();
         user = UserDTOMother.complete().build();
         teacher = new TeacherDTO();
+        student = new StudentDTO();
+        lessons = Arrays.asList(lesson);
+        group = GroupDTOMother.complete().build();
     }
     
     @Test
-    void getScheduleForDate_ShouldRedirectToTeacherWeekSchedule() throws Exception {
+    void getGroupScheduleForDate_ShouldRedirectToGetGroupWeekSchedule() throws Exception {
+        mockMvc.perform(get("/lessons/group-week-schedule/{email}", user.getEmail())
+                    .param(DATE_PARAMETER, lesson.getDatestamp().toString()))
+               .andDo(print())
+               .andExpect(redirectedUrl(new StringBuilder().append(SLASH)
+                                                           .append(GROUP_WEEK_SCHEDULE_PATH)
+                                                           .append(SLASH)
+                                                           .append(lesson.getDatestamp())
+                                                           .append(SLASH)
+                                                           .append(user.getEmail())
+                                                           .toString()));
+    }
+    
+    @Test
+    void getPreviousWeekGroupSchedule_ShouldRedirectToGetGroupWeekSchedule() throws Exception {
+        when(lessonServiceMock.moveWeekBack(isA(LocalDate.class)))
+            .thenReturn(lesson.getDatestamp());
+        
+        mockMvc.perform(get("/lessons/group-week-schedule/{date}/{email}/back", 
+                            lesson.getDatestamp(), user.getEmail()))
+               .andDo(print())
+               .andExpect(redirectedUrl(new StringBuilder().append(SLASH)
+                                                           .append(GROUP_WEEK_SCHEDULE_PATH)
+                                                           .append(SLASH)
+                                                           .append(lesson.getDatestamp())
+                                                           .append(SLASH)
+                                                           .append(user.getEmail())
+                                                           .toString()));
+
+        verify(lessonServiceMock).moveWeekBack(isA(LocalDate.class));
+    }
+    
+    @Test
+    void getNextWeekGroupSchedule_ShouldRedirectToGetGroupWeekSchedule() throws Exception {
+        when(lessonServiceMock.moveWeekForward(isA(LocalDate.class)))
+            .thenReturn(lesson.getDatestamp());
+        
+        mockMvc.perform(get("/lessons/group-week-schedule/{date}/{email}/next", 
+                            lesson.getDatestamp(), user.getEmail()))
+               .andDo(print())
+               .andExpect(redirectedUrl(new StringBuilder().append(SLASH)
+                                                           .append(GROUP_WEEK_SCHEDULE_PATH)
+                                                           .append(SLASH)
+                                                           .append(lesson.getDatestamp())
+                                                           .append(SLASH)
+                                                           .append(user.getEmail())
+                                                           .toString()));
+
+        verify(lessonServiceMock).moveWeekForward(isA(LocalDate.class));
+    }
+    
+    @Test
+    void getGroupWeekSchedule_ShouldRenderWeekScheduleTemplate() throws Exception {
+        group.setId(GROUP_ID);
+        student.setGroup(group);
+        student.setId(STUDENT_ID);
+        List<List<LessonDTO>> weekLessons = Arrays.asList(lessons);
+
+        when(studentServiceMock.getByEmail(anyString())).thenReturn(student);
+        when(lessonServiceMock.getWeekLessonsOwnedByGroup(isA(LocalDate.class), anyInt()))
+            .thenReturn(weekLessons);
+        
+        mockMvc.perform(get("/lessons/group-week-schedule/{date}/{email}", 
+                            lesson.getDatestamp(), user.getEmail()))
+               .andDo(print())
+               .andExpect(model().attributeExists(WEEK_LESSONS_ATTRIBUTE, 
+                                                  LESSON_ATTRIBUTE))
+               .andExpect(view().name(WEEK_SCHEDULE_TEMPLATE_PATH));
+        
+        verify(studentServiceMock).getByEmail(anyString());
+        verify(lessonServiceMock).getWeekLessonsOwnedByGroup(isA(LocalDate.class), anyInt());
+    }
+    
+    @Test
+    void getTeacherScheduleForDate_ShouldRedirectToTeacherWeekSchedule() throws Exception {
         mockMvc.perform(get("/lessons/teacher-week-schedule/{email}", user.getEmail())
                     .param("date", lesson.getDatestamp().toString()))
                .andDo(print())
                .andExpect(redirectedUrl(
                        new StringBuilder().append(SLASH)
-                                          .append(TEACHER_WEEK_SCHEDULE_TEMPLATE_PATH)
+                                          .append(TEACHER_WEEK_SCHEDULE_PATH)
                                           .append(SLASH)
                                           .append(lesson.getDatestamp())
                                           .append(SLASH)
@@ -109,7 +202,7 @@ class LessonControllerTest {
     }
     
     @Test
-    void getPreviousWeekSchedule_ShouldRedirectToTecherWeekSchdule() throws Exception {
+    void getPreviousWeekTeacherSchedule_ShouldRedirectToTecherWeekSchdule() throws Exception {
         when(lessonServiceMock.moveWeekBack(isA(LocalDate.class)))
             .thenReturn(lesson.getDatestamp());
         mockMvc.perform(get("/lessons/teacher-week-schedule/{date}/{email}/back", 
@@ -117,7 +210,7 @@ class LessonControllerTest {
                .andDo(print())
                .andExpect(redirectedUrl(
                        new StringBuilder().append(SLASH)
-                                          .append(TEACHER_WEEK_SCHEDULE_TEMPLATE_PATH)
+                                          .append(TEACHER_WEEK_SCHEDULE_PATH)
                                           .append(SLASH)
                                           .append(lesson.getDatestamp())
                                           .append(SLASH)
@@ -128,7 +221,7 @@ class LessonControllerTest {
     }
     
     @Test
-    void getNextWeekSchedule_ShouldRedirectToTeacherWeekSchedule() throws Exception {
+    void getNextWeekTeacherSchedule_ShouldRedirectToTeacherWeekSchedule() throws Exception {
         when(lessonServiceMock.moveWeekForward(isA(LocalDate.class)))
             .thenReturn(lesson.getDatestamp());
         mockMvc.perform(get("/lessons/teacher-week-schedule/{date}/{email}/next", 
@@ -136,7 +229,7 @@ class LessonControllerTest {
                .andDo(print())
                .andExpect(redirectedUrl(
                        new StringBuilder().append(SLASH)
-                                          .append(TEACHER_WEEK_SCHEDULE_TEMPLATE_PATH)
+                                          .append(TEACHER_WEEK_SCHEDULE_PATH)
                                           .append(SLASH)
                                           .append(lesson.getDatestamp())
                                           .append(SLASH)
@@ -155,7 +248,7 @@ class LessonControllerTest {
                             lesson.getDatestamp(), user.getEmail() ))
                .andDo(print())
                .andExpect(model().attributeExists(WEEK_LESSONS_ATTRIBUTE, LESSON_ATTRIBUTE))
-               .andExpect(view().name(TEACHER_WEEK_SCHEDULE_TEMPLATE_PATH));
+               .andExpect(view().name(WEEK_SCHEDULE_TEMPLATE_PATH));
         
         verify(teacherServiceMock).getTeacherByEmail(anyString());
         verify(lessonServiceMock).getWeekLessonsOwnedByTeacher(isA(LocalDate.class), anyInt());
@@ -174,6 +267,10 @@ class LessonControllerTest {
                                                            .append(TIMETABLE_ID_PARAMETER_NAME)
                                                            .append(EQUAL_SIGN)
                                                            .append(TIMETABLE_ID)
+                                                           .append(AMPERSAND_SIGN)
+                                                           .append(COURSE_ID_PARAMETER_NAME)
+                                                           .append(EQUAL_SIGN)
+                                                           .append(STUB)
                                                            .toString()));
         
         verify(lessonServiceMock).applyTimetable(isA(LocalDate.class), anyInt());

@@ -1,5 +1,6 @@
 package ua.com.foxminded.university.controller;
 
+import static ua.com.foxminded.university.controller.LessonController.LESSONS_ATTRIBUTE;
 import static ua.com.foxminded.university.controller.StudentController.STUDENTS_ATTRIBUTE;
 
 import java.util.Collections;
@@ -15,9 +16,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import lombok.RequiredArgsConstructor;
+import ua.com.foxminded.university.comparator.LessonDTOComparator;
 import ua.com.foxminded.university.dto.GroupDTO;
+import ua.com.foxminded.university.dto.LessonDTO;
 import ua.com.foxminded.university.dto.StudentDTO;
 import ua.com.foxminded.university.service.GroupService;
+import ua.com.foxminded.university.service.LessonService;
 import ua.com.foxminded.university.service.StudentService;
 
 @Controller
@@ -36,6 +40,7 @@ public class GroupController extends DefaultController {
 
     private final GroupService groupService;
     private final StudentService studentService;
+    private final LessonService lessonService;
     
     @PostMapping("/{groupId}/deassign-group")
     public String deassignGroup(@PathVariable int groupId, 
@@ -91,6 +96,10 @@ public class GroupController extends DefaultController {
         groupService.sortContainedStudentsByLastName(group);
         List<StudentDTO> students = studentService.getAll();
         studentService.sortByLastName(students);
+        List<LessonDTO> lessons = lessonService.getByGroupId(groupId);
+        lessons.sort(new LessonDTOComparator());
+        
+        model.addAttribute(LESSONS_ATTRIBUTE, lessons);
         model.addAttribute(STUDENTS_ATTRIBUTE, students);
         model.addAttribute(GROUP_ATTRIBUTE, group);
         return GROUP_TEMPLATE_PATH;

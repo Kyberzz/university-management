@@ -8,7 +8,11 @@ import ua.com.foxminded.university.dto.LessonDTO;
 
 public interface LessonService extends GenericService<LessonDTO> {
     
-    public List<LessonDTO> getLessonsByTeacherId(int teacherId);
+    public List<LessonDTO> getByGroupId(int groupId);
+    
+    public List<List<LessonDTO>> getWeekLessonsOwnedByGroup(LocalDate date, int groupId);
+    
+    public List<LessonDTO> getByTeacherId(int teacherId);
     
     public Set<LessonDTO> sortByDatestamp(Set<LessonDTO> lessons);
     

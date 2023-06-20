@@ -1,11 +1,11 @@
-package ua.com.foxminded.university.service;
+package ua.com.foxminded.university.service.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static ua.com.foxminded.university.service.UserServiceImplTest.USER_ID;
+import static ua.com.foxminded.university.service.impl.UserServiceImplTest.USER_ID;
 
 import java.util.Arrays;
 import java.util.List;
@@ -34,7 +34,6 @@ import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.repository.GroupRepository;
 import ua.com.foxminded.university.repository.StudentRepository;
 import ua.com.foxminded.university.repository.UserRepository;
-import ua.com.foxminded.university.service.impl.StudentServiceImpl;
 
 @ExtendWith(MockitoExtension.class)
 class StudentServiceImplTest {

@@ -33,7 +33,7 @@ public enum ServiceErrorCode {
     TEACHER_FETCH_ERROR(SC_INTERNAL_SERVER_ERROR, "Failed to fetch the database teacher data"),
     
     STUDETNS_FETCH_ERROR(SC_INTERNAL_SERVER_ERROR, "Failed to fetch the database students data"),
-    STUDETN_FETCH_ERROR(SC_INTERNAL_SERVER_ERROR, "Failed to fetch the database student data"),
+    STUDENT_FETCH_ERROR(SC_INTERNAL_SERVER_ERROR, "Failed to fetch the database student data"),
     STUDENT_CREATE_ERROR(SC_INTERNAL_SERVER_ERROR, "Failed to database persist the student data"),
     STUDENT_UPDATE_ERROR(SC_INTERNAL_SERVER_ERROR, "Failed to update the database student data"),
     STUDENT_DELETE_ERROR(SC_INTERNAL_SERVER_ERROR, "Failed to delete the database student data"),

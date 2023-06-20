@@ -35,7 +35,7 @@ task 3.7
 + + + User 'B' should be able to list all students in a group (read access)
 
 task 3.9
-- - - User 'B' should be able to list all its schedules
++ + - User 'B' should be able to list all its schedules
 
 ## Teacher flow
 

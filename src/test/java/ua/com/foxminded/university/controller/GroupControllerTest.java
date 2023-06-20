@@ -24,6 +24,7 @@ import ua.com.foxminded.university.dto.GroupDTO;
 import ua.com.foxminded.university.dto.StudentDTO;
 import ua.com.foxminded.university.dtomother.GroupDTOMother;
 import ua.com.foxminded.university.service.GroupService;
+import ua.com.foxminded.university.service.LessonService;
 import ua.com.foxminded.university.service.StudentService;
 
 @ExtendWith(SpringExtension.class)
@@ -38,13 +39,16 @@ class GroupControllerTest {
     @MockBean
     private StudentService studentServiceMock;
     
+    @MockBean
+    private LessonService lessonService;
+    
     private MockMvc mockMvc;
     private GroupDTO group;
     
     @BeforeEach
     void setup() {
         mockMvc = MockMvcBuilders.standaloneSetup(new GroupController(
-                groupServiceMock, studentServiceMock)).build();
+                groupServiceMock, studentServiceMock, lessonService)).build();
         group = GroupDTOMother.complete().build();
     }
     

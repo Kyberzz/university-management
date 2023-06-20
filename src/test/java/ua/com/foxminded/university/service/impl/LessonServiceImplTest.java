@@ -1,4 +1,4 @@
-package ua.com.foxminded.university.service;
+package ua.com.foxminded.university.service.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -8,7 +8,7 @@ import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static ua.com.foxminded.university.service.GroupServiceImplTest.GROUP_ID;
+import static ua.com.foxminded.university.service.impl.GroupServiceImplTest.GROUP_ID;
 import static ua.com.foxminded.university.service.impl.LessonServiceImpl.LESSON_LIST_TYPE;
 
 import java.io.IOException;
@@ -52,7 +52,6 @@ import ua.com.foxminded.university.repository.GroupRepository;
 import ua.com.foxminded.university.repository.LessonRepository;
 import ua.com.foxminded.university.repository.TimetableRepository;
 import ua.com.foxminded.university.repository.TimingRepository;
-import ua.com.foxminded.university.service.impl.LessonServiceImpl;
 
 @ExtendWith(MockitoExtension.class)
 @DirtiesContext
@@ -109,9 +108,33 @@ class LessonServiceImplTest {
     }
     
     @Test
-    void getLessonsByTeacherId_ShouldReturnLessonsOwnedByTeacher() {
+    void getByGroupId_ShouldReturn() {
+        when(lessonRepositoryMock.findByGroupsId(anyInt())).thenReturn(lessons);
+        lessonSerivice.getByGroupId(GROUP_ID);
+        verify(lessonRepositoryMock).findByGroupsId(anyInt());
+        verify(modelMapperMock).map(lessons, LESSON_LIST_TYPE);
+    }
+    
+    @Test
+    void getWeekLessonsOwnedByGroup_ShouldReturnLessons() {
+        when(lessonRepositoryMock.findByDatestampAndGroupsId(isA(LocalDate.class), anyInt()))
+            .thenReturn(lessons);
+        when(lessonRepositoryMock.findByDatestampAndGroupsIdAndLessonOrder(
+                isA(LocalDate.class), anyInt(), anyInt())).thenReturn(lesson);
+        when(modelMapperMock.map(lesson, LessonDTO.class)).thenReturn(lessonDto);
+        lessonSerivice.getWeekLessonsOwnedByGroup(lesson.getDatestamp(), GROUP_ID);
+        
+        verify(lessonRepositoryMock, times(DayOfWeek.values().length))
+            .findByDatestampAndGroupsId(isA(LocalDate.class), anyInt());
+        verify(modelMapperMock, atLeastOnce()).map(lesson, LessonDTO.class);
+        verify(lessonRepositoryMock, atLeastOnce())
+            .findByDatestampAndGroupsIdAndLessonOrder(isA(LocalDate.class), anyInt(), anyInt());
+    }
+    
+    @Test
+    void getByTeacherId_ShouldReturnLessonsOwnedByTeacher() {
         when(lessonRepositoryMock.findByTeacherId(anyInt())).thenReturn(lessons);
-        lessonSerivice.getLessonsByTeacherId(TEACHER_ID);
+        lessonSerivice.getByTeacherId(TEACHER_ID);
         verify(modelMapperMock).map(lessons, LESSON_LIST_TYPE);
     }
     

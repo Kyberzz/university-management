@@ -166,7 +166,7 @@
     <div class="col-4 mh-100" style="overflow-y: scroll;">
 
      <div class="row text-center">
-      <p th:text="|#{groups.lessons}: |">
+      <p th:text="|#{groups.lessons}: |">All lessons of the group:</p>
      </div>
 
      <table class="table">
@@ -180,7 +180,7 @@
        </tr>
       </thead>
       <tbody>
-       <tr th:each="lesson, iterationStatus : ${group.lessons}">
+       <tr th:each="lesson, iterationStatus : ${lessons}">
         <th scope="row" th:text="${iterationStatus.count}">1</th>
         <td th:text="|${lesson.lessonOrder}#{tr.order-suffix}|">1th</td>
         <td th:text="${lesson.datestamp.dayOfWeek}">1</td>

@@ -1,7 +1,7 @@
-package ua.com.foxminded.university.service;
+package ua.com.foxminded.university.service.impl;
 
 import static java.util.Arrays.asList;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.verify;
@@ -28,7 +28,6 @@ import ua.com.foxminded.university.dto.TimingDTO;
 import ua.com.foxminded.university.entity.Timetable;
 import ua.com.foxminded.university.entitymother.TimetableMother;
 import ua.com.foxminded.university.repository.TimetableRepository;
-import ua.com.foxminded.university.service.impl.TimetableServiceIml;
 
 @ExtendWith(MockitoExtension.class)
 class TimetableServiceImplTest {

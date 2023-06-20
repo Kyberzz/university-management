@@ -28,7 +28,7 @@
       </ol>
      </nav>
 
-     <div class="row mb-3 justify-content-center">
+     <div class="row mb-3 justify-content-center" sec:authorize="hasAnyRole('TEACHER')">
       <div class="col-2 text-end">
        <form
         th:action="@{/lessons/teacher-week-schedule/__${lesson.datestamp}__/__${#authentication.name}__/back}"
@@ -46,9 +46,36 @@
        </form>
       </div>
       <div class="col-2 text-start">
+       <form th:action="@{/lessons/teacher-week-schedule/__${#authentication.name}__}" method="get">
+        <div class="input-group mb-3">
+         <input type="date" class="form-control" placeholder="YYYY MMMM DD"
+          aria-label="Recipient's username" aria-describedby="button-addon2" name="date">
+         <button class="btn btn-primary btn-sm" type="submit" id="button-addon2"
+          th:text="#{button.print}">Print</button>
+        </div>
+       </form>
+      </div>
+     </div>
+     
+     <div class="row mb-3 justify-content-center" sec:authorize="hasAnyRole('STUDENT')">
+      <div class="col-2 text-end">
        <form
-        th:action="@{/lessons/teacher-week-schedule/__${#authentication.name}__}"
+        th:action="@{/lessons/group-week-schedule/__${lesson.datestamp}__/__${#authentication.name}__/back}"
         method="get">
+        <button type="submit" class="btn btn-primary btn-sm w-50"
+         th:text="#{button.previous-week}">Previous week</button>
+       </form>
+      </div>
+      <div class="col-2 text-start">
+       <form
+        th:action="@{/lessons/group-week-schedule/__${lesson.datestamp}__/__${#authentication.name}__/next}"
+        method="get">
+        <button type="submit" class="btn btn-primary btn-sm w-50" th:text="#{button.next-week}">Next
+         week</button>
+       </form>
+      </div>
+      <div class="col-2 text-start">
+       <form th:action="@{/lessons/group-week-schedule/__${#authentication.name}__}" method="get">
         <div class="input-group mb-3">
          <input type="date" class="form-control" placeholder="YYYY MMMM DD"
           aria-label="Recipient's username" aria-describedby="button-addon2" name="date">
@@ -70,7 +97,7 @@
         <tr class="text-center">
          <th scope="col" rowspan="2" th:text="#{th.lesson.order}">Order</th>
          <div th:each="lesson : ${weekLessons[0]}">
-          <th scope="col" colspan="2">
+          <th scope="col" colspan="2" style="width: 14%;">
            <div th:text="${lesson.datestamp.getDayOfWeek()}">Monday</div>
            <div th:text="${lesson.datestamp}">2023-06-01</div>
           </th>
@@ -78,8 +105,8 @@
         </tr>
         <tr>
          <div th:each="dayOfWeek : ${T(java.time.DayOfWeek).values()}">
-          <td th:text="#{href.groups}">Groups</td>
-          <td th:text="#{thead.lesson}">Lesson</th>
+          <td class="text-center" style="width: 4%;" th:text="#{href.groups}">Groups</td>
+          <td class="text-center" style="width: 10%;" th:text="#{lessons.lessons}">Lessons</th>
          </div>
         </tr>
        </thead>
