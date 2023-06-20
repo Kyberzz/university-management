@@ -42,7 +42,6 @@ import ua.com.foxminded.university.service.TimetableService;
 @Validated
 public class LessonController extends DefaultController {
     
-    
     public static final String DATE_PARAMETER = "date";
     public static final String LESSONS_ATTRIBUTE = "lessons";
     public static final String COURSE_ATTRIBUTE = "course";
