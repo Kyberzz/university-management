@@ -11,6 +11,7 @@ import static ua.com.foxminded.university.controller.LessonController.DATE_PARAM
 import static ua.com.foxminded.university.controller.LessonController.LESSON_ATTRIBUTE;
 import static ua.com.foxminded.university.controller.TimetableController.TIMETABLE_ID_PARAMETER_NAME;
 import static ua.com.foxminded.university.entity.Authority.ADMIN;
+import static ua.com.foxminded.university.entity.Authority.STAFF;
 import static ua.com.foxminded.university.entity.Authority.STUDENT;
 import static ua.com.foxminded.university.entity.Authority.TEACHER;
 
@@ -139,6 +140,16 @@ class LessonControllerIntegrationTest extends DefaultControllerTest {
         
         entityManager.getTransaction().commit();
         entityManager.close();
+    }
+    
+    @Test
+    @WithUserDetails(STAFF_EMAIL)
+    void edit_ShouldRedirect() throws Exception {
+        mockMvc.perform(post("/lessons/{lessonId}/update", lesson.getId())
+                    .flashAttr(LESSON_ATTRIBUTE, lessonDto)
+                    .with(csrf()))
+               .andExpect(authenticated().withRoles(STAFF.toString()))
+               .andExpect(status().is3xxRedirection());
     }
     
     @Test

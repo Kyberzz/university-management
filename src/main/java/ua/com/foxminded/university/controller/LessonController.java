@@ -70,6 +70,28 @@ public class LessonController extends DefaultController {
     private final TeacherService teacherService;
     private final StudentService studentService;
     
+    @PostMapping("/{lessonId}/update")
+    public String edit(@PathVariable int lessonId,
+                       @ModelAttribute(LESSON_ATTRIBUTE) LessonDTO lesson) {
+        LessonDTO persistedLesson = lessonService.getById(lessonId);
+        persistedLesson.setLessonOrder(lesson.getLessonOrder());
+        persistedLesson.setDescription(lesson.getDescription());
+        lessonService.update(persistedLesson);
+        return new StringBuilder().append(REDIRECT_KEY_WORD)
+                                  .append(SLASH)
+                                  .append(DAY_LESSONS_TEMPLATE_PATH)
+                                  .append(SLASH)
+                                  .append(persistedLesson.getDatestamp())
+                                  .append(QUESTION_MARK)
+                                  .append(TIMETABLE_ID_PARAMETER_NAME)
+                                  .append(EQUAL_SIGN)
+                                  .append(persistedLesson.getTimetable().getId())
+                                  .append(AMPERSAND_SIGN)
+                                  .append(COURSE_ID_PARAMETER_NAME)
+                                  .append(EQUAL_SIGN)
+                                  .append(STUB).toString();
+    }
+    
     @GetMapping("/group-week-schedule/{email}")
     public String getGroupScheduleForDate(@PathVariable String email, 
                                           @RequestParam @NotBlank String date) {
@@ -222,7 +244,7 @@ public class LessonController extends DefaultController {
                                   .append(TIMETABLE_ID_PARAMETER_NAME)
                                   .append(EQUAL_SIGN)
                                   .append(lesson.getTimetable().getId())
-                                  .append("&")
+                                  .append(AMPERSAND_SIGN)
                                   .append(COURSE_ID_PARAMETER_NAME)
                                   .append(EQUAL_SIGN)
                                   .append(courseId).toString();
@@ -241,7 +263,7 @@ public class LessonController extends DefaultController {
                                   .append(TIMETABLE_ID_PARAMETER_NAME)
                                   .append(EQUAL_SIGN)
                                   .append(lesson.getTimetable().getId())
-                                  .append("&")
+                                  .append(AMPERSAND_SIGN)
                                   .append(COURSE_ID_PARAMETER_NAME)
                                   .append(EQUAL_SIGN)
                                   .append(STUB).toString();
@@ -300,7 +322,7 @@ public class LessonController extends DefaultController {
                                   .append(MONTH_SHEDULE_TEMPLATE)
                                   .append(SLASH)
                                   .append(datestamp)
-                                  .append("?").toString();
+                                  .append(QUESTION_MARK).toString();
     }
     
     @GetMapping("/{date}/next")
@@ -312,7 +334,7 @@ public class LessonController extends DefaultController {
                                   .append(MONTH_SHEDULE_TEMPLATE)
                                   .append(SLASH)
                                   .append(datestamp)
-                                  .append("?").toString();
+                                  .append(QUESTION_MARK).toString();
     }
     
     @GetMapping("/month-lessons/{date}")
