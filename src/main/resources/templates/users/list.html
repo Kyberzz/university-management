@@ -34,7 +34,7 @@
 
      <div class="row justify-content-end">
       <button type="button" class="btn btn-success w-50 me-2" data-bs-toggle="modal"
-       data-bs-target="#exampleModal" th:text="#{button.create-person}">Create person</button>
+       data-bs-target="#exampleModal" th:text="#{persons.button.add-person}">Add person</button>
 
       <form class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
        aria-hidden="true" th:action="@{/users/create-user-person}" th:object="${user}"
@@ -42,7 +42,7 @@
        <div class="modal-dialog">
         <div class="modal-content">
          <div class="modal-header">
-          <h1 class="modal-title fs-5" id="exampleModalLabel" th:text="#{teacher.new}">A new teacher
+          <h1 class="modal-title fs-5" id="exampleModalLabel" th:text="#{persons.add-new}">Add a person
           </h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal"
            aria-label="Close"></button>
