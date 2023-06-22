@@ -70,7 +70,7 @@
             <select class="form-select" aria-label="Default select example" th:field="*{group.id}">
              <option th:each="group :${groups}" th:value="${group.id}" th:text=${group.name}>kt-17
              </option>
-             <option th:value="null" th:text="#{thead.null}">null</option>
+             <option th:value="null" th:text="#{groups.no-group}">no group</option>
             </select>
            </div>
           </div>
@@ -161,7 +161,7 @@
                  th:field="*{group.id}">
                  <option th:each="group :${groups}" th:value="${group.id}" th:text=${group.name}>
                   kt-17</option>
-                 <option th:value="null" th:text="#{thead.null}">null</option>
+                 <option th:value="null" th:text="#{groups.no-group}">no group</option>
                 </select>
                </div>
               </div>

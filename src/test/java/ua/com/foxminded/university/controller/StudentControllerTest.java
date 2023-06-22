@@ -30,6 +30,7 @@ import ua.com.foxminded.university.dto.UserDTO;
 import ua.com.foxminded.university.dtomother.UserDTOMother;
 import ua.com.foxminded.university.service.GroupService;
 import ua.com.foxminded.university.service.StudentService;
+import ua.com.foxminded.university.service.UserService;
 
 @ExtendWith(SpringExtension.class)
 class StudentControllerTest {
@@ -42,6 +43,9 @@ class StudentControllerTest {
     @MockBean
     private GroupService groupServiceMock;
     
+    @MockBean
+    private UserService userServiceMock;
+    
     private MockMvc mockMvc;
     private StudentDTO studentDto;
     private UserDTO studentUserDto;
@@ -49,7 +53,7 @@ class StudentControllerTest {
     @BeforeEach
     void setup() {
         mockMvc = MockMvcBuilders.standaloneSetup(new StudentController(
-                studentServiceMock, groupServiceMock)).build();
+                studentServiceMock, groupServiceMock, userServiceMock)).build();
         studentUserDto = UserDTOMother.complete().build();
         studentDto = StudentDTO.builder().user(studentUserDto).build();
     }

@@ -31,7 +31,7 @@
    </div>
 
    <div class="row flex-fill" style="min-height: 0;">
-    <div class="col-4 mh-100" style="overflow-y: scroll;">
+    <div class="col-3 mh-100 border-right pe-2">
 
      <form class="row gap-2" method="post" th:object="${updatedCourse}"
       th:action="@{/courses/update}">
@@ -78,10 +78,10 @@
      </form>
     </div>
 
-    <div class="col-4 mh-100">
+    <div class="col-5 mh-100 ps-4">
 
-     <div class="row">
-      <button type="button" class="btn btn-primary btn-sm" id="assignButton" data-bs-toggle="modal"
+     <div class="col">
+      <button type="button" class="btn btn-primary btn-sm w-100" id="assignButton" data-bs-toggle="modal"
        data-bs-target="#assignTeacher" th:text="#{button.assign-teacher}">Assign
        teacher</button>
 
