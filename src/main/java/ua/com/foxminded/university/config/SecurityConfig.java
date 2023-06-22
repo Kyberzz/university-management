@@ -90,6 +90,7 @@ public class SecurityConfig {
                 .mvcMatchers("/lessons/group-week-schedule/{date:\\S+}/{email:\\+S}/back")
                     .hasAnyRole(STUDENT)
                 .mvcMatchers("/lessons/group-week-schedule/{email:\\S+}").hasAnyRole(STUDENT)
+                .mvcMatchers("/lessons/{lessonId:\\d+}/update").hasAnyRole(ADMIN, STAFF)
                 .mvcMatchers("/teachers/list").hasAnyRole(ADMIN, STAFF)
                 .mvcMatchers("/teachers/create").hasAnyRole(ADMIN, STAFF)
                 .mvcMatchers("/teachers/delete/{teacherId:\\d+}").hasAnyRole(ADMIN, STAFF)

@@ -57,6 +57,7 @@
          <th scope="col" th:text="#{thead.description}" class="text-center">
           Description</th>
          <th scope="col" style="width: 4%"></th>
+         <th scope="col" style="width: 4%"></th>
         </tr>
        </thead>
        <tbody>
@@ -71,8 +72,59 @@
          <td
           th:text="|${lesson.teacher?.user?.person?.firstName} ${lesson.teacher?.user?.person?.lastName}|">
           Jonh Joshua</td>
+         <td>
+          <div th:text="${lesson.description}">Some descrition</div>
+         </td>
+         <td>
+          <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal"
+           th:data-bs-target="|#update${lesson.id}|" th:text="#{button.edit}">Update</button>
 
-         <td></td>
+          <form class="modal fade" th:id="|update${lesson.id}|" tabindex="-1"
+           aria-labelledby="exampleModalLabel" aria-hidden="true"
+           th:action="@{/lessons/__${lesson.id}__/update}" method="post" th:object="${lesson}">
+           <div class="modal-dialog">
+            <div class="modal-content">
+             <div class="modal-header">
+              <h1 class="modal-title fs-5" id="exampleModalLabel" th:text="#{lessons.edit}">Edit the
+               lesson</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal"
+               aria-label="Close"></button>
+             </div>
+             <div class="modal-body">
+
+              <div class="row">
+               <div class="col-3" th:text="|#{div.lesson-order}: |">Lesson order:</div>
+               <div class="col-9">
+                <select class="form-select" aria-label="Default select example" th:field="*{lessonOrder}">
+                 <option th:each="timing, iterationStatus : ${timetable.timings}"
+                  th:value="${iterationStatus.count}" th:text="${iterationStatus.count}">1</option>
+                </select>
+               </div>
+              </div>
+
+              <div class="row mt-2">
+               <div class="col-3"></div>
+               <div class="col-9">
+                <div class="form-floating">
+                 <textarea class="form-control" placeholder="Leave a comment here"
+                  id="floatingTextarea2" style="height: 100px" th:field="*{description}"></textarea>
+                 <label for="floatingTextarea2"
+                  th:text="|#{thead.description}...|">Description...</label>
+                </div>
+               </div>
+              </div>
+
+             </div>
+             <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary" th:text="#{button.save-changes}">Save
+               changes</button>
+             </div>
+            </div>
+           </div>
+          </form>
+
+         </td>
          <td class="text-start">
           <button type="button" class="btn btn-outline-danger btn-sm" th:text="#{button.delete}"
            data-bs-toggle="modal" id="deleteLessonButton"

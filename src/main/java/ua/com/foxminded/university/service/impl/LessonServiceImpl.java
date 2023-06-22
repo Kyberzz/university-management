@@ -255,7 +255,6 @@ public class LessonServiceImpl implements LessonService {
             persistEntity.setLessonOrder(entity.getLessonOrder());
             persistEntity.setTeacher(entity.getTeacher());
             persistEntity.setTimetable(entity.getTimetable());
-            persistEntity.setGroups(entity.getGroups());
             lessonRepository.saveAndFlush(persistEntity);
         } catch (DataAccessException | IllegalArgumentException | 
                  ConfigurationException | MappingException e) {

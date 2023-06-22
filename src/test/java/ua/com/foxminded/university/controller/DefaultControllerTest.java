@@ -1,6 +1,7 @@
 package ua.com.foxminded.university.controller;
 
 import static ua.com.foxminded.university.entity.RoleAuthority.ROLE_ADMIN;
+import static ua.com.foxminded.university.entity.RoleAuthority.ROLE_STAFF;
 import static ua.com.foxminded.university.entity.RoleAuthority.ROLE_STUDENT;
 import static ua.com.foxminded.university.entity.RoleAuthority.ROLE_TEACHER;
 
@@ -27,6 +28,7 @@ class DefaultControllerTest {
     public static final String ADMIN_EMAIL = "admin@email";
     public static final String STUDENT_EMAIL = "student@email";
     public static final String TEACHER_EMAIL = "teacher@email";
+    public static final String STAFF_EMAIL = "staff@email";
     
     @PersistenceUnit
     public EntityManagerFactory entityManagerFactory;
@@ -37,18 +39,21 @@ class DefaultControllerTest {
     public User adminUser;
     public User teacherUser;
     public User studentUser;
+    public User staffUser;
     
     @BeforeTransaction
     void init() {
         adminUser = UserMother.complete().email(ADMIN_EMAIL).build();
         teacherUser = UserMother.complete().email(TEACHER_EMAIL).build();
         studentUser = UserMother.complete().email(STUDENT_EMAIL).build();
+        staffUser = UserMother.complete().email(STAFF_EMAIL).build();
         
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
         entityManager.persist(adminUser);
         entityManager.persist(teacherUser);
         entityManager.persist(studentUser);
+        entityManager.persist(staffUser);
         
         UserAuthority adminUserAuthority = UserAuthority.builder()
                 .roleAuthority(ROLE_ADMIN)
@@ -58,11 +63,16 @@ class DefaultControllerTest {
                 .roleAuthority(ROLE_TEACHER)
                 .user(teacherUser)
                 .build();
-        
         UserAuthority studentUserAuthority = UserAuthority.builder()
                 .roleAuthority(ROLE_STUDENT)
                 .user(studentUser)
                 .build();
+        UserAuthority staffUserAuthority = UserAuthority.builder()
+                                                        .roleAuthority(ROLE_STAFF)
+                                                        .user(staffUser)
+                                                        .build();
+        
+        entityManager.persist(staffUserAuthority);
         entityManager.persist(studentUserAuthority);
         entityManager.persist(teacherUserAuthority);
         entityManager.persist(adminUserAuthority);
@@ -79,6 +89,9 @@ class DefaultControllerTest {
         User persistedTeacherUser = entityManager.find(User.class, teacherUser.getId());
         entityManager.remove(persistedTeacherUser);
         User persistedStudentUser = entityManager.find(User.class, studentUser.getId());
+        entityManager.remove(persistedStudentUser);
+        User persistedStaffUser = entityManager.find(User.class, staffUser.getId());
+        entityManager.remove(persistedStaffUser);
         entityManager.remove(persistedStudentUser);
         entityManager.getTransaction().commit();
         entityManager.close();

@@ -27,6 +27,7 @@ import static ua.com.foxminded.university.controller.LessonController.*;
 import static ua.com.foxminded.university.controller.StudentControllerTest.STUDENT_ID;
 import static ua.com.foxminded.university.controller.TeacherController.TEACHER_ID;
 import static ua.com.foxminded.university.controller.TimetableController.TIMETABLE_ID_PARAMETER_NAME;
+import static ua.com.foxminded.university.controller.TimetableControllerTest.TIMETABLE_NAME;
 
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -111,6 +112,33 @@ class LessonControllerTest {
         student = new StudentDTO();
         lessons = Arrays.asList(lesson);
         group = GroupDTOMother.complete().build();
+    }
+    
+    @Test
+    void edit_ShouldRedirectToGetDayLessons() throws Exception {
+        lesson.setTimetable(TimetableDTO.builder().id(TIMETABLE_ID)
+                                                  .name(TIMETABLE_NAME).build());
+        when(lessonServiceMock.getById(anyInt())).thenReturn(lesson);
+        
+        mockMvc.perform(post("/lessons/{lessonId}/update", LESSON_ID)
+                    .flashAttr(LESSON_ATTRIBUTE, lesson))
+               .andDo(print())
+               .andExpect(redirectedUrl(new StringBuilder().append(SLASH)
+                                                           .append(DAY_LESSONS_TEMPLATE_PATH)
+                                                           .append(SLASH)
+                                                           .append(lesson.getDatestamp())
+                                                           .append(QUESTION_MARK)
+                                                           .append(TIMETABLE_ID_PARAMETER_NAME)
+                                                           .append(EQUAL_SIGN)
+                                                           .append(TIMETABLE_ID)
+                                                           .append(AMPERSAND_SIGN)
+                                                           .append(COURSE_ID_PARAMETER_NAME)
+                                                           .append(EQUAL_SIGN)
+                                                           .append(STUB)
+                                                           .toString()));
+        
+        verify(lessonServiceMock).getById(anyInt());
+        verify(lessonServiceMock).update(isA(LessonDTO.class));
     }
     
     @Test
@@ -255,7 +283,7 @@ class LessonControllerTest {
     }
     
     @Test
-    void applyTimetable_ShouldRedirectToDayLessonsTemplate() throws Exception {
+    void applyTimetable_ShouldRedirectToGetDayLessons() throws Exception {
         mockMvc.perform(post("/lessons/{date}/apply-timetable", lesson.getDatestamp())
                     .param(TIMETABLE_ID_PARAMETER_NAME, String.valueOf(TIMETABLE_ID)))
                .andDo(print())

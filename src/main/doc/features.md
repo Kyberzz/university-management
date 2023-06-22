@@ -73,7 +73,7 @@ task 3.7
 + + + User 'B' should be able to list all students in a group (read access)_task_3.6 
 
 taks 3.9
-- - - User 'A' should be able to create/read/update/delete new schedule
++ + - User 'A' should be able to create/read/update/delete new schedule
 
 ## Anonimous flow
 
