@@ -1,19 +1,19 @@
 package ua.com.foxminded.university.repository;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
-import ua.com.foxminded.university.entity.TimetableEntity;
+import ua.com.foxminded.university.entity.Timetable;
 
-public interface TimetableRepository extends JpaRepository<TimetableEntity, Integer> {
+public interface TimetableRepository extends JpaRepository<Timetable, Integer> {
     
-    public List<TimetableEntity> findByDatestamp(LocalDate date);
+    @Query("select t from Timetable t left join fetch t.timings where t.id = ?1")
+    public Timetable getByIdWithTimings(int id);
     
-    public TimetableEntity findCourseById(Integer id);
-
-    public TimetableEntity findGroupById(Integer id);
-
-    public TimetableEntity findById(int id);
+    @Query("select t from Timetable t left join fetch t.timings")
+    public List<Timetable> getAllWithTimings();
+    
+    public Timetable findById(int id);
 }

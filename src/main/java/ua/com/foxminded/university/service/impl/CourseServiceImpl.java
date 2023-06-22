@@ -1,23 +1,23 @@
 package ua.com.foxminded.university.service.impl;
 
+import static ua.com.foxminded.university.exception.ServiceErrorCode.*;
+
 import java.lang.reflect.Type;
 import java.util.List;
-
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.PersistenceUnit;
 
 import org.modelmapper.ConfigurationException;
 import org.modelmapper.MappingException;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
-import ua.com.foxminded.university.entity.CourseEntity;
-import ua.com.foxminded.university.entity.TeacherEntity;
+import ua.com.foxminded.university.dto.CourseDTO;
+import ua.com.foxminded.university.entity.Course;
+import ua.com.foxminded.university.entity.Teacher;
 import ua.com.foxminded.university.exception.ServiceException;
-import ua.com.foxminded.university.model.CourseModel;
 import ua.com.foxminded.university.repository.CourseRepository;
 import ua.com.foxminded.university.repository.TeacherRepository;
 import ua.com.foxminded.university.service.CourseService;
@@ -28,103 +28,117 @@ import ua.com.foxminded.university.service.CourseService;
 public class CourseServiceImpl implements CourseService {
     
     public static final Type COURSE_MODEL_LIST_TYPE = 
-            new TypeToken<List<CourseModel>>() {}.getType();
+            new TypeToken<List<CourseDTO>>() {}.getType();
 
     private final CourseRepository courseRepository;
     private final TeacherRepository teacherRepository;
     private final ModelMapper modelMapper;
     
-    @PersistenceUnit
-    private  EntityManagerFactory entityManagerFactory;
+    @Override
+    public List<CourseDTO> getByTeacherId(int teacherId) {
+        try {
+            List<Course> courses = courseRepository.findByTeachersId(teacherId);
+            return modelMapper.map(courses, COURSE_MODEL_LIST_TYPE);
+        } catch (DataAccessException | IllegalArgumentException | 
+                 ConfigurationException | MappingException e) {
+            throw new ServiceException(COURSE_FETCH_ERROR, e);
+        }
+    }
     
     @Override
     public void deassignTeacherToCourse(int teacherId, int courseId) {
         
-            CourseEntity course = courseRepository.findById(courseId);
-            TeacherEntity teacher = teacherRepository.findById(teacherId);
+            Course course = courseRepository.findById(courseId);
+            Teacher teacher = teacherRepository.findById(teacherId);
             course.removeTeacher(teacher);
             courseRepository.saveAndFlush(course);
     }
     
     @Override
     public void assignTeacherToCourse(int teacherId, int courseId) {
-        TeacherEntity teacher = teacherRepository.findById(teacherId);
-        CourseEntity course = courseRepository.findById(courseId);
+        Teacher teacher = teacherRepository.findById(teacherId);
+        Course course = courseRepository.findById(courseId);
         course.addTeacher(teacher);
         courseRepository.saveAndFlush(course);
     }
 
     @Override
-    public CourseModel getTimetableAndTeachersByCourseId(int id) throws ServiceException {
+    public CourseDTO getByIdWithLessonsAndTeachers(int id) {
         try {
-            CourseEntity entity = courseRepository.getCourseRelationsById(id);
-            return modelMapper.map(entity, CourseModel.class);
-        } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
-            throw new ServiceException("Fetching the course with related "
-                    + "timetables and teachers fails", e);
+            Course entity = courseRepository.findTeachersAndLessonsById(id);
+            return modelMapper.map(entity, CourseDTO.class);
+        } catch (DataAccessException | IllegalArgumentException | 
+                 ConfigurationException | MappingException e) {
+            throw new ServiceException(COURSE_FETCH_ERROR, e);
         }
     }
     
     @Override
-    public CourseModel getById(int id) throws ServiceException {
+    public CourseDTO getById(int id) {
         try {
-            CourseEntity entity = courseRepository.findById(id);
-            return modelMapper.map(entity, CourseModel.class); 
-        } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
-            throw new ServiceException("Getting a course by its id fails", e);
+            Course entity = courseRepository.findById(id);
+            return modelMapper.map(entity, CourseDTO.class); 
+        } catch (DataAccessException | IllegalArgumentException | 
+                 ConfigurationException | MappingException e) {
+            throw new ServiceException(COURSE_FETCH_ERROR, e);
         }
     }
     
     @Override
-    public void deleteById(Integer id) throws ServiceException {
+    public void deleteById(Integer id) {
         try {
             courseRepository.deleteById(id);
-        } catch (IllegalArgumentException e) {
-            throw new ServiceException("Deleting the course fails", e);
+        } catch (DataAccessException | IllegalArgumentException e) {
+            throw new ServiceException(COURSE_DELETE_ERROR, e);
         }
     }
     
     @Override
-    public void create(CourseModel model) throws ServiceException {
+    public CourseDTO create(CourseDTO model) {
         try {
-            CourseEntity entity = modelMapper.map(model, CourseEntity.class);
-            courseRepository.saveAndFlush(entity);
-        } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
-            throw new ServiceException("Creating the course fails", e);
+            Course entity = modelMapper.map(model, Course.class);
+            Course createdEntity = courseRepository.saveAndFlush(entity);
+            return modelMapper.map(createdEntity, CourseDTO.class);
+        } catch (DataAccessException | IllegalArgumentException | 
+                 ConfigurationException | MappingException e) {
+            throw new ServiceException(COURSE_CREATE_ERROR, e);
         }
     }
     
     @Override
-    public List<CourseModel> getAll() throws ServiceException {
+    public List<CourseDTO> getAll() {
         try {
-            List<CourseEntity> courseEntities = courseRepository.findAll();
+            List<Course> courseEntities = courseRepository.findAll();
             return modelMapper.map(courseEntities, COURSE_MODEL_LIST_TYPE);
-        } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
-            throw new ServiceException("Getting all courses was failed.", e); 
+        } catch (DataAccessException | IllegalArgumentException | 
+                 ConfigurationException | MappingException e) {
+            throw new ServiceException(COURSES_FETCH_ERROR, e); 
         }
     }
     
     @Override
-    public void update(CourseModel model) throws ServiceException {
+    public void update(CourseDTO model) {
         try {
-            CourseEntity entity = modelMapper.map(model, CourseEntity.class);
-            CourseEntity persistedEntity = courseRepository.findById(entity.getId()
+            Course entity = modelMapper.map(model, Course.class);
+            Course persistedEntity = courseRepository.findById(entity.getId()
                                                            .intValue());
             persistedEntity.setDescription(entity.getDescription());
             persistedEntity.setName(entity.getName());
             courseRepository.saveAndFlush(persistedEntity);
-        } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
-            throw new ServiceException("Updating the course was failed", e);
+        } catch (DataAccessException | IllegalArgumentException | 
+                 ConfigurationException | MappingException e) {
+            throw new ServiceException(COURSE_UPDATE_ERROR, e);
         }
     }
    
     @Override
-    public CourseModel getTimetableListByCourseId(int id) throws ServiceException {
+    public CourseDTO getByIdWithLessons(int id) {
         try {
-            CourseEntity courseEntity = courseRepository.findTimetablesById(id);
-            return modelMapper.map(courseEntity, CourseModel.class);
-        } catch (IllegalArgumentException | ConfigurationException | MappingException e) {
-            throw new ServiceException("Getting timetable list of the course id was failed", e);
+            Course courseEntity = courseRepository.findTimetablesById(id);
+            return modelMapper.map(courseEntity, CourseDTO.class);
+        } catch (DataAccessException | IllegalArgumentException | 
+                 ConfigurationException | MappingException e) {
+            throw new ServiceException(COURSE_FETCH_ERROR, e);
         }
     }
 }

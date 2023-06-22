@@ -1,20 +1,19 @@
 package ua.com.foxminded.university.service;
 
 
-import ua.com.foxminded.university.exception.ServiceException;
-import ua.com.foxminded.university.model.GroupModel;
+import ua.com.foxminded.university.dto.GroupDTO;
 
-public interface GroupService extends GenericService<GroupModel> {
+public interface GroupService extends GenericService<GroupDTO> {
     
     public void deassignGroup(int studentId);
     
-    public void sortStudentsByLastName(GroupModel group);
+    public void sortContainedStudentsByLastName(GroupDTO group);
     
     public void assignGroup(int groupId, int[] studentIds);
 
-    public GroupModel getGroupRelationsById(int id) throws ServiceException;
+    public GroupDTO getGroupRelationsById(int id);
 
-    public GroupModel getStudentsByGroupId(int id) throws ServiceException;
+    public GroupDTO getStudentsByGroupId(int id);
 
-    public GroupModel getTimetablesByGroupId(int id) throws ServiceException;
+    public GroupDTO getTimetablesByGroupId(int id);
 }

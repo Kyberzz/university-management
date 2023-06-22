@@ -1,12 +1,20 @@
 package ua.com.foxminded.university.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import ua.com.foxminded.university.entity.TeacherEntity;
+import ua.com.foxminded.university.entity.Teacher;
 
-public interface TeacherRepository extends JpaRepository<TeacherEntity, Integer> {
+public interface TeacherRepository extends JpaRepository<Teacher, Integer> {
+    
+    public Teacher findByUserEmail(String email);
+    
+    public List <Teacher> findByCoursesId(int id);
+    
+    public Teacher findByUserId(int id);
 
-    public TeacherEntity findCoursesById(Integer id);
+    public Teacher findCoursesById(int id);
 
-    public TeacherEntity findById(int id);
+    public Teacher findById(int id);
 }

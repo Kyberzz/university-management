@@ -1,19 +1,18 @@
 package ua.com.foxminded.university.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 
-import ua.com.foxminded.university.entity.CourseEntity;
+import ua.com.foxminded.university.entity.Course;
 
-public interface CourseRepository extends JpaRepository<CourseEntity, Integer> {
+public interface CourseRepository extends JpaRepository<Course, Integer> {
     
+    public List<Course> findByTeachersId(int teacherId);
     
-    @Query("select c from CourseEntity c left join fetch c.teachers "
-                                      + "left join fetch c.timetables "
-                                      + "where c.id = ?1")
-    public CourseEntity getCourseRelationsById(int id);
+    public Course findTeachersAndLessonsById(int id);
     
-    public CourseEntity findTimetablesById(Integer id);
+    public Course findTimetablesById(Integer id);
 
-    public CourseEntity findById(int id);
+    public Course findById(int id);
 }

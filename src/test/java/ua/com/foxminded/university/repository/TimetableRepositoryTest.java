@@ -4,80 +4,57 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.PersistenceUnit;
-
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.transaction.BeforeTransaction;
 
-import ua.com.foxminded.university.entity.CourseEntity;
-import ua.com.foxminded.university.entity.GroupEntity;
-import ua.com.foxminded.university.entity.TimetableEntity;
-import ua.com.foxminded.university.entitymother.CourseEntityMother;
-import ua.com.foxminded.university.entitymother.GroupEntityMother;
-import ua.com.foxminded.university.entitymother.TimetableEntityMother;
+import ua.com.foxminded.university.entity.Timetable;
+import ua.com.foxminded.university.entity.Timing;
+import ua.com.foxminded.university.entitymother.TimetableMother;
+import ua.com.foxminded.university.entitymother.TimingMother;
 
-@DataJpaTest
 @ActiveProfiles("test")
+@DataJpaTest
 class TimetableRepositoryTest {
-    
-    @PersistenceUnit
-    private EntityManagerFactory entityManagerFactory;
     
     @Autowired
     private TimetableRepository timetableRepository;
     
-    private CourseEntity course;
-    private GroupEntity group;
-    private TimetableEntity timetable;
+    @Autowired
+    private TimingRepository timingRepository;
     
-    @BeforeEach
+    private Timetable timetable;
+    private Timing timing;
+    
+    @BeforeTransaction
     void init() {
-        EntityManager entityManager = entityManagerFactory.createEntityManager();
-        entityManager.getTransaction().begin();
-        course = CourseEntityMother.complete().build();
-        entityManager.persist(course);
-        
-        group = GroupEntityMother.complete().build();
-        entityManager.persist(group);
-        
-        timetable = TimetableEntityMother.complete().build();
-        timetable.setCourse(course);
-        timetable.setGroup(group);
-        entityManager.persist(timetable);
-        entityManager.getTransaction().commit();
-        entityManager.close();
+        timetable = TimetableMother.complete().build();
+        timetableRepository.saveAndFlush(timetable);
+        timing = TimingMother.complete().timetable(timetable).build();
+        timingRepository.saveAndFlush(timing);
     }
     
     @Test
-    void findByDatestamp_ShouldReturnTimetablesOfDay() {
-        List<TimetableEntity> timetables = timetableRepository.findByDatestamp(
-                timetable.getDatestamp());
-        assertEquals(timetable.getDatestamp(), timetables.iterator().next().getDatestamp());
+    void getByIdWithTimings_ShouldReturnTimingsRelationship() {
+        Timetable persistedTimetable = timetableRepository.getByIdWithTimings(timetable.getId());
+        assertEquals(timing, persistedTimetable.getTimings().iterator().next());
     }
     
     @Test
-    void findCourseById_ShouldReturnCourseOwnedByTimetableWithId() {
-        TimetableEntity receivedTimetable = timetableRepository.findCourseById(
-                timetable.getId());
-        assertEquals(course.getId(), receivedTimetable.getCourse().getId());
-    }
+    void getAllWithTimings_ShouldReturnTimingsRelationship() {
+        List<Timetable> timetables = timetableRepository.getAllWithTimings();
+        Timetable persistedTimetable = timetables.iterator().next();
         
-    @Test
-    void findGroupById_ShouldReturnGroupOwnedByTimetableWithId() {
-        TimetableEntity receivedTimetable = timetableRepository.findGroupById(
-                timetable.getId());
-        assertEquals(group.getId(), receivedTimetable.getGroup().getId());
+        assertEquals(timetable.getId(), 
+                     persistedTimetable.getTimings().iterator().next().getId());
     }
-    
+
     @Test
-    void findById_ShouldReturnTimetableEntityWithId() {
-        TimetableEntity receivedTimetable = timetableRepository.findById(
+    void findById_ShouldReturnEntity() {
+        Timetable persistedTimetable = timetableRepository.findById(
                 timetable.getId().intValue());
-        assertEquals(timetable.getId(), receivedTimetable.getId());
+        assertEquals(timetable.getId(), persistedTimetable.getId());
     }
 }

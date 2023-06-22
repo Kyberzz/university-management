@@ -15,7 +15,7 @@ import com.github.springtestdbunit.TransactionDbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 
 import ua.com.foxminded.university.config.TestConfig;
-import ua.com.foxminded.university.entity.GroupEntity;
+import ua.com.foxminded.university.entity.Group;
 
 @DataJpaTest
 @Import(TestConfig.class)
@@ -27,7 +27,7 @@ import ua.com.foxminded.university.entity.GroupEntity;
 class GroupRepositoryTest {
     
     private static final int STUDENTS_QUANTITY = 1;
-    private static final int TIMETALBES_QUANTITY = 1;
+    private static final int LESSONS_QUANTITY = 1;
     private static final int GROUP_ID = 101;
     
     @Autowired
@@ -35,26 +35,26 @@ class GroupRepositoryTest {
     
     @Test
     void getGroupRelationsById_ShouldReturnGroupWithItsAllRelations() {
-        GroupEntity receivedGroup = groupRepository.getGroupRelationsById(GROUP_ID);
+        Group receivedGroup = groupRepository.getGroupRelationsById(GROUP_ID);
         assertEquals(STUDENTS_QUANTITY, receivedGroup.getStudents().size());
-        assertEquals(TIMETALBES_QUANTITY, receivedGroup.getTimetables().size());
+        assertEquals(LESSONS_QUANTITY, receivedGroup.getLessons().size());
     }
 
     @Test
     void findTimetablesById_ShouldReturnTimetalbesOwnedByGroup() {
-        GroupEntity receivedGroup = groupRepository.findTimetablesById(GROUP_ID);
-        assertEquals(TIMETALBES_QUANTITY, receivedGroup.getTimetables().size());
+        Group receivedGroup = groupRepository.findTimetablesById(GROUP_ID);
+        assertEquals(LESSONS_QUANTITY, receivedGroup.getLessons().size());
     }
 
     @Test
     void findStudentListById_ShouldReturnStudentsOwnedByGroupWithId() {
-        GroupEntity receivedGroup = groupRepository.findStudentsById(GROUP_ID);
+        Group receivedGroup = groupRepository.findStudentsById(GROUP_ID);
         assertEquals(STUDENTS_QUANTITY, receivedGroup.getStudents().size());
     }
     
     @Test
     void findById_ShouldRetrunGroupWithId() {
-        GroupEntity receivedGroup = groupRepository.findById(GROUP_ID);
+        Group receivedGroup = groupRepository.findById(GROUP_ID);
         assertEquals(GROUP_ID, receivedGroup.getId());
     }
 }

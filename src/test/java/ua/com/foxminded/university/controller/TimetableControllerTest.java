@@ -1,7 +1,6 @@
 package ua.com.foxminded.university.controller;
 
-import static ua.com.foxminded.university.controller.TimetableController.*;
-
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -10,141 +9,201 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrlPattern;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static ua.com.foxminded.university.controller.TimetableController.*;
 
-import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.mockito.ArgumentMatchers;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import ua.com.foxminded.university.model.TimetableModel;
-import ua.com.foxminded.university.modelmother.TimetableModelMother;
-import ua.com.foxminded.university.service.CourseService;
-import ua.com.foxminded.university.service.GroupService;
+import ua.com.foxminded.university.dto.TimetableDTO;
+import ua.com.foxminded.university.dto.TimingDTO;
+import ua.com.foxminded.university.dtomother.TimingDTOMother;
 import ua.com.foxminded.university.service.TimetableService;
+import ua.com.foxminded.university.service.TimingService;
 
-@ExtendWith(SpringExtension.class)
+@ExtendWith(MockitoExtension.class)
+@DirtiesContext
 class TimetableControllerTest {
     
+    public static final int TIMIMING_ID = 1;
     public static final int TIMETABLE_ID = 1;
+    public static final String TIMETABLE_NAME = "general";
     
-    @MockBean
+    @Mock
     private TimetableService timetableServiceMock;
     
-    @MockBean
-    private CourseService courseServiceMock;
+    @Mock
+    private TimingService timingServiceMock;
     
-    @MockBean
-    private GroupService groupServiceMock;
+    private TimetableDTO timetable;
+    private List<TimetableDTO> timetables;
+    private TimingDTO timing;
     
     private MockMvc mockMvc;
-    private TimetableModel timetableModel;
     
     @BeforeEach
-    void setup() {
-        mockMvc = MockMvcBuilders.standaloneSetup(
-                new TimetableController(timetableServiceMock, 
-                                        courseServiceMock, 
-                                        groupServiceMock)).build();
-
-        timetableModel = TimetableModelMother.complete().build();
+    void setUp() {
+        mockMvc = MockMvcBuilders.standaloneSetup(new TimetableController(
+                timetableServiceMock, timingServiceMock)).build();
+        timetable = TimetableDTO.builder().name(TIMETABLE_NAME).build();
+        timetables = Arrays.asList(timetable);
+        timing = TimingDTOMother.complete().build();
     }
     
     @Test
-    void create_ShouldRedirectToGetDayTimetable() throws Exception {
-        LocalDate localDate = LocalDate.now();
-        TimetableModel timetableModel = TimetableModelMother.complete().build();
-        mockMvc.perform(post("/timetables/create/timetable/{date}", localDate.toString())
-                    .flashAttr(TIMETABLE_MODEL_ATTRIBUTE, timetableModel))
-               .andDo(print())
-               .andExpect(model().attributeExists(TIMETABLE_MODEL_ATTRIBUTE))
-               .andExpect(redirectedUrl(new StringBuffer().append(DAY_TIMETABLES_PATH)
-                                                          .append(localDate)
-                                                          .append("?").toString()));
-        verify(timetableServiceMock).create(isA(TimetableModel.class));
-    }
-    
-    @Test
-    void delete_ShouldRedirectToList() throws Exception {
-        mockMvc.perform(post("/timetables/delete/{id}", TIMETABLE_ID)
-                    .flashAttr(TIMETABLE_MODEL_ATTRIBUTE, timetableModel))
-               .andDo(print())
-               .andExpect(redirectedUrl(new StringBuilder().append(DAY_TIMETABLES_PATH)
-                                                           .append(timetableModel.getDatestamp())
-                                                           .append("?").toString()));
-        verify(timetableServiceMock).deleteById(isA(Integer.class));
-    }
-    
-    @Test
-    void update_ShouldRedirectToGetDayTimetable() throws Exception {
-        mockMvc.perform(post("/timetables/update/{id}", TIMETABLE_ID)
-                    .flashAttr("timetableModel", timetableModel))
+    void deleteTiming_ShouldRedirectToGetAll() throws Exception {
+        mockMvc.perform(post("/timetables/delete-timing/{timetableId}/{timingId}", 
+                        TIMETABLE_ID, TIMIMING_ID))
                .andDo(print())
                .andExpect(redirectedUrl(
-                       new StringBuilder().append(DAY_TIMETABLES_PATH)
-                                          .append(timetableModel.getDatestamp())
-                                          .append("?").toString()));
+                       new StringBuilder().append(SLASH)
+                                          .append(TIMETABLES_LIST_TEMPLATE_PATH)
+                                          .append(QUESTION_MARK)
+                                          .append(TIMETABLE_ID_PARAMETER_NAME)
+                                          .append(EQUAL_SIGN)
+                                          .append(TIMETABLE_ID)
+                                          .toString()));
         
-        verify(timetableServiceMock).update(isA(TimetableModel.class));
+        verify(timingServiceMock).deleteById(anyInt());
     }
     
     @Test
-    void getDayTimetable_ShouldRenderDayTimetableTemplate() throws Exception {
-        mockMvc.perform(get("/timetables/day-timetables/{datestamp}", 
-                            timetableModel.getDatestamp().toString()))
+    void delete_ShouldRedirectToGetAll() throws Exception {
+        mockMvc.perform(post("/timetables/delete/{timetableId}", TIMETABLE_ID))
                .andDo(print())
-               .andExpect(model().attributeExists(GROUPS_ATTRIBUTE, 
-                                                  COURSES_ATTRIBUTE, 
-                                                  DAY_TIMETABLE_ATTRIBUTE,
-                                                  TIMETABLE_MODEL_ATTRIBUTE))
-               .andExpect(view().name(DAY_TIMETABLE_TEMPLATE));
+               .andExpect(redirectedUrl(
+                       new StringBuilder().append(SLASH)
+                                          .append(TIMETABLES_LIST_TEMPLATE_PATH)
+                                          .append(QUESTION_MARK)
+                                          .append(TIMETABLE_ID_PARAMETER_NAME)
+                                          .append(EQUAL_SIGN)
+                                          .append(STUB)
+                                          .toString()));
         
-        verify(timetableServiceMock).getDayTimetalbe(isA(LocalDate.class));
-        verify(courseServiceMock).getAll();
-        verify(groupServiceMock).getAll();
+        verify(timetableServiceMock).deleteById(anyInt());
     }
     
     @Test
-    void back_ShouldRendirectToList() throws Exception {
-        LocalDate localDate = LocalDate.now();
-        when(timetableServiceMock.moveBack(isA(LocalDate.class))).thenReturn(localDate);
-        mockMvc.perform(get("/timetables/{date}/back", localDate.toString()))
+    void addTiming_ShouldRedirectToGetAll() throws Exception {
+        mockMvc.perform(post("/timetables/add-timing/{timetableId}", TIMETABLE_ID)
+                    .flashAttr(TIMING_ATTRIBUTE, timing))
                .andDo(print())
-               .andExpect(redirectedUrlPattern("/timetables/*/list?"));
+               .andExpect(redirectedUrl(
+                       new StringBuilder().append(SLASH)
+                                          .append(TIMETABLES_LIST_TEMPLATE_PATH)
+                                          .append(QUESTION_MARK)
+                                          .append(TIMETABLE_ID_PARAMETER_NAME)
+                                          .append(EQUAL_SIGN)
+                                          .append(TIMETABLE_ID)
+                                          .toString()));
+        
+        verify(timingServiceMock).create(isA(TimingDTO.class));
     }
     
     @Test
-    void next_ShouldRedirectToList() throws Exception {
-        LocalDate localDate = LocalDate.now();
-        when(timetableServiceMock.moveForward(isA(LocalDate.class))).thenReturn(localDate);
-        mockMvc.perform(get("/timetables/{date}/next", localDate.toString()))
-               .andDo(print())
-               .andExpect(redirectedUrlPattern("/timetables/*/list?"));
-    }
-
-    @Test
-    void list_ShouldRenderListTemplate() throws Exception {
-        LocalDate localDate = LocalDate.now();
-        mockMvc.perform(MockMvcRequestBuilders.get("/timetables/{date}/list", 
-                    localDate.toString()))
-               .andExpect(status().isOk())
-               .andExpect(model().attributeExists(GROUPS_ATTRIBUTE))
-               .andExpect(model().attributeExists(COURSES_ATTRIBUTE))
-               .andExpect(model().attributeExists(MONTH_TIMETABLE_ATTRIBUTE))
-               .andExpect(model().attributeExists(TIMETABLE_MODEL_ATTRIBUTE))
-               .andExpect(MockMvcResultMatchers.view().name(TIMETABLES_LIST_TEMPLATE));
+    void updateName_ShouldRedirectToGetAll() throws Exception {
+        when(timetableServiceMock.getById(anyInt())).thenReturn(timetable);
         
-        verify(timetableServiceMock).getMonthTimetable(LocalDate.now());
-        verify(courseServiceMock).getAll();
-        verify(groupServiceMock).getAll();
+        mockMvc.perform(post("/timetables/update-name/{timetableId}", TIMETABLE_ID)
+                    .flashAttr(TIMETABLE_ATTRIBUTE, timetable))
+               .andDo(print())
+               .andExpect(redirectedUrl(
+                       new StringBuilder().append(SLASH)
+                                          .append(TIMETABLES_LIST_TEMPLATE_PATH)
+                                          .append(QUESTION_MARK)
+                                          .append(TIMETABLE_ID_PARAMETER_NAME)
+                                          .append(EQUAL_SIGN)
+                                          .append(TIMETABLE_ID)
+                                          .toString()));
+        verify(timetableServiceMock).getById(anyInt());
+        verify(timetableServiceMock).update(isA(TimetableDTO.class));
+    }
+    
+    @Test
+    void create_SouldRedirectToGetAll() throws Exception {
+        timetable.setId(TIMETABLE_ID);
+        when(timetableServiceMock.create(timetable)).thenReturn(timetable);
+        
+        mockMvc.perform(post("/timetables/create")
+                    .flashAttr(TIMETABLE_ATTRIBUTE, timetable))
+               .andDo(print())
+               .andExpect(redirectedUrl(
+                       new StringBuilder().append(SLASH)
+                                          .append(TIMETABLES_LIST_TEMPLATE_PATH)
+                                          .append(QUESTION_MARK)
+                                          .append(TIMETABLE_ID_PARAMETER_NAME)
+                                          .append(EQUAL_SIGN)
+                                          .append(TIMETABLE_ID)
+                                          .toString()));
+        
+        verify(timetableServiceMock).create(isA(TimetableDTO.class));
+    }
+    
+    @Test
+    void getAll_ShouldRenderTimetablesListTemplate_TimetableIdIsNotNull() 
+            throws Exception {
+        when(timetableServiceMock.getAll()).thenReturn(timetables);
+        when(timetableServiceMock.getByIdWithTimings(anyInt())).thenReturn(timetable);
+        
+        mockMvc.perform(get("/timetables/list")
+                    .param("timetableId", String.valueOf(TIMETABLE_ID)))
+               .andDo(print())
+               .andExpect(model().attributeExists(TIMING_ATTRIBUTE, 
+                                                  TIMETABLE_ATTRIBUTE, 
+                                                  TIMETABLES_ATTRIBUTE))
+               .andExpect(view().name(TIMETABLES_LIST_TEMPLATE_PATH));
+        
+        verify(timetableServiceMock).getAll();
+        verify(timetableServiceMock).sortByName(ArgumentMatchers.<TimetableDTO>anyList());
+        verify(timetableServiceMock).sortTimingsByStartTime(isA(TimetableDTO.class));
+        verify(timetableServiceMock).getByIdWithTimings(anyInt());
+    }
+    
+    @Test
+    void getAll_ShouldRenderTimetablesListTemplate_WhenFirstIfBlockIsTrueAndSecondOneIsFalse() 
+            throws Exception {
+        when(timetableServiceMock.getAll()).thenReturn(timetables);
+        
+        mockMvc.perform(get("/timetables/list")
+                    .param("timetableId", String.valueOf(STUB)))
+               .andDo(print())
+               .andExpect(model().attributeExists(TIMING_ATTRIBUTE, 
+                                                  TIMETABLE_ATTRIBUTE, 
+                                                  TIMETABLES_ATTRIBUTE))
+               .andExpect(view().name(TIMETABLES_LIST_TEMPLATE_PATH));
+        
+        verify(timetableServiceMock).getAll();
+        verify(timetableServiceMock).sortByName(ArgumentMatchers.<TimetableDTO>anyList());
+        verify(timetableServiceMock).sortTimingsByStartTime(isA(TimetableDTO.class));
+    }
+    
+    @Test
+    void getAll_ShouldRenderTimetablesListTemplate_WhenFirstIfBlockIsTrueAndSecondOneIsTrue() 
+            throws Exception {
+        timetables = new ArrayList<>();
+        when(timetableServiceMock.getAll()).thenReturn(timetables);
+        
+        mockMvc.perform(get("/timetables/list")
+                    .param("timetableId", String.valueOf(STUB)))
+               .andDo(print())
+               .andExpect(model().attributeExists(TIMING_ATTRIBUTE, 
+                                                  TIMETABLE_ATTRIBUTE, 
+                                                  TIMETABLES_ATTRIBUTE))
+               .andExpect(view().name(TIMETABLES_LIST_TEMPLATE_PATH));
+        
+        verify(timetableServiceMock).getAll();
+        verify(timetableServiceMock).sortByName(ArgumentMatchers.<TimetableDTO>anyList());
+        verify(timetableServiceMock).sortTimingsByStartTime(isA(TimetableDTO.class));
     }
 }

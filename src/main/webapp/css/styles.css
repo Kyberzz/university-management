@@ -1,0 +1,9 @@
+@charset "UTF-8";
+
+html,body {
+    height: 100%;
+}
+
+.border-right {
+    border-right: 1px solid #ddd;
+}

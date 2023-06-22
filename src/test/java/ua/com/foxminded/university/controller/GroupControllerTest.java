@@ -20,15 +20,17 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import ua.com.foxminded.university.model.GroupModel;
-import ua.com.foxminded.university.model.StudentModel;
-import ua.com.foxminded.university.modelmother.GroupModelMother;
+import ua.com.foxminded.university.dto.GroupDTO;
+import ua.com.foxminded.university.dto.StudentDTO;
+import ua.com.foxminded.university.dtomother.GroupDTOMother;
 import ua.com.foxminded.university.service.GroupService;
+import ua.com.foxminded.university.service.LessonService;
 import ua.com.foxminded.university.service.StudentService;
 
 @ExtendWith(SpringExtension.class)
 class GroupControllerTest {
     
+    public static final String GROUP_NAME_PARAMETER = "name";
     public static final int GROUP_ID = 1;
     
     @MockBean
@@ -37,14 +39,17 @@ class GroupControllerTest {
     @MockBean
     private StudentService studentServiceMock;
     
+    @MockBean
+    private LessonService lessonService;
+    
     private MockMvc mockMvc;
-    private GroupModel groupModel;
+    private GroupDTO group;
     
     @BeforeEach
     void setup() {
         mockMvc = MockMvcBuilders.standaloneSetup(new GroupController(
-                groupServiceMock, studentServiceMock)).build();
-        groupModel = GroupModelMother.complete().build();
+                groupServiceMock, studentServiceMock, lessonService)).build();
+        group = GroupDTOMother.complete().build();
     }
     
     @Test
@@ -60,10 +65,10 @@ class GroupControllerTest {
     @Test
     void assignGroup_ShouldRedirectToGetById() throws Exception {
         mockMvc.perform(post("/groups/{groupId}/assign-group", GROUP_ID)
-                    .param("studentIds", "1,5"))
+                    .param("studentId", "1,5"))
                .andDo(print())
                .andExpect(redirectedUrl(new StringBuilder().append(GROUPS_PATH)
-                                                           .append(GROUP_ID) .toString()));
+                                                           .append(GROUP_ID).toString()));
         verify(groupServiceMock).assignGroup(anyInt(), any(int[].class));
     }
     
@@ -71,49 +76,50 @@ class GroupControllerTest {
     void delete_ShouldRedirectToList() throws Exception {
         mockMvc.perform(post("/groups/{groupId}/delete", GROUP_ID))
                .andDo(print())
-               .andExpect(redirectedUrl(new StringBuilder().append(GROUPS_PATH)
-                                                           .append(LIST_TEMPLATE).toString()));
+               .andExpect(redirectedUrl(new StringBuilder().append(SLASH)
+                                                           .append(GROUPS_LIST_TEMPLATE_PATH)
+                                                           .toString()));
         verify(groupServiceMock).deleteById(anyInt());
     }
     
     @Test
     void create_ShouldRedirectToList() throws Exception {
-        mockMvc.perform(post("/groups/create").param("name", groupModel.getName()))
+        mockMvc.perform(post("/groups/create").param("name", group.getName()))
                .andDo(print())
-               .andExpect(redirectedUrl(new StringBuilder().append(GROUPS_PATH)
-                                                           .append(LIST_TEMPLATE).toString()));
-        verify(groupServiceMock).create(isA(GroupModel.class));
+               .andExpect(redirectedUrl(new StringBuilder().append(SLASH)
+                                                           .append(GROUPS_LIST_TEMPLATE_PATH)
+                                                           .toString()));
+        verify(groupServiceMock).create(isA(GroupDTO.class));
     }
     
     @Test
     void update_ShouldRedirectToGetById() throws Exception {
         mockMvc.perform(post("/groups/{groupId}/update", GROUP_ID)
-                    .param("name", groupModel.getName()))
+                    .param(GROUP_NAME_PARAMETER, group.getName()))
                .andDo(print())
                .andExpect(redirectedUrl(new StringBuilder().append(GROUPS_PATH)
                                                            .append(GROUP_ID).toString()));
-        verify(groupServiceMock).update(isA(GroupModel.class));
+        verify(groupServiceMock).update(isA(GroupDTO.class));
     }
     
     @Test
     void getById_ShouldRenderGroupTemplate() throws Exception {
-        when(groupServiceMock.getGroupRelationsById(GROUP_ID)).thenReturn(groupModel);
+        when(groupServiceMock.getGroupRelationsById(GROUP_ID)).thenReturn(group);
         mockMvc.perform(get("/groups/{groupId}", GROUP_ID))
                .andDo(print())
                .andExpect(status().isOk())
-               .andExpect(model().attributeExists(GROUP_MODEL_ATTRIBUTE))
+               .andExpect(model().attributeExists(GROUP_ATTRIBUTE))
                .andExpect(view().name("groups/group"));
-        verify(groupServiceMock).sortStudentsByLastName(any(GroupModel.class));
-        verify(studentServiceMock).sortByLastName(ArgumentMatchers.<StudentModel>anyList());
+        verify(groupServiceMock).sortContainedStudentsByLastName(any(GroupDTO.class));
+        verify(studentServiceMock).sortByLastName(ArgumentMatchers.<StudentDTO>anyList());
     }
     
     @Test
-    void getAllGroups_shouldRenderListTemplate() throws Exception {
+    void getAll_shouldRenderListTemplate() throws Exception {
         mockMvc.perform(get("/groups/list"))
                .andDo(print())
-               .andExpect(status().isOk())
-               .andExpect(model().attributeExists("groups"))
-               .andExpect(view().name("groups/list"));
+               .andExpect(model().attributeExists(GROUPS_ATTRIBUTE))
+               .andExpect(view().name(GROUPS_LIST_TEMPLATE_PATH));
         
         verify(groupServiceMock).getAll();
     }

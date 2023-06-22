@@ -38,8 +38,8 @@ spring:
 logging:
   level:
     root: warn
-    org.springframework.web: warn
-    org.springframework.security: warn
+    '[org.springframework.web]': warn
+    '[org.springframework.security]': warn
 #    org.hibernate: error
 #    org.hibernate.sql: debug
 #    org.hibernate.type.descriptor.sql.BasicBinder: trace
@@ -55,8 +55,8 @@ spring:
   datasource:
     name: test
     driverClassName: org.h2.Driver
-    url: jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;
-#    url: jdbc:h2:mem:test;DB_CLOSE_ON_EXIT=FALSE;
+#    url: jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;
+    url: jdbc:h2:mem:test;DB_CLOSE_ON_EXIT=FALSE;
     username: sa
     password:
   sql:

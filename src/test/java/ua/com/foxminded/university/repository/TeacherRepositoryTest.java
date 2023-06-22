@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -18,16 +19,18 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ActiveProfiles;
 
-import ua.com.foxminded.university.entity.CourseEntity;
-import ua.com.foxminded.university.entity.TeacherEntity;
-import ua.com.foxminded.university.entitymother.CourseEntityMother;
-import ua.com.foxminded.university.entitymother.TeacherEntityMother;
+import ua.com.foxminded.university.entity.Course;
+import ua.com.foxminded.university.entity.Teacher;
+import ua.com.foxminded.university.entity.User;
+import ua.com.foxminded.university.entitymother.CourseMother;
+import ua.com.foxminded.university.entitymother.UserMother;
 
 @DataJpaTest
 @ActiveProfiles("test")
-@DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
+@DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 class TeacherRepositoryTest {
     
+    private static final int TEACHERS_QUANTITY = 1;
     private static final int COURSES_QUANTITY = 1;
     
     @PersistenceContext
@@ -39,17 +42,20 @@ class TeacherRepositoryTest {
     @Autowired
     private TeacherRepository teacherRepository;
     
-    private TeacherEntity teacher;
-    private CourseEntity course;
+    private Teacher teacher;
+    private Course course;
+    private User user;
     
     @BeforeEach
     void setUp() {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
         
-        teacher = TeacherEntityMother.complete().build();
+        user = UserMother.complete().build();
+        entityManager.persist(user);
+        teacher = Teacher.builder().user(user).build();
         entityManager.persist(teacher);
-        course = CourseEntityMother.complete().build();
+        course = CourseMother.complete().build();
         course.setTeachers(new HashSet<>(Arrays.asList(teacher)));
         entityManager.persist(course);
         teacher.setCourses(new HashSet<>(Arrays.asList(course)));
@@ -59,14 +65,33 @@ class TeacherRepositoryTest {
     }
     
     @Test
+    void findByUserEmail_ShouldReturnTeacher() {
+        Teacher persistedTeacher = teacherRepository.findByUserEmail(
+                teacher.getUser().getEmail());
+        assertEquals(teacher, persistedTeacher);
+    }
+    
+    @Test
+    void findByCoursesId_ShouldReturnTeachersHavingCourseId() {
+        List<Teacher> teachers = teacherRepository.findByCoursesId(course.getId());
+        assertEquals(TEACHERS_QUANTITY, teachers.size());
+    }
+    
+    @Test
+    void findByUserId_ShouldFindByIdPropertyOfRelatedEntityUser() {
+        Teacher persistedTeacher = teacherRepository.findByUserId(user.getId());
+        assertEquals(user.getId(), persistedTeacher.getUser().getId());
+    }
+    
+    @Test
     void findCoursesById_ShouldReturnCoursesOwnedByTeacherWithId() {
-        TeacherEntity receivedTeacher = teacherRepository.findById(teacher.getId().intValue());
+        Teacher receivedTeacher = teacherRepository.findById(teacher.getId().intValue());
         assertEquals(COURSES_QUANTITY, receivedTeacher.getCourses().size());
     }
     
     @Test
     void findById_ShouldReturnTeacherEntityWithId() {
-        TeacherEntity receivedTeacher = teacherRepository.findById(teacher.getId().intValue());
+        Teacher receivedTeacher = teacherRepository.findById(teacher.getId().intValue());
         assertEquals(teacher.getId(), receivedTeacher.getId());
     }
 }

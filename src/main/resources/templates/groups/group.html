@@ -1,82 +1,76 @@
 <!doctype html>
-<html lang="en" xmlns:th="http://thymeleaf.org">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Bootstrap demo</title>
-<link
- href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css"
- rel="stylesheet"
- integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ"
- crossorigin="anonymous">
-</head>
-<body>
- <div th:replace="~{fragments/header::navigationBar}"></div>
+<html lang="en" xmlns:th="http://thymeleaf.org" style="height: 100%;">
 
- <nav class="ms-2" aria-label="breadcrumb" th:fragment="page-path">
-  <ol class="breadcrumb container-fluid">
-   <li class="breadcrumb-item"><a th:href="@{/}"
-    th:text="#{href.home}">Home</a></li>
-   <li class="breadcrumb-item"><a th:href="@{/groups/list}"
-    th:text="#{href.groups}">Groups</a></li>
-   <li class="breadcrumb-item active" aria-current="page"
-    th:text="${groupModel.id}">1</li>
-  </ol>
- </nav>
+ <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bootstrap demo</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css"
+   rel="stylesheet"
+   integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ"
+   crossorigin="anonymous">
+ </head>
 
- <div class="container">
+ <body style="height: 100%;">
 
-  <div class="col">
+  <div class="container-fluid h-100 d-flex flex-column">
 
-   <div class="row">
+   <div class="row flex-shrink-0">
 
-    <div class="col-3">
+    <div th:replace="~{fragments/header::navigationBar}">Navigation bar</div>
 
-     <form class="row"
-      th:action="@{/groups/__${groupModel.id}__/update}" method="post">
+    <div class="col-12">
+     <nav class="ms-2" aria-label="breadcrumb" th:fragment="page-path">
+      <ol class="breadcrumb container-fluid">
+       <li class="breadcrumb-item"><a th:href="@{/}" th:text="#{href.home}">Home</a></li>
+       <li class="breadcrumb-item"><a th:href="@{/groups/list}" th:text="#{href.groups}">Groups</a>
+       </li>
+       <li class="breadcrumb-item active" aria-current="page" th:text="${group.id}">1</li>
+      </ol>
+     </nav>
+    </div>
+   </div>
+
+   <div class="row flex-fill" style="min-height: 0;">
+
+    <div class="col-4">
+
+     <form class="row" th:action="@{/groups/__${group.id}__/update}" method="post">
       <div class="row mt-2">
-       <div class="col-6 fs-6 fw-bold text-end"
-        th:text="|#{thead.groupId}: |">Group ID:</div>
-       <div class="col" th:text="${groupModel.id}">1</div>
+       <div class="col-6 fs-6 fw-bold text-end" th:text="|#{thead.groupId}: |">Group ID:</div>
+       <div class="col" th:text="${group.id}">1</div>
       </div>
       <div class="row mt-2">
-       <div class="col-6 fs-6 fw-bold text-end"
-        th:text="|#{thead.groupName}: |">Group name:</div>
-       <div class="col" th:text="${groupModel.name}">ku-58</div>
+       <div class="col-6 fs-6 fw-bold text-end" th:text="|#{thead.groupName}: |">Group name:</div>
+       <div class="col" th:text="${group.name}">ku-58</div>
       </div>
       <div class="row mt-2">
-       <div class="col-6 fs-6 fw-bold text-end"
-        th:text="|#{thead.newName}: |">New name:</div>
+       <div class="col-6 fs-6 fw-bold text-end" th:text="|#{thead.newName}: |">New name:</div>
        <div class="col">
-        <input class="form-control" id="groupUpdateNameField"
-         type="text" name="name">
+        <input class="form-control" id="groupUpdateNameField" type="text" name="name">
        </div>
       </div>
 
       <div class="row text-center">
        <div>
-        <button type="button" class="btn btn-primary mt-2"
-         data-bs-toggle="modal" data-bs-target="#updateGroup"
-         id="nameUpdateButton">Update group</button>
+        <button type="button" class="btn btn-primary mt-2" data-bs-toggle="modal"
+         data-bs-target="#updateGroup" id="nameUpdateButton">Update group</button>
 
-        <div class="modal fade" id="updateGroup"
-         data-bs-backdrop="static" data-bs-keyboard="false"
-         tabindex="-1" aria-labelledby="staticBackdropLabel"
-         aria-hidden="true">
+        <div class="modal fade" id="updateGroup" data-bs-backdrop="static" data-bs-keyboard="false"
+         tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
          <div class="modal-dialog modal-dialog-centered">
           <div class="modal-content">
            <div class="modal-header">
             <h1 class="modal-title fs-5" id="staticBackdropLabel"></h1>
-            <button type="button" class="btn-close"
-             data-bs-dismiss="modal" aria-label="Close"></button>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"
+             aria-label="Close"></button>
            </div>
            <div class="modal-body" th:text="#{message.confirm-update}">Are
             you sure to update the data?</div>
            <div class="modal-footer">
-            <button type="button" class="btn btn-secondary"
-             data-bs-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-primary"
-             th:text="#{button.confirm}" id="confirmButton">Confirm</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary" th:text="#{button.confirm}"
+             id="confirmButton">Confirm</button>
            </div>
           </div>
          </div>
@@ -87,35 +81,31 @@
 
     </div>
 
-    <div class="col-4 text-center me-5">
+    <div class="col-4 mh-100 text-center pe-5">
 
      <div class="row">
-      <button type="button" class="btn btn-primary"
-       data-bs-toggle="modal" data-bs-target="#exampleModal"
-       th:text="#{button.add-student}" id="addStudentButton">Add student</button>
+      <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+       data-bs-target="#exampleModal" th:text="#{button.add-student}" id="addStudentButton">Add
+       student</button>
 
-      <form class="modal fade" id="exampleModal" tabindex="-1"
-       aria-labelledby="exampleModalLabel" aria-hidden="true"
-       th:action="@{/groups/__${groupModel.id}__/assign-group}"
-       method="post">
+      <form class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+       aria-hidden="true" th:action="@{/groups/__${group.id}__/assign-group}" method="post">
        <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
          <div class="modal-header">
-          <h1 class="modal-title fs-5" id="exampleModalLabel"
-           th:text="#{students.tableName}">All students of the
+          <h1 class="modal-title fs-5" id="exampleModalLabel" th:text="#{students.tableName}">All
+           students of the
            university title</h1>
-          <button type="button" class="btn-close"
-           data-bs-dismiss="modal" aria-label="Close"></button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"
+           aria-label="Close"></button>
          </div>
          <div class="modal-body">
           <table class="table">
            <thead>
             <tr>
              <th scope="col">#</th>
-             <th scope="col" th:text="#{thead.lastName}"
-              class="text-start">Last name</th>
-             <th scope="col" th:text="#{thead.firstName}"
-              class="text-start">First name</th>
+             <th scope="col" th:text="#{thead.lastName}" class="text-start">Last name</th>
+             <th scope="col" th:text="#{thead.firstName}" class="text-start">First name</th>
              <th scope="col" th:text="#{thead.studentId}">Student
               ID</th>
              <th></th>
@@ -124,19 +114,15 @@
            <tbody>
             <tr th:each="student, iterationStatus : ${students}">
              <th scope="row" th:text="${iterationStatus.count}">1</th>
-             <td class="text-start"
-              th:text="${student.user.person.lastName}">Parker</td>
-             <td class="text-start"
-              th:text="${student.user.person.firstName}">Jones</td>
+             <td class="text-start" th:text="${student.user.person.lastName}">Parker</td>
+             <td class="text-start" th:text="${student.user.person.firstName}">Jones</td>
              <td th:text="${student.id}">1</td>
-             <td><input type="checkbox" name="studentId"
-              th:value="${student.id}"></td>
+             <td><input type="checkbox" name="studentId" th:value="${student.id}"></td>
             </tr>
           </table>
          </div>
          <div class="modal-footer">
-          <button type="button" class="btn btn-secondary"
-           data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
           <button type="submit" class="btn btn-primary" id="saveSelecetdStudents">Save
            changes</button>
          </div>
@@ -145,45 +131,42 @@
       </form>
      </div>
 
-     <div class="row mt-5">
-      <p th:text="|#{groups.students}: |">All students in the group:</p>
-      <div class="row">
-       <table class="table">
-        <thead>
-         <tr>
-          <th scope="col">#</th>
-          <th scope="col" th:text="#{thead.lastName}">Last name</th>
-          <th scope="col" th:text="#{thead.firstName}">First name</th>
-          <th scope="col" th:text="#{thead.studentId}">Student ID</th>
-          <th></th>
-         </tr>
-        </thead>
-        <tbody>
-         <tr th:each="student, iterationStatus : ${groupModel.students}">
-          <th scope="row" th:text="${iterationStatus.count}">1</th>
-          <td class="text-start"
-           th:text="${student.user.person.lastName}">Parker</td>
-          <td class="text-start"
-           th:text="${student.user.person.firstName}">Jones</td>
-          <td th:text="${student.id}">1</td>
-          <td>
-           <form
-            th:action="@{/groups/__${groupModel.id}__/deassign-group}"
-            method="post">
-            <button type="submit"
-             class="btn btn-sm btn-outline-secondary" name="studentId"
-             th:value="${student.id}" th:text="#{button.deassign}">Deassign</button>
-           </form>
-          </td>
-         </tr>
-       </table>
-      </div>
+     <div class="col mh-100" style="overflow-y: scroll;">
+
+      <p class="mt-3" th:text="|#{groups.students}: |">All students in the group:</p>
+
+      <table class="table">
+       <thead>
+        <tr>
+         <th scope="col">#</th>
+         <th scope="col" th:text="#{thead.lastName}">Last name</th>
+         <th scope="col" th:text="#{thead.firstName}">First name</th>
+         <th scope="col" th:text="#{thead.studentId}">Student ID</th>
+         <th></th>
+        </tr>
+       </thead>
+       <tbody>
+        <tr th:each="student, iterationStatus : ${group.students}">
+         <th scope="row" th:text="${iterationStatus.count}">1</th>
+         <td class="text-start" th:text="${student.user.person.lastName}">Parker</td>
+         <td class="text-start" th:text="${student.user.person.firstName}">Jones</td>
+         <td th:text="${student.id}">1</td>
+         <td>
+          <form th:action="@{/groups/__${group.id}__/deassign-group}" method="post">
+           <button type="submit" class="btn btn-sm btn-outline-secondary" name="studentId"
+            th:value="${student.id}" th:text="#{button.deassign}">Deassign</button>
+          </form>
+         </td>
+        </tr>
+      </table>
      </div>
+
     </div>
 
-    <div class="col-4">
+    <div class="col-4 mh-100" style="overflow-y: scroll;">
+
      <div class="row text-center">
-      <p th:text="|#{groups.timetables}: |">
+      <p th:text="|#{groups.lessons}: |">All lessons of the group:</p>
      </div>
 
      <table class="table">
@@ -197,27 +180,22 @@
        </tr>
       </thead>
       <tbody>
-       <tr
-        th:each="timetable, iterationStatus : ${#lists.sort(groupModel.timetables, new ua.com.foxminded.university.comparator.TimetableModelComparator())}">
+       <tr th:each="lesson, iterationStatus : ${lessons}">
         <th scope="row" th:text="${iterationStatus.count}">1</th>
-        <td
-         th:text="|${timetable.lessonOrder.representation}#{tr.order-suffix}|">1th</td>
-        <td th:text="${timetable.datestamp.dayOfWeek}">1</td>
-        <td th:text="${timetable.datestamp}">2023-05-01</td>
+        <td th:text="|${lesson.lessonOrder}#{tr.order-suffix}|">1th</td>
+        <td th:text="${lesson.datestamp.dayOfWeek}">1</td>
+        <td th:text="${lesson.datestamp}">2023-05-01</td>
        </tr>
      </table>
 
     </div>
-
    </div>
 
   </div>
 
- </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
+   integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
+   crossorigin="anonymous"></script>
+ </body>
 
- <script
-  src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
-  integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
-  crossorigin="anonymous"></script>
-</body>
 </html>

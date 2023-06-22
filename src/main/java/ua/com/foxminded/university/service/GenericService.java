@@ -2,17 +2,15 @@ package ua.com.foxminded.university.service;
 
 import java.util.List;
 
-import ua.com.foxminded.university.exception.ServiceException;
-
 public interface GenericService <T> {
     
-    public void deleteById(Integer id) throws ServiceException; 
+    public void deleteById(Integer id); 
     
-    public void create(T model) throws ServiceException;
+    public T create(T model);
     
-    public void update(T model) throws ServiceException;
+    public void update(T model);
     
-    public T getById(int id) throws ServiceException;
+    public T getById(int id);
     
-    public List<T> getAll() throws ServiceException;
+    public List<T> getAll();
 }

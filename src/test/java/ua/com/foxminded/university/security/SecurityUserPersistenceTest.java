@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Example;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,11 +20,11 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ActiveProfiles;
 
+import ua.com.foxminded.university.entity.Authority;
 import ua.com.foxminded.university.entity.RoleAuthority;
-import ua.com.foxminded.university.entity.UserAuthorityEntity;
-import ua.com.foxminded.university.entity.UserEntity;
-import ua.com.foxminded.university.entitymother.UserEntityMother;
-import ua.com.foxminded.university.model.Authority;
+import ua.com.foxminded.university.entity.UserAuthority;
+import ua.com.foxminded.university.entity.User;
+import ua.com.foxminded.university.entitymother.UserMother;
 import ua.com.foxminded.university.repository.UserRepository;
 
 @SpringBootTest
@@ -53,20 +52,20 @@ class SecurityUserPersistenceTest {
     
     private PasswordEncoder encoder = PasswordEncoderFactories
             .createDelegatingPasswordEncoder();
-    private UserEntity user;
-    private UserAuthorityEntity userAuthority;
+    private User user;
+    private UserAuthority userAuthority;
     
     @BeforeEach
     void init() {
-        user = UserEntityMother.complete().build();
+        user = UserMother.complete().build();
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
         entityManager.persist(user);
         
-        userAuthority = UserAuthorityEntity.builder()
-                                           .roleAuthority(RoleAuthority.ROLE_ADMIN)
-                                           .user(user)
-                                           .build();
+        userAuthority = UserAuthority.builder()
+                                     .roleAuthority(RoleAuthority.ROLE_ADMIN)
+                                     .user(user)
+                                     .build();
         entityManager.persist(userAuthority);
         entityManager.getTransaction().commit();
         entityManager.close();
@@ -75,35 +74,36 @@ class SecurityUserPersistenceTest {
     @Test
     void deleteUser_ShouldDeleteUserAndUserAuthorityEntities() {
         userDetailsManager.deleteUser(user.getEmail());
-        UserEntity receivedUser = entityManager.find(UserEntity.class, user.getId());
+        User receivedUser = entityManager.find(User.class, user.getId());
         assertNull(receivedUser);
     }
     
     @Test
     void createUser_ShouldPersistUserEntity() {
-        UserDetails userDetails = User.builder().username(EMAIL)
-                                                .disabled(true)
-                                                .password(PASSWORD)
-                                                .passwordEncoder(encoder::encode)
-                                                .roles(Authority.STUDENT.toString())
-                                                .build();
+        UserDetails userDetails = org.springframework.security.core.userdetails.User.builder()
+                .username(EMAIL)
+                .disabled(true)
+                .password(PASSWORD)
+                .passwordEncoder(encoder::encode)
+                .roles(Authority.STUDENT.toString())
+                .build();
         userDetailsManager.createUser(userDetails);
-        Example<UserEntity> example = Example.of(user);
+        Example<User> example = Example.of(user);
         assertTrue(userRepository.exists(example));
     }
 
     @Test
     void updateUser_ShouldUpdateUserAndUserAuthorityEntities() {
-        UserDetails userDetails = User.builder()
-                                      .username(user.getEmail())
-                                      .disabled(true)
-                                      .password(PASSWORD)
-                                      .passwordEncoder(encoder::encode)
-                                      .roles(Authority.STUDENT.toString())
-                                      .build();
+        UserDetails userDetails = org.springframework.security.core.userdetails.User.builder()
+                .username(user.getEmail())
+                .disabled(true)
+                .password(PASSWORD)
+                .passwordEncoder(encoder::encode)
+                .roles(Authority.STUDENT.toString())
+                .build();
         
         userDetailsManager.updateUser(userDetails);
-        UserEntity receivedUser = entityManager.find(UserEntity.class, user.getId());
+        User receivedUser = entityManager.find(User.class, user.getId());
         RoleAuthority roleAuthority = receivedUser.getUserAuthority()
                                                   .getRoleAuthority();
         

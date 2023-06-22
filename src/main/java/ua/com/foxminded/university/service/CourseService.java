@@ -1,15 +1,18 @@
 package ua.com.foxminded.university.service;
 
-import ua.com.foxminded.university.exception.ServiceException;
-import ua.com.foxminded.university.model.CourseModel;
+import java.util.List;
 
-public interface CourseService extends GenericService<CourseModel> {
+import ua.com.foxminded.university.dto.CourseDTO;
+
+public interface CourseService extends GenericService<CourseDTO> {
+    
+    public List<CourseDTO> getByTeacherId(int teacherId);
     
     public void deassignTeacherToCourse(int teacherId, int courseId);
     
     public void assignTeacherToCourse(int teacherId, int courseId);
     
-    public CourseModel getTimetableAndTeachersByCourseId(int id) throws ServiceException;
+    public CourseDTO getByIdWithLessonsAndTeachers(int courseId);
     
-    public CourseModel getTimetableListByCourseId(int id) throws ServiceException;
+    public CourseDTO getByIdWithLessons(int courseId);
 }

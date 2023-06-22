@@ -1,86 +1,139 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="thymeleaf.org">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>teachers/list</title>
-<link
- href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
- rel="stylesheet"
- integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
- crossorigin="anonymous">
-</head>
-<body>
- <div th:replace="~{fragments/header::navigationBar}"></div>
+<html lang="en" xmlns:th="thymeleaf.org" style="height: 100%;">
 
- <div class="offcanvas offcanvas-top" tabindex="-1" id="add"
-  aria-labelledy="offcanvasTopLabel">
-  <div class="offcanvas-header">
-   <h5 class="offcanvas-title" th:text="#{teachers.addTeacher}">Add
-    a student</h5>
-   <button type="button" class="btn-close" data-bs-dismiss="offcanvas"
-    aria-label="close"></button>
-  </div>
-  <div class="offcanvas-body">My content</div>
- </div>
+ <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>teachers/list</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+   rel="stylesheet"
+   integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
+   crossorigin="anonymous">
+ </head>
 
- <div class="offcanvas offcanvas-top" tabindex="-1" id="delete"
-  aria-labelledy="offcanvasTopLabel">
-  <div class="offcanvas-header">
-   <h5 class="offcanvas-title" th:text="#{teachers.deleteTeacher}">Delete
-    a student</h5>
-   <button type="button" class="btn-close" data-bs-dismiss="offcanvas"
-    aria-label="close"></button>
-  </div>
-  <div class="offcanvas-body">My content</div>
- </div>
+ <body style="height: 100%;">
+  <div class="container-fluid h-100 d-flex flex-column">
 
- <div class="offcanvas offcanvas-top" tabindex="-1" id="edit"
-  aria-labelledy="offcanvasTopLabel">
-  <div class="offcanvas-header">
-   <h5 class="offcanvas-title" th:text="#{teachers.editTeacher}">Edit
-    a teacher</h5>
-   <button type="button" class="btn-close" data-bs-dismiss="offcanvas"
-    aria-label="close"></button>
-  </div>
-  <div class="offcanvas-body">My content</div>
- </div>
+   <div class="row flex-shrink-0">
+    <div th:replace="~{fragments/header::navigationBar}">Navigation bar</div>
+    <div class="col-12">
 
+     <nav class="ms-2" aria-label="breadcrumb" th:fragment="page-path">
+      <ol class="breadcrumb container-fluid">
+       <li class="breadcrumb-item"><a th:href="@{/}" th:text="#{href.home}">Home</a></li>
+       <li class="breadcrumb-item active" aria-current="page" th:text="#{index.menu.teachers}">
+        Teachers</li>
+      </ol>
+     </nav>
 
+    </div>
+   </div>
 
- <div class="container">
-  <div class="col">
-   <p class="text-center fs-4" th:text="#{teachers.tableName}">All
-    teachers of the university</p>
-  </div>
+   <div class="row flex-fill" style="min-height: 0;">
 
-  <div class="col">
-   <div class="row justify-content-center">
-    <table class="table" style="width: 40%">
-     <thead>
-      <tr>
-       <th scope="col" th:text="#{thead.number}">#</th>
-       <th scope="col" th:text="#{thead.firstName}">First name</th>
-       <th scope="col" th:text="#{thead.lastName}">Last name</th>
-       <th scope="col" th:text="#{teachers.teacherId}" style="width: 20%">ID</th>
-      </tr>
-     </thead>
-     <tbody>
-      <tr th:each="teacher,iterationStatus : ${teachers}">
-       <th scope="row" th:text="${iterationStatus.count}">1</th>
-       <td th:text="${teacher.user.person.firstName}">Dennis</td>
-       <td th:text="${teacher.user.person.lastName}">Ritchie</td>
-       <td th:text="${teacher.id}" class="text-center">1</td>
-      </tr>
-     </tbody>
-    </table>
+    <div class="col-2" style="border-right: 1px solid #ddd;">
+
+     <div class="row justify-content-end">
+
+      <button type="button" class="btn btn-success w-50 me-2" data-bs-toggle="modal"
+       data-bs-target="#createTeacher">Create</button>
+
+      <form class="modal fade" id="createTeacher" tabindex="-1" aria-labelledby="exampleModalLabel"
+       aria-hidden="true" th:action="@{/teachers/create}" method="post">
+       <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+         <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel" th:text="#{teacher.new}">A new teacher
+          </h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"
+           aria-label="Close"></button>
+         </div>
+         <div class="modal-body">
+
+          <table class="table">
+           <thead>
+            <tr>
+             <th scope="col">#</th>
+             <th scope="col" th:text="#{thead.name}">Name</th>
+             <th scope="col" th:text="#{thead.status}">Status</th>
+             <th scope="col" th:text="#{thead.userId}">User ID</th>
+             <th scope="col"></th>
+            </tr>
+           </thead>
+           <tbody>
+            <tr th:each="user, iterationStatus : ${users}">
+             <th scope="row" th:text="${iterationStatus.count}">1</th>
+             <td th:text="|${user.person?.firstName} ${user.person?.lastName}|">Cassius Clay</td>
+             <td>
+              <div th:if="${user.teacher != null}" th:text="#{thead.teacher}">Teacher</div>
+              <div th:if="${user.student != null}" th:text="#{thead.student}">Student</div>
+              <div th:if="${user.staff != null}" th:text="#{thead.staff}">Staff</div>
+             </td>
+             <td th:text="${user.id}">7</td>
+             <td>
+              <div class="form-check"
+               th:if="${user.teacher} == null and ${user.student} == null and ${user.staff} == null">
+               <input class="form-check-input" type="radio" name="userId" id="userId"
+                th:value="${user.id}">
+              </div>
+             </td>
+            </tr>
+           </tbody>
+          </table>
+
+         </div>
+         <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary" th:text="#{button.save-changes}">Save
+           changes</button>
+         </div>
+        </div>
+       </div>
+      </form>
+     </div>
+
+    </div>
+
+    <div class="col-10 mh-100 ps-4" style="overflow-y: scroll;">
+     <div class="row">
+      <table class="table" style="width: 80%">
+       <thead>
+        <tr>
+         <th scope="col" th:text="#{thead.number}">#</th>
+         <th scope="col" th:text="#{thead.firstName}">First name</th>
+         <th scope="col" th:text="#{thead.lastName}">Last name</th>
+         <th scope="col" th:text="#{thead.email}">Email</th>
+         <th scope="col" class="text-center" th:text="#{teachers.teacherId}">ID</th>
+         <th scope="col" style="width: 0;"></th>
+         <th scope="col" style="width: 0;"></th>
+        </tr>
+       </thead>
+       <tbody>
+        <tr th:each="teacher,iterationStatus : ${teachers}">
+         <th scope="row" th:text="${iterationStatus.count}">1</th>
+         <td th:text="${teacher.user?.person?.firstName}">Dennis</td>
+         <td th:text="${teacher.user?.person?.lastName}">Ritchie</td>
+         <td th:text="${teacher.user?.email}">email@com</td>
+         <td th:text="${teacher.id}" class="text-center">1</td>
+         <td class="text-end" style="width: 0%;">
+          <form th:action="@{/teachers/teacher/__${teacher.id}__}" method="get">
+           <button type="submit" class="btn btn-outline-secondary btn-sm"
+            th:text="#{button.details}">Details</button>
+          </form>
+         </td>
+
+        </tr>
+       </tbody>
+      </table>
+     </div>
+
+    </div>
    </div>
   </div>
- </div>
 
- <script
-  src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
-  integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
-  crossorigin="anonymous"></script>
-</body>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+   integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+   crossorigin="anonymous"></script>
+ </body>
+
 </html>

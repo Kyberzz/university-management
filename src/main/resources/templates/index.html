@@ -1,60 +1,63 @@
 <!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>index</title>
-<link
- href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
- rel="stylesheet"
- integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
- crossorigin="anonymous">
-</head>
-<body>
- <div th:replace="~{fragments/header::navigationBar}"></div>
+<html lang="en" xmlns:th="http://thymeleaf.org">
 
- <h1 class="text-center fs-2 mt-5" th:text="#{index.universityName}">Foxminded
-  university</h1>
+ <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>index</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+   rel="stylesheet"
+   integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
+   crossorigin="anonymous">
+ </head>
 
- <div class="container">
-  <div class="row justify-content-center">
-   <div class="col-9">
-    <form>
-     <fieldset class="border p-3">
-      <legend class="float-none w-auto p-2 text-start fs-5"
-       th:text="#{index.universityData}">The university data</legend>
-      <div class="container">
-       <div class="row justify-content-center">
-        <div class="col-5">
-         <div class="d-grid gap-2">
-          <button class="btn btn-success"
-           th:formaction="@{/teachers/list}"
-           th:text="#{index.menu.teachers}">Teachers</button>
-          <button class="btn btn-success"
-           th:formaction="@{/students/list}"
-           th:text="#{index.menu.students}">Students</button>
-          <button class="btn btn-success"
-           th:formaction="@{/groups/list}"
-           th:text="#{index.menu.groups}" id="groupsButton">Groups</button>
-          <button id="coursesButton" class="btn btn-success"
-           th:formaction="@{/courses/list}"
-           th:text="#{index.menu.courses}">Courses</button>
-          <button class="btn btn-success"
-           th:formaction="@{/timetables/__${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}__/list}"
-           th:text="#{index.menu.timetables}" id="timetablesButton">Timetables</button>
+ <body>
+  <div th:replace="~{fragments/header::navigationBar}"></div>
+
+  <h1 class="text-center fs-2 mt-5" th:text="#{index.universityName}">Foxminded
+   university</h1>
+
+  <div class="container">
+   <div class="row justify-content-center">
+    <div class="col-9">
+     <form>
+      <fieldset class="border p-3">
+       <legend class="float-none w-auto p-2 text-start fs-5" th:text="#{index.universityData}">The
+        university data</legend>
+       <div class="container">
+        <div class="row justify-content-center">
+         <div class="col-5">
+          <div class="d-grid gap-2">
+           <button class="btn btn btn-primary d-inline" th:formaction="@{/users/list}"
+            id="adminPanelButton" sec:authorize="hasRole('ADMIN')"
+            th:text="#{header.adminPanel}">Admin panel</button>
+           <button class="btn btn-success" th:formaction="@{/teachers/list}"
+            th:text="#{index.menu.teachers}">Teachers</button>
+           <button class="btn btn-success" th:formaction="@{/students/list}"
+            th:text="#{index.menu.students}">Students</button>
+           <button class="btn btn-success" th:formaction="@{/groups/list}"
+            th:text="#{index.menu.groups}" id="groupsButton">Groups</button>
+           <button id="coursesButton" class="btn btn-success" th:formaction="@{/courses/list}"
+            th:text="#{index.menu.courses}">Courses</button>
+           <button class="btn btn-success"
+            th:formaction="@{/lessons/month-lessons/__${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}__}"
+            th:text="#{index.menu.lessons}" id="lessonsButton">Lessons</button>
+           <button class="btn btn-success"
+            th:formaction="@{/timetables/list}" name="timetableId" value="0"
+            th:text="#{index.menu.timetables}" id="timetablesButton">Timetables</button>
+          </div>
          </div>
         </div>
        </div>
-      </div>
-     </fieldset>
-    </form>
+      </fieldset>
+     </form>
+    </div>
    </div>
   </div>
- </div>
 
- <script
-  src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
-  integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
-  crossorigin="anonymous"></script>
-</body>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+   integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+   crossorigin="anonymous"></script>
+ </body>
+
 </html>

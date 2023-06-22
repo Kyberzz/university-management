@@ -1,41 +1,32 @@
 package ua.com.foxminded.university.controller;
 
+import static ua.com.foxminded.university.entity.RoleAuthority.ROLE_ADMIN;
+import static ua.com.foxminded.university.entity.RoleAuthority.ROLE_STUDENT;
+import static ua.com.foxminded.university.entity.RoleAuthority.ROLE_TEACHER;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.transaction.AfterTransaction;
 import org.springframework.test.context.transaction.BeforeTransaction;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
-import ua.com.foxminded.university.entity.RoleAuthority;
-import ua.com.foxminded.university.entity.UserAuthorityEntity;
-import ua.com.foxminded.university.entity.UserEntity;
-import ua.com.foxminded.university.entitymother.UserEntityMother;
+import ua.com.foxminded.university.entity.User;
+import ua.com.foxminded.university.entity.UserAuthority;
+import ua.com.foxminded.university.entitymother.UserMother;
 
-@SpringBootTest
-@ActiveProfiles("prod")
-@AutoConfigureMockMvc
-@Testcontainers
 @Transactional
 class DefaultControllerTest {
     
+    public static final String TIMETABLE_NAME = "first";
     public static final String ERROR_VIEW = "error";
     public static final String BAD_CONTENT = "bad content";
-    public static final String AUTHORIZED_EMAIL = "authorized@email";
-    
-    @Container
-    public static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:14");
+    public static final String ADMIN_EMAIL = "admin@email";
+    public static final String STUDENT_EMAIL = "student@email";
+    public static final String TEACHER_EMAIL = "teacher@email";
     
     @PersistenceUnit
     public EntityManagerFactory entityManagerFactory;
@@ -43,29 +34,38 @@ class DefaultControllerTest {
     @Autowired
     public MockMvc mockMvc;
     
-    private UserEntity authorizedUser;
-    
-    @DynamicPropertySource
-    public static void configureProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url", postgres::getJdbcUrl);
-        registry.add("spring.datasource.username", postgres::getUsername);
-        registry.add("spring.datasource.password", postgres::getPassword);
-    }
+    public User adminUser;
+    public User teacherUser;
+    public User studentUser;
     
     @BeforeTransaction
     void init() {
-        authorizedUser = UserEntityMother.complete().email(AUTHORIZED_EMAIL).build();
+        adminUser = UserMother.complete().email(ADMIN_EMAIL).build();
+        teacherUser = UserMother.complete().email(TEACHER_EMAIL).build();
+        studentUser = UserMother.complete().email(STUDENT_EMAIL).build();
         
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
-        entityManager.persist(authorizedUser);
+        entityManager.persist(adminUser);
+        entityManager.persist(teacherUser);
+        entityManager.persist(studentUser);
         
-        UserAuthorityEntity userAuthority = UserAuthorityEntity.builder()
-                .roleAuthority(RoleAuthority.ROLE_ADMIN)
-                .user(authorizedUser)
+        UserAuthority adminUserAuthority = UserAuthority.builder()
+                .roleAuthority(ROLE_ADMIN)
+                .user(adminUser)
+                .build();
+        UserAuthority teacherUserAuthority = UserAuthority.builder()
+                .roleAuthority(ROLE_TEACHER)
+                .user(teacherUser)
                 .build();
         
-        entityManager.persist(userAuthority);
+        UserAuthority studentUserAuthority = UserAuthority.builder()
+                .roleAuthority(ROLE_STUDENT)
+                .user(studentUser)
+                .build();
+        entityManager.persist(studentUserAuthority);
+        entityManager.persist(teacherUserAuthority);
+        entityManager.persist(adminUserAuthority);
         entityManager.getTransaction().commit();
         entityManager.close();
     }
@@ -74,8 +74,12 @@ class DefaultControllerTest {
     void cleanUp() {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
-        UserEntity user = entityManager.find(UserEntity.class, authorizedUser.getId());
-        entityManager.remove(user);
+        User persistedAdminUser = entityManager.find(User.class, adminUser.getId());
+        entityManager.remove(persistedAdminUser);
+        User persistedTeacherUser = entityManager.find(User.class, teacherUser.getId());
+        entityManager.remove(persistedTeacherUser);
+        User persistedStudentUser = entityManager.find(User.class, studentUser.getId());
+        entityManager.remove(persistedStudentUser);
         entityManager.getTransaction().commit();
         entityManager.close();
     }

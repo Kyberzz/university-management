@@ -1,0 +1,1 @@
+alter table university.timetables add column lesson_duration bigint;

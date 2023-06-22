@@ -1,142 +1,132 @@
 package ua.com.foxminded.university.controller;
 
-import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import lombok.RequiredArgsConstructor;
-import ua.com.foxminded.university.exception.ServiceException;
-import ua.com.foxminded.university.model.CourseModel;
-import ua.com.foxminded.university.model.GroupModel;
-import ua.com.foxminded.university.model.TeacherModel;
-import ua.com.foxminded.university.model.TimetableModel;
-import ua.com.foxminded.university.service.CourseService;
-import ua.com.foxminded.university.service.GroupService;
+import ua.com.foxminded.university.dto.TimetableDTO;
+import ua.com.foxminded.university.dto.TimingDTO;
 import ua.com.foxminded.university.service.TimetableService;
+import ua.com.foxminded.university.service.TimingService;
 
 @Controller
-@RequiredArgsConstructor
 @RequestMapping("/timetables")
+@RequiredArgsConstructor
+@Validated
 public class TimetableController extends DefaultController {
     
-    public static final String TIMETABLES_PATH = "/timetables/";
-    public static final String DAY_TIMETABLE_TEMPLATE = "timetables/day-timetable";
-    public static final String COURSES_ATTRIBUTE = "courses";
-    public static final String GROUPS_ATTRIBUTE = "groups";
-    public static final String DAY_TIMETABLES_PATH = "/timetables/day-timetables/";
-    public static final String TIMETABLES_LIST_TEMPLATE = "timetables/list";
-    public static final String TIMETABLE_MODEL_ATTRIBUTE = "timetableModel";
-    public static final String DAY_TIMETABLE_ATTRIBUTE = "dayTimetable";
-    public static final String MONTH_TIMETABLE_ATTRIBUTE = "monthTimetable";
+    public static final String TIMING_ATTRIBUTE = "timing";
+    public static final String TIMETABLE_ID_PARAMETER_NAME = "timetableId";
+    public static final String TIMETABLE_ATTRIBUTE = "timetable";
+    public static final int STUB = 0;
+    public static final String TIMETABLES_ATTRIBUTE = "timetables"; 
+    public static final String TIMETABLES_LIST_TEMPLATE_PATH = "timetables/list"; 
     
     private final TimetableService timetableService;
-    private final CourseService courseService;
-    private final GroupService groupService;
-
-    @PostMapping("/create/timetable/{date}")
-    public String create(@PathVariable String date, 
-                         @ModelAttribute TimetableModel timetableModel, 
-                         Model model) throws ServiceException {
-        timetableModel.setDatestamp(LocalDate.parse(date));
-        timetableService.create(timetableModel);
-        
+    private final TimingService timingService;
+    
+    @PostMapping("/delete-timing/{timetableId}/{timingId}")
+    public String deleteTiming(@PathVariable int timetableId, 
+                               @PathVariable int timingId) {
+        timingService.deleteById(timingId);
         return new StringBuilder().append(REDIRECT_KEY_WORD)
-                                  .append(DAY_TIMETABLES_PATH)
-                                  .append(timetableModel.getDatestamp())
-                                  .append("?").toString();
+                                  .append(SLASH)
+                                  .append(TIMETABLES_LIST_TEMPLATE_PATH)
+                                  .append(QUESTION_MARK)
+                                  .append(TIMETABLE_ID_PARAMETER_NAME)
+                                  .append(EQUAL_SIGN)
+                                  .append(timetableId).toString();
     }
     
     @PostMapping("/delete/{timetableId}")
-    public String delete(@ModelAttribute TimetableModel timetableModel, 
-                         @PathVariable int timetableId) throws ServiceException {
+    public String delete(@PathVariable int timetableId) {
         timetableService.deleteById(timetableId);
         return new StringBuilder().append(REDIRECT_KEY_WORD)
-                                  .append(DAY_TIMETABLES_PATH)
-                                  .append(timetableModel.getDatestamp())
-                                  .append("?").toString();
+                                  .append(SLASH)
+                                  .append(TIMETABLES_LIST_TEMPLATE_PATH)
+                                  .append(QUESTION_MARK)
+                                  .append(TIMETABLE_ID_PARAMETER_NAME)
+                                  .append(EQUAL_SIGN)
+                                  .append(STUB).toString();
     }
     
-    @PostMapping("/update/{id}")
-    public String update(@PathVariable int id, 
-                         @ModelAttribute TimetableModel timetableModel, 
-                         Model model) throws ServiceException {
+    @PostMapping("/add-timing/{timetableId}")
+    public String addTiming(@PathVariable int timetableId,                            
+                            @Valid @ModelAttribute(TIMING_ATTRIBUTE) TimingDTO timing) {
         
-        timetableService.update(timetableModel);
+        timing.setTimetable(TimetableDTO.builder().id(timetableId).build());
+        timingService.create(timing);
         return new StringBuilder().append(REDIRECT_KEY_WORD)
-                                  .append(DAY_TIMETABLES_PATH)
-                                  .append(timetableModel.getDatestamp())
-                                  .append("?")
+                                  .append(SLASH)
+                                  .append(TIMETABLES_LIST_TEMPLATE_PATH)
+                                  .append(QUESTION_MARK)
+                                  .append(TIMETABLE_ID_PARAMETER_NAME)
+                                  .append(EQUAL_SIGN)
+                                  .append(timetableId)
                                   .toString();
     }
     
-    @GetMapping("/day-timetables/{date}")
-    public String getDayTimetable(@PathVariable String date,
-                                  Model model) throws ServiceException {
-        LocalDate localDate = LocalDate.parse(date);
-        List<TimetableModel> dayTimetable = timetableService.getDayTimetalbe(localDate);
-        TimetableModel timetableModel = new TimetableModel();
-        timetableModel.setDatestamp(localDate);
-        timetableModel.setCourse(new CourseModel());
-        timetableModel.getCourse().setTeachers(new HashSet<>());
-        timetableModel.getCourse().getTeachers().add(new TeacherModel());
-        List<CourseModel> courses = courseService.getAll();
-        List<GroupModel> groups = groupService.getAll();
-        
-        model.addAttribute(GROUPS_ATTRIBUTE, groups);
-        model.addAttribute(COURSES_ATTRIBUTE, courses);
-        model.addAttribute(DAY_TIMETABLE_ATTRIBUTE, dayTimetable);
-        model.addAttribute(TIMETABLE_MODEL_ATTRIBUTE, timetableModel);
-        return DAY_TIMETABLE_TEMPLATE;
-    }
-    
-    @GetMapping(value = "/{date}/back")
-    public String back(@PathVariable String date) {
-        LocalDate localDate = LocalDate.parse(date);
-        LocalDate datestamp = timetableService.moveBack(localDate);
+    @PostMapping("/update-name/{timetableId}")
+    public String updateName(@PathVariable int timetableId,
+                             @Valid @ModelAttribute(TIMETABLE_ATTRIBUTE) TimetableDTO timetable) {
+        TimetableDTO persistedTimetable = timetableService.getById(timetableId);
+        persistedTimetable.setName(timetable.getName());
+        timetableService.update(persistedTimetable);
         return new StringBuilder().append(REDIRECT_KEY_WORD)
-                                  .append(TIMETABLES_PATH)
-                                  .append(datestamp)
                                   .append(SLASH)
-                                  .append(LIST_TEMPLATE)
-                                  .append("?").toString();
+                                  .append(TIMETABLES_LIST_TEMPLATE_PATH)
+                                  .append(QUESTION_MARK)
+                                  .append(TIMETABLE_ID_PARAMETER_NAME)
+                                  .append(EQUAL_SIGN)
+                                  .append(timetableId).toString();
     }
     
-    @GetMapping(value = "/{date}/next")
-    public String next(@PathVariable String date) {
-        LocalDate localDate = LocalDate.parse(date);
-        LocalDate datestamp = timetableService.moveForward(localDate);
+    @PostMapping("/create")
+    public String create(@ModelAttribute(TIMETABLE_ATTRIBUTE) @Valid TimetableDTO timetable) {
+        TimetableDTO createdTimetable = timetableService.create(timetable);
         return new StringBuilder().append(REDIRECT_KEY_WORD)
-                                  .append(TIMETABLES_PATH)
-                                  .append(datestamp)
                                   .append(SLASH)
-                                  .append(LIST_TEMPLATE)
-                                  .append("?").toString();
+                                  .append(TIMETABLES_LIST_TEMPLATE_PATH)
+                                  .append(QUESTION_MARK)
+                                  .append(TIMETABLE_ID_PARAMETER_NAME)
+                                  .append(EQUAL_SIGN)
+                                  .append(createdTimetable.getId()).toString();
     }
     
-    @GetMapping(value = "/{date}/list")
-    public String list(@PathVariable String date,
-                       Model model) throws ServiceException {
-        LocalDate datestamp = LocalDate.parse(date);
-        List<List<List<TimetableModel>>> monthTimetable = timetableService
-                .getMonthTimetable(datestamp);
-        TimetableModel timetableModel = TimetableModel.builder()
-                                                      .datestamp(datestamp).build();
-        timetableModel.setDatestamp(datestamp);
-        List<CourseModel> courses = courseService.getAll();
-        List<GroupModel> groups = groupService.getAll();
+    @GetMapping("/list")
+    public String getAll(@RequestParam int timetableId, Model model) {
+        List<TimetableDTO> timetables = timetableService.getAll();
+        timetableService.sortByName(timetables);
+        TimetableDTO timetable;
         
-        model.addAttribute(TIMETABLE_MODEL_ATTRIBUTE, timetableModel);
-        model.addAttribute(GROUPS_ATTRIBUTE, groups);
-        model.addAttribute(COURSES_ATTRIBUTE, courses);
-        model.addAttribute(MONTH_TIMETABLE_ATTRIBUTE, monthTimetable);
-        return TIMETABLES_LIST_TEMPLATE;
+        if (timetableId == STUB) {
+            if (timetables.isEmpty()) {
+                timetable = TimetableDTO.builder().timings(new HashSet<>()).build();
+            } else {
+                timetable = timetables.iterator().next();
+            }
+        } else {
+            timetable = timetableService.getByIdWithTimings(timetableId);
+        }
+        
+        timetableService.sortTimingsByStartTime(timetable);
+        TimingDTO timing = new TimingDTO();
+        
+        model.addAttribute(TIMING_ATTRIBUTE, timing);
+        model.addAttribute(TIMETABLE_ATTRIBUTE, timetable);
+        model.addAttribute(TIMETABLES_ATTRIBUTE, timetables);
+        return TIMETABLES_LIST_TEMPLATE_PATH;
     }
 }
