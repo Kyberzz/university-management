@@ -169,7 +169,7 @@
 
     <div class="col-4 mh-100">
 
-     <div class="col ps-3 pe-5 mh-100" style="overflow-y: scroll;">
+     <div class="col pe-3 mh-100" style="overflow-y: scroll;">
 
       <form class="row mt-2" th:action="@{/lessons/day-lessons/__${lesson.datestamp}__}"
        method="get">
@@ -182,7 +182,7 @@
         </select>
         <input type="hidden" name="timetableId" th:value="${timetable.id}" />
        </div>
-       <span class="col-2">
+       <span class="col-3">
         <button class="btn btn-primary btn-sm w-100" type="submit">Apply</button>
        </span>
       </form>
@@ -235,8 +235,8 @@
         </div>
        </div>
 
-       <div class="row mb-3 mt-2">
-        <button type="submit" class="btn btn-primary btn-sm">Create lesson</button>
+       <div class="col mb-3 mt-2">
+        <button type="submit" class="btn btn-primary btn-sm w-100">Create lesson</button>
        </div>
 
       </form>
@@ -281,7 +281,7 @@
        <div class="col-6 text-start flex-shrink-1" th:text="${timetable.name}">short lessons</div>
       </div>
 
-      <div class="row">
+      <div class="col">
        <table class="table">
         <thead>
          <tr>

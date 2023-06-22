@@ -21,7 +21,7 @@ import org.modelmapper.TypeToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 
-import ua.com.foxminded.university.dto.PersonDTO;
+import ua.com.foxminded.university.dto.UserPersonDTO;
 import ua.com.foxminded.university.dto.UserAuthorityDTO;
 import ua.com.foxminded.university.dto.UserDTO;
 import ua.com.foxminded.university.dtomother.PersonDTOMother;
@@ -61,7 +61,7 @@ class UserServiceImplTest {
     @BeforeEach
     void init() {
         user = UserMother.complete().build();
-        PersonDTO personModel = PersonDTOMother.complete().build();
+        UserPersonDTO personModel = PersonDTOMother.complete().build();
         UserAuthorityDTO userAuthorityModel = UserAuthorityDTO.builder()
                 .authority(Authority.ADMIN).build();
         userDto = UserDTOMother.complete()

@@ -22,7 +22,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 
-import ua.com.foxminded.university.dto.PersonDTO;
+import ua.com.foxminded.university.dto.UserPersonDTO;
 import ua.com.foxminded.university.dto.TeacherDTO;
 import ua.com.foxminded.university.dto.UserDTO;
 import ua.com.foxminded.university.entity.Teacher;
@@ -62,9 +62,9 @@ class TeacherServiceImplTest {
     @Test
     void sortByLastName_ShouldSortSet() {
         UserDTO firstUser = UserDTO.builder().person(
-                PersonDTO.builder().lastName(FIRST_TEACHER_LAST_NAME).build()).build();
+                UserPersonDTO.builder().lastName(FIRST_TEACHER_LAST_NAME).build()).build();
         UserDTO secondUser = UserDTO.builder().person(
-                PersonDTO.builder().lastName(SECOND_TEACHER_LAST_NAME).build()).build();
+                UserPersonDTO.builder().lastName(SECOND_TEACHER_LAST_NAME).build()).build();
         TeacherDTO firstTeacher = TeacherDTO.builder().user(firstUser).build();
         TeacherDTO secondTeacher = TeacherDTO.builder().user(secondUser).build();
         List<TeacherDTO> teachers = Arrays.asList(secondTeacher, firstTeacher);
@@ -79,9 +79,9 @@ class TeacherServiceImplTest {
     @Test
     void sortByLastName_ShouldSortList() {
         UserDTO firstUser = UserDTO.builder().person(
-                PersonDTO.builder().lastName(FIRST_TEACHER_LAST_NAME).build()).build();
+                UserPersonDTO.builder().lastName(FIRST_TEACHER_LAST_NAME).build()).build();
         UserDTO secondUser = UserDTO.builder().person(
-                PersonDTO.builder().lastName(SECOND_TEACHER_LAST_NAME).build()).build();
+                UserPersonDTO.builder().lastName(SECOND_TEACHER_LAST_NAME).build()).build();
         TeacherDTO firstTeacher = TeacherDTO.builder().user(firstUser).build();
         TeacherDTO secondTeacher = TeacherDTO.builder().user(secondUser).build();
         List<TeacherDTO> teachers = Arrays.asList(secondTeacher, firstTeacher);

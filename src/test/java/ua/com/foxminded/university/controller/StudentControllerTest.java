@@ -1,8 +1,10 @@
 package ua.com.foxminded.university.controller;
 
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -16,6 +18,7 @@ import static ua.com.foxminded.university.controller.GroupController.GROUPS_ATTR
 import static ua.com.foxminded.university.controller.StudentController.STUDENTS_ATTRIBUTE;
 import static ua.com.foxminded.university.controller.StudentController.STUDENTS_LIST_TEMPLATE_PATH;
 import static ua.com.foxminded.university.controller.StudentController.STUDENT_ATTRIBUTE;
+import static ua.com.foxminded.university.controller.UserControllerTest.USER_ID;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -69,13 +72,19 @@ class StudentControllerTest {
     
     @Test
     void create_ShouldRedirectToGetAll() throws Exception {
+        studentDto.getUser().setId(USER_ID);
+        when(userServiceMock.createUserPerson(isA(UserDTO.class))).thenReturn(studentUserDto);
+        
         mockMvc.perform(post("/students/create")
                     .flashAttr(STUDENT_ATTRIBUTE, studentDto))
                .andDo(print())
                .andExpect(redirectedUrl(new StringBuilder().append(SLASH)
                                                            .append(STUDENTS_LIST_TEMPLATE_PATH)
                                                            .toString()));
+        
+        verify(userServiceMock).createUserPerson(isA(UserDTO.class));
         verify(studentServiceMock).create(isA(StudentDTO.class));
+        verify(userServiceMock).updateEmail(anyInt(), anyString());
     }
     
     @Test
@@ -104,13 +113,19 @@ class StudentControllerTest {
     
     @Test
     void update_ShouldRedirectToGetAll() throws Exception {
+        studentDto.getUser().setId(USER_ID);
+        when(studentServiceMock.getById(anyInt())).thenReturn(studentDto);
+        
         mockMvc.perform(post("/students/{studentId}/update", STUDENT_ID)
                     .flashAttr(STUDENT_ATTRIBUTE, studentDto))
                .andDo(print())
                .andExpect(redirectedUrl(new StringBuilder().append(SLASH)
                                                            .append(STUDENTS_LIST_TEMPLATE_PATH)
                                                            .toString()));
+        verify(studentServiceMock).getById(anyInt());
         verify(studentServiceMock).update(isA(StudentDTO.class));
+        verify(userServiceMock).updateEmail(anyInt(), anyString());
+        verify(userServiceMock).updateUserPerson(isA(UserDTO.class));
     }
     
     @Test

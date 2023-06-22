@@ -64,11 +64,11 @@ public class StudentController extends DefaultController {
     
     @PostMapping("/{studentId}/update")
     public String update(@PathVariable int studentId, 
-                         @Valid @ModelAttribute(STUDENT_ATTRIBUTE) StudentDTO student) {
+                         @Valid @ModelAttribute(STUDENT_ATTRIBUTE) StudentDTO studentDto) {
         StudentDTO persistedStudent = studentService.getById(studentId);
         
-        if (student.hasGroup()) {
-            persistedStudent.setGroup(student.getGroup());
+        if (studentDto.hasGroup()) {
+            persistedStudent.setGroup(studentDto.getGroup());
         } else {
             persistedStudent.setGroup(null);
         }
@@ -76,12 +76,11 @@ public class StudentController extends DefaultController {
         studentService.update(persistedStudent);
         int userId = persistedStudent.getUser().getId();
         
-        if (student.getUser().hasEmail()) {
-            userService.updateEmail(userId, student.getUser().getEmail());
-            
+        if (studentDto.getUser().hasEmail()) {
+            userService.updateEmail(userId, studentDto.getUser().getEmail());
         }
-        student.getUser().setId(userId);
-        userService.updateUserPerson(student.getUser());
+        studentDto.getUser().setId(userId);
+        userService.updateUserPerson(studentDto.getUser());
         
         return new StringBuilder().append(REDIRECT_KEY_WORD)
                                   .append(SLASH)

@@ -28,7 +28,7 @@ public class UserDTO implements Serializable {
     @NotNull
     private Boolean enabled;
     private String password;
-    private PersonDTO person;
+    private UserPersonDTO person;
     
     @NotNull
     @EqualsAndHashCode.Exclude

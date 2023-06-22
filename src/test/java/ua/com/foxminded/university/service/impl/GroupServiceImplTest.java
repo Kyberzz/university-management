@@ -22,7 +22,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 
 import ua.com.foxminded.university.dto.GroupDTO;
-import ua.com.foxminded.university.dto.PersonDTO;
+import ua.com.foxminded.university.dto.UserPersonDTO;
 import ua.com.foxminded.university.dto.StudentDTO;
 import ua.com.foxminded.university.dto.UserDTO;
 import ua.com.foxminded.university.dtomother.GroupDTOMother;
@@ -73,8 +73,8 @@ class GroupServiceImplTest {
     
     @Test
     void sortStudentsByLastName() {
-        PersonDTO firstPerson = PersonDTO.builder().lastName(LAST_NAME_A).build();
-        PersonDTO secondPerson = PersonDTO.builder().lastName(LAST_NAME_B).build();
+        UserPersonDTO firstPerson = UserPersonDTO.builder().lastName(LAST_NAME_A).build();
+        UserPersonDTO secondPerson = UserPersonDTO.builder().lastName(LAST_NAME_B).build();
         UserDTO firstUser = UserDTO.builder().person(firstPerson).build();
         UserDTO secondUser = UserDTO.builder().person(secondPerson).build();
         
