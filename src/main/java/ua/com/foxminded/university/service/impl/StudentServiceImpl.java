@@ -2,9 +2,9 @@ package ua.com.foxminded.university.service.impl;
 
 import static ua.com.foxminded.university.exception.ServiceErrorCode.STUDENT_CREATE_ERROR;
 import static ua.com.foxminded.university.exception.ServiceErrorCode.STUDENT_DELETE_ERROR;
+import static ua.com.foxminded.university.exception.ServiceErrorCode.STUDENT_FETCH_ERROR;
 import static ua.com.foxminded.university.exception.ServiceErrorCode.STUDENT_UPDATE_ERROR;
 import static ua.com.foxminded.university.exception.ServiceErrorCode.STUDETNS_FETCH_ERROR;
-import static ua.com.foxminded.university.exception.ServiceErrorCode.STUDENT_FETCH_ERROR;
 
 import java.lang.reflect.Type;
 import java.util.Collections;
@@ -21,13 +21,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import ua.com.foxminded.university.dto.StudentDTO;
-import ua.com.foxminded.university.entity.Group;
 import ua.com.foxminded.university.entity.Student;
-import ua.com.foxminded.university.entity.User;
 import ua.com.foxminded.university.exception.ServiceException;
-import ua.com.foxminded.university.repository.GroupRepository;
 import ua.com.foxminded.university.repository.StudentRepository;
-import ua.com.foxminded.university.repository.UserRepository;
 import ua.com.foxminded.university.service.StudentService;
 
 @Service
@@ -40,8 +36,6 @@ public class StudentServiceImpl implements StudentService {
     
     private final ModelMapper modelMapper;
     private final StudentRepository studentRepository;
-    private final GroupRepository groupRepository;
-    private final UserRepository userRepository;
     
     @Override
     public StudentDTO getByEmail(String email) {
@@ -73,25 +67,10 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public void update(StudentDTO studentDto) {
         try {
-            Student studentEntity = modelMapper.map(studentDto, Student.class);
-            Student persistedStudent = studentRepository.findById(studentEntity.getId());
-            
-            if (studentDto.hasGroup()) {
-                int groupId = studentDto.getGroup().getId();
-                Group persistedGroup = groupRepository.findById(groupId);
-                persistedStudent.setGroup(persistedGroup);
-            } else {
-                persistedStudent.setGroup(null);
-            }
-            
-            if (studentDto.hasUser()) {
-                int userId = studentDto.getUser().getId().intValue();
-                User user = userRepository.findById(userId);
-                persistedStudent.setUser(user);
-            } else {
-                persistedStudent.setUser(null);
-            }
-            
+            Student student = modelMapper.map(studentDto, Student.class);
+            Student persistedStudent = studentRepository.findById(student.getId());
+            persistedStudent.setGroup(student.getGroup());
+            persistedStudent.setUser(student.getUser());
             studentRepository.saveAndFlush(persistedStudent);
         } catch (DataAccessException | IllegalArgumentException | 
                  ConfigurationException | MappingException e) {

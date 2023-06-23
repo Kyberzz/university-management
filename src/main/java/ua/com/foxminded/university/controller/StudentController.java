@@ -17,8 +17,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import lombok.RequiredArgsConstructor;
 import ua.com.foxminded.university.dto.GroupDTO;
 import ua.com.foxminded.university.dto.StudentDTO;
+import ua.com.foxminded.university.dto.UserDTO;
 import ua.com.foxminded.university.service.GroupService;
 import ua.com.foxminded.university.service.StudentService;
+import ua.com.foxminded.university.service.UserService;
 
 @Controller
 @RequestMapping("/students")
@@ -32,10 +34,17 @@ public class StudentController extends DefaultController {
     
     private final StudentService studentService;
     private final GroupService groupService;
+    private final UserService userService;
     
     @PostMapping("/create")
     public String create(@Valid @ModelAttribute(STUDENT_ATTRIBUTE) StudentDTO student) {
+        UserDTO createdUser = userService.createUserPerson(student.getUser());
+        student.setUser(createdUser);
         studentService.create(student);
+        
+        if (student.getUser().hasEmail()) {
+            userService.updateEmail(createdUser.getId(), student.getUser().getEmail());
+        }
         return new StringBuilder().append(REDIRECT_KEY_WORD)
                                   .append(SLASH)
                                   .append(STUDENTS_LIST_TEMPLATE_PATH)
@@ -55,9 +64,24 @@ public class StudentController extends DefaultController {
     
     @PostMapping("/{studentId}/update")
     public String update(@PathVariable int studentId, 
-                         @Valid @ModelAttribute(STUDENT_ATTRIBUTE) StudentDTO student) {
-        student.setId(studentId);
-        studentService.update(student);
+                         @Valid @ModelAttribute(STUDENT_ATTRIBUTE) StudentDTO studentDto) {
+        StudentDTO persistedStudent = studentService.getById(studentId);
+        
+        if (studentDto.hasGroup()) {
+            persistedStudent.setGroup(studentDto.getGroup());
+        } else {
+            persistedStudent.setGroup(null);
+        }
+        
+        studentService.update(persistedStudent);
+        int userId = persistedStudent.getUser().getId();
+        
+        if (studentDto.getUser().hasEmail()) {
+            userService.updateEmail(userId, studentDto.getUser().getEmail());
+        }
+        studentDto.getUser().setId(userId);
+        userService.updateUserPerson(studentDto.getUser());
+        
         return new StringBuilder().append(REDIRECT_KEY_WORD)
                                   .append(SLASH)
                                   .append(STUDENTS_LIST_TEMPLATE_PATH).toString();

@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PersonDTO implements Serializable {
+public class UserPersonDTO implements Serializable {
     
     private static final long serialVersionUID = 1L;
     

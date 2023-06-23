@@ -44,6 +44,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(request -> request
                 .mvcMatchers("/", "/index", "/images/**").permitAll()
+                .mvcMatchers("/courses/list").permitAll()
                 .mvcMatchers("/users/**").hasAnyRole(ADMIN)
                 .mvcMatchers("/courses/list").hasAnyRole(ADMIN, STAFF, TEACHER, STUDENT)
                 .mvcMatchers("/courses/list/{email:\\S+}").hasAnyRole(TEACHER, STUDENT)
@@ -99,10 +100,12 @@ public class SecurityConfig {
                 .mvcMatchers("/teachers/{teacherId:\\d+}/delete-lesson").hasAnyRole(ADMIN, STAFF)
                 .antMatchers("/timetables/list").hasAnyRole(ADMIN, STAFF)
                 .mvcMatchers("/timetables/create").hasAnyRole(ADMIN, STAFF)
-                .mvcMatchers("/timetables/update-name/{timetableId:\\d+}").hasAnyRole(ADMIN, STAFF)
+                .mvcMatchers("/timetables/update-name/{timetableId:\\d+}")
+                    .hasAnyRole(ADMIN, STAFF)
                 .mvcMatchers("/timetables/add-timing/{timetableId:\\d+}").hasAnyRole(ADMIN, STAFF)
                 .mvcMatchers("/timetables/delete/{timetableId:\\d+}").hasAnyRole(ADMIN, STAFF)
-                .mvcMatchers("/timetables/delete-timing/{timetableId:\\d+}/{timingId:\\d+}").hasAnyRole(ADMIN, STAFF)
+                .mvcMatchers("/timetables/delete-timing/{timetableId:\\d+}/{timingId:\\d+}")
+                    .hasAnyRole(ADMIN, STAFF)
                 .anyRequest().authenticated()
                 )
             .formLogin(form -> form.loginPage("/login")

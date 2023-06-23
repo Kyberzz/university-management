@@ -12,7 +12,7 @@ public class UserMother {
     public static final String EMAIL = "email@com";
     
     public static User.UserBuilder complete() {
-        UserPerson person = PersonMother.complete().build();
+        UserPerson person = UserPersonMother.complete().build();
         PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
         
         return User.builder().email(EMAIL)

@@ -29,22 +29,22 @@
      </nav>
 
      <div class="row mb-3 justify-content-center" sec:authorize="hasAnyRole('TEACHER')">
-      <div class="col-2 text-end">
-       <form
-        th:action="@{/lessons/teacher-week-schedule/__${lesson.datestamp}__/__${#authentication.name}__/back}"
-        method="get">
-        <button type="submit" class="btn btn-primary btn-sm w-50"
-         th:text="#{button.previous-week}">Previous week</button>
-       </form>
+      <div class="col-4 text-end">
+        <form class="d-inline"
+         th:action="@{/lessons/teacher-week-schedule/__${lesson.datestamp}__/__${#authentication.name}__/back}"
+         method="get">
+         <button type="submit" class="btn btn-primary btn-sm"
+          th:text="#{button.previous-week}">Previous week</button>
+        </form>
+        <form class="d-inline"
+         th:action="@{/lessons/teacher-week-schedule/__${lesson.datestamp}__/__${#authentication.name}__/next}"
+         method="get">
+         <button type="submit" class="btn btn-primary btn-sm"
+          th:text="#{button.next-week}">Next
+          week</button>
+        </form>
       </div>
-      <div class="col-2 text-start">
-       <form
-        th:action="@{/lessons/teacher-week-schedule/__${lesson.datestamp}__/__${#authentication.name}__/next}"
-        method="get">
-        <button type="submit" class="btn btn-primary btn-sm w-50" th:text="#{button.next-week}">Next
-         week</button>
-       </form>
-      </div>
+
       <div class="col-2 text-start">
        <form th:action="@{/lessons/teacher-week-schedule/__${#authentication.name}__}" method="get">
         <div class="input-group mb-3">

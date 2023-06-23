@@ -14,7 +14,7 @@
  <body>
   <div class="ms-3"
    th:with="httpStatus=${T(org.springframework.http.HttpStatus).valueOf(#response.status)}">
-   <h1 th:text="|${httpStatus} - ${httpStatus.reasonPhrase}|">404</h1>
+   <h3 th:text="|${httpStatus} - ${httpStatus.reasonPhrase}|">404</h3>
    <p th:if="${url}"> <b th:text="|#{error.errorCause}: |">Page:</b>
     <a th:href="@{__${url}__}" th:text="@{__${url}__}">Page URL</a>
    </p>

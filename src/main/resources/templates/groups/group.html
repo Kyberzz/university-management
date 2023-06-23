@@ -33,7 +33,7 @@
 
    <div class="row flex-fill" style="min-height: 0;">
 
-    <div class="col-4">
+    <div class="col-3" style="border-right: 1px solid #ddd;">
 
      <form class="row" th:action="@{/groups/__${group.id}__/update}" method="post">
       <div class="row mt-2">
@@ -53,8 +53,8 @@
 
       <div class="row text-center">
        <div>
-        <button type="button" class="btn btn-primary mt-2" data-bs-toggle="modal"
-         data-bs-target="#updateGroup" id="nameUpdateButton">Update group</button>
+        <button type="button" class="btn btn-primary mt-4 w-50" data-bs-toggle="modal"
+         data-bs-target="#updateGroup" id="nameUpdateButton" th:text="#{update}">Update</button>
 
         <div class="modal fade" id="updateGroup" data-bs-backdrop="static" data-bs-keyboard="false"
          tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -81,10 +81,10 @@
 
     </div>
 
-    <div class="col-4 mh-100 text-center pe-5">
+    <div class="col-5 mh-100 text-center ps-4">
 
-     <div class="row">
-      <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+     <div class="col">
+      <button type="button" class="btn btn-primary mb-3 w-100" data-bs-toggle="modal"
        data-bs-target="#exampleModal" th:text="#{button.add-student}" id="addStudentButton">Add
        student</button>
 

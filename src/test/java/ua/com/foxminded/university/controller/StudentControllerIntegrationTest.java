@@ -30,8 +30,10 @@ import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.web.context.WebApplicationContext;
 
 import ua.com.foxminded.university.dto.GroupDTO;
+import ua.com.foxminded.university.dto.UserPersonDTO;
 import ua.com.foxminded.university.dto.StudentDTO;
 import ua.com.foxminded.university.dto.UserDTO;
+import ua.com.foxminded.university.dtomother.PersonDTOMother;
 import ua.com.foxminded.university.dtomother.UserDTOMother;
 import ua.com.foxminded.university.entity.Group;
 import ua.com.foxminded.university.entity.Student;
@@ -76,10 +78,12 @@ class StudentControllerIntegrationTest {
     private StudentDTO studentDto;
     private Group group;
     private UserDTO studentUserDto;
+    private UserPersonDTO studentPersonDto;
     
     @BeforeTransaction
     void init() {
-        studentUserDto = UserDTOMother.complete().build();
+        studentPersonDto = PersonDTOMother.complete().build();
+        studentUserDto = UserDTOMother.complete().person(studentPersonDto).build();
         studentDto = StudentDTO.builder().user(studentUserDto).build();
         
         new TransactionTemplate(transactionManager).execute(transactionStatus -> {

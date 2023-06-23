@@ -19,6 +19,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -31,6 +33,7 @@ import ua.com.foxminded.university.service.LessonService;
 import ua.com.foxminded.university.service.TeacherService;
 
 @ExtendWith(SpringExtension.class)
+@DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 class CourseControllerTest {
     
     private static final String EMAIL = "email@com";
@@ -149,7 +152,6 @@ class CourseControllerTest {
         
         verify(courseServiceMock).create(isA(CourseDTO.class));
     }
-    
     
     @Test
     void getAll_ShouldRenderCoursesView() throws Exception {

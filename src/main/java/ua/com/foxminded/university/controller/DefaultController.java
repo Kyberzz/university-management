@@ -1,5 +1,8 @@
 package ua.com.foxminded.university.controller;
 
+import static ua.com.foxminded.university.exception.ServiceErrorCode.API_ERROR;
+import static ua.com.foxminded.university.exception.ServiceErrorCode.TEACHER_NOT_NULL_CONSTRAINT_VIOLATION;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -9,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -23,10 +27,11 @@ import ua.com.foxminded.university.exception.ServiceException;
 @Slf4j
 public class DefaultController {
     
+    public static final String NOT_NULL_TEACHER_CONSTRAINT = "lessons_teacher_id_fkey";
     public static final String AMPERSAND_SIGN = "&";
     public static final int STUB = 0;
     public static final String EQUAL_SIGN = "=";
-    public static final String ERRORS_RESPONCE = "errorsResponse";
+    public static final String ERRORS_RESPONSE_ATTRIBUTE = "errorsResponse";
     public static final String ERROR_MESSAGE_ATTRIBUTE = "errorMessage";
     public static final String QUESTION_MARK = "?";
     public static final String SLASH = "/";
@@ -34,15 +39,41 @@ public class DefaultController {
     public static final String URL_ATTRIBUTE = "url";
     public static final String ERROR_TEMPLATE_NAME = "error";
     
+    
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(RuntimeException.class) 
-    public ModelAndView handlRuntimeException(HttpServletRequest request, 
-                                              HttpServletResponse response, 
-                                              RuntimeException exception) {
+    public ModelAndView handleRuntimeException(HttpServletRequest request, 
+                                               HttpServletResponse response, 
+                                               RuntimeException exception) {
         ModelAndView modelAndView = new ModelAndView();
         log.error("API error", exception);
         modelAndView.addObject(URL_ATTRIBUTE, request.getRequestURI());
         modelAndView.addObject(ERROR_MESSAGE_ATTRIBUTE, exception.getMessage());
+        modelAndView.setViewName(ERROR_TEMPLATE_NAME);
+        return modelAndView;
+    }
+    
+    @ExceptionHandler(DataIntegrityViolationException.class) 
+    public ModelAndView handleDataIntegrityViolation(HttpServletRequest request, 
+            HttpServletResponse response, 
+            DataIntegrityViolationException ex) {
+        log.error("API error", ex);
+        
+        ServiceException serviceException;
+        String constraintName = ((org.hibernate.exception.ConstraintViolationException)ex
+                .getCause()).getConstraintName();
+        
+        if (constraintName.equals(NOT_NULL_TEACHER_CONSTRAINT)) {
+            serviceException = new ServiceException(TEACHER_NOT_NULL_CONSTRAINT_VIOLATION, ex);
+        } else {
+            serviceException = new ServiceException(API_ERROR, ex);
+        }
+        
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject(URL_ATTRIBUTE, request.getRequestURI());
+        modelAndView.addObject(ERROR_MESSAGE_ATTRIBUTE, 
+                serviceException.getErrorCode().getDescription());
+        response.setStatus(serviceException.getErrorCode().getCode());
         modelAndView.setViewName(ERROR_TEMPLATE_NAME);
         return modelAndView;
     }
@@ -70,12 +101,12 @@ public class DefaultController {
         
         for (ConstraintViolation<?> violation : error.getConstraintViolations()) {
             errorsResponse.add(new ErrorResponse(violation.getPropertyPath().toString(), 
-                               violation.getMessage()));
+                                                 violation.getMessage()));
         }
         
         log.error("The argument value violation of the controller method was occured");
         modelAndView.addObject(URL_ATTRIBUTE, request.getRequestURI());
-        modelAndView.addObject(ERRORS_RESPONCE, errorsResponse);
+        modelAndView.addObject(ERRORS_RESPONSE_ATTRIBUTE, errorsResponse);
         modelAndView.setViewName(ERROR_TEMPLATE_NAME);
         return modelAndView;
     }
@@ -88,7 +119,7 @@ public class DefaultController {
         List<ErrorResponse> errorsResponse = getErrorsResponse(error);
         log.error("The argument violation of the controller method was occured");
         modelAndView.addObject(URL_ATTRIBUTE, request.getRequestURI());
-        modelAndView.addObject(ERRORS_RESPONCE, errorsResponse);
+        modelAndView.addObject(ERRORS_RESPONSE_ATTRIBUTE, errorsResponse);
         modelAndView.setViewName(ERROR_TEMPLATE_NAME);
         return modelAndView;
     }
@@ -101,7 +132,7 @@ public class DefaultController {
         ModelAndView modelAndView = new ModelAndView();
         log.error("The request data binding fails", error);
         modelAndView.addObject(URL_ATTRIBUTE, request.getRequestURL());
-        modelAndView.addObject(ERRORS_RESPONCE, errorsResponse);
+        modelAndView.addObject(ERRORS_RESPONSE_ATTRIBUTE, errorsResponse);
         modelAndView.setViewName(ERROR_TEMPLATE_NAME);
         return modelAndView;
     }

@@ -2,7 +2,7 @@ package ua.com.foxminded.university.entitymother;
 
 import ua.com.foxminded.university.entity.UserPerson;
 
-public class PersonMother {
+public class UserPersonMother {
     
     public static final String FIRST_NAME = "Elon";
     public static final String LAST_NAME = "Musk";

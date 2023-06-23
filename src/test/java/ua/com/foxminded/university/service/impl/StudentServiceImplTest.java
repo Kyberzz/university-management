@@ -19,17 +19,17 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 
 import ua.com.foxminded.university.dto.GroupDTO;
-import ua.com.foxminded.university.dto.PersonDTO;
 import ua.com.foxminded.university.dto.StudentDTO;
 import ua.com.foxminded.university.dto.UserDTO;
+import ua.com.foxminded.university.dto.UserPersonDTO;
 import ua.com.foxminded.university.dtomother.GroupDTOMother;
 import ua.com.foxminded.university.dtomother.PersonDTOMother;
 import ua.com.foxminded.university.dtomother.UserDTOMother;
-import ua.com.foxminded.university.entity.Group;
 import ua.com.foxminded.university.entity.Student;
 import ua.com.foxminded.university.entity.User;
-import ua.com.foxminded.university.entitymother.GroupMother;
+import ua.com.foxminded.university.entity.UserPerson;
 import ua.com.foxminded.university.entitymother.UserMother;
+import ua.com.foxminded.university.entitymother.UserPersonMother;
 import ua.com.foxminded.university.exception.ServiceException;
 import ua.com.foxminded.university.repository.GroupRepository;
 import ua.com.foxminded.university.repository.StudentRepository;
@@ -62,23 +62,23 @@ class StudentServiceImplTest {
     private Student student;
     private User user;
     private GroupDTO groupDto;
-    private Group group;
+    private UserPerson person;
     
     @BeforeEach
     void setUp() {
-        PersonDTO personDto = PersonDTOMother.complete().build();
+        UserPersonDTO personDto = PersonDTOMother.complete().build();
         UserDTO userDto = UserDTOMother.complete().person(personDto).build();
         studentDto = StudentDTO.builder().user(userDto).build();
-        user = UserMother.complete().build();
+        person = UserPersonMother.complete().build();
+        user = UserMother.complete().person(person).build();
         student = Student.builder().user(user).build();
         groupDto = GroupDTOMother.complete().id(GROUP_ID).build();
-        group = GroupMother.complete().build();
     }
     
     @Test
     void sortByLastName_ShouldSortCorrectly() {
         studentDto.getUser().getPerson().setLastName(LAST_NAME_A);
-        PersonDTO person = PersonDTOMother.complete().lastName(LAST_NAME_B).build();
+        UserPersonDTO person = PersonDTOMother.complete().lastName(LAST_NAME_B).build();
         UserDTO user = UserDTOMother.complete().person(person).build();
         StudentDTO studentB = StudentDTO.builder().user(user).build();
         List<StudentDTO> list = Arrays.asList(studentB, studentDto);
@@ -95,17 +95,18 @@ class StudentServiceImplTest {
     }
     
     @Test
-    void update_ShouldUpdateGroupAndUserRelationships() 
-            throws ServiceException {
+    void update_ShouldUpdateGroupAndUserRelationships() throws ServiceException {
         student.getUser().setId(STUDENT_ID);
         groupDto.setId(GROUP_ID);
         studentDto.setGroup(groupDto);
         studentDto.setUser(UserDTO.builder().id(USER_ID).build());
-        when(groupRepository.findById(anyInt())).thenReturn(group);
         when(modelMapperMock.map(studentDto, Student.class)).thenReturn(student);
         when(studentRepositoryMock.findById(anyInt())).thenReturn(student);
-        when(userRepositoryMock.findById(anyInt())).thenReturn(user);
+        
         studentService.update(studentDto);
+        
+        verify(modelMapperMock).map(studentDto, Student.class);
+        verify(studentRepositoryMock).findById(anyInt());
         verify(studentRepositoryMock).saveAndFlush(isA(Student.class));
     }
     

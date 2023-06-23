@@ -8,6 +8,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Getter
 public enum ServiceErrorCode {
+    TEACHER_NOT_NULL_CONSTRAINT_VIOLATION(SC_BAD_REQUEST, 
+            "A teacher that has lessons cannot be removed"),
+    
     PERSON_DELETE_ERROR(SC_INTERNAL_SERVER_ERROR, "Failed to delete the person data"),
     PERSON_CREATE_ERROR(SC_INTERNAL_SERVER_ERROR, "Failed to create the database person data"),
     PERSON_UPDATE_ERROR(SC_INTERNAL_SERVER_ERROR, "Failed to update the database person data"),
