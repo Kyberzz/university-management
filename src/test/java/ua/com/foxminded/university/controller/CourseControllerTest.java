@@ -153,7 +153,6 @@ class CourseControllerTest {
         verify(courseServiceMock).create(isA(CourseDTO.class));
     }
     
-    
     @Test
     void getAll_ShouldRenderCoursesView() throws Exception {
         mockMvc.perform(get("/courses/list"))
