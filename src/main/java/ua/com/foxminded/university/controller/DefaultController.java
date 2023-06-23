@@ -53,7 +53,6 @@ public class DefaultController {
         return modelAndView;
     }
     
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(DataIntegrityViolationException.class) 
     public ModelAndView handleDataIntegrityViolation(HttpServletRequest request, 
             HttpServletResponse response, 
@@ -74,6 +73,7 @@ public class DefaultController {
         modelAndView.addObject(URL_ATTRIBUTE, request.getRequestURI());
         modelAndView.addObject(ERROR_MESSAGE_ATTRIBUTE, 
                 serviceException.getErrorCode().getDescription());
+        response.setStatus(serviceException.getErrorCode().getCode());
         modelAndView.setViewName(ERROR_TEMPLATE_NAME);
         return modelAndView;
     }
