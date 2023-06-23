@@ -1,8 +1,5 @@
 package ua.com.foxminded.university.controller;
 
-import static ua.com.foxminded.university.exception.ServiceErrorCode.API_ERROR;
-import static ua.com.foxminded.university.exception.ServiceErrorCode.TEACHER_NOT_NULL_CONSTRAINT_VIOLATION;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
