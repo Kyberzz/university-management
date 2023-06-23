@@ -43,7 +43,7 @@ public class CourseController extends DefaultController {
     private final LessonService lessonService;
     
     @GetMapping("/list/{teacherEmail}")
-    public String getByTeacherId(@PathVariable String teacherEmail, Model model) {
+    public String getByTeacherEmail(@PathVariable String teacherEmail, Model model) {
         TeacherDTO teacher = teacherService.getTeacherByEmail(teacherEmail);
         List<CourseDTO> courses = courseService.getByTeacherId(teacher.getId());
         CourseDTO course = new CourseDTO();

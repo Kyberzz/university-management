@@ -129,7 +129,7 @@ class CourseControllerIntegrationTest {
     
     @Test
     @WithUserDetails(TEACHER_EMAIL)
-    void getByTeacherId_ShouldAuthenticateCredentialsAndReturnStatusIsOk() throws Exception {
+    void getByTeacherEmail_ShouldAuthenticateCredentialsAndReturnStatusIsOk() throws Exception {
         mockMvc.perform(get("/courses/list/{teacherEmail}", teacher.getUser().getEmail()))
                .andDo(print())
                .andExpect(authenticated().withRoles(TEACHER.toString()))

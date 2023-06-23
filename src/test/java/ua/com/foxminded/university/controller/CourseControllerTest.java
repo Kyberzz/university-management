@@ -60,7 +60,7 @@ class CourseControllerTest {
     }
     
     @Test
-    void getByTeacherId_ShouldRenderCourseView() throws Exception {
+    void getByTeacherEmail_ShouldRenderCourseView() throws Exception {
         when(teacherServiceMock.getTeacherByEmail(anyString())).thenReturn(teacher);
         
         mockMvc.perform(get("/courses/list/{teacherEmail}", EMAIL))
