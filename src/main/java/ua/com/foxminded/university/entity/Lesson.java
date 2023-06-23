@@ -15,6 +15,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,7 +25,9 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Entity
-@Table(name = "lessons", schema = "university")
+@Table(name = "lessons", schema = "university", 
+       uniqueConstraints = @UniqueConstraint(name = "lessons_teacher_id_fkey", 
+                                             columnNames = {"teacher_id"}))
 @Data
 @Builder
 @NoArgsConstructor

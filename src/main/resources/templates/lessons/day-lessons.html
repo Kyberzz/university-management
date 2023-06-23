@@ -169,7 +169,7 @@
 
     <div class="col-4 mh-100">
 
-     <div class="col pe-3 mh-100" style="overflow-y: scroll;">
+     <div class="col mh-100 ps-2 pe-4" style="overflow-y: scroll;">
 
       <form class="row mt-2" th:action="@{/lessons/day-lessons/__${lesson.datestamp}__}"
        method="get">
@@ -250,6 +250,7 @@
 
       <form class="row" th:action="@{/lessons/__${dayLessons[0].datestamp}__/apply-timetable}"
        method="post">
+       
        <div class="col-6">
         <div class="form">
          <select class="form-select form-select-sm" id="floatingSelect"
@@ -262,14 +263,14 @@
         </div>
        </div>
 
-       <div class="col-2">
+       <div class="col-3">
         <button class="btn btn-primary btn-sm w-100" type="submit" th:text="#{button.print}"
          th:formaction="@{/lessons/day-lessons/__${dayLessons[0].datestamp}__}"
          formmethod="get">Print</button>
         <input type="hidden" name="courseId" th:value=${course.id}>
        </div>
 
-       <div class="col-2">
+       <div class="col-3">
         <button class="btn btn-primary btn-sm w-100" type="submit">Apply</button>
        </div>
 
