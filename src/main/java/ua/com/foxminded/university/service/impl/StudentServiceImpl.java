@@ -1,10 +1,10 @@
 package ua.com.foxminded.university.service.impl;
 
-import static ua.com.foxminded.university.exception.ServiceErrorCode.STUDENT_CREATE_ERROR;
-import static ua.com.foxminded.university.exception.ServiceErrorCode.STUDENT_DELETE_ERROR;
-import static ua.com.foxminded.university.exception.ServiceErrorCode.STUDENT_FETCH_ERROR;
-import static ua.com.foxminded.university.exception.ServiceErrorCode.STUDENT_UPDATE_ERROR;
-import static ua.com.foxminded.university.exception.ServiceErrorCode.STUDETNS_FETCH_ERROR;
+import static ua.com.foxminded.university.exception.ErrorCode.STUDENT_CREATE_ERROR;
+import static ua.com.foxminded.university.exception.ErrorCode.STUDENT_DELETE_ERROR;
+import static ua.com.foxminded.university.exception.ErrorCode.STUDENT_FETCH_ERROR;
+import static ua.com.foxminded.university.exception.ErrorCode.STUDENT_UPDATE_ERROR;
+import static ua.com.foxminded.university.exception.ErrorCode.STUDETNS_FETCH_ERROR;
 
 import java.lang.reflect.Type;
 import java.util.Collections;

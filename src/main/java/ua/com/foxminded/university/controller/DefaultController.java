@@ -19,7 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import lombok.extern.slf4j.Slf4j;
 import ua.com.foxminded.university.exception.ErrorResponse;
-import ua.com.foxminded.university.exception.ServiceErrorCode;
+import ua.com.foxminded.university.exception.ErrorCode;
 import ua.com.foxminded.university.exception.ServiceException;
 
 @Slf4j
@@ -57,14 +57,14 @@ public class DefaultController {
             DataIntegrityViolationException ex) {
         log.error("API error", ex);
         
-        ServiceErrorCode errorCode;
+        ErrorCode errorCode;
         String constraintName = ((org.hibernate.exception.ConstraintViolationException)ex
                 .getCause()).getConstraintName();
         
         if (constraintName.equals(NOT_NULL_TEACHER_CONSTRAINT)) {
-            errorCode = ServiceErrorCode.TEACHER_NOT_NULL_CONSTRAINT_VIOLATION;
+            errorCode = ErrorCode.TEACHER_NOT_NULL_CONSTRAINT_VIOLATION;
         } else {
-            errorCode = ServiceErrorCode.API_ERROR;
+            errorCode = ErrorCode.API_ERROR;
         }
         
         ModelAndView modelAndView = new ModelAndView();

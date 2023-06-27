@@ -1,6 +1,6 @@
 package ua.com.foxminded.university.service.impl;
 
-import static ua.com.foxminded.university.exception.ServiceErrorCode.*;
+import static ua.com.foxminded.university.exception.ErrorCode.*;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
