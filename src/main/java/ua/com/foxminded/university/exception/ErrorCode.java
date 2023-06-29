@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Getter
-public enum ServiceErrorCode {
+public enum ErrorCode {
     TEACHER_NOT_NULL_CONSTRAINT_VIOLATION(SC_BAD_REQUEST, 
             "A teacher that has lessons cannot be removed"),
     

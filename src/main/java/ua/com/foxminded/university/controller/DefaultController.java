@@ -1,8 +1,5 @@
 package ua.com.foxminded.university.controller;
 
-import static ua.com.foxminded.university.exception.ServiceErrorCode.API_ERROR;
-import static ua.com.foxminded.university.exception.ServiceErrorCode.TEACHER_NOT_NULL_CONSTRAINT_VIOLATION;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,6 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import lombok.extern.slf4j.Slf4j;
 import ua.com.foxminded.university.exception.ErrorResponse;
+import ua.com.foxminded.university.exception.ErrorCode;
 import ua.com.foxminded.university.exception.ServiceException;
 
 @Slf4j
@@ -59,21 +57,21 @@ public class DefaultController {
             DataIntegrityViolationException ex) {
         log.error("API error", ex);
         
-        ServiceException serviceException;
+        ErrorCode errorCode;
         String constraintName = ((org.hibernate.exception.ConstraintViolationException)ex
                 .getCause()).getConstraintName();
         
         if (constraintName.equals(NOT_NULL_TEACHER_CONSTRAINT)) {
-            serviceException = new ServiceException(TEACHER_NOT_NULL_CONSTRAINT_VIOLATION, ex);
+            errorCode = ErrorCode.TEACHER_NOT_NULL_CONSTRAINT_VIOLATION;
         } else {
-            serviceException = new ServiceException(API_ERROR, ex);
+            errorCode = ErrorCode.API_ERROR;
         }
         
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject(URL_ATTRIBUTE, request.getRequestURI());
         modelAndView.addObject(ERROR_MESSAGE_ATTRIBUTE, 
-                serviceException.getErrorCode().getDescription());
-        response.setStatus(serviceException.getErrorCode().getCode());
+                errorCode.getDescription());
+        response.setStatus(errorCode.getCode());
         modelAndView.setViewName(ERROR_TEMPLATE_NAME);
         return modelAndView;
     }

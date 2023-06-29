@@ -1,11 +1,11 @@
 package ua.com.foxminded.university.service.impl;
 
-import static ua.com.foxminded.university.exception.ServiceErrorCode.API_ERROR;
-import static ua.com.foxminded.university.exception.ServiceErrorCode.LESSONS_FETCH_ERROR;
-import static ua.com.foxminded.university.exception.ServiceErrorCode.LESSON_DELETE_ERROR;
-import static ua.com.foxminded.university.exception.ServiceErrorCode.LESSON_FETCH_ERROR;
-import static ua.com.foxminded.university.exception.ServiceErrorCode.LESSON_PERSISTENCE_ERROR;
-import static ua.com.foxminded.university.exception.ServiceErrorCode.LESSON_UPDATE_ERROR;
+import static ua.com.foxminded.university.exception.ErrorCode.API_ERROR;
+import static ua.com.foxminded.university.exception.ErrorCode.LESSONS_FETCH_ERROR;
+import static ua.com.foxminded.university.exception.ErrorCode.LESSON_DELETE_ERROR;
+import static ua.com.foxminded.university.exception.ErrorCode.LESSON_FETCH_ERROR;
+import static ua.com.foxminded.university.exception.ErrorCode.LESSON_PERSISTENCE_ERROR;
+import static ua.com.foxminded.university.exception.ErrorCode.LESSON_UPDATE_ERROR;
 
 import java.lang.reflect.Type;
 import java.time.DateTimeException;
