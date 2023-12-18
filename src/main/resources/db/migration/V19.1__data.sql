@@ -1,13 +1,13 @@
 insert into university.users(first_name, last_name, email, password, enabled) 
-    values('admin', 'admin', 'a', '{noop}a', 'true');
+    values('admin', 'admin', 'admin', '{noop}admin', 'true');
 insert into university.users(first_name, last_name, email, password, enabled)
-    values('staff', 'staff', 'staff', '{noop}a', 'true');
+    values('staff', 'staff', 'staff', '{noop}staff', 'true');
 insert into university.users(first_name, last_name, email, password, enabled) 
-    values('teacher', 'teacher', 'teacher', '{noop}a', 'true');
+    values('teacher', 'teacher', 'teacher', '{noop}teacher', 'true');
 insert into university.users(first_name, last_name, email, password, enabled) 
-    values('student', 'student', 'student', '{noop}a', 'true');
+    values('student', 'student', 'student', '{noop}teacher', 'true');
 insert into university.users(first_name, last_name, email, password) 
-    values('person', 'person', 'person', '{noop}a');
+    values('person', 'person', 'person', '{noop}person');
     
 insert into university.authorities(authority, user_id) values('ROLE_ADMIN', 1);
 insert into university.authorities(authority, user_id) values('ROLE_STAFF', 2);

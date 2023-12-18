@@ -15,7 +15,6 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addConverter(new WebDurationConverter());
     }
     
-    
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController("/").setViewName("index");

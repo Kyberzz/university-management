@@ -11,7 +11,7 @@ public class UniversityManagement {
 
     public static void main(String[] args) {
         SpringApplication application = new SpringApplication(UniversityManagement.class);
-        application.setAdditionalProfiles(DEV_PROFILE);
+        application.setAdditionalProfiles(PROD_PROFILE);
         application.run(args);
     }
 }
